@@ -1,7 +1,7 @@
 class World {
   character = new Character();
   enemies = level1.enemies;
-  fogs = level1.fogs;
+  cloud = level1.cloud;
   backgroundObject = level1.backgroundObject;
   level = level1;
   canvas;
@@ -122,16 +122,16 @@ class World {
     this.ctx.translate(this.camera_x, 0);
 
     this.addToMap(this.character);
-    //this.addObjectsToMap(this.level.enemies);
-    this.level.enemies.forEach((enemy) => {
-      this.addToMap(enemy);
-      if (enemy.statusBar) {
-        enemy.updateStatusBar();
-        this.addToMap(enemy.statusBar);
-      }
-    });
+    this.addObjectsToMap(this.level.enemies);
+    // this.level.enemies.forEach((enemy) => {
+    //   this.addToMap(enemy);
+    //   if (enemy.statusBar) {
+    //     enemy.updateStatusBar();
+    //     this.addToMap(enemy.statusBar);
+    //   }
+    // });
 
-    this.addObjectsToMap(this.level.fogs);
+    this.addObjectsToMap(this.level.cloud);
     this.addObjectsToMap(this.throwableObject);
 
     this.ctx.translate(-this.camera_x, 0);
