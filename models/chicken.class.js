@@ -1,4 +1,7 @@
 class Chicken extends MovableObject {
+  height = 80;
+  y = 350;
+  
 //   IMAGES_RUNNING = Array.from(
 //     { length: 6 },
 //     (_, i) => `img/spider/walk${i + 1}.png`

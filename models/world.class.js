@@ -40,7 +40,7 @@ class World {
       });
     }
 
-    if (this.keyboard.SPACE) {
+    if (this.keyboard.D) {
       let bottle = new ThrowableObject(
         this.character.x + 100,
         this.character.y + 100
@@ -58,19 +58,18 @@ class World {
       }
     });
 
-    this.throwableObject.forEach((bottle) => {
-  this.level.enemies.forEach((enemy) => {
-    if (bottle.isColliding(enemy)) {
-      enemy.hit();
-      if (enemy.statusBar) {
-        enemy.statusBar.setPercentage(enemy.energy);
-      }
+    // this.throwableObject.forEach((bottle) => {
+    //   this.level.enemies.forEach((enemy) => {
+    //     if (bottle.isColliding(enemy)) {
+    //       enemy.hit();
+    //       if (enemy.statusBar) {
+    //         enemy.statusBar.setPercentage(enemy.energy);
+    //       }
 
-      this.throwableObject.splice(this.throwableObject.indexOf(bottle), 1);
-    }
-  });
-});
-
+    //       this.throwableObject.splice(this.throwableObject.indexOf(bottle), 1);
+    //     }
+    //   });
+    // });
 
     // this.throwableObject.forEach((bottle) => {
     //   this.level.enemies.forEach((enemy) => {
@@ -122,6 +121,7 @@ class World {
     this.ctx.translate(this.camera_x, 0);
 
     this.addToMap(this.character);
+    this.addObjectsToMap(this.level.cloud);
     this.addObjectsToMap(this.level.enemies);
     // this.level.enemies.forEach((enemy) => {
     //   this.addToMap(enemy);
@@ -130,8 +130,6 @@ class World {
     //     this.addToMap(enemy.statusBar);
     //   }
     // });
-
-    this.addObjectsToMap(this.level.cloud);
     this.addObjectsToMap(this.throwableObject);
 
     this.ctx.translate(-this.camera_x, 0);
