@@ -3,23 +3,23 @@ class Character extends MovableObject {
   y = 160;
   speed = 10;
 
-//   IMAGES_RUNNING = Array.from(
-//     { length: 8 },
-//     (_, i) => `img/2_character_pepe/2_walk/W-2${i + 1}.png`
-//   );
+  //   IMAGES_RUNNING = Array.from(
+  //     { length: 8 },
+  //     (_, i) => `img/2_character_pepe/2_walk/W-2${i + 1}.png`
+  //   );
   IMAGES_RUNNING = [
-    'img/2_character_pepe/2_walk/W-21.png'
-    , 'img/2_character_pepe/2_walk/W-22.png'
-    , 'img/2_character_pepe/2_walk/W-23.png'
-    , 'img/2_character_pepe/2_walk/W-24.png'
-    , 'img/2_character_pepe/2_walk/W-25.png'
-    , 'img/2_character_pepe/2_walk/W-26.png'
+    "img/2_character_pepe/2_walk/W-21.png",
+    "img/2_character_pepe/2_walk/W-22.png",
+    "img/2_character_pepe/2_walk/W-23.png",
+    "img/2_character_pepe/2_walk/W-24.png",
+    "img/2_character_pepe/2_walk/W-25.png",
+    "img/2_character_pepe/2_walk/W-26.png",
   ];
 
-//   IMAGES_JUMPING = Array.from(
-//     { length: 12 },
-//     (_, i) => `img/hero/high_jump${i + 1}.png`
-//   );
+  //   IMAGES_JUMPING = Array.from(
+  //     { length: 12 },
+  //     (_, i) => `img/hero/high_jump${i + 1}.png`
+  //   );
   // IMAGES_JUMPING = [
   //   "img/hero/high_jump1.png",
   //   "img/hero/high_jump2.png",
@@ -35,15 +35,15 @@ class Character extends MovableObject {
   //   "img/hero/high_jump12.png",
   // ];
 
-//   IMAGES_DEATH = Array.from(
-//     { length: 10 },
-//     (_, i) => `img/hero/death${i + 1}.png`
-//   );
+  //   IMAGES_DEATH = Array.from(
+  //     { length: 10 },
+  //     (_, i) => `img/hero/death${i + 1}.png`
+  //   );
 
-//   IMAGES_HURT = Array.from(
-//     { length: 4 },
-//     (_, i) => `img/hero/hurt${i + 1}.png`
-//   );
+  //   IMAGES_HURT = Array.from(
+  //     { length: 4 },
+  //     (_, i) => `img/hero/hurt${i + 1}.png`
+  //   );
 
   world;
 
