@@ -1,6 +1,6 @@
 class Character extends MovableObject {
-  height = 150;
-  y = 160;
+  height = 250;
+  y = 180;
   speed = 10;
 
   //   IMAGES_RUNNING = Array.from(
@@ -16,24 +16,37 @@ class Character extends MovableObject {
     "img/2_character_pepe/2_walk/W-26.png",
   ];
 
-  //   IMAGES_JUMPING = Array.from(
-  //     { length: 12 },
-  //     (_, i) => `img/hero/high_jump${i + 1}.png`
-  //   );
-  // IMAGES_JUMPING = [
-  //   "img/hero/high_jump1.png",
-  //   "img/hero/high_jump2.png",
-  //   "img/hero/high_jump3.png",
-  //   "img/hero/high_jump4.png",
-  //   "img/hero/high_jump5.png",
-  //   "img/hero/high_jump6.png",
-  //   "img/hero/high_jump7.png",
-  //   "img/hero/high_jump8.png",
-  //   "img/hero/high_jump9.png",
-  //   "img/hero/high_jump10.png",
-  //   "img/hero/high_jump11.png",
-  //   "img/hero/high_jump12.png",
-  // ];
+    // IMAGES_JUMPING = Array.from(
+    //   { length: 9 },
+    //   (_, i) => `img/2_character_pepe/3_jump/J-3${i + 1}.png`
+    // );
+  IMAGES_JUMPING = [
+    'img/2_character_pepe/3_jump/J-31.png',
+    'img/2_character_pepe/3_jump/J-32.png',
+    'img/2_character_pepe/3_jump/J-33.png',
+    'img/2_character_pepe/3_jump/J-34.png',
+    'img/2_character_pepe/3_jump/J-35.png',
+    'img/2_character_pepe/3_jump/J-36.png',
+    'img/2_character_pepe/3_jump/J-37.png',
+    'img/2_character_pepe/3_jump/J-38.png',
+    'img/2_character_pepe/3_jump/J-39.png',
+  ];
+
+  IMAGES_HURT = [
+    'img/2_character_pepe/4_hurt/H-41.png',
+    'img/2_character_pepe/4_hurt/H-42.png',
+    'img/2_character_pepe/4_hurt/H-43.png'
+  ];
+
+  IMAGES_DEAD = [
+    'img/2_character_pepe/5_dead/D-51.png',
+    'img/2_character_pepe/5_dead/D-52.png',
+    'img/2_character_pepe/5_dead/D-53.png',
+    'img/2_character_pepe/5_dead/D-54.png',
+    'img/2_character_pepe/5_dead/D-55.png',
+    'img/2_character_pepe/5_dead/D-56.png',
+    'img/2_character_pepe/5_dead/D-57.png'
+  ]
 
   //   IMAGES_DEATH = Array.from(
   //     { length: 10 },
@@ -52,9 +65,9 @@ class Character extends MovableObject {
   constructor() {
     super().loadImage(this.IMAGES_RUNNING[0]);
     this.loadImages(this.IMAGES_RUNNING);
-    // this.loadImages(this.IMAGES_JUMPING);
-    // this.loadImages(this.IMAGES_DEATH);
-    // this.loadImages(this.IMAGES_HURT);
+    this.loadImages(this.IMAGES_JUMPING);
+    this.loadImages(this.IMAGES_HURT);
+    this.loadImages(this.IMAGES_DEAD);
     this.applyGravity();
     this.animate();
   }
