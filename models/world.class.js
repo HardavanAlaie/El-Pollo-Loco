@@ -14,6 +14,8 @@ class World {
 
   // -------------- chatGPT --------------
   //bottle = new ThrowableObject(this.x, this.y, this.otherDirection);
+  canThrow = true; // Neue Variable zur Steuerung
+
   // -------------- chatGPT --------------
 
   constructor(canvas, keyboard) {
@@ -57,9 +59,15 @@ class World {
     // }
 
     // -------------- chatGPT --------------
-    if (this.keyboard.D && this.statusBarBottle.availableBottles > 0) {
+
+    if (
+      this.keyboard.D &&
+      this.canThrow &&
+      this.statusBarBottle.availableBottles > 0
+    ) {
+      this.canThrow = false; // Werfen deaktivieren
       this.statusBarBottle.availableBottles--;
-      this.statusBarBottle.update();
+      this.statusBarBottle.update(); // optional, wenn update-Methode existiert
 
       let bottle = new ThrowableObject(
         this.character.x + 30,
@@ -67,7 +75,24 @@ class World {
         this.character.otherDirection
       );
       this.throwableObjects.push(bottle);
+
+      // Wartezeit, bevor wieder geworfen werden darf
+      setTimeout(() => {
+        this.canThrow = true;
+      }, 300); // 300ms Pause (kannst du anpassen)
     }
+
+    // if (this.keyboard.D && this.statusBarBottle.availableBottles > 0) {
+    //   this.statusBarBottle.availableBottles--;
+    //   this.statusBarBottle.update();
+
+    //   let bottle = new ThrowableObject(
+    //     this.character.x + 30,
+    //     this.character.y + 100,
+    //     this.character.otherDirection
+    //   );
+    //   this.throwableObjects.push(bottle);
+    // }
     // -------------- chatGPT --------------
   }
 
