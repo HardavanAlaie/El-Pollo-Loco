@@ -70,8 +70,24 @@ class MovableObject extends DrawableObject {
     this.speedY = 30;
   }
 
+  // throw() {
+  //   this.speedY = 30;
+  //   this.speedX = 20;
+  // }
+
+  // ---------------- chatGPT ----------------
   throw() {
-    this.speedY = 30;
-    this.speedX = 20;
+    if (this.world.statusBarBottle.availableBottles > 0) {
+      this.world.statusBarBottle.availableBottles--;
+      this.world.statusBarBottle.update();
+
+      let bottle = new ThrowableObject(
+        this.x += 50,
+        this.y -= 50,
+        this.otherDirection
+      );
+      this.world.throwableObjects.push(bottle);
+    }
   }
+  // ---------------- chatGPT ----------------
 }

@@ -10,7 +10,11 @@ class World {
   camera_x = 0;
   statusBar = new StatusBar();
   statusBarBottle = new StatusBarBottle();
-  throwableObject = [];
+  throwableObjects = [];
+
+  // -------------- chatGPT --------------
+  //bottle = new ThrowableObject(this.x, this.y, this.otherDirection);
+  // -------------- chatGPT --------------
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -33,21 +37,38 @@ class World {
   }
 
   checkThrowableObjects() {
-    if (this.throwableObject.length > 0) {
-      this.throwableObject.forEach((bottle) => {
+    if (this.throwableObjects.length > 0) {
+      this.throwableObjects.forEach((bottle) => {
         if (bottle.isDead()) {
-          this.throwableObject.splice(this.throwableObject.indexOf(bottle), 1);
+          this.throwableObjects.splice(
+            this.throwableObjects.indexOf(bottle),
+            1
+          );
         }
       });
     }
 
-    if (this.keyboard.D) {
+    // if (this.keyboard.D) {
+    //   let bottle = new ThrowableObject(
+    //     this.character.x + 100,
+    //     this.character.y + 100
+    //   );
+    //   this.throwableObjects.push(bottle);
+    // }
+
+    // -------------- chatGPT --------------
+    if (this.keyboard.D && this.statusBarBottle.availableBottles > 0) {
+      this.statusBarBottle.availableBottles--;
+      this.statusBarBottle.update();
+
       let bottle = new ThrowableObject(
-        this.character.x + 100,
-        this.character.y + 100
+        this.character.x + 30,
+        this.character.y + 100,
+        this.character.otherDirection
       );
-      this.throwableObject.push(bottle);
+      this.throwableObjects.push(bottle);
     }
+    // -------------- chatGPT --------------
   }
 
   checkCollisions() {
@@ -58,6 +79,24 @@ class World {
         this.character.isHurt();
       }
     });
+
+    // -------------- chatGPT --------------
+    this.throwableObjects.forEach((bottle) => {
+      this.level.enemies.forEach((enemy) => {
+        if (bottle.isColliding(enemy)) {
+          enemy.hit(); // Schaden zufügen
+          this.throwableObjects.splice(
+            this.throwableObjects.indexOf(bottle),
+            1
+          );
+
+          if (enemy.isDead()) {
+            this.level.enemies.splice(this.level.enemies.indexOf(enemy), 1);
+          }
+        }
+      });
+    });
+    // -------------- chatGPT --------------
 
     // this.throwableObject.forEach((bottle) => {
     //   this.level.enemies.forEach((enemy) => {
@@ -132,7 +171,7 @@ class World {
     //     this.addToMap(enemy.statusBar);
     //   }
     // });
-    this.addObjectsToMap(this.throwableObject);
+    this.addObjectsToMap(this.throwableObjects);
 
     this.ctx.translate(-this.camera_x, 0);
 
