@@ -162,7 +162,7 @@ class World {
 
   flipImage(mo) {
     this.ctx.save();
-    this.ctx.translate(mo.img.width, 0);
+    this.ctx.translate(mo.width, 0);
     this.ctx.scale(-1, 1);
     mo.x = mo.x * -1;
   }
