@@ -1,6 +1,6 @@
 class Character extends MovableObject {
   height = 250;
-  y = 80;
+  y = 90;
   speed = 10;
 
   //   IMAGES_RUNNING = Array.from(

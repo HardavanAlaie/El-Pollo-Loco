@@ -2,8 +2,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* min-height: 100vh; */
-    /* background-image: url('img/bg/bg/bg4.png'); */
+    /* min-height: 100vh;  */
+    /* background-image: url('img/5_background/cactus-9085905_1280.jpg'); */
     background-position: center;
     background-size: cover;
 }
