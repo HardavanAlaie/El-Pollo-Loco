@@ -1,4 +1,4 @@
-class World {
+/*class World {
   character = new Character();
   enemies = level1.enemies;
   cloud = level1.cloud;
@@ -184,7 +184,7 @@ class World {
     });
   }
 */
-
+/*
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -201,6 +201,8 @@ class World {
     this.addObjectsToMap(this.level.cloud);
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.collectableBottles);
+    this.addObjectsToMap(this.level.collectableObjects);
+
 
     // this.level.enemies.forEach((enemy) => {
     //   this.addToMap(enemy);
@@ -237,6 +239,161 @@ class World {
     if (mo.otherDirection) {
       this.flipImageBack(mo);
     }
+  }
+
+  flipImage(mo) {
+    this.ctx.save();
+    this.ctx.translate(mo.width, 0);
+    this.ctx.scale(-1, 1);
+    mo.x = mo.x * -1;
+  }
+
+  flipImageBack(mo) {
+    this.ctx.restore();
+    mo.x = mo.x * -1;
+  }
+}
+*/
+
+class World {
+  character = new Character();
+  enemies = level1.enemies;
+  cloud = level1.cloud;
+  backgroundObject = level1.backgroundObject;
+  level = level1;
+  canvas;
+  ctx;
+  keyboard;
+  camera_x = 0;
+  statusBar = new StatusBar();
+  statusBarBottle = new StatusBarBottle();
+  throwableObjects = [];
+  canThrow = true;
+
+  constructor(canvas, keyboard) {
+    this.ctx = canvas.getContext("2d");
+    this.canvas = canvas;
+    this.keyboard = keyboard;
+    this.setWorld();
+    this.draw();
+    this.run();
+  }
+
+  setWorld() {
+    this.character.world = this;
+  }
+
+  run() {
+    setInterval(() => {
+      this.checkCollisions();
+      this.checkThrowableObjects();
+    }, 1000 / 10); // 10x pro Sekunde
+  }
+
+  checkThrowableObjects() {
+    // Entferne geworfene Flaschen, wenn sie "tot" sind
+    this.throwableObjects = this.throwableObjects.filter(
+      (bottle) => !bottle.isDead?.()
+    );
+
+    // Wurf-Taste gedrückt, noch Flaschen vorhanden, Wurf erlaubt?
+    if (
+      this.keyboard.D &&
+      this.canThrow &&
+      this.statusBarBottle.availableBottles > 0
+    ) {
+      this.canThrow = false;
+      this.statusBarBottle.availableBottles--;
+      this.statusBarBottle.update?.();
+
+      let bottle = new ThrowableObject(
+        this.character.x + (this.character.otherDirection ? -30 : 30),
+        this.character.y + 100,
+        this.character.otherDirection
+      );
+      this.throwableObjects.push(bottle);
+
+      setTimeout(() => (this.canThrow = true), 300);
+    }
+  }
+
+  checkCollisions() {
+    // Kollisionsprüfung: Spieler mit Gegnern
+    this.level.enemies.forEach((enemy) => {
+      if (this.character.isColliding(enemy)) {
+        this.character.hit();
+        this.statusBar.setPercentage(this.character.energy);
+        this.character.isHurt();
+      }
+    });
+
+    // Kollisionsprüfung: Flaschen mit Gegnern
+    this.throwableObjects.forEach((bottle) => {
+      this.level.enemies.forEach((enemy) => {
+        if (bottle.isColliding(enemy)) {
+          enemy.hit();
+          this.throwableObjects.splice(
+            this.throwableObjects.indexOf(bottle),
+            1
+          );
+          if (enemy.isDead()) {
+            this.level.enemies.splice(this.level.enemies.indexOf(enemy), 1);
+          }
+        }
+      });
+    });
+
+    // Kollisionsprüfung: Spieler sammelt Flaschen ein
+    this.level.collectableObjects = this.level.collectableObjects.filter(
+      (bottle) => {
+        if (this.character.isColliding(bottle)) {
+          this.statusBarBottle.availableBottles++;
+          this.statusBarBottle.update?.();
+          return false; // Entferne eingesammelte Flasche
+        }
+        return true;
+      }
+    );
+  }
+
+  draw() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.translate(this.camera_x, 0);
+
+    // this.addObjectsToMap(this.level.backgroundObject);
+    // this.addObjectsToMap(this.level.cloud);
+    // this.addObjectsToMap(this.level.collectableObjects || []);
+    // this.addObjectsToMap(this.level.enemies);
+
+    this.addObjectsToMap(this.level.backgroundObject || []);
+this.addObjectsToMap(this.level.cloud || []);
+this.addObjectsToMap(this.level.enemies || []);
+this.addObjectsToMap(this.level.collectableObjects || []);
+this.addObjectsToMap(this.throwableObjects || []);
+
+
+    this.addObjectsToMap(this.throwableObjects);
+    this.addToMap(this.character);
+
+    this.ctx.translate(-this.camera_x, 0);
+    this.addToMap(this.statusBar);
+    this.addToMap(this.statusBarBottle);
+
+    this.ctx.translate(this.camera_x, 0);
+    this.ctx.translate(-this.camera_x, 0);
+
+    requestAnimationFrame(() => this.draw());
+  }
+
+  addObjectsToMap(objects) {
+    objects.forEach((object) => this.addToMap(object));
+  }
+
+  addToMap(mo) {
+    if (mo.otherDirection) this.flipImage(mo);
+    mo.draw?.(this.ctx);
+    mo.drawFrame?.(this.ctx);
+    if (mo.otherDirection) this.flipImageBack(mo);
   }
 
   flipImage(mo) {
