@@ -15,6 +15,7 @@ class World {
   // -------------- chatGPT --------------
   //bottle = new ThrowableObject(this.x, this.y, this.otherDirection);
   canThrow = true; // Neue Variable zur Steuerung
+  collectableBottles = [];
 
   // -------------- chatGPT --------------
 
@@ -22,6 +23,7 @@ class World {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
+    this.collectableBottles = this.level.collectableObjects;
     this.draw();
     this.setWorld();
     this.run();
@@ -121,6 +123,15 @@ class World {
         }
       });
     });
+
+    this.collectableBottles.forEach((bottle, index) => {
+  if (this.character.isColliding(bottle)) {
+    this.collectableBottles.splice(index, 1); // Flasche entfernen
+    this.statusBarBottle.availableBottles++; // Anzahl erhöhen
+    this.statusBarBottle.update(); // Optional, je nach StatusBar
+  }
+});
+
     // -------------- chatGPT --------------
 
     // this.throwableObject.forEach((bottle) => {
@@ -189,6 +200,8 @@ class World {
     this.addToMap(this.character);
     this.addObjectsToMap(this.level.cloud);
     this.addObjectsToMap(this.level.enemies);
+    this.addObjectsToMap(this.collectableBottles);
+
     // this.level.enemies.forEach((enemy) => {
     //   this.addToMap(enemy);
     //   if (enemy.statusBar) {
