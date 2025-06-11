@@ -366,11 +366,10 @@ class World {
     // this.addObjectsToMap(this.level.enemies);
 
     this.addObjectsToMap(this.level.backgroundObject || []);
-this.addObjectsToMap(this.level.cloud || []);
-this.addObjectsToMap(this.level.enemies || []);
-this.addObjectsToMap(this.level.collectableObjects || []);
-this.addObjectsToMap(this.throwableObjects || []);
-
+    this.addObjectsToMap(this.level.cloud || []);
+    this.addObjectsToMap(this.level.enemies || []);
+    this.addObjectsToMap(this.level.collectableObjects || []);
+    this.addObjectsToMap(this.throwableObjects || []);
 
     this.addObjectsToMap(this.throwableObjects);
     this.addToMap(this.character);
