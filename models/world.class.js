@@ -409,7 +409,6 @@ class World {
 }
 */
 
-
 class World {
   character = new Character();
   enemies = level1.enemies;
@@ -428,7 +427,7 @@ class World {
   canThrow = true;
 
   constructor(canvas, keyboard) {
-    this.ctx = canvas.getContext('2d');
+    this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
     this.setWorld();
@@ -531,7 +530,22 @@ class World {
 
     this.addToMap(this.character);
     this.addObjectsToMap(this.level.cloud || []);
-    this.addObjectsToMap(this.level.enemies || []);
+    //this.addObjectsToMap(this.level.enemies || []);
+    this.addObjectsToMap(this.level.enemies);
+    // ✅ zusätzlich: StatusBars für Gegner zeichnen
+    // this.level.enemies.forEach((enemy) => {
+    //   if (enemy.statusBar) {
+    //     enemy.statusBar.draw(this.ctx);
+    //   }
+    // });
+
+    this.level.enemies.forEach((enemy) => {
+      if (enemy.statusBar) {
+        enemy.statusBar.updatePosition();
+        this.addToMap(enemy.statusBar);
+      }
+    });
+
     this.addObjectsToMap(this.collectableBottles || []);
     this.addObjectsToMap(this.throwableObjects || []);
 
