@@ -1,13 +1,13 @@
 // class Level {
 //   enemies;
 //   cloud;
-//   backgroundObject;
+//   backgroundObjects;
 //   level_end_x = 2200;
 
-//   constructor(enemies, cloud, backgroundObject) {
+//   constructor(enemies, cloud, backgroundObjects) {
 //     this.enemies = enemies;
 //     this.cloud = cloud;
-//     this.backgroundObject = backgroundObject;
+//     this.backgroundObjects = backgroundObjects;
 //   }
 // }
 
@@ -15,7 +15,7 @@ class Level {
 
     enemies;
    cloud;
-   backgroundObject;
+   backgroundObjects;
    level_end_x = 2200;
 
    collectableObjects = [];

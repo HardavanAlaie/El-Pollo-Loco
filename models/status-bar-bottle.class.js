@@ -54,14 +54,49 @@
 // }
 // ---------- chatGPT ----------
 
-class StatusBarBottle extends DrawableObject {
+// class StatusBarBottle extends DrawableObject {
+//   IMAGES = [
+//     'img/7_statusbars/1_statusbar/3_statusbar_bottle/0.png',
+//     'img/7_statusbars/1_statusbar/3_statusbar_bottle/20.png',
+//     'img/7_statusbars/1_statusbar/3_statusbar_bottle/40.png',
+//     'img/7_statusbars/1_statusbar/3_statusbar_bottle/60.png',
+//     'img/7_statusbars/1_statusbar/3_statusbar_bottle/80.png',
+//     'img/7_statusbars/1_statusbar/3_statusbar_bottle/100.png'
+//   ];
+
+//   availableBottles = 0;
+
+//   constructor() {
+//     super();
+//     this.loadImages(this.IMAGES);
+//     this.x = 40;
+//     this.y = 60;
+//     this.width = 200;
+//     this.height = 60;
+//     this.setPercentage(0);
+//   }
+
+//   setPercentage(percent) {
+//     this.availableBottles = percent;
+//     let index = Math.floor((percent / 5)); // max 5 Flaschen
+//     if (index > 5) index = 5;
+//     this.img = this.imageCache[this.IMAGES[index]];
+//   }
+
+//   update() {
+//     this.setPercentage(this.availableBottles);
+//   }
+// }
+
+
+class StatusBarBottle extends StatusBar {
   IMAGES = [
-    'img/7_statusbars/1_statusbar/3_statusbar_bottle/0.png',
-    'img/7_statusbars/1_statusbar/3_statusbar_bottle/20.png',
-    'img/7_statusbars/1_statusbar/3_statusbar_bottle/40.png',
-    'img/7_statusbars/1_statusbar/3_statusbar_bottle/60.png',
-    'img/7_statusbars/1_statusbar/3_statusbar_bottle/80.png',
-    'img/7_statusbars/1_statusbar/3_statusbar_bottle/100.png'
+    'img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/0.png',
+    'img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/20.png',
+    'img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/40.png',
+    'img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/60.png',
+    'img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/80.png',
+    'img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/100.png',
   ];
 
   availableBottles = 0;
@@ -69,21 +104,15 @@ class StatusBarBottle extends DrawableObject {
   constructor() {
     super();
     this.loadImages(this.IMAGES);
-    this.x = 40;
-    this.y = 60;
-    this.width = 200;
-    this.height = 60;
     this.setPercentage(0);
-  }
-
-  setPercentage(percent) {
-    this.availableBottles = percent;
-    let index = Math.floor((percent / 5)); // max 5 Flaschen
-    if (index > 5) index = 5;
-    this.img = this.imageCache[this.IMAGES[index]];
+    this.x = 20;
+    this.y = 55;
+    this.width = 150;
+    this.height = 40;
   }
 
   update() {
-    this.setPercentage(this.availableBottles);
+    let percentage = Math.min(this.availableBottles * 20, 100);
+    this.setPercentage(percentage);
   }
 }

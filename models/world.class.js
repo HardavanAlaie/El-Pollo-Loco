@@ -2,7 +2,7 @@
   character = new Character();
   enemies = level1.enemies;
   cloud = level1.cloud;
-  backgroundObject = level1.backgroundObject;
+  backgroundObjects = level1.backgroundObjects;
   level = level1;
   canvas;
   ctx;
@@ -189,7 +189,7 @@
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.ctx.translate(this.camera_x, 0);
-    this.addObjectsToMap(this.level.backgroundObject);
+    this.addObjectsToMap(this.level.backgroundObjects);
 
     this.ctx.translate(-this.camera_x, 0);
     //------ space for fixed objects -------
@@ -254,12 +254,12 @@
   }
 }
 */
-
+/*
 class World {
   character = new Character();
   enemies = level1.enemies;
   cloud = level1.cloud;
-  backgroundObject = level1.backgroundObject;
+  backgroundObjects = level1.backgroundObjects;
   level = level1;
   canvas;
   ctx;
@@ -360,18 +360,18 @@ class World {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.translate(this.camera_x, 0);
 
-    // this.addObjectsToMap(this.level.backgroundObject);
+    // this.addObjectsToMap(this.level.backgroundObjects);
     // this.addObjectsToMap(this.level.cloud);
     // this.addObjectsToMap(this.level.collectableObjects || []);
     // this.addObjectsToMap(this.level.enemies);
 
-    this.addObjectsToMap(this.level.backgroundObject || []);
+    this.addObjectsToMap(this.level.backgroundObjects || []);
     this.addObjectsToMap(this.level.cloud || []);
-    this.addObjectsToMap(this.level.enemies || []);
     this.addObjectsToMap(this.level.collectableObjects || []);
+    this.addObjectsToMap(this.level.enemies || []);
     this.addObjectsToMap(this.throwableObjects || []);
 
-    this.addObjectsToMap(this.throwableObjects);
+    //this.addObjectsToMap(this.throwableObjects);
     this.addToMap(this.character);
 
     this.ctx.translate(-this.camera_x, 0);
@@ -393,6 +393,173 @@ class World {
     mo.draw?.(this.ctx);
     mo.drawFrame?.(this.ctx);
     if (mo.otherDirection) this.flipImageBack(mo);
+  }
+
+  flipImage(mo) {
+    this.ctx.save();
+    this.ctx.translate(mo.width, 0);
+    this.ctx.scale(-1, 1);
+    mo.x = mo.x * -1;
+  }
+
+  flipImageBack(mo) {
+    this.ctx.restore();
+    mo.x = mo.x * -1;
+  }
+}
+*/
+
+
+class World {
+  character = new Character();
+  enemies = level1.enemies;
+  cloud = level1.cloud;
+  backgroundObjects = level1.backgroundObjects;
+  level = level1;
+  canvas;
+  ctx;
+  keyboard;
+  camera_x = 0;
+
+  statusBar = new StatusBar();
+  statusBarBottle = new StatusBarBottle();
+  throwableObjects = [];
+  collectableBottles = level1.collectableObjects || [];
+  canThrow = true;
+
+  constructor(canvas, keyboard) {
+    this.ctx = canvas.getContext('2d');
+    this.canvas = canvas;
+    this.keyboard = keyboard;
+    this.setWorld();
+    this.draw();
+    this.run();
+  }
+
+  setWorld() {
+    this.character.world = this;
+  }
+
+  run() {
+    setInterval(() => {
+      this.checkCollisions();
+      this.checkThrowableObjects();
+    }, 200);
+  }
+
+  checkThrowableObjects() {
+    // Entferne tote Flaschen
+    this.throwableObjects = this.throwableObjects.filter(
+      (bottle) => !bottle.isDead?.()
+    );
+
+    // Werfen mit Taste "D" und wenn erlaubt
+    if (
+      this.keyboard.D &&
+      this.canThrow &&
+      this.statusBarBottle.availableBottles > 0
+    ) {
+      this.canThrow = false;
+      this.statusBarBottle.availableBottles--;
+      this.statusBarBottle.update?.();
+
+      const bottle = new ThrowableObject(
+        this.character.x + 30,
+        this.character.y + 100,
+        this.character.otherDirection
+      );
+      this.throwableObjects.push(bottle);
+
+      setTimeout(() => {
+        this.canThrow = true;
+      }, 300);
+    }
+  }
+
+  checkCollisions() {
+    // Kollision mit Gegnern
+    this.level.enemies.forEach((enemy) => {
+      if (this.character.isColliding(enemy)) {
+        this.character.hit();
+        this.statusBar.setPercentage(this.character.energy);
+        this.character.isHurt();
+      }
+    });
+
+    // Flasche trifft Gegner
+    this.throwableObjects.forEach((bottle) => {
+      this.level.enemies.forEach((enemy) => {
+        if (bottle.isColliding(enemy)) {
+          enemy.hit();
+          this.throwableObjects.splice(
+            this.throwableObjects.indexOf(bottle),
+            1
+          );
+
+          if (enemy.isDead?.()) {
+            this.level.enemies.splice(this.level.enemies.indexOf(enemy), 1);
+          }
+        }
+      });
+    });
+
+    // Charakter sammelt Flasche
+    this.collectableBottles.forEach((bottle) => {
+      if (this.character.isColliding(bottle)) {
+        this.statusBarBottle.availableBottles++;
+        this.collectableBottles.splice(
+          this.collectableBottles.indexOf(bottle),
+          1
+        );
+        this.statusBarBottle.update?.();
+      }
+    });
+  }
+
+  draw() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.ctx.translate(this.camera_x, 0);
+    this.addObjectsToMap(this.level.backgroundObjects || []);
+    this.ctx.translate(-this.camera_x, 0);
+
+    // Feste UI-Elemente
+    this.addToMap(this.statusBar);
+    this.addToMap(this.statusBarBottle);
+
+    this.ctx.translate(this.camera_x, 0);
+
+    this.addToMap(this.character);
+    this.addObjectsToMap(this.level.cloud || []);
+    this.addObjectsToMap(this.level.enemies || []);
+    this.addObjectsToMap(this.collectableBottles || []);
+    this.addObjectsToMap(this.throwableObjects || []);
+
+    this.ctx.translate(-this.camera_x, 0);
+
+    requestAnimationFrame(() => this.draw());
+  }
+
+  addObjectsToMap(objects) {
+    if (!Array.isArray(objects)) return;
+    objects.forEach((object) => {
+      this.addToMap(object);
+    });
+  }
+
+  addToMap(mo) {
+    if (!mo) return;
+
+    if (mo.otherDirection) {
+      this.flipImage(mo);
+    }
+
+    mo.draw(this.ctx);
+    mo.drawFrame?.(this.ctx);
+
+    if (mo.otherDirection) {
+      this.flipImageBack(mo);
+    }
   }
 
   flipImage(mo) {
