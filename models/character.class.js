@@ -116,7 +116,8 @@
   }
 }*/
 
-// ---------------- chatGPT ----------------
+// --------------------------------------------------
+
 // class Character extends MovableObject {
 //   height = 250;
 //   y = 90;
@@ -227,6 +228,10 @@
 //     }
 //   }
 // }
+
+// --------------------------------------------------
+
+
 
 class Character extends MovableObject {
   height = 250;
@@ -419,9 +424,9 @@ class Character extends MovableObject {
   //   } 
   }*/
 
-  isHurt() {
-    return this.isHurtTimer;
-  }
+  // isHurt() {
+  //   return this.isHurtTimer;
+  // }
 
   collectBottle() {
     if (this.world.statusBarBottle.availableBottles < 5) {
@@ -444,4 +449,5 @@ class Character extends MovableObject {
     }
   }
 }
-// ---------------- chatGPT ----------------
+
+
