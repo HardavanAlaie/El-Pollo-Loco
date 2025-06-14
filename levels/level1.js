@@ -25,6 +25,9 @@ const level1 = new Level(
   ],
   [
     new CollectableBottle(300, 350),
+    new CollectableBottle(350, 300),
+    new CollectableBottle(400, 300),
+    new CollectableBottle(350, 350),
     new CollectableBottle(400, 350),
     new CollectableBottle(450, 350),
     new CollectableBottle(600, 350),

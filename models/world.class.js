@@ -430,6 +430,10 @@ class World {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
+
+    this.bottleLimitMessage = "";
+    this.bottleLimitTimeout = null;
+
     this.setWorld();
     this.draw();
     this.run();
@@ -526,14 +530,42 @@ class World {
     );
 
     // Charakter sammelt Flasche
+    // this.collectableBottles.forEach((bottle) => {
+    //   if (this.character.isColliding(bottle)) {
+    //     this.statusBarBottle.availableBottles++;
+    //     this.collectableBottles.splice(
+    //       this.collectableBottles.indexOf(bottle),
+    //       1
+    //     );
+    //     this.statusBarBottle.update?.();
+    //   }
+    // });
+    //------------------------------------------------------------
+    // this.collectableBottles.forEach((bottle) => {
+    //   if (
+    //     this.character.isColliding(bottle) &&
+    //     this.statusBarBottle.availableBottles < 5
+    //   ) {
+    //     this.statusBarBottle.availableBottles++;
+    //     this.collectableBottles.splice(
+    //       this.collectableBottles.indexOf(bottle),
+    //       1
+    //     );
+    //     this.statusBarBottle.update?.();
+    //   }
+    // });
     this.collectableBottles.forEach((bottle) => {
       if (this.character.isColliding(bottle)) {
-        this.statusBarBottle.availableBottles++;
-        this.collectableBottles.splice(
-          this.collectableBottles.indexOf(bottle),
-          1
-        );
-        this.statusBarBottle.update?.();
+        if (this.statusBarBottle.availableBottles < 5) {
+          this.statusBarBottle.availableBottles++;
+          this.collectableBottles.splice(
+            this.collectableBottles.indexOf(bottle),
+            1
+          );
+          this.statusBarBottle.update?.();
+        } else {
+          this.showBottleLimitMessage();
+        }
       }
     });
   }
@@ -553,12 +585,28 @@ class World {
     });
   }
 
+  showBottleLimitMessage() {
+    this.bottleLimitMessage = "Flaschenlimit erreicht!";
+    clearTimeout(this.bottleLimitTimeout);
+    this.bottleLimitTimeout = setTimeout(() => {
+      this.bottleLimitMessage = "";
+    }, 2000); // Nach 2 Sekunden ausblenden
+  }
+
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.level.backgroundObjects || []);
     this.ctx.translate(-this.camera_x, 0);
+
+    //---------------------------------------------------------------------
+    if (this.bottleLimitMessage) {
+      this.ctx.font = "15px Comic Sans MS";
+      this.ctx.fillStyle = "red";
+      this.ctx.fillText(this.bottleLimitMessage, 260, 80);
+    }
+    //---------------------------------------------------------------------
 
     // Feste UI-Elemente
     this.addToMap(this.statusBar);
