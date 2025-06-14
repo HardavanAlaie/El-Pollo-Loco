@@ -231,8 +231,6 @@
 
 // --------------------------------------------------
 
-
-
 class Character extends MovableObject {
   height = 250;
   width = 120;
@@ -428,6 +426,13 @@ class Character extends MovableObject {
   //   return this.isHurtTimer;
   // }
 
+  collectCoin() {
+    if (this.world.statusBarCoin.availableCoins < 5) {
+      this.world.statusBarCoin.availableCoins++;
+      this.world.statusBarCoin.update();
+    }
+  }
+
   collectBottle() {
     if (this.world.statusBarBottle.availableBottles < 5) {
       this.world.statusBarBottle.availableBottles++;
@@ -449,5 +454,3 @@ class Character extends MovableObject {
     }
   }
 }
-
-

@@ -422,8 +422,10 @@ class World {
 
   statusBar = new StatusBar();
   statusBarBottle = new StatusBarBottle();
+  statusBarCoin = new StatusBarCoin();
   throwableObjects = [];
   collectableBottles = level1.collectableObjects || [];
+  collectableCoins = level1.collectableCoins || [];
   canThrow = true;
 
   constructor(canvas, keyboard) {
@@ -568,6 +570,18 @@ class World {
         }
       }
     });
+
+    this.collectableCoins.forEach((coin) => {
+      if (this.character.isColliding(coin)) {
+        this.statusBarCoin.availableCoins++;
+        this.collectableCoins.splice(
+          this.collectableCoins.indexOf(coin),
+          1
+        );
+        this.statusBarCoin.update?.();
+      }
+    });
+    
   }
 
   checkBottleEnemyCollision() {
@@ -611,6 +625,7 @@ class World {
     // Feste UI-Elemente
     this.addToMap(this.statusBar);
     this.addToMap(this.statusBarBottle);
+    this.addToMap(this.statusBarCoin);
 
     this.ctx.translate(this.camera_x, 0);
 
