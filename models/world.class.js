@@ -486,21 +486,44 @@ class World {
     });
 
     // Flasche trifft Gegner
+    // this.throwableObjects.forEach((bottle) => {
+    //   this.level.enemies.forEach((enemy) => {
+    //     if (bottle.isColliding(enemy)) {
+    //       enemy.hit();
+    //       this.throwableObjects.splice(
+    //         this.throwableObjects.indexOf(bottle),
+    //         1
+    //       );
+
+    //       if (enemy.isDead?.()) {
+    //         this.level.enemies.splice(this.level.enemies.indexOf(enemy), 1);
+    //       }
+    //     }
+    //   });
+    // });
     this.throwableObjects.forEach((bottle) => {
       this.level.enemies.forEach((enemy) => {
-        if (bottle.isColliding(enemy)) {
-          enemy.hit();
-          this.throwableObjects.splice(
-            this.throwableObjects.indexOf(bottle),
-            1
-          );
+        if (!bottle.isBroken && bottle.isColliding(enemy)) {
+          bottle.break(); // Splash-Animation
+          enemy.hit(); // Gegner verletzen
 
           if (enemy.isDead?.()) {
-            this.level.enemies.splice(this.level.enemies.indexOf(enemy), 1);
+            const i = this.level.enemies.indexOf(enemy);
+            if (i >= 0) this.level.enemies.splice(i, 1);
           }
         }
       });
+
+      // Flasche verschwindet, wenn sie den Boden erreicht
+      if (!bottle.isBroken && bottle.y > 420) {
+        bottle.break();
+      }
     });
+
+    // Entferne gebrochene Flaschen nach Animation
+    this.throwableObjects = this.throwableObjects.filter(
+      (bottle) => !bottle.isDead()
+    );
 
     // Charakter sammelt Flasche
     this.collectableBottles.forEach((bottle) => {
@@ -511,6 +534,21 @@ class World {
           1
         );
         this.statusBarBottle.update?.();
+      }
+    });
+  }
+
+  checkBottleEnemyCollision() {
+    this.throwableObjects.forEach((bottle) => {
+      this.enemies.forEach((enemy) => {
+        if (this.checkCollision(bottle, enemy) && !bottle.isBroken) {
+          enemy.hit(); // Schaden am Gegner
+          bottle.break(); // Flasche zerbricht
+        }
+      });
+
+      if (bottle.isDead() && !bottle.isBroken) {
+        bottle.break(); // Wenn Flasche z. B. unten aus dem Bildschirm fällt
       }
     });
   }
@@ -527,7 +565,7 @@ class World {
     this.addToMap(this.statusBarBottle);
 
     this.ctx.translate(this.camera_x, 0);
-    
+
     this.addToMap(this.character);
     this.addObjectsToMap(this.level.cloud || []);
     //this.addObjectsToMap(this.level.enemies || []);
