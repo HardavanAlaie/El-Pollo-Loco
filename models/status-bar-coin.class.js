@@ -21,7 +21,7 @@ class StatusBarCoin extends StatusBar {
   }
 
   update() {
-    let percentage = Math.min(this.availableBottles * 20, 100);
+    let percentage = Math.min(this.availableCoins * 20, 100);
     this.setPercentage(percentage);
   }
 }

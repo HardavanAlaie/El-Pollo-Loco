@@ -574,14 +574,10 @@ class World {
     this.collectableCoins.forEach((coin) => {
       if (this.character.isColliding(coin)) {
         this.statusBarCoin.availableCoins++;
-        this.collectableCoins.splice(
-          this.collectableCoins.indexOf(coin),
-          1
-        );
-        this.statusBarCoin.update?.();
+        this.collectableCoins.splice(this.collectableCoins.indexOf(coin), 1);
+        this.statusBarCoin.update?.(); // <- wird das hier korrekt ausgeführt?
       }
     });
-    
   }
 
   checkBottleEnemyCollision() {
@@ -648,6 +644,7 @@ class World {
     });
 
     this.addObjectsToMap(this.collectableBottles || []);
+    this.addObjectsToMap(this.collectableCoins || []);
     this.addObjectsToMap(this.throwableObjects || []);
 
     this.ctx.translate(-this.camera_x, 0);
