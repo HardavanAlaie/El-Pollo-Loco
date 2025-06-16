@@ -1,7 +1,7 @@
 class Endboss extends MovableObject {
-  y = 185;
-  width = 250;
-  height = 250;
+  y = 240;
+  width = 200;
+  height = 200;
 
   //IMAGES_ATTACK = Array.from({ length: 5 }, (_, i) => `img/endboss2/Attack${i + 1}.png`);
   IMAGES_ALERT = [

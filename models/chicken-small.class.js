@@ -57,19 +57,19 @@ class Chicken extends MovableObject {
 //   }
 // }
 
-class Chicken extends MovableObject {
+class ChickenSmall extends MovableObject {
   IMAGES_RUNNING = [
-    "img/3_enemies_chicken/chicken_normal/1_walk/1_w.png",
-    "img/3_enemies_chicken/chicken_normal/1_walk/2_w.png",
-    "img/3_enemies_chicken/chicken_normal/1_walk/3_w.png",
+    'img/3_enemies_chicken/chicken_small/1_walk/1_w.png',
+    'img/3_enemies_chicken/chicken_small/1_walk/2_w.png',
+    'img/3_enemies_chicken/chicken_small/1_walk/3_w.png'
   ];
   constructor() {
     super().loadImage(this.IMAGES_RUNNING[0]);
     this.loadImages(this.IMAGES_RUNNING);
     this.x = 500 + Math.random() * 1500;
-    this.y = 355;
-    this.width = 60;
-    this.height = 60;
+    this.y = 380;
+    this.width = 50;
+    this.height = 50;
     this.speed = 0.3 + Math.random() * 0.5;
     this.energy = 100;
     this.statusBar = new StatusBarEnemy(this);
