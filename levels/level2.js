@@ -1,4 +1,4 @@
-const level2 = new level2(
+const level2 = new Level(
   [new ChickenNormal(), new ChickenNormal(), new ChickenNormal(), new EndbossLevel2()],
   [new Cloud()],
   [

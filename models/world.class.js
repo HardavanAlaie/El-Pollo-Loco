@@ -409,6 +409,7 @@ class World {
 }
 */
 
+
 class World {
   character = new Character();
   enemies = level1.enemies;
