@@ -43,7 +43,7 @@ class Chicken extends MovableObject {
 //     this.height = 60;
 //     this.energy = 100;
 
-//     this.statusBar = new StatusBarEnemy(this); // 👈 StatusBar mit sich selbst verknüpfen
+//     this.statusBar = new StatusBarEnemy(this); //  StatusBar mit sich selbst verknüpfen
 //   }
 
 //   hit() {

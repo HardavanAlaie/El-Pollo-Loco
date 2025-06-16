@@ -626,7 +626,7 @@ class World {
     this.ctx.translate(this.camera_x, 0);
 
     this.addToMap(this.character);
-    this.addObjectsToMap(this.level.cloud || []);
+    this.addObjectsToMap(this.level.cloud);
     //this.addObjectsToMap(this.level.enemies || []);
     this.addObjectsToMap(this.level.enemies);
     // ✅ zusätzlich: StatusBars für Gegner zeichnen
