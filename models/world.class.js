@@ -409,7 +409,6 @@ class World {
 }
 */
 
-
 class World {
   character = new Character();
   enemies = level1.enemies;
@@ -582,83 +581,125 @@ class World {
     });
   }
     */
-  
+
   checkCollisions() {
-  // Gegner-Kollisionen (inkl. Sprung-Angriff)
-  this.level.enemies.forEach((enemy) => {
-    if (this.character.isColliding(enemy)) {
-      const isAboveEnemy = this.character.y + this.character.height < enemy.y + 20;
-
-      if (isAboveEnemy && this.character.speedY >= 0) {
-        // Von oben auf Gegner gesprungen
-        enemy.hit(); // Gegner verliert Energie
-
-        if (enemy.isDead?.()) {
-          const i = this.level.enemies.indexOf(enemy);
-          if (i >= 0) this.level.enemies.splice(i, 1);
-        }
-
-        this.character.jump(); // Rückstoß-Sprung
-      } else {
-        // Normale Kollision = Spieler nimmt Schaden
-        this.character.hit();
-        this.statusBar.setPercentage(this.character.energy);
-        this.character.isHurt();
-      }
-    }
-  });
-
-  // Flaschen-Kollision mit Gegnern
-  this.throwableObjects.forEach((bottle) => {
+    // Gegner-Kollisionen (inkl. Sprung-Angriff)
     this.level.enemies.forEach((enemy) => {
-      if (!bottle.isBroken && bottle.isColliding(enemy)) {
-        bottle.break(); // Splash-Animation
-        enemy.hit();     // Gegner verletzen
+      if (this.character.isColliding(enemy)) {
+        const characterBottom = this.character.y + this.character.height;
+        const characterVerticalSpeed = this.character.speedY;
+        const enemyTop = enemy.y + enemy.height * 0.3;
 
-        if (enemy.isDead?.()) {
-          const i = this.level.enemies.indexOf(enemy);
-          if (i >= 0) this.level.enemies.splice(i, 1);
+        const isAboveEnemy =
+          characterBottom <= enemyTop + 10 && characterVerticalSpeed >= 0;
+
+        if (isAboveEnemy) {
+          // Von oben auf Gegner gesprungen
+          enemy.hit(); // Gegner verliert Energie
+          playSound("squash.mp3");
+          enemy.playDeathAnimation?.();
+
+          if (enemy.isDead?.()) {
+            const i = this.level.enemies.indexOf(enemy);
+            if (i >= 0) this.level.enemies.splice(i, 1);
+          }
+
+          this.character.jump(); // Rückstoß-Sprung
+        } else {
+          // Normale Kollision = Spieler nimmt Schaden
+          this.character.hit();
+          this.statusBar.setPercentage(this.character.energy);
+          this.character.isHurt();
         }
       }
     });
 
-    // Flasche zerbricht, wenn sie den Boden erreicht
-    if (!bottle.isBroken && bottle.y > 420) {
-      bottle.break();
-    }
-  });
+    // // Gegner-Kollisionen (inkl. Sprung-Angriff)
+    // this.level.enemies.forEach((enemy) => {
+    //   if (this.character.isColliding(enemy)) {
+    //     //const isAboveEnemy = this.character.y + this.character.height < enemy.y + 20;
+    //     let verticalOffset = 20;
+    //     if (enemy instanceof ChickenSmall) verticalOffset = 5;
+    //     if (enemy instanceof EndbossLevel1) verticalOffset = 30;
 
-  // Entferne tote Flaschen
-  this.throwableObjects = this.throwableObjects.filter(
-    (bottle) => !bottle.isDead()
-  );
+    //     // const isAboveEnemy =
+    //     //   this.character.y + this.character.height <= enemy.y + verticalOffset;
+    //     const characterBottom = this.character.y + this.character.height;
+    //     const characterVerticalSpeed = this.character.speedY;
+    //     const enemyTop = enemy.y + enemy.height * 0.3;
 
-  // Flaschen aufsammeln
-  this.collectableBottles.forEach((bottle) => {
-    if (this.character.isColliding(bottle)) {
-      if (this.statusBarBottle.availableBottles < 5) {
-        this.statusBarBottle.availableBottles++;
-        this.collectableBottles.splice(
-          this.collectableBottles.indexOf(bottle),
-          1
-        );
-        this.statusBarBottle.update?.();
-      } else {
-        this.showBottleLimitMessage();
+    //     const isAboveEnemy =
+    //       characterBottom <= enemyTop + 10 && characterVerticalSpeed >= 0;
+
+    //     if (isAboveEnemy && this.character.speedY >= 0) {
+    //       // Von oben auf Gegner gesprungen
+    //       enemy.hit(); // Gegner verliert Energie
+
+    //       if (enemy.isDead?.()) {
+    //         const i = this.level.enemies.indexOf(enemy);
+    //         if (i >= 0) this.level.enemies.splice(i, 1);
+    //       }
+
+    //       this.character.jump(); // Rückstoß-Sprung
+    //     } else {
+    //       // Normale Kollision = Spieler nimmt Schaden
+    //       this.character.hit();
+    //       this.statusBar.setPercentage(this.character.energy);
+    //       this.character.isHurt();
+    //     }
+    //   }
+    // });
+
+    // Flaschen-Kollision mit Gegnern
+    this.throwableObjects.forEach((bottle) => {
+      this.level.enemies.forEach((enemy) => {
+        if (!bottle.isBroken && bottle.isColliding(enemy)) {
+          bottle.break(); // Splash-Animation
+          enemy.hit(); // Gegner verletzen
+
+          if (enemy.isDead?.()) {
+            const i = this.level.enemies.indexOf(enemy);
+            if (i >= 0) this.level.enemies.splice(i, 1);
+          }
+        }
+      });
+
+      // Flasche zerbricht, wenn sie den Boden erreicht
+      if (!bottle.isBroken && bottle.y > 420) {
+        bottle.break();
       }
-    }
-  });
+    });
 
-  // Münzen einsammeln
-  this.collectableCoins.forEach((coin) => {
-    if (this.character.isColliding(coin)) {
-      this.statusBarCoin.availableCoins++;
-      this.collectableCoins.splice(this.collectableCoins.indexOf(coin), 1);
-      this.statusBarCoin.update?.();
-    }
-  });
-}
+    // Entferne tote Flaschen
+    this.throwableObjects = this.throwableObjects.filter(
+      (bottle) => !bottle.isDead()
+    );
 
+    // Flaschen aufsammeln
+    this.collectableBottles.forEach((bottle) => {
+      if (this.character.isColliding(bottle)) {
+        if (this.statusBarBottle.availableBottles < 5) {
+          this.statusBarBottle.availableBottles++;
+          this.collectableBottles.splice(
+            this.collectableBottles.indexOf(bottle),
+            1
+          );
+          this.statusBarBottle.update?.();
+        } else {
+          this.showBottleLimitMessage();
+        }
+      }
+    });
+
+    // Münzen einsammeln
+    this.collectableCoins.forEach((coin) => {
+      if (this.character.isColliding(coin)) {
+        this.statusBarCoin.availableCoins++;
+        this.collectableCoins.splice(this.collectableCoins.indexOf(coin), 1);
+        this.statusBarCoin.update?.();
+      }
+    });
+  }
 
   checkBottleEnemyCollision() {
     this.throwableObjects.forEach((bottle) => {
