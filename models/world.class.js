@@ -596,7 +596,7 @@ class World {
         if (isAboveEnemy) {
           // Von oben auf Gegner gesprungen
           enemy.hit(); // Gegner verliert Energie
-          playSound("squash.mp3");
+          //playSound("squash.mp3");
           enemy.playDeathAnimation?.();
 
           if (enemy.isDead?.()) {
