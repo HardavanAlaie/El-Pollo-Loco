@@ -724,6 +724,24 @@ class World {
     }, 2000); // Nach 2 Sekunden ausblenden
   }
 
+  checkEndbossDefeated() {
+  const endboss = this.level.enemies.find(e => e instanceof EndbossLevel1);
+
+  if (endboss && endboss.isDead?.() && !this.levelEnded) {
+    this.levelEnded = true; // damit es nur einmal passiert
+
+    // Animation/Sound bei Sieg
+    //playSound("win.mp3");
+    endboss.playDeathAnimation?.();
+
+    // Kurze Verzögerung, dann nächstes Level starten
+    setTimeout(() => {
+      this.loadNextLevel();
+    }, 3000); // 3 Sekunden warten
+  }
+}
+
+
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
