@@ -829,8 +829,6 @@ class World {
 }
 */
 
-
-
 class World {
   character = new Character();
   canvas;
@@ -860,6 +858,15 @@ class World {
     this.canvas = canvas;
     this.keyboard = keyboard;
 
+    this.currentLevelIndex = 0; // 🔥 Wichtig!
+    this.level = allLevels[this.currentLevelIndex];
+    this.enemies = this.level.enemies;
+    this.cloud = this.level.cloud;
+    this.backgroundObjects = this.level.backgroundObjects;
+    this.collectableBottles = this.level.collectableObjects || [];
+    this.collectableCoins = this.level.collectableCoins || [];
+    this.levelEnded = false;
+
     this.setWorld();
     this.draw();
     this.run();
@@ -869,13 +876,24 @@ class World {
     this.character.world = this;
   }
 
+  // run() {
+  //   setInterval(() => {
+  //     this.checkCollisions();
+  //     this.checkThrowableObjects();
+  //     this.checkEndbossDefeated(); // Neu: prüft, ob der Endboss besiegt ist
+  //   }, 200);
+  // }
+
   run() {
-    setInterval(() => {
+  this.gameInterval = setInterval(() => {
+    if (!this.levelEnded) {
       this.checkCollisions();
       this.checkThrowableObjects();
-      this.checkEndbossDefeated(); // Neu: prüft, ob der Endboss besiegt ist
-    }, 200);
-  }
+      this.checkEndbossDefeated();
+    }
+  }, 200);
+}
+
 
   checkThrowableObjects() {
     this.throwableObjects = this.throwableObjects.filter(
@@ -979,7 +997,9 @@ class World {
   }
 
   checkEndbossDefeated() {
-    const endboss = (this.level.enemies || []).find(e => e instanceof EndbossLevel1);
+    const endboss = (this.level.enemies || []).find(
+      (e) => e instanceof EndbossLevel1
+    );
 
     if (endboss && endboss.isDead?.() && !this.levelEnded) {
       this.levelEnded = true;
