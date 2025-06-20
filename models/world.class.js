@@ -996,21 +996,31 @@ class World {
     });
   }
 
+  // checkEndbossDefeated() {
+  //   const endboss = (this.level.enemies || []).find(
+  //     (e) => e instanceof EndbossLevel1
+  //   );
+
+  //   if (endboss && endboss.isDead?.() && !this.levelEnded) {
+  //     this.levelEnded = true;
+
+  //     endboss.playDeathAnimation?.();
+
+  //     setTimeout(() => {
+  //       this.loadNextLevel();
+  //     }, 3000);
+  //   }
+  // }
   checkEndbossDefeated() {
-    const endboss = (this.level.enemies || []).find(
-      (e) => e instanceof EndbossLevel1
-    );
-
-    if (endboss && endboss.isDead?.() && !this.levelEnded) {
-      this.levelEnded = true;
-
-      endboss.playDeathAnimation?.();
-
-      setTimeout(() => {
-        this.loadNextLevel();
-      }, 3000);
-    }
+  if (this.endboss && this.endboss.isDead && !this.levelEnded) {
+    console.log('Endboss besiegt – nächstes Level wird geladen!');
+    this.levelEnded = true;
+    setTimeout(() => {
+      this.loadNextLevel();
+    }, 2000);
   }
+}
+
 
   loadNextLevel() {
     this.currentLevelIndex++;
