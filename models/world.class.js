@@ -844,6 +844,8 @@ class World {
 
   bottleLimitMessage = "";
   bottleLimitTimeout = null;
+  levelMessage = ""; // 👈 Textanzeige für Hinweise
+  levelMessageTimeout = null; // Timeout für automatische Ausblendung
 
   currentLevelIndex = 0; // Neu: Level-Zähler
   level = allLevels[this.currentLevelIndex]; // allLevels muss global definiert sein
@@ -1048,6 +1050,20 @@ class World {
   //     }, 2000);
   //   }
   // }
+  // checkEndbossDefeated() {
+  //   const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
+
+  //   if (endboss && endboss.isDead() && !this.levelEnded) {
+  //     console.log("✅ Endboss besiegt – nächstes Level wird geladen!");
+  //     this.levelEnded = true;
+
+  //     endboss.playDeathAnimation?.(); // Optional: falls vorhanden
+
+  //     setTimeout(() => {
+  //       this.loadNextLevel();
+  //     }, 2000);
+  //   }
+  // }
   checkEndbossDefeated() {
     const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
 
@@ -1055,24 +1071,52 @@ class World {
       console.log("✅ Endboss besiegt – nächstes Level wird geladen!");
       this.levelEnded = true;
 
-      endboss.playDeathAnimation?.(); // Optional: falls vorhanden
+      // 🎉 Hinweis anzeigen
+      this.showLevelMessage("🎉 Level 1 geschafft! Weiter geht's...");
 
       setTimeout(() => {
         this.loadNextLevel();
-      }, 2000);
+      }, 3000);
     }
   }
 
+  showLevelMessage(message) {
+    this.levelMessage = message;
+
+    if (this.levelMessageTimeout) clearTimeout(this.levelMessageTimeout);
+
+    this.levelMessageTimeout = setTimeout(() => {
+      this.levelMessage = "";
+    }, 3000); // Nachricht verschwindet nach 3 Sekunden
+  }
+
+  // loadNextLevel() {
+  //   this.currentLevelIndex++;
+
+  //   if (this.currentLevelIndex >= allLevels.length) {
+  //     console.log("Spiel beendet – alle Levels abgeschlossen!");
+  //     // Optional: Game Over oder Victory-Screen
+  //     return;
+  //   }
+
+  //   // Lade das neue Level
+  //   this.level = allLevels[this.currentLevelIndex];
+  //   this.enemies = this.level.enemies;
+  //   this.cloud = this.level.cloud;
+  //   this.backgroundObjects = this.level.backgroundObjects;
+  //   this.collectableBottles = this.level.collectableObjects || [];
+  //   this.collectableCoins = this.level.collectableCoins || [];
+  //   this.levelEnded = false;
+  // }
   loadNextLevel() {
     this.currentLevelIndex++;
 
     if (this.currentLevelIndex >= allLevels.length) {
-      console.log("Spiel beendet – alle Levels abgeschlossen!");
-      // Optional: Game Over oder Victory-Screen
+      console.log("🏁 Spiel beendet – alle Levels abgeschlossen!");
+      this.showLevelMessage("🏁 Du hast das Spiel gewonnen!");
       return;
     }
 
-    // Lade das neue Level
     this.level = allLevels[this.currentLevelIndex];
     this.enemies = this.level.enemies;
     this.cloud = this.level.cloud;
@@ -1080,6 +1124,9 @@ class World {
     this.collectableBottles = this.level.collectableObjects || [];
     this.collectableCoins = this.level.collectableCoins || [];
     this.levelEnded = false;
+
+    // 🚀 Levelstart-Meldung
+    this.showLevelMessage(`🚀 Level ${this.currentLevelIndex + 1} beginnt!`);
   }
 
   showBottleLimitMessage() {
@@ -1101,6 +1148,12 @@ class World {
       this.ctx.font = "15px Comic Sans MS";
       this.ctx.fillStyle = "red";
       this.ctx.fillText(this.bottleLimitMessage, 260, 80);
+    }
+    if (this.levelMessage) {
+      this.ctx.font = "32px Comic Sans MS";
+      this.ctx.fillStyle = "#28a745"; // grün
+      this.ctx.textAlign = "center";
+      this.ctx.fillText(this.levelMessage, this.canvas.width / 2, 150);
     }
 
     this.addToMap(this.statusBar);
