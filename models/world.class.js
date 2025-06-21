@@ -885,15 +885,16 @@ class World {
   // }
 
   run() {
-  this.gameInterval = setInterval(() => {
-    if (!this.levelEnded) {
-      this.checkCollisions();
-      this.checkThrowableObjects();
-      this.checkEndbossDefeated();
-    }
-  }, 200);
-}
+    console.log("Aktuelle Gegnerliste(run):", this.level.enemies);
 
+    this.gameInterval = setInterval(() => {
+      if (!this.levelEnded) {
+        this.checkCollisions();
+        this.checkThrowableObjects();
+        this.checkEndbossDefeated();
+      }
+    }, 200);
+  }
 
   checkThrowableObjects() {
     this.throwableObjects = this.throwableObjects.filter(
@@ -956,9 +957,18 @@ class World {
           bottle.break();
           enemy.hit();
 
+          // if (enemy.isDead?.()) {
+          //   const i = this.level.enemies.indexOf(enemy);
+          //   if (i >= 0) this.level.enemies.splice(i, 1);
+          // }
           if (enemy.isDead?.()) {
-            const i = this.level.enemies.indexOf(enemy);
-            if (i >= 0) this.level.enemies.splice(i, 1);
+            if (enemy instanceof EndbossLevel1) {
+              // 🟡 Nur markieren – NICHT löschen
+              enemy.isMarkedDead = true;
+            } else {
+              const i = this.level.enemies.indexOf(enemy);
+              if (i >= 0) this.level.enemies.splice(i, 1);
+            }
           }
         }
       });
@@ -1011,16 +1021,47 @@ class World {
   //     }, 3000);
   //   }
   // }
-  checkEndbossDefeated() {
-  if (this.endboss && this.endboss.isDead && !this.levelEnded) {
-    console.log('Endboss besiegt – nächstes Level wird geladen!');
-    this.levelEnded = true;
-    setTimeout(() => {
-      this.loadNextLevel();
-    }, 2000);
-  }
-}
+  //   checkEndbossDefeated() {
+  //   if (this.endboss && this.endboss.isDead && !this.levelEnded) {
+  //     console.log('Endboss besiegt – nächstes Level wird geladen!');
+  //     this.levelEnded = true;
+  //     setTimeout(() => {
+  //       this.loadNextLevel();
+  //     }, 2000);
+  //   }
+  // }
 
+  // checkEndbossDefeated() {
+  //   //console.log('Aktuelle Gegnerliste(checkEndbos...(1)):', this.level.enemies);
+
+  //   const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
+  //   //console.log('Aktuelle Gegnerliste(checkEndbos...(2)):', this.level.enemies);
+
+  //   if (endboss && endboss.isDead() && !this.levelEnded) {
+  //     console.log("✅ Endboss besiegt – nächstes Level wird geladen!");
+  //     this.levelEnded = true;
+
+  //     endboss.playDeathAnimation?.(); // Optional
+
+  //     setTimeout(() => {
+  //       this.loadNextLevel();
+  //     }, 2000);
+  //   }
+  // }
+  checkEndbossDefeated() {
+    const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
+
+    if (endboss && endboss.isDead() && !this.levelEnded) {
+      console.log("✅ Endboss besiegt – nächstes Level wird geladen!");
+      this.levelEnded = true;
+
+      endboss.playDeathAnimation?.(); // Optional: falls vorhanden
+
+      setTimeout(() => {
+        this.loadNextLevel();
+      }, 2000);
+    }
+  }
 
   loadNextLevel() {
     this.currentLevelIndex++;
