@@ -1,6 +1,10 @@
 class World {
   character = new Character();
   characterDead = false;
+  playerDied = false; // NEU: unterscheidet "Tod" von "Endboss geschafft"
+  endbossDefeated = false;
+
+  gameOver = false;
   canvas;
   ctx;
   keyboard;
@@ -20,7 +24,7 @@ class World {
   currentLevelIndex = 0; // Neu: Level-Zähler
   level = allLevels[this.currentLevelIndex]; // allLevels muss global definiert sein
   enemies = this.level.enemies;
-  cloud = this.level.cloud;
+  clouds = this.level.clouds;
   backgroundObjects = this.level.backgroundObjects;
   collectableBottles = this.level.collectableObjects || [];
   collectableCoins = this.level.collectableCoins || [];
@@ -33,7 +37,7 @@ class World {
     this.currentLevelIndex = 0; // 🔥 Wichtig!
     this.level = allLevels[this.currentLevelIndex];
     this.enemies = this.level.enemies;
-    this.cloud = this.level.cloud;
+    this.clouds = this.level.clouds;
     this.backgroundObjects = this.level.backgroundObjects;
     this.collectableBottles = this.level.collectableObjects || [];
     this.collectableCoins = this.level.collectableCoins || [];
@@ -114,7 +118,6 @@ class World {
           if (this.character.energy <= 0 && !this.characterDead) {
             this.characterDead = true;
             this.showLevelMessage("💀 Du bist gestorben!");
-            
 
             setTimeout(() => {
               this.endGame();
@@ -179,20 +182,47 @@ class World {
     });
   }
 
+  // endGame() {
+  //   clearInterval(this.gameInterval); // stoppe alle Intervall-Schleifen
+  //   cancelAnimationFrame(this.animationFrame); // stoppe Zeichnung, falls nötig
+  //   this.levelEnded = true;
+  // }
   endGame() {
-    clearInterval(this.gameInterval); // stoppe alle Intervall-Schleifen
-    cancelAnimationFrame(this.animationFrame); // stoppe Zeichnung, falls nötig
+    clearInterval(this.gameInterval);
+    //cancelAnimationFrame(this.animationFrame);
     this.levelEnded = true;
+    this.gameOver = true; // ⬅️ NEU
+    this.playerDied = true; // ⬅️ Wichtig!
   }
 
+  // checkEndbossDefeated() {
+  //   const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
+
+  //   if (endboss && endboss.isDead() && !this.levelEnded) {
+  //     console.log("✅ Endboss besiegt – nächstes Level wird geladen!");
+  //     this.levelEnded = true;
+
+  //     // 🎉 Hinweis anzeigen
+  //     this.showLevelMessage("🎉 Level 1 geschafft! Weiter geht's...");
+
+  //     setTimeout(() => {
+  //       this.loadNextLevel();
+  //     }, 3000);
+  //   }
+  // }
   checkEndbossDefeated() {
     const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
 
-    if (endboss && endboss.isDead() && !this.levelEnded) {
+    if (
+      endboss &&
+      endboss.isDead() &&
+      !this.endbossDefeated &&
+      !this.playerDied
+    ) {
       console.log("✅ Endboss besiegt – nächstes Level wird geladen!");
+      this.endbossDefeated = true;
       this.levelEnded = true;
 
-      // 🎉 Hinweis anzeigen
       this.showLevelMessage("🎉 Level 1 geschafft! Weiter geht's...");
 
       setTimeout(() => {
@@ -222,11 +252,25 @@ class World {
 
     this.level = allLevels[this.currentLevelIndex];
     this.enemies = this.level.enemies;
-    this.cloud = this.level.cloud;
+    this.clouds = this.level.clouds;
     this.backgroundObjects = this.level.backgroundObjects;
     this.collectableBottles = this.level.collectableObjects || [];
     this.collectableCoins = this.level.collectableCoins || [];
     this.levelEnded = false;
+
+    // WICHTIG:
+    this.characterDead = false;
+    this.playerDied = false;
+    this.endbossDefeated = false;
+    this.throwableObjects = [];
+    this.statusBarBottle.availableBottles = 3;
+    this.statusBarCoin.availableCoins = 0;
+    this.statusBarBottle.update?.();
+    this.statusBarCoin.update?.();
+    this.statusBar.setPercentage(100);
+
+    clearInterval(this.gameInterval); // alte Schleife beenden
+    this.run(); // neue starten
 
     // 🚀 Levelstart-Meldung
     this.showLevelMessage(`🚀 Level ${this.currentLevelIndex + 1} beginnt!`);
@@ -244,7 +288,7 @@ class World {
     // Überprüfe, ob der Button schon existiert
     if (!document.getElementById("restartButton")) {
       const button = document.createElement("button");
-      button.innerText = "🔁 Spiel neu starten";
+      button.innerText = "Spiel neu starten";
       button.id = "restartButton";
       button.style.position = "absolute";
       button.style.top = "50%";
@@ -269,7 +313,7 @@ class World {
   }
 
   draw() {
-    console.log('characterDead:', this.characterDead); // 🐞 Debug!
+    console.log("characterDead:", this.characterDead); // 🐞 Debug!
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.translate(this.camera_x, 0);
 
@@ -295,8 +339,8 @@ class World {
     this.ctx.translate(this.camera_x, 0);
 
     this.addToMap(this.character);
-    this.addObjectsToMap(this.cloud || []);
-    this.addObjectsToMap(this.level.enemies || []);
+    this.addObjectsToMap(this.clouds || []);
+    this.addObjectsToMap(this.enemies || []);
 
     (this.level.enemies || []).forEach((enemy) => {
       if (enemy.statusBar) {
@@ -311,11 +355,29 @@ class World {
 
     this.ctx.translate(-this.camera_x, 0);
 
-    if (this.characterDead) {
-      this.showRestartOverlay();
-    } else {
+    if (this.playerDied) {
+      this.showRestartOverlay(); // nur bei Tod
+    }
+
+    // if (!this.playerDied && !this.endbossDefeated) {
+    //   this.animationFrame = requestAnimationFrame(() => this.draw());
+    // }
+    // draw() ganz am Ende:
+    if (!this.playerDied) {
       this.animationFrame = requestAnimationFrame(() => this.draw());
     }
+
+    // if (this.characterDead) {
+    //   this.showRestartOverlay();
+    // } else {
+    //   this.animationFrame = requestAnimationFrame(() => this.draw());
+    // }
+    // if (this.gameOver) {
+    //   this.showRestartOverlay(); // Nur wenn echtes Game Over (Tod)
+    // } else {
+    //   this.animationFrame = requestAnimationFrame(() => this.draw());
+    // }
+
     //requestAnimationFrame(() => this.draw());
   }
 

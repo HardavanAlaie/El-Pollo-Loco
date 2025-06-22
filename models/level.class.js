@@ -1,6 +1,6 @@
 class Level {
   enemies;
-  cloud;
+  clouds;
   backgroundObjects;
   level_end_x = 2200;
 
