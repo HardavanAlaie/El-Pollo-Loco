@@ -114,6 +114,7 @@ class World {
           if (this.character.energy <= 0 && !this.characterDead) {
             this.characterDead = true;
             this.showLevelMessage("💀 Du bist gestorben!");
+            
 
             setTimeout(() => {
               this.endGame();
@@ -239,7 +240,36 @@ class World {
     }, 2000);
   }
 
+  showRestartOverlay() {
+    // Überprüfe, ob der Button schon existiert
+    if (!document.getElementById("restartButton")) {
+      const button = document.createElement("button");
+      button.innerText = "🔁 Spiel neu starten";
+      button.id = "restartButton";
+      button.style.position = "absolute";
+      button.style.top = "50%";
+      button.style.left = "50%";
+      button.style.transform = "translate(-50%, -50%)";
+      button.style.padding = "15px 30px";
+      button.style.fontSize = "20px";
+      button.style.backgroundColor = "#ff4444";
+      button.style.color = "white";
+      button.style.border = "none";
+      button.style.borderRadius = "10px";
+      button.style.cursor = "pointer";
+      button.style.boxShadow = "0 0 10px black";
+      button.style.zIndex = "999";
+
+      button.addEventListener("click", () => {
+        location.reload(); // 🔁 Seite neu laden = Spiel neu starten
+      });
+
+      document.body.appendChild(button);
+    }
+  }
+
   draw() {
+    console.log('characterDead:', this.characterDead); // 🐞 Debug!
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.translate(this.camera_x, 0);
 
@@ -281,7 +311,9 @@ class World {
 
     this.ctx.translate(-this.camera_x, 0);
 
-    if (!this.characterDead) {
+    if (this.characterDead) {
+      this.showRestartOverlay();
+    } else {
       this.animationFrame = requestAnimationFrame(() => this.draw());
     }
     //requestAnimationFrame(() => this.draw());
