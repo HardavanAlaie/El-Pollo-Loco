@@ -1,17 +1,6 @@
-// class CollectableBottle extends MovableObject {
-//   constructor(x, y) {
-//     super().loadImage('img/6_salsa_bottle/1_salsa_bottle_on_ground.png');
-//     this.x = x;
-//     this.y = y;
-//     this.width = 40;
-//     this.height = 60;
-//   }
-// }
-
-
 class CollectableBottle extends MovableObject {
   constructor(x, y) {
-    super().loadImage('img/6_salsa_bottle/1_salsa_bottle_on_ground.png');
+    super().loadImage("img/6_salsa_bottle/1_salsa_bottle_on_ground.png");
     this.x = x;
     this.y = y;
     this.width = 50;

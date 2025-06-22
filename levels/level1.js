@@ -93,4 +93,3 @@ const level2 = new Level(
 );
 
 
-//const allLevels = [level1, level2];
