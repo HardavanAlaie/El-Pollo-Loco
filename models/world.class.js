@@ -247,27 +247,44 @@ class World {
     if (this.currentLevelIndex >= allLevels.length) {
       console.log("🏁 Spiel beendet – alle Levels abgeschlossen!");
       this.showLevelMessage("🏁 Du hast das Spiel gewonnen!");
+      this.levelEnded = true;
       return;
     }
-
+    // Neues Level laden
     this.level = allLevels[this.currentLevelIndex];
     this.enemies = this.level.enemies;
     this.clouds = this.level.clouds;
     this.backgroundObjects = this.level.backgroundObjects;
     this.collectableBottles = this.level.collectableObjects || [];
     this.collectableCoins = this.level.collectableCoins || [];
-    this.levelEnded = false;
+    //this.levelEnded = false;
 
     // WICHTIG:
-    this.characterDead = false;
+    // Flags & Status zurücksetzen
+    // this.characterDead = false;
+    // this.playerDied = false;
+    // this.endbossDefeated = false;
+    // this.throwableObjects = [];
+    // this.statusBarBottle.availableBottles = 3;
+    // this.statusBarCoin.availableCoins = 0;
+    // this.statusBarBottle.update?.();
+    // this.statusBarCoin.update?.();
+    // this.statusBar.setPercentage(100);
     this.playerDied = false;
     this.endbossDefeated = false;
+    this.levelEnded = false;
     this.throwableObjects = [];
+
     this.statusBarBottle.availableBottles = 3;
     this.statusBarCoin.availableCoins = 0;
+    this.statusBar.setPercentage(100);
     this.statusBarBottle.update?.();
     this.statusBarCoin.update?.();
-    this.statusBar.setPercentage(100);
+
+    // 🆕 Charakter & Kamera zurücksetzen:
+    // this.character.x = 100;
+    // this.character.y = 355;
+    // this.camera_x = 0;
 
     clearInterval(this.gameInterval); // alte Schleife beenden
     this.run(); // neue starten
