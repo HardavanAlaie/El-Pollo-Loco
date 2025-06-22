@@ -1,5 +1,6 @@
 class World {
   character = new Character();
+  characterDead = false;
   canvas;
   ctx;
   keyboard;
@@ -110,6 +111,14 @@ class World {
           this.character.hit();
           this.statusBar.setPercentage(this.character.energy);
           this.character.isHurt();
+          if (this.character.energy <= 0 && !this.characterDead) {
+            this.characterDead = true;
+            this.showLevelMessage("💀 Du bist gestorben!");
+
+            setTimeout(() => {
+              this.endGame();
+            }, 3000);
+          }
         }
       }
     });
@@ -167,6 +176,12 @@ class World {
         this.statusBarCoin.update?.();
       }
     });
+  }
+
+  endGame() {
+    clearInterval(this.gameInterval); // stoppe alle Intervall-Schleifen
+    cancelAnimationFrame(this.animationFrame); // stoppe Zeichnung, falls nötig
+    this.levelEnded = true;
   }
 
   checkEndbossDefeated() {
@@ -265,7 +280,11 @@ class World {
     this.addObjectsToMap(this.throwableObjects || []);
 
     this.ctx.translate(-this.camera_x, 0);
-    requestAnimationFrame(() => this.draw());
+
+    if (!this.characterDead) {
+      this.animationFrame = requestAnimationFrame(() => this.draw());
+    }
+    //requestAnimationFrame(() => this.draw());
   }
 
   addObjectsToMap(objects) {
