@@ -53,7 +53,7 @@ class World {
   }
 
   run() {
-    console.log("Aktuelle Gegnerliste(run):", this.level.enemies);
+    //console.log("Aktuelle Gegnerliste(run):", this.level.enemies);
 
     this.gameInterval = setInterval(() => {
       if (!this.levelEnded) {
@@ -105,9 +105,17 @@ class World {
           enemy.hit();
           enemy.playDeathAnimation?.();
 
+          // if (enemy.isDead?.()) {
+          //   const i = this.level.enemies.indexOf(enemy);
+          //   if (i >= 0) this.level.enemies.splice(i, 1);
+          // }
           if (enemy.isDead?.()) {
-            const i = this.level.enemies.indexOf(enemy);
-            if (i >= 0) this.level.enemies.splice(i, 1);
+            if (enemy instanceof EndbossLevel1) {
+              enemy.isMarkedDead = true; // nur markieren
+            } else {
+              const i = this.level.enemies.indexOf(enemy);
+              if (i >= 0) this.level.enemies.splice(i, 1);
+            }
           }
 
           this.character.jump();
@@ -210,19 +218,43 @@ class World {
   //     }, 3000);
   //   }
   // }
+  // checkEndbossDefeated() {
+  //   const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
+  //   //const endboss = this.level.enemies.find(e => e instanceof EndbossLevel1 || e instanceof EndbossLevel2);
+  //   console.log("🧠 Endboss gefunden:", endboss);
+
+  //   if (
+  //     endboss &&
+  //     endboss.isDead() &&
+  //     !this.endbossDefeated &&
+  //     !this.playerDied
+  //   ) {
+  //     console.log("✅ Endboss besiegt – nächstes Level wird geladen!");
+  //     this.endbossDefeated = true;
+  //     this.levelEnded = true;
+
+  //     this.showLevelMessage("🎉 Level 1 geschafft! Weiter geht's...");
+
+  //     setTimeout(() => {
+  //       this.loadNextLevel();
+  //     }, 3000);
+  //   }
+  // }
   checkEndbossDefeated() {
     const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
+    console.log("🧠 Endboss gefunden:", endboss);
 
-    if (
-      endboss &&
-      endboss.isDead() &&
-      !this.endbossDefeated &&
-      !this.playerDied
-    ) {
+    if (!endboss) return;
+
+    console.log("💡 Endboss Energy:", endboss.energy);
+    console.log("🧪 isDead:", endboss.isDead());
+    console.log("⛔ already defeated?", this.endbossDefeated);
+    console.log("💀 player died?", this.playerDied);
+
+    if (endboss.isDead() && !this.endbossDefeated && !this.playerDied) {
       console.log("✅ Endboss besiegt – nächstes Level wird geladen!");
       this.endbossDefeated = true;
       this.levelEnded = true;
-
       this.showLevelMessage("🎉 Level 1 geschafft! Weiter geht's...");
 
       setTimeout(() => {
