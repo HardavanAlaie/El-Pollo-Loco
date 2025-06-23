@@ -50,6 +50,7 @@ class World {
 
   setWorld() {
     this.character.world = this;
+    this.spawnEnemyLoop(); // Gegner-Spawning starten
   }
 
   run() {
@@ -197,12 +198,13 @@ class World {
   // }
   endGame() {
     clearInterval(this.gameInterval);
+    clearInterval(this.enemySpawnInterval); // NEU!
     //cancelAnimationFrame(this.animationFrame);
     this.levelEnded = true;
     this.gameOver = true; // ⬅️ NEU
     this.playerDied = true; // ⬅️ Wichtig!
   }
-  
+
   checkEndbossDefeated() {
     const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
     //console.log("Endboss gefunden:", endboss);
@@ -219,6 +221,51 @@ class World {
         this.loadNextLevel();
       }, 3000);
     }
+  }
+
+  // spawnEnemyLoop() {
+  //   this.enemySpawnInterval = setInterval(() => {
+  //     const endboss = this.level.enemies.find(
+  //       (e) => e instanceof EndbossLevel1
+  //     );
+
+  //     if (endboss && !endboss.isDead()) {
+  //       const newChicken = new Chicken();
+  //       newChicken.x = 900 + Math.random() * 400; // etwas weiter hinten spawnen
+  //       this.level.enemies.push(newChicken);
+  //       console.log("🐣 Neues Chicken gespawnt!");
+  //     } else {
+  //       // Stoppe den Spawn, wenn der Endboss besiegt wurde
+  //       clearInterval(this.enemySpawnInterval);
+  //       console.log("🛑 Gegner-Spawn gestoppt – Endboss besiegt!");
+  //     }
+  //   }, 4000); // alle 4 Sekunden ein neues Chicken
+  // }
+  spawnEnemyLoop() {
+    this.enemySpawnInterval = setInterval(() => {
+      const endboss = this.level.enemies.find(
+        (e) => e instanceof EndbossLevel1
+      );
+
+      if (endboss && !endboss.isDead()) {
+        const currentChickens = this.level.enemies.filter(
+          (e) => e instanceof ChickenSmall
+        );
+
+        if (currentChickens.length < 5) {
+          // 🧠 Max. 5 Chickens gleichzeitig
+          const newChicken = new ChickenSmall();
+          newChicken.x = 900 + Math.random() * 400; // etwas weiter hinten spawnen
+          this.level.enemies.push(newChicken);
+          console.log("🐣 Neues Chicken gespawnt!");
+        } else {
+          console.log("⛔ Max. Anzahl an Chickens erreicht.");
+        }
+      } else {
+        clearInterval(this.enemySpawnInterval); // Endboss tot → stoppen
+        console.log("🛑 Gegner-Spawn gestoppt – Endboss besiegt!");
+      }
+    }, 4000); // z. B. alle 4 Sekunden
   }
 
   showLevelMessage(message) {
@@ -281,6 +328,8 @@ class World {
 
     // 🚀 Levelstart-Meldung
     this.showLevelMessage(`🚀 Level ${this.currentLevelIndex + 1} beginnt!`);
+
+    this.spawnEnemyLoop(); // 🐣 Gegner-Spawning starten
   }
 
   showBottleLimitMessage() {
