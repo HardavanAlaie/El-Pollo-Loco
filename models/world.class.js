@@ -202,54 +202,12 @@ class World {
     this.gameOver = true; // ⬅️ NEU
     this.playerDied = true; // ⬅️ Wichtig!
   }
-
-  // checkEndbossDefeated() {
-  //   const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
-
-  //   if (endboss && endboss.isDead() && !this.levelEnded) {
-  //     console.log("✅ Endboss besiegt – nächstes Level wird geladen!");
-  //     this.levelEnded = true;
-
-  //     // 🎉 Hinweis anzeigen
-  //     this.showLevelMessage("🎉 Level 1 geschafft! Weiter geht's...");
-
-  //     setTimeout(() => {
-  //       this.loadNextLevel();
-  //     }, 3000);
-  //   }
-  // }
-  // checkEndbossDefeated() {
-  //   const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
-  //   //const endboss = this.level.enemies.find(e => e instanceof EndbossLevel1 || e instanceof EndbossLevel2);
-  //   console.log("🧠 Endboss gefunden:", endboss);
-
-  //   if (
-  //     endboss &&
-  //     endboss.isDead() &&
-  //     !this.endbossDefeated &&
-  //     !this.playerDied
-  //   ) {
-  //     console.log("✅ Endboss besiegt – nächstes Level wird geladen!");
-  //     this.endbossDefeated = true;
-  //     this.levelEnded = true;
-
-  //     this.showLevelMessage("🎉 Level 1 geschafft! Weiter geht's...");
-
-  //     setTimeout(() => {
-  //       this.loadNextLevel();
-  //     }, 3000);
-  //   }
-  // }
+  
   checkEndbossDefeated() {
     const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
-    console.log("🧠 Endboss gefunden:", endboss);
+    //console.log("Endboss gefunden:", endboss);
 
     if (!endboss) return;
-
-    console.log("💡 Endboss Energy:", endboss.energy);
-    console.log("🧪 isDead:", endboss.isDead());
-    console.log("⛔ already defeated?", this.endbossDefeated);
-    console.log("💀 player died?", this.playerDied);
 
     if (endboss.isDead() && !this.endbossDefeated && !this.playerDied) {
       console.log("✅ Endboss besiegt – nächstes Level wird geladen!");
@@ -314,9 +272,9 @@ class World {
     this.statusBarCoin.update?.();
 
     // 🆕 Charakter & Kamera zurücksetzen:
-    // this.character.x = 100;
-    // this.character.y = 355;
-    // this.camera_x = 0;
+    this.character.x = 100;
+    this.character.y = 185;
+    this.camera_x = 0;
 
     clearInterval(this.gameInterval); // alte Schleife beenden
     this.run(); // neue starten
