@@ -61,6 +61,7 @@ class World {
         this.checkCollisions();
         this.checkThrowableObjects();
         this.checkEndbossDefeated();
+        this.removeOffscreenEnemies();
       }
     }, 200);
   }
@@ -268,6 +269,18 @@ class World {
     }, 4000); // z. B. alle 4 Sekunden
   }
 
+  removeOffscreenEnemies() {
+    this.level.enemies = this.level.enemies.filter((enemy) => {
+      if (
+        (enemy instanceof ChickenSmall || enemy instanceof ChickenNormal) &&
+        enemy.x < -50
+      ) {
+        return false; // Entferne dieses Chicken
+      }
+      return true;
+    });
+  }
+
   showLevelMessage(message) {
     this.levelMessage = message;
 
@@ -396,7 +409,9 @@ class World {
 
     this.addToMap(this.character);
     this.addObjectsToMap(this.clouds || []);
-    this.addObjectsToMap(this.enemies || []);
+    //this.addObjectsToMap(this.enemies || []);
+    this.addObjectsToMap(this.level.enemies || []);
+
 
     (this.level.enemies || []).forEach((enemy) => {
       if (enemy.statusBar) {
