@@ -18,11 +18,11 @@ class World {
 
   bottleLimitMessage = "";
   bottleLimitTimeout = null;
-  levelMessage = ""; 
-  levelMessageTimeout = null; 
+  levelMessage = "";
+  levelMessageTimeout = null;
 
-  currentLevelIndex = 0; 
-  level = allLevels[this.currentLevelIndex]; 
+  currentLevelIndex = 0;
+  level = allLevels[this.currentLevelIndex];
   enemies = this.level.enemies;
   clouds = this.level.clouds;
   backgroundObjects = this.level.backgroundObjects;
@@ -34,7 +34,7 @@ class World {
     this.canvas = canvas;
     this.keyboard = keyboard;
 
-    this.currentLevelIndex = 0; 
+    this.currentLevelIndex = 0;
     this.level = allLevels[this.currentLevelIndex];
     this.enemies = this.level.enemies;
     this.clouds = this.level.clouds;
@@ -50,7 +50,7 @@ class World {
 
   setWorld() {
     this.character.world = this;
-    this.spawnEnemyLoop(); 
+    this.spawnEnemyLoop();
   }
 
   run() {
@@ -113,7 +113,7 @@ class World {
           // }
           if (enemy.isDead?.()) {
             if (enemy instanceof EndbossLevel1) {
-              enemy.isMarkedDead = true; // nur markieren
+              enemy.isMarkedDead = true; 
             } else {
               const i = this.level.enemies.indexOf(enemy);
               if (i >= 0) this.level.enemies.splice(i, 1);
@@ -149,7 +149,7 @@ class World {
           // }
           if (enemy.isDead?.()) {
             if (enemy instanceof EndbossLevel1) {
-              // 🟡 Nur markieren – NICHT löschen
+              
               enemy.isMarkedDead = true;
             } else {
               const i = this.level.enemies.indexOf(enemy);
@@ -199,11 +199,11 @@ class World {
   // }
   endGame() {
     clearInterval(this.gameInterval);
-    clearInterval(this.enemySpawnInterval); // NEU!
+    clearInterval(this.enemySpawnInterval); 
     //cancelAnimationFrame(this.animationFrame);
     this.levelEnded = true;
-    this.gameOver = true; // ⬅️ NEU
-    this.playerDied = true; // ⬅️ Wichtig!
+    this.gameOver = true; 
+    this.playerDied = true; 
   }
 
   checkEndbossDefeated() {
@@ -254,19 +254,18 @@ class World {
         );
 
         if (currentChickens.length < 5) {
-          // 🧠 Max. 5 Chickens gleichzeitig
+          
           const newChicken = new ChickenSmall();
-          newChicken.x = 900 + Math.random() * 400; // etwas weiter hinten spawnen
+          newChicken.x = 900 + Math.random() * 400; 
           this.level.enemies.push(newChicken);
-          console.log("🐣 Neues Chicken gespawnt!");
+          //console.log("🐣 Neues Chicken gespawnt!");
         } else {
-          console.log("⛔ Max. Anzahl an Chickens erreicht.");
+          console.log(" Max. Anzahl an Chickens erreicht.");
         }
       } else {
-        clearInterval(this.enemySpawnInterval); // Endboss tot → stoppen
-        console.log("🛑 Gegner-Spawn gestoppt – Endboss besiegt!");
+        clearInterval(this.enemySpawnInterval); 
       }
-    }, 4000); // z. B. alle 4 Sekunden
+    }, 3000); 
   }
 
   removeOffscreenEnemies() {
@@ -275,7 +274,7 @@ class World {
         (enemy instanceof ChickenSmall || enemy instanceof ChickenNormal) &&
         enemy.x < -50
       ) {
-        return false; // Entferne dieses Chicken
+        return false; 
       }
       return true;
     });
@@ -288,7 +287,7 @@ class World {
 
     this.levelMessageTimeout = setTimeout(() => {
       this.levelMessage = "";
-    }, 3000); // Nachricht verschwindet nach 3 Sekunden
+    }, 3000); 
   }
 
   loadNextLevel() {
@@ -331,18 +330,18 @@ class World {
     this.statusBarBottle.update?.();
     this.statusBarCoin.update?.();
 
-    // 🆕 Charakter & Kamera zurücksetzen:
+    
     this.character.x = 100;
     this.character.y = 185;
     this.camera_x = 0;
 
-    clearInterval(this.gameInterval); // alte Schleife beenden
-    this.run(); // neue starten
+    clearInterval(this.gameInterval);
+    this.run(); 
 
-    // 🚀 Levelstart-Meldung
+    
     this.showLevelMessage(`🚀 Level ${this.currentLevelIndex + 1} beginnt!`);
 
-    this.spawnEnemyLoop(); // 🐣 Gegner-Spawning starten
+    this.spawnEnemyLoop(); 
   }
 
   showBottleLimitMessage() {
@@ -354,7 +353,7 @@ class World {
   }
 
   showRestartOverlay() {
-    // Überprüfe, ob der Button schon existiert
+    
     if (!document.getElementById("restartButton")) {
       const button = document.createElement("button");
       button.innerText = "Spiel neu starten";
@@ -374,7 +373,7 @@ class World {
       button.style.zIndex = "999";
 
       button.addEventListener("click", () => {
-        location.reload(); // 🔁 Seite neu laden = Spiel neu starten
+        location.reload(); 
       });
 
       document.body.appendChild(button);
@@ -382,7 +381,7 @@ class World {
   }
 
   draw() {
-    console.log("characterDead:", this.characterDead); // 🐞 Debug!
+    console.log("characterDead:", this.characterDead); 
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.translate(this.camera_x, 0);
 
@@ -396,7 +395,7 @@ class World {
     }
     if (this.levelMessage) {
       this.ctx.font = "32px Comic Sans MS";
-      this.ctx.fillStyle = "#28a745"; // grün
+      this.ctx.fillStyle = "#28a745"; 
       this.ctx.textAlign = "center";
       this.ctx.fillText(this.levelMessage, this.canvas.width / 2, 150);
     }
@@ -412,7 +411,6 @@ class World {
     //this.addObjectsToMap(this.enemies || []);
     this.addObjectsToMap(this.level.enemies || []);
 
-
     (this.level.enemies || []).forEach((enemy) => {
       if (enemy.statusBar) {
         enemy.statusBar.updatePosition();
@@ -427,7 +425,7 @@ class World {
     this.ctx.translate(-this.camera_x, 0);
 
     if (this.playerDied) {
-      this.showRestartOverlay(); // nur bei Tod
+      this.showRestartOverlay(); 
     }
 
     // if (!this.playerDied && !this.endbossDefeated) {
