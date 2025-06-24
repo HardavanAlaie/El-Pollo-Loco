@@ -1,7 +1,7 @@
 class World {
   character = new Character();
   characterDead = false;
-  playerDied = false; // NEU: unterscheidet "Tod" von "Endboss geschafft"
+  playerDied = false; //  unterscheidet "Tod" von "Endboss geschafft"
   endbossDefeated = false;
 
   gameOver = false;
@@ -18,11 +18,11 @@ class World {
 
   bottleLimitMessage = "";
   bottleLimitTimeout = null;
-  levelMessage = ""; // 👈 Textanzeige für Hinweise
-  levelMessageTimeout = null; // Timeout für automatische Ausblendung
+  levelMessage = ""; 
+  levelMessageTimeout = null; 
 
-  currentLevelIndex = 0; // Neu: Level-Zähler
-  level = allLevels[this.currentLevelIndex]; // allLevels muss global definiert sein
+  currentLevelIndex = 0; 
+  level = allLevels[this.currentLevelIndex]; 
   enemies = this.level.enemies;
   clouds = this.level.clouds;
   backgroundObjects = this.level.backgroundObjects;
@@ -34,7 +34,7 @@ class World {
     this.canvas = canvas;
     this.keyboard = keyboard;
 
-    this.currentLevelIndex = 0; // 🔥 Wichtig!
+    this.currentLevelIndex = 0; 
     this.level = allLevels[this.currentLevelIndex];
     this.enemies = this.level.enemies;
     this.clouds = this.level.clouds;
@@ -50,7 +50,7 @@ class World {
 
   setWorld() {
     this.character.world = this;
-    this.spawnEnemyLoop(); // Gegner-Spawning starten
+    this.spawnEnemyLoop(); 
   }
 
   run() {

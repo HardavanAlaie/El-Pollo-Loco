@@ -17,7 +17,7 @@ class Level {
     this.enemies = enemies;
     this.clouds = clouds;
     this.backgroundObjects = backgroundObjects;
-    this.collectableObjects = collectableObjects; // ← wichtig!
+    this.collectableObjects = collectableObjects;
     this.collectableCoins = collectableCoins;
   }
 }

@@ -19,7 +19,7 @@ class EndbossLevel2 extends MovableObject {
     super().loadImage(this.IMAGES_ALERT[0]);
     this.loadImages(this.IMAGES_ALERT);
 
-    this.x = 900;
+    this.x = 2000;
     this.energy = 100;
     this.statusBar = new StatusBarEnemy(this);
     this.animate();

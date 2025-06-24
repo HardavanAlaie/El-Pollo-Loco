@@ -32,6 +32,6 @@ class StatusBarEnemy extends DrawableObject {
 
   updatePosition() {
     this.x = this.enemy.x;
-    this.y = this.enemy.y - 20; // etwas über dem Gegner
+    this.y = this.enemy.y - 20; 
   }
 }

@@ -7,7 +7,7 @@ class ChickenNormal extends MovableObject {
   constructor() {
     super().loadImage(this.IMAGES_RUNNING[0]);
     this.loadImages(this.IMAGES_RUNNING);
-    this.x = 500 + Math.random() * 1500;
+    this.x = 500 + Math.random() * 2000;
     this.y = 355;
     this.width = 60;
     this.height = 60;
