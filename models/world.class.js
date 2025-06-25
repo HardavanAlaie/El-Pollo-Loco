@@ -299,7 +299,7 @@ class World {
       this.levelEnded = true;
       return;
     }
-    // Neues Level laden
+    
     this.level = allLevels[this.currentLevelIndex];
     this.enemies = this.level.enemies;
     this.clouds = this.level.clouds;
