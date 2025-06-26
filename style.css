@@ -14,3 +14,23 @@ canvas {
     justify-content: center;
     align-items: center;
 }
+
+
+#start-screen {
+    text-align: center;
+    margin-top: 100px;
+}
+
+#start-screen button {
+    padding: 15px 30px;
+    font-size: 24px;
+    cursor: pointer;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 10px;
+}
+
+#start-screen button:hover {
+    background-color: #218838;
+}
