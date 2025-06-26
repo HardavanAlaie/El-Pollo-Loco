@@ -47,13 +47,23 @@
   </head>
 
   <body>
-
     <div id="start-screen">
       <h1>Willkommen zum Spiel!</h1>
       <button onclick="startGame()">Start</button>
     </div>
 
-    <canvas id="canvas" width="700" height="480"></canvas>
+    <!-- Mobile Gamepad-Steuerung -->
+    <div id="mobile-controls">
+      <div class="left-controls">
+        <button id="left-btn">⬅️</button>
+        <button id="right-btn">➡️</button>
+      </div>
+      <div class="right-controls">
+        <button id="jump-btn">🟢</button>
+        <button id="throw-btn">🧪</button>
+      </div>
+    </div>
 
+    <canvas id="canvas" width="700" height="480"></canvas>
   </body>
 </html>

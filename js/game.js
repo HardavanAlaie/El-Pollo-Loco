@@ -57,11 +57,33 @@ function startGame() {
   document.getElementById("start-screen").style.display = "none";
   document.getElementById("canvas").style.display = "block";
   init();
+  setupMobileControls(); // <--- HIER
 }
 
 function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
+}
+
+function setupMobileControls() {
+  const controls = [
+    { id: "left-btn", key: "LEFT" },
+    { id: "right-btn", key: "RIGHT" },
+    { id: "jump-btn", key: "UP" },
+    { id: "throw-btn", key: "D" },
+  ];
+
+  controls.forEach((control) => {
+    const btn = document.getElementById(control.id);
+    btn.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      keyboard[control.key] = true;
+    });
+    btn.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      keyboard[control.key] = false;
+    });
+  });
 }
 
 window.addEventListener("keydown", (e) => {
