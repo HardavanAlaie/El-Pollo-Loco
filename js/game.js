@@ -56,6 +56,7 @@ let keyboard = new Keyboard();
 function startGame() {
   document.getElementById("start-screen").style.display = "none";
   document.getElementById("canvas").style.display = "block";
+  document.getElementById("mobile-controls").style.display = "flex"; // <- NEU!
   init();
   setupMobileControls(); // <--- HIER
 }
