@@ -43,7 +43,7 @@ canvas {
   width: 700px;
   display: flex;
   justify-content: space-between;
- 
+  top: 500px;
   z-index: 1000;
 }
 
@@ -53,6 +53,7 @@ canvas {
   /* flex-direction: column;
   gap: 15px; */
   pointer-events: auto;
+  gap: 10px;
 }
 
 #mobile-controls button {
