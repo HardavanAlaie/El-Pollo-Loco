@@ -354,7 +354,7 @@ class World {
       button.innerText = "Spiel neu starten";
       button.id = "restartButton";
       button.style.position = "absolute";
-      button.style.top = "50%";
+      button.style.top = "40%";
       button.style.left = "50%";
       button.style.transform = "translate(-50%, -50%)";
       button.style.padding = "15px 30px";

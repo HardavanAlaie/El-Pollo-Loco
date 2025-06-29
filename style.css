@@ -56,7 +56,7 @@ canvas {
   width: 700px;
   display: flex;
   justify-content: space-between;
-  top: 500px;
+  top: 620px;
   z-index: 1000;
 }
 
