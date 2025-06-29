@@ -1,38 +1,51 @@
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* min-height: 100vh;  */
-    /* background-image: url('img/5_background/cactus-9085905_1280.jpg'); */
-    background-position: center;
-    background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* min-height: 100vh;  */
+  /* background-image: url('img/5_background/cactus-9085905_1280.jpg'); */
+  background-position: center;
+  background-size: cover;
+  font-family: 'myFont', sans-serif;
+}
+
+@font-face {
+  font-family: 'myFont';
+  src: url('fonts/fascinateInline-regular.ttf') format('truetype');
+}
+
+h1 {
+  font-size: 48px;  
+  text-shadow: 4px 2px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 3px;
+ 
 }
 
 canvas {
-    background-color: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 
 #start-screen {
-    text-align: center;
-    margin-top: 100px;
+  text-align: center;
+  margin-top: 100px;
 }
 
 #start-screen button {
-    padding: 15px 30px;
-    font-size: 24px;
-    cursor: pointer;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 10px;
+  padding: 15px 30px;
+  font-size: 24px;
+  cursor: pointer;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 10px;
 }
 
 #start-screen button:hover {
-    background-color: #218838;
+  background-color: #218838;
 }
 
 
@@ -48,7 +61,8 @@ canvas {
 }
 
 
-.left-controls, .right-controls {
+.left-controls,
+.right-controls {
   display: flex;
   /* flex-direction: column;
   gap: 15px; */
@@ -74,6 +88,7 @@ canvas {
 
 @media (min-width: 768px) {
   #mobile-controls {
-    display: none; /* Nur auf kleinen Geräten */
+    display: none;
+    /* Nur auf kleinen Geräten */
   }
 }
