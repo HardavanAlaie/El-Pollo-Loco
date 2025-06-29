@@ -398,11 +398,12 @@ class World {
     this.addToMap(this.statusBar);
     this.addToMap(this.statusBarBottle);
     this.addToMap(this.statusBarCoin);
+    this.addObjectsToMap(this.clouds || []);
 
     this.ctx.translate(this.camera_x, 0);
 
     this.addToMap(this.character);
-    this.addObjectsToMap(this.clouds || []);
+    //this.addObjectsToMap(this.clouds || []);
     //this.addObjectsToMap(this.enemies || []);
     this.addObjectsToMap(this.level.enemies || []);
 
