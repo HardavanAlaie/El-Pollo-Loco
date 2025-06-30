@@ -55,7 +55,7 @@ let keyboard = new Keyboard();
 
 function startGame() {
   document.getElementById("start-screen").style.display = "none";
-  document.getElementById("canvas").style.display = "block";
+  //document.getElementById("canvas").style.display = "block";
   document.getElementById("mobile-controls").style.display = "flex"; // <- NEU!
   init();
   setupMobileControls(); // <--- HIER
@@ -101,6 +101,19 @@ window.addEventListener("keyup", (e) => {
   if (e.keyCode == 39) keyboard.RIGHT = false;
   if (e.keyCode == 40) keyboard.DOWN = false;
   if (e.keyCode == 68) keyboard.D = false;
+});
+
+// Bild beim Laden direkt zeichnen
+window.addEventListener("load", () => {
+  canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+
+  const startImage = new Image();
+  startImage.src = "img/9_intro_outro_screens/start/startscreen_1.png";
+
+  startImage.onload = () => {
+    ctx.drawImage(startImage, 0, 0, canvas.width, canvas.height);
+  };
 });
 
 // // window.addEventListener("keydown", (e) => {
