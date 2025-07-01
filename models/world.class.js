@@ -386,7 +386,7 @@ class World {
     if (this.bottleLimitMessage) {
       this.ctx.font = "15px Comic Sans MS";
       this.ctx.fillStyle = "red";
-      this.ctx.fillText(this.bottleLimitMessage, 260, 80);
+      this.ctx.fillText(this.bottleLimitMessage, 180, 95);
     }
     if (this.levelMessage) {
       this.ctx.font = "32px Comic Sans MS";
