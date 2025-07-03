@@ -2,11 +2,7 @@
   height = 250;
   y = 90;
   speed = 10;
-
-  //   IMAGES_RUNNING = Array.from({ length: 8 },(_, i) => `img/2_character_pepe/2_walk/W-2${i + 1}.png`);
-  //     
-  //     
-  //   
+ 
   IMAGES_RUNNING = [
     "img/2_character_pepe/2_walk/W-21.png",
     "img/2_character_pepe/2_walk/W-22.png",
@@ -29,10 +25,6 @@
   //   "img/2_character_pepe/1_idle/idle/I-10.png",
   // ];
 
-  // IMAGES_JUMPING = Array.from(
-  //   { length: 9 },
-  //   (_, i) => `img/2_character_pepe/3_jump/J-3${i + 1}.png`
-  // );
   IMAGES_JUMPING = [
     "img/2_character_pepe/3_jump/J-31.png",
     "img/2_character_pepe/3_jump/J-32.png",
@@ -60,17 +52,6 @@
     "img/2_character_pepe/5_dead/D-56.png",
     "img/2_character_pepe/5_dead/D-57.png",
   ];
-
-  //   IMAGES_DEATH = Array.from(
-  //     { length: 10 },
-  //     (_, i) => `img/hero/death${i + 1}.png`
-  //   );
-
-  //   IMAGES_HURT = Array.from(
-  //     { length: 4 },
-  //     (_, i) => `img/hero/hurt${i + 1}.png`
-  //   );
-
  */
 
 class Character extends MovableObject {
