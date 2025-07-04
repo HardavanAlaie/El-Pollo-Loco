@@ -20,7 +20,9 @@ class DrawableObject {
     if (
       this instanceof Character ||
       this instanceof ChickenSmall ||
-      this instanceof EndbossLevel1
+      this instanceof ChickenNormal ||
+      this instanceof EndbossLevel1 ||
+      this instanceof EndbossLevel2
     ) {
       ctx.beginPath();
       ctx.lineWidth = "5";
