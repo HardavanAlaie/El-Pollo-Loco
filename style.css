@@ -98,10 +98,18 @@ canvas {
   canvas {
     width: 100%;
   }
+
+  h1 {
+    display: none;
+  }
 }
 
 @media only screen and (max-height: 480px) {
   canvas {
     height: 100vh;
+  }
+
+  h1 {
+    display: none;
   }
 }
