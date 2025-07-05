@@ -99,7 +99,7 @@ const level2 = new Level(
   ]
 );
 
-
+/*
 const level3 = new Level(
   [new ChickenSmall(), new ChickenSmall(), new ChickenSmall(), new EndbossLevel1()],
   [new Cloud(), new Cloud(), new Cloud()],
@@ -153,4 +153,4 @@ const level3 = new Level(
     new CollectableCoin(700, 350)
   ]
 );
-
+*/
