@@ -247,41 +247,72 @@ class World {
   //     }
   //   }, 3000);
   // }
+  //   spawnEnemyLoop() {
+  //   const spawnConfig = this.level.config?.spawnConfig || [];
+
+  //   this.spawnIntervals = [];
+
+  //   spawnConfig.forEach((config) => {
+  //     const intervalId = setInterval(() => {
+  //       const endbossAlive = this.level.enemies.some(
+  //         (e) =>
+  //           (e instanceof EndbossLevel1 || e instanceof EndbossLevel2) &&
+  //           !e.isDead()
+  //       );
+
+  //       if (!endbossAlive) {
+  //         clearInterval(intervalId);
+  //         return;
+  //       }
+
+  //       const currentEnemies = this.level.enemies.filter(
+  //         (e) => e instanceof config.type
+  //       );
+
+  //       if (currentEnemies.length < config.maxCount) {
+  //         const enemy = new config.type();
+  //         enemy.x = 900 + Math.random() * 400;
+  //         this.level.enemies.push(enemy);
+  //         //console.log(`Spawned: ${config.type.name}`);
+  //       }
+
+  //     }, config.interval);
+
+  //     this.spawnIntervals.push(intervalId);
+  //   });
+  // }
   spawnEnemyLoop() {
-  const spawnConfig = this.level.config?.spawnConfig || [];
+    const spawnConfigs = this.level.config?.spawnConfig || [];
+    this.spawnIntervals = [];
 
-  this.spawnIntervals = [];
+    spawnConfigs.forEach((config) => {
+      const intervalId = setInterval(() => {
+        // Bedingung prüfen (optional)
+        const allowed =
+          typeof config.condition === "function"
+            ? config.condition(this.level)
+            : true;
 
-  spawnConfig.forEach((config) => {
-    const intervalId = setInterval(() => {
-      const endbossAlive = this.level.enemies.some(
-        (e) =>
-          (e instanceof EndbossLevel1 || e instanceof EndbossLevel2) &&
-          !e.isDead()
-      );
+        if (!allowed) {
+          return;
+        }
 
-      if (!endbossAlive) {
-        clearInterval(intervalId);
-        return;
-      }
+        // Aktuelle Anzahl dieser Gegner zählen
+        const current = this.level.enemies.filter(
+          (e) => e instanceof config.type
+        );
 
-      const currentEnemies = this.level.enemies.filter(
-        (e) => e instanceof config.type
-      );
+        if (current.length < config.maxCount) {
+          const newEnemy = new config.type();
+          newEnemy.x = 900 + Math.random() * 400;
+          this.level.enemies.push(newEnemy);
+          // console.log(`Spawned ${config.type.name}`);
+        }
+      }, config.interval);
 
-      if (currentEnemies.length < config.maxCount) {
-        const enemy = new config.type();
-        enemy.x = 900 + Math.random() * 400;
-        this.level.enemies.push(enemy);
-        //console.log(`Spawned: ${config.type.name}`);
-      }
-
-    }, config.interval);
-
-    this.spawnIntervals.push(intervalId);
-  });
-}
-
+      this.spawnIntervals.push(intervalId);
+    });
+  }
 
   removeOffscreenEnemies() {
     this.level.enemies = this.level.enemies.filter((enemy) => {
