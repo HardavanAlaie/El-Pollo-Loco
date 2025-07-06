@@ -230,41 +230,58 @@ class World {
   //     );
 
   //     if (endboss && !endboss.isDead()) {
-  //       const newChicken = new Chicken();
-  //       newChicken.x = 900 + Math.random() * 400; // etwas weiter hinten spawnen
-  //       this.level.enemies.push(newChicken);
-  //       console.log("🐣 Neues Chicken gespawnt!");
+  //       const currentChickens = this.level.enemies.filter(
+  //         (e) => e instanceof ChickenSmall
+  //       );
+
+  //       if (currentChickens.length < 5) {
+  //         const newChicken = new ChickenSmall();
+  //         newChicken.x = 900 + Math.random() * 400;
+  //         this.level.enemies.push(newChicken);
+  //         //console.log("🐣 Neues Chicken gespawnt!");
+  //       } else {
+  //         console.log(" Max. Anzahl an Chickens erreicht.");
+  //       }
   //     } else {
-  //       // Stoppe den Spawn, wenn der Endboss besiegt wurde
   //       clearInterval(this.enemySpawnInterval);
-  //       console.log("🛑 Gegner-Spawn gestoppt – Endboss besiegt!");
   //     }
-  //   }, 4000); // alle 4 Sekunden ein neues Chicken
+  //   }, 3000);
   // }
   spawnEnemyLoop() {
-    this.enemySpawnInterval = setInterval(() => {
-      const endboss = this.level.enemies.find(
-        (e) => e instanceof EndbossLevel1
+  const spawnConfig = this.level.config?.spawnConfig || [];
+
+  this.spawnIntervals = [];
+
+  spawnConfig.forEach((config) => {
+    const intervalId = setInterval(() => {
+      const endbossAlive = this.level.enemies.some(
+        (e) =>
+          (e instanceof EndbossLevel1 || e instanceof EndbossLevel2) &&
+          !e.isDead()
       );
 
-      if (endboss && !endboss.isDead()) {
-        const currentChickens = this.level.enemies.filter(
-          (e) => e instanceof ChickenSmall
-        );
-
-        if (currentChickens.length < 5) {
-          const newChicken = new ChickenSmall();
-          newChicken.x = 900 + Math.random() * 400;
-          this.level.enemies.push(newChicken);
-          //console.log("🐣 Neues Chicken gespawnt!");
-        } else {
-          console.log(" Max. Anzahl an Chickens erreicht.");
-        }
-      } else {
-        clearInterval(this.enemySpawnInterval);
+      if (!endbossAlive) {
+        clearInterval(intervalId);
+        return;
       }
-    }, 3000);
-  }
+
+      const currentEnemies = this.level.enemies.filter(
+        (e) => e instanceof config.type
+      );
+
+      if (currentEnemies.length < config.maxCount) {
+        const enemy = new config.type();
+        enemy.x = 900 + Math.random() * 400;
+        this.level.enemies.push(enemy);
+        //console.log(`Spawned: ${config.type.name}`);
+      }
+
+    }, config.interval);
+
+    this.spawnIntervals.push(intervalId);
+  });
+}
+
 
   removeOffscreenEnemies() {
     this.level.enemies = this.level.enemies.filter((enemy) => {

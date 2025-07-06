@@ -1,27 +1,45 @@
 const level1 = new Level(
-  [new ChickenSmall(), new ChickenSmall(), new ChickenSmall(), new EndbossLevel1()],
+  [new ChickenSmall(), new EndbossLevel1()],
   [new Cloud(), new Cloud(), new Cloud()],
   [
-    new BackgroundObject('img/5_background/layers/air.png', 0),
+    new BackgroundObject("img/5_background/layers/air.png", 0),
     new BackgroundObject("img/5_background/layers/3_third_layer/1.png", 0),
     new BackgroundObject("img/5_background/layers/2_second_layer/1.png", 0),
     new BackgroundObject("img/5_background/layers/1_first_layer/1.png", 0),
-    new BackgroundObject('img/5_background/layers/air.png', 719),
+    new BackgroundObject("img/5_background/layers/air.png", 719),
     new BackgroundObject("img/5_background/layers/3_third_layer/2.png", 719),
     new BackgroundObject("img/5_background/layers/2_second_layer/2.png", 719),
     new BackgroundObject("img/5_background/layers/1_first_layer/2.png", 719),
-    new BackgroundObject('img/5_background/layers/air.png', -720),
+    new BackgroundObject("img/5_background/layers/air.png", -720),
     new BackgroundObject("img/5_background/layers/3_third_layer/2.png", -720),
     new BackgroundObject("img/5_background/layers/2_second_layer/2.png", -720),
     new BackgroundObject("img/5_background/layers/1_first_layer/2.png", -720),
-    new BackgroundObject('img/5_background/layers/air.png', 719 * 2),
-    new BackgroundObject("img/5_background/layers/3_third_layer/1.png", 719 * 2),
-    new BackgroundObject("img/5_background/layers/2_second_layer/1.png", 719 * 2),
-    new BackgroundObject("img/5_background/layers/1_first_layer/1.png", 719 * 2),
-    new BackgroundObject('img/5_background/layers/air.png', 719 * 3),
-    new BackgroundObject("img/5_background/layers/3_third_layer/2.png", 719 * 3),
-    new BackgroundObject("img/5_background/layers/2_second_layer/2.png", 719 * 3),
-    new BackgroundObject("img/5_background/layers/1_first_layer/2.png", 719 * 3),
+    new BackgroundObject("img/5_background/layers/air.png", 719 * 2),
+    new BackgroundObject(
+      "img/5_background/layers/3_third_layer/1.png",
+      719 * 2
+    ),
+    new BackgroundObject(
+      "img/5_background/layers/2_second_layer/1.png",
+      719 * 2
+    ),
+    new BackgroundObject(
+      "img/5_background/layers/1_first_layer/1.png",
+      719 * 2
+    ),
+    new BackgroundObject("img/5_background/layers/air.png", 719 * 3),
+    new BackgroundObject(
+      "img/5_background/layers/3_third_layer/2.png",
+      719 * 3
+    ),
+    new BackgroundObject(
+      "img/5_background/layers/2_second_layer/2.png",
+      719 * 3
+    ),
+    new BackgroundObject(
+      "img/5_background/layers/1_first_layer/2.png",
+      719 * 3
+    ),
   ],
   [
     new CollectableBottle(300, 350),
@@ -48,34 +66,75 @@ const level1 = new Level(
     new CollectableCoin(200, 350),
     new CollectableCoin(250, 350),
     new CollectableCoin(400, 350),
-    new CollectableCoin(700, 350)
-  ]
+    new CollectableCoin(700, 350),
+  ],
+  {
+    spawnConfig: [
+      {
+        type: ChickenSmall,
+        maxCount: 5,
+        interval: 3000,
+        condition: (level) =>
+          level.enemies.some((e) => e instanceof EndbossLevel1 && !e.isDead()),
+      },
+      {
+        type: ChickenNormal,
+        maxCount: 2,
+        interval: 4000,
+        condition: (level) =>
+          level.enemies.some((e) => e instanceof EndbossLevel1 && !e.isDead()),
+      },
+    ],
+  }
 );
 
 const level2 = new Level(
-  [new ChickenNormal(), new ChickenNormal(), new ChickenNormal(), new EndbossLevel2()],
+  [
+    new ChickenNormal(),
+    new ChickenNormal(),
+    new ChickenNormal(),
+    new EndbossLevel2(),
+  ],
   [new Cloud(), new Cloud(), new Cloud()],
   [
-    new BackgroundObject('img/5_background/layers/air.png', 0),
+    new BackgroundObject("img/5_background/layers/air.png", 0),
     new BackgroundObject("img/5_background/layers/3_third_layer/1.png", 0),
     new BackgroundObject("img/5_background/layers/2_second_layer/1.png", 0),
     new BackgroundObject("img/5_background/layers/1_first_layer/1.png", 0),
-    new BackgroundObject('img/5_background/layers/air.png', 719),
+    new BackgroundObject("img/5_background/layers/air.png", 719),
     new BackgroundObject("img/5_background/layers/3_third_layer/2.png", 719),
     new BackgroundObject("img/5_background/layers/2_second_layer/2.png", 719),
     new BackgroundObject("img/5_background/layers/1_first_layer/2.png", 719),
-    new BackgroundObject('img/5_background/layers/air.png', -720),
+    new BackgroundObject("img/5_background/layers/air.png", -720),
     new BackgroundObject("img/5_background/layers/3_third_layer/2.png", -720),
     new BackgroundObject("img/5_background/layers/2_second_layer/2.png", -720),
     new BackgroundObject("img/5_background/layers/1_first_layer/2.png", -720),
-    new BackgroundObject('img/5_background/layers/air.png', 719 * 2),
-    new BackgroundObject("img/5_background/layers/3_third_layer/1.png", 719 * 2),
-    new BackgroundObject("img/5_background/layers/2_second_layer/1.png", 719 * 2),
-    new BackgroundObject("img/5_background/layers/1_first_layer/1.png", 719 * 2),
-    new BackgroundObject('img/5_background/layers/air.png', 719 * 3),
-    new BackgroundObject("img/5_background/layers/3_third_layer/2.png", 719 * 3),
-    new BackgroundObject("img/5_background/layers/2_second_layer/2.png", 719 * 3),
-    new BackgroundObject("img/5_background/layers/1_first_layer/2.png", 719 * 3),
+    new BackgroundObject("img/5_background/layers/air.png", 719 * 2),
+    new BackgroundObject(
+      "img/5_background/layers/3_third_layer/1.png",
+      719 * 2
+    ),
+    new BackgroundObject(
+      "img/5_background/layers/2_second_layer/1.png",
+      719 * 2
+    ),
+    new BackgroundObject(
+      "img/5_background/layers/1_first_layer/1.png",
+      719 * 2
+    ),
+    new BackgroundObject("img/5_background/layers/air.png", 719 * 3),
+    new BackgroundObject(
+      "img/5_background/layers/3_third_layer/2.png",
+      719 * 3
+    ),
+    new BackgroundObject(
+      "img/5_background/layers/2_second_layer/2.png",
+      719 * 3
+    ),
+    new BackgroundObject(
+      "img/5_background/layers/1_first_layer/2.png",
+      719 * 3
+    ),
   ],
   [
     new CollectableBottle(300, 350),
@@ -85,7 +144,7 @@ const level2 = new Level(
     new CollectableBottle(400, 350),
     new CollectableBottle(450, 350),
     new CollectableBottle(600, 350),
-    new CollectableBottle(900, 350)
+    new CollectableBottle(900, 350),
   ],
   [
     new CollectableCoin(100, 350),
@@ -95,7 +154,7 @@ const level2 = new Level(
     new CollectableCoin(200, 350),
     new CollectableCoin(250, 350),
     new CollectableCoin(400, 350),
-    new CollectableCoin(700, 350)
+    new CollectableCoin(700, 350),
   ]
 );
 
