@@ -14,6 +14,7 @@ function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
   createTopRightButtons();
+  //createOverlayButtons();
 }
 
 function createTopRightButtons() {
@@ -66,7 +67,7 @@ function createTopRightButtons() {
     window.soundMuted = soundMuted;
     // Falls du Audio-Objekte verwendest:
     const audios = document.querySelectorAll("audio");
-    audios.forEach(audio => audio.muted = soundMuted);
+    audios.forEach((audio) => (audio.muted = soundMuted));
   });
 
   container.appendChild(fullscreenBtn);
@@ -74,6 +75,57 @@ function createTopRightButtons() {
   document.body.appendChild(container);
 }
 
+// function createOverlayButtons() {
+//   const overlay = document.createElement("div");
+//   overlay.id = "gameOverlay";
+//   overlay.style.position = "absolute";
+//   overlay.style.top = "10px";
+//   overlay.style.right = "10px";
+//   overlay.style.display = "flex";
+//   overlay.style.gap = "10px";
+//   overlay.style.zIndex = "1000";
+
+//   const buttonStyle = `
+//     background-color: rgba(0,0,0,0.5);
+//     color: white;
+//     border: none;
+//     padding: 8px 12px;
+//     font-size: 18px;
+//     border-radius: 8px;
+//     cursor: pointer;
+//     backdrop-filter: blur(4px);
+//     transition: background-color 0.3s;
+//   `;
+
+//   // 🔊 Sound-Button
+//   const soundButton = document.createElement("button");
+//   soundButton.innerHTML = "🔊";
+//   soundButton.style.cssText = buttonStyle;
+//   soundButton.onclick = () => {
+//     // 🎵 Sound umschalten
+//     const muted = !window.isMuted;
+//     window.isMuted = muted;
+//     soundButton.innerHTML = muted ? "🔇" : "🔊";
+//     // TODO: Sound engine mute/unmute logik
+//   };
+
+//   // ⛶ Vollbild-Button
+//   const fullscreenButton = document.createElement("button");
+//   fullscreenButton.innerHTML = "⛶";
+//   fullscreenButton.style.cssText = buttonStyle;
+//   fullscreenButton.onclick = () => {
+//     const game = document.getElementById("gameContainer") || document.body;
+//     if (!document.fullscreenElement) {
+//       game.requestFullscreen();
+//     } else {
+//       document.exitFullscreen();
+//     }
+//   };
+
+//   overlay.appendChild(soundButton);
+//   overlay.appendChild(fullscreenButton);
+//   document.body.appendChild(overlay);
+// }
 
 function setupMobileControls() {
   const controls = [
