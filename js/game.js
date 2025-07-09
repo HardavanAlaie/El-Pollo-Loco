@@ -13,67 +13,67 @@ function startGame() {
 function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
-  createTopRightButtons();
+  //createTopRightButtons();
   //createOverlayButtons();
 }
 
-function createTopRightButtons() {
-  const container = document.createElement("div");
-  container.style.position = "absolute";
-  container.style.top = "10px";
-  container.style.right = "10px";
-  container.style.zIndex = "1000";
-  container.style.display = "flex";
-  container.style.gap = "10px";
+// function createTopRightButtons() {
+//   const container = document.createElement("div");
+//   container.style.position = "absolute";
+//   container.style.top = "10px";
+//   container.style.right = "10px";
+//   container.style.zIndex = "1000";
+//   container.style.display = "flex";
+//   container.style.gap = "10px";
 
-  // Vollbild-Button
-  const fullscreenBtn = document.createElement("button");
-  fullscreenBtn.innerText = "⛶";
-  fullscreenBtn.title = "Vollbild";
-  fullscreenBtn.style.padding = "10px";
-  fullscreenBtn.style.fontSize = "20px";
-  fullscreenBtn.style.borderRadius = "8px";
-  fullscreenBtn.style.border = "none";
-  fullscreenBtn.style.cursor = "pointer";
-  fullscreenBtn.style.background = "#444";
-  fullscreenBtn.style.color = "white";
+//   // Vollbild-Button
+//   const fullscreenBtn = document.createElement("button");
+//   fullscreenBtn.innerText = "⛶";
+//   fullscreenBtn.title = "Vollbild";
+//   fullscreenBtn.style.padding = "10px";
+//   fullscreenBtn.style.fontSize = "20px";
+//   fullscreenBtn.style.borderRadius = "8px";
+//   fullscreenBtn.style.border = "none";
+//   fullscreenBtn.style.cursor = "pointer";
+//   fullscreenBtn.style.background = "#444";
+//   fullscreenBtn.style.color = "white";
 
-  fullscreenBtn.addEventListener("click", () => {
-    const canvas = document.querySelector("canvas");
-    if (canvas.requestFullscreen) {
-      canvas.requestFullscreen();
-    } else if (canvas.webkitRequestFullscreen) {
-      canvas.webkitRequestFullscreen();
-    }
-  });
+//   fullscreenBtn.addEventListener("click", () => {
+//     const canvas = document.querySelector("canvas");
+//     if (canvas.requestFullscreen) {
+//       canvas.requestFullscreen();
+//     } else if (canvas.webkitRequestFullscreen) {
+//       canvas.webkitRequestFullscreen();
+//     }
+//   });
 
   // Sound-Button
-  const soundBtn = document.createElement("button");
-  soundBtn.innerText = "🔊";
-  soundBtn.title = "Sound ein/aus";
-  soundBtn.style.padding = "10px";
-  soundBtn.style.fontSize = "20px";
-  soundBtn.style.borderRadius = "8px";
-  soundBtn.style.border = "none";
-  soundBtn.style.cursor = "pointer";
-  soundBtn.style.background = "#444";
-  soundBtn.style.color = "white";
+  // const soundBtn = document.createElement("button");
+  // soundBtn.innerText = "🔊";
+  // soundBtn.title = "Sound ein/aus";
+  // soundBtn.style.padding = "10px";
+  // soundBtn.style.fontSize = "20px";
+  // soundBtn.style.borderRadius = "8px";
+  // soundBtn.style.border = "none";
+  // soundBtn.style.cursor = "pointer";
+  // soundBtn.style.background = "#444";
+  // soundBtn.style.color = "white";
 
-  let soundMuted = false;
-  soundBtn.addEventListener("click", () => {
-    soundMuted = !soundMuted;
-    soundBtn.innerText = soundMuted ? "🔇" : "🔊";
-    // Beispiel: globale Audio-Mute-Variable setzen
-    window.soundMuted = soundMuted;
-    // Falls du Audio-Objekte verwendest:
-    const audios = document.querySelectorAll("audio");
-    audios.forEach((audio) => (audio.muted = soundMuted));
-  });
+  // let soundMuted = false;
+  // soundBtn.addEventListener("click", () => {
+  //   soundMuted = !soundMuted;
+  //   soundBtn.innerText = soundMuted ? "🔇" : "🔊";
+  //   // Beispiel: globale Audio-Mute-Variable setzen
+  //   window.soundMuted = soundMuted;
+  //   // Falls du Audio-Objekte verwendest:
+  //   const audios = document.querySelectorAll("audio");
+  //   audios.forEach((audio) => (audio.muted = soundMuted));
+  // });
 
-  container.appendChild(fullscreenBtn);
-  container.appendChild(soundBtn);
-  document.body.appendChild(container);
-}
+//   container.appendChild(fullscreenBtn);
+//   container.appendChild(soundBtn);
+//   document.body.appendChild(container);
+// }
 
 // function createOverlayButtons() {
 //   const overlay = document.createElement("div");
