@@ -41,26 +41,69 @@ class EndbossLevel1 extends MovableObject {
   constructor() {
     super().loadImage(this.IMAGES_ALERT[0]);
     this.loadImages(this.IMAGES_ALERT);
+    this.loadImages(this.IMAGES_ATTACK);
+    this.loadImages(this.IMAGES_HURT);
+    this.loadImages(this.IMAGES_DEAD);
 
     this.x = 2000;
     this.energy = 100;
     this.statusBar = new StatusBarEnemy(this);
     this.animate();
+    this.startAttackCycle();
   }
 
+  // hit() {
+  //   this.energy -= 20;
+  //   this.energy = Math.max(this.energy, 0);
+  //   this.statusBar.setPercentage(this.energy);
+  // }
   hit() {
+    if (this.isDead()) return;
+
     this.energy -= 20;
     this.energy = Math.max(this.energy, 0);
     this.statusBar.setPercentage(this.energy);
+
+    if (this.isDead()) {
+      this.die();
+    }
+  }
+
+  die() {
+    this.playAnimation(this.IMAGES_DEAD);
+    clearInterval(this.bossAnimationInterval);
+    // optional: removeFromWorld(), explosion etc.
   }
 
   isDead() {
     return this.energy <= 0;
   }
 
+  // animate() {
+  //   setInterval(() => {
+  //     this.playAnimation(this.IMAGES_ALERT);
+  //   }, 200);
+  // }
+
   animate() {
-    setInterval(() => {
-      this.playAnimation(this.IMAGES_ALERT);
+    this.bossAnimationInterval = setInterval(() => {
+      if (this.isDead()) {
+        this.playAnimation(this.IMAGES_DEAD);
+        clearInterval(this.bossAnimationInterval); // Stoppe weitere Animationen
+      } else if (this.energy < 40) {
+        this.playAnimation(this.IMAGES_HURT);
+      } else if (this.isAttacking) {
+        this.playAnimation(this.IMAGES_ATTACK);
+      } else {
+        this.playAnimation(this.IMAGES_ALERT);
+      }
     }, 200);
+  }
+
+  startAttackCycle() {
+    setInterval(() => {
+      this.isAttacking = true;
+      setTimeout(() => (this.isAttacking = false), 1000); // Angriff dauert 1 Sekunde
+    }, 5000); // alle 5 Sekunden Angriff
   }
 }
