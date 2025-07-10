@@ -47,28 +47,28 @@ function init() {
 //     }
 //   });
 
-  // Sound-Button
-  // const soundBtn = document.createElement("button");
-  // soundBtn.innerText = "🔊";
-  // soundBtn.title = "Sound ein/aus";
-  // soundBtn.style.padding = "10px";
-  // soundBtn.style.fontSize = "20px";
-  // soundBtn.style.borderRadius = "8px";
-  // soundBtn.style.border = "none";
-  // soundBtn.style.cursor = "pointer";
-  // soundBtn.style.background = "#444";
-  // soundBtn.style.color = "white";
+// Sound-Button
+// const soundBtn = document.createElement("button");
+// soundBtn.innerText = "🔊";
+// soundBtn.title = "Sound ein/aus";
+// soundBtn.style.padding = "10px";
+// soundBtn.style.fontSize = "20px";
+// soundBtn.style.borderRadius = "8px";
+// soundBtn.style.border = "none";
+// soundBtn.style.cursor = "pointer";
+// soundBtn.style.background = "#444";
+// soundBtn.style.color = "white";
 
-  // let soundMuted = false;
-  // soundBtn.addEventListener("click", () => {
-  //   soundMuted = !soundMuted;
-  //   soundBtn.innerText = soundMuted ? "🔇" : "🔊";
-  //   // Beispiel: globale Audio-Mute-Variable setzen
-  //   window.soundMuted = soundMuted;
-  //   // Falls du Audio-Objekte verwendest:
-  //   const audios = document.querySelectorAll("audio");
-  //   audios.forEach((audio) => (audio.muted = soundMuted));
-  // });
+// let soundMuted = false;
+// soundBtn.addEventListener("click", () => {
+//   soundMuted = !soundMuted;
+//   soundBtn.innerText = soundMuted ? "🔇" : "🔊";
+//   // Beispiel: globale Audio-Mute-Variable setzen
+//   window.soundMuted = soundMuted;
+//   // Falls du Audio-Objekte verwendest:
+//   const audios = document.querySelectorAll("audio");
+//   audios.forEach((audio) => (audio.muted = soundMuted));
+// });
 
 //   container.appendChild(fullscreenBtn);
 //   container.appendChild(soundBtn);

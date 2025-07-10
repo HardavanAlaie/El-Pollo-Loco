@@ -223,30 +223,6 @@ class World {
     }
   }
 
-  // spawnEnemyLoop() {
-  //   this.enemySpawnInterval = setInterval(() => {
-  //     const endboss = this.level.enemies.find(
-  //       (e) => e instanceof EndbossLevel1
-  //     );
-
-  //     if (endboss && !endboss.isDead()) {
-  //       const currentChickens = this.level.enemies.filter(
-  //         (e) => e instanceof ChickenSmall
-  //       );
-
-  //       if (currentChickens.length < 5) {
-  //         const newChicken = new ChickenSmall();
-  //         newChicken.x = 900 + Math.random() * 400;
-  //         this.level.enemies.push(newChicken);
-  //         //console.log("🐣 Neues Chicken gespawnt!");
-  //       } else {
-  //         console.log(" Max. Anzahl an Chickens erreicht.");
-  //       }
-  //     } else {
-  //       clearInterval(this.enemySpawnInterval);
-  //     }
-  //   }, 3000);
-  // }
   //   spawnEnemyLoop() {
   //   const spawnConfig = this.level.config?.spawnConfig || [];
 
