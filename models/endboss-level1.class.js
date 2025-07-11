@@ -17,13 +17,13 @@ class EndbossLevel1 extends MovableObject {
 
   IMAGES_ATTACK = [
     "img/4_enemie_boss_chicken/3_attack/G13.png",
-    "img/4_enemie_boss_chicken/1_attack/G14.png",
-    "img/4_enemie_boss_chicken/1_attack/G15.png",
-    "img/4_enemie_boss_chicken/1_attack/G16.png",
-    "img/4_enemie_boss_chicken/1_attack/G17.png",
-    "img/4_enemie_boss_chicken/1_attack/G18.png",
-    "img/4_enemie_boss_chicken/1_attack/G19.png",
-    "img/4_enemie_boss_chicken/1_attack/G20.png",
+    "img/4_enemie_boss_chicken/3_attack/G14.png",
+    "img/4_enemie_boss_chicken/3_attack/G15.png",
+    "img/4_enemie_boss_chicken/3_attack/G16.png",
+    "img/4_enemie_boss_chicken/3_attack/G17.png",
+    "img/4_enemie_boss_chicken/3_attack/G18.png",
+    "img/4_enemie_boss_chicken/3_attack/G19.png",
+    "img/4_enemie_boss_chicken/3_attack/G20.png",
   ];
 
   IMAGES_HURT = [
@@ -35,7 +35,7 @@ class EndbossLevel1 extends MovableObject {
   IMAGES_DEAD = [
     "img/4_enemie_boss_chicken/5_dead/G24.png",
     "img/4_enemie_boss_chicken/5_dead/G25.png",
-    "img/4_enemie_boss_chicken/3_dead/G26.png",
+    "img/4_enemie_boss_chicken/5_dead/G26.png",
   ];
 
   constructor() {
