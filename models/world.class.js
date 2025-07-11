@@ -29,10 +29,11 @@ class World {
   collectableBottles = this.level.collectableObjects || [];
   collectableCoins = this.level.collectableCoins || [];
 
-  constructor(canvas, keyboard) {
+  constructor(canvas, keyboard, character) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
+    this.character = character; // Spieler speichern
 
     this.currentLevelIndex = 0;
     this.level = allLevels[this.currentLevelIndex];
@@ -62,9 +63,17 @@ class World {
         this.checkThrowableObjects();
         this.checkEndbossDefeated();
         this.removeOffscreenEnemies();
+        checkEndbossHit();
       }
     }, 200);
   }
+
+  checkEndbossHit() {
+  if (!this.character.isHurt && this.character.isColliding(this.endboss)) {
+    this.character.hit();
+  }
+}
+
 
   checkThrowableObjects() {
     this.throwableObjects = this.throwableObjects.filter(

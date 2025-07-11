@@ -38,6 +38,9 @@ class EndbossLevel1 extends MovableObject {
     "img/4_enemie_boss_chicken/5_dead/G26.png",
   ];
 
+  alertDistance = 300; // wie nah der Spieler sein muss
+  attackMode = false;
+
   constructor() {
     super().loadImage(this.IMAGES_ALERT[0]);
     this.loadImages(this.IMAGES_ALERT);
@@ -48,6 +51,7 @@ class EndbossLevel1 extends MovableObject {
     this.x = 2000;
     this.energy = 100;
     this.statusBar = new StatusBarEnemy(this);
+    this.character = character;
     this.animate();
     this.startAttackCycle();
   }
@@ -85,20 +89,43 @@ class EndbossLevel1 extends MovableObject {
   //   }, 200);
   // }
 
+  // animate() {
+  //   this.bossAnimationInterval = setInterval(() => {
+  //     if (this.isDead()) {
+  //       this.playAnimation(this.IMAGES_DEAD);
+  //       clearInterval(this.bossAnimationInterval); // Stoppe weitere Animationen
+  //     } else if (this.energy < 40) {
+  //       this.playAnimation(this.IMAGES_HURT);
+  //     } else if (this.isAttacking) {
+  //       this.playAnimation(this.IMAGES_ATTACK);
+  //     } else {
+  //       this.playAnimation(this.IMAGES_ALERT);
+  //     }
+  //   }, 200);
+  // }
   animate() {
-    this.bossAnimationInterval = setInterval(() => {
-      if (this.isDead()) {
-        this.playAnimation(this.IMAGES_DEAD);
-        clearInterval(this.bossAnimationInterval); // Stoppe weitere Animationen
-      } else if (this.energy < 40) {
-        this.playAnimation(this.IMAGES_HURT);
-      } else if (this.isAttacking) {
-        this.playAnimation(this.IMAGES_ATTACK);
-      } else {
-        this.playAnimation(this.IMAGES_ALERT);
-      }
-    }, 200);
+  setInterval(() => {
+    const distance = this.x - this.character.x;
+
+    if (distance < this.alertDistance && !this.isDead()) {
+      this.attackMode = true;
+    }
+
+    if (this.attackMode) {
+      this.playAnimation(this.IMAGES_ATTACK);
+      this.moveTowardsPlayer();
+    } else {
+      this.playAnimation(this.IMAGES_ALERT);
+    }
+  }, 150);
+}
+
+moveTowardsPlayer() {
+  if (this.x > this.character.x + 50) {
+    this.x -= 2; // läuft zum Spieler
   }
+}
+
 
   startAttackCycle() {
     setInterval(() => {

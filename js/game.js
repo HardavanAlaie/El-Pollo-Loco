@@ -1,6 +1,7 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let character = new Character();
 
 function startGame() {
   document.getElementById("start-screen").style.display = "none";
@@ -12,7 +13,7 @@ function startGame() {
 
 function init() {
   canvas = document.getElementById("canvas");
-  world = new World(canvas, keyboard);
+  world = new World(canvas, keyboard, character);
   //createTopRightButtons();
   //createOverlayButtons();
 }
