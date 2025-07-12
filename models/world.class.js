@@ -21,15 +21,15 @@ class World {
   levelMessage = "";
   levelMessageTimeout = null;
 
-  // currentLevelIndex = 0;
-  // level = allLevels[this.currentLevelIndex];
-  // enemies = this.level.enemies;
+  currentLevelIndex = 0;
+  level = allLevels[this.currentLevelIndex];
+  enemies = this.level.enemies;
   clouds = this.level.clouds;
   backgroundObjects = this.level.backgroundObjects;
   collectableBottles = this.level.collectableObjects || [];
   collectableCoins = this.level.collectableCoins || [];
 
-  constructor(canvas, keyboard) {
+  constructor(canvas, keyboard, character) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
