@@ -51,9 +51,9 @@ class EndbossLevel1 extends MovableObject {
     this.x = 2000;
     this.energy = 100;
     this.statusBar = new StatusBarEnemy(this);
-    this.character = character;
+    //this.character = character;
     this.animate();
-    this.startAttackCycle();
+    //this.startAttackCycle();
   }
 
   // hit() {
@@ -89,53 +89,50 @@ class EndbossLevel1 extends MovableObject {
   //   }, 200);
   // }
 
+  animate() {
+    this.bossAnimationInterval = setInterval(() => {
+      if (this.isDead()) {
+        this.playAnimation(this.IMAGES_DEAD);
+        clearInterval(this.bossAnimationInterval); // Stoppe weitere Animationen
+      } else if (this.energy < 40) {
+        this.playAnimation(this.IMAGES_HURT);
+      } else if (this.isAttacking) {
+        this.playAnimation(this.IMAGES_ATTACK);
+      } else {
+        this.playAnimation(this.IMAGES_ALERT);
+      }
+    }, 200);
+  }
   // animate() {
-  //   this.bossAnimationInterval = setInterval(() => {
-  //     if (this.isDead()) {
-  //       this.playAnimation(this.IMAGES_DEAD);
-  //       clearInterval(this.bossAnimationInterval); // Stoppe weitere Animationen
-  //     } else if (this.energy < 40) {
-  //       this.playAnimation(this.IMAGES_HURT);
-  //     } else if (this.isAttacking) {
+  //   setInterval(() => {
+  //     const distance = this.x - this.character.x;
+
+  //     if (distance < this.alertDistance && !this.isDead()) {
+  //       this.attackMode = true;
+  //     }
+
+  //     if (this.attackMode) {
   //       this.playAnimation(this.IMAGES_ATTACK);
+  //       this.moveTowardsPlayer();
   //     } else {
   //       this.playAnimation(this.IMAGES_ALERT);
   //     }
-  //   }, 200);
+  //   }, 150);
   // }
-  animate() {
-  setInterval(() => {
-    const distance = this.x - this.character.x;
 
-    if (distance < this.alertDistance && !this.isDead()) {
-      this.attackMode = true;
-    }
+  // moveTowardsPlayer() {
+  //   if (this.x > this.character.x + 50) {
+  //     this.x -= 2; // läuft zum Spieler
+  //   }
+  // }
 
-    if (this.attackMode) {
-      this.playAnimation(this.IMAGES_ATTACK);
-      this.moveTowardsPlayer();
-    } else {
-      this.playAnimation(this.IMAGES_ALERT);
-    }
-  }, 150);
+  // startAttackCycle() {
+  //   setInterval(() => {
+  //     this.isAttacking = true;
+  //     setTimeout(() => (this.isAttacking = false), 1000); // Angriff dauert 1 Sekunde
+  //   }, 5000); // alle 5 Sekunden Angriff
+  // }
 }
-
-moveTowardsPlayer() {
-  if (this.x > this.character.x + 50) {
-    this.x -= 2; // läuft zum Spieler
-  }
-}
-
-
-  startAttackCycle() {
-    setInterval(() => {
-      this.isAttacking = true;
-      setTimeout(() => (this.isAttacking = false), 1000); // Angriff dauert 1 Sekunde
-    }, 5000); // alle 5 Sekunden Angriff
-  }
-}
-
-
 
 /*
 class EndbossLevel1 extends MovableObject {
