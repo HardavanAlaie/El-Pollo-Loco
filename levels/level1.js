@@ -63,13 +63,13 @@ const level1 = new Level(
         condition: (level) =>
           level.enemies.some((e) => e instanceof EndbossLevel1 && !e.isDead()),
       },
-      {
-        type: ChickenNormal,
-        maxCount: 2,
-        interval: 4000,
-        condition: (level) =>
-          level.enemies.some((e) => e instanceof EndbossLevel1 && !e.isDead()),
-      },
+      // {
+      //   type: ChickenNormal,
+      //   maxCount: 2,
+      //   interval: 4000,
+      //   condition: (level) =>
+      //     level.enemies.some((e) => e instanceof EndbossLevel1 && !e.isDead()),
+      // },
     ],
   }
 );
@@ -141,7 +141,26 @@ const level2 = new Level(
     new CollectableCoin(250, 350),
     new CollectableCoin(400, 350),
     new CollectableCoin(700, 350),
-  ]
+  ],
+
+    {
+    spawnConfig: [
+      // {
+      //   type: ChickenSmall,
+      //   maxCount: 5,
+      //   interval: 3000,
+      //   condition: (level) =>
+      //     level.enemies.some((e) => e instanceof EndbossLevel1 && !e.isDead()),
+      // },
+      {
+        type: ChickenNormal,
+        maxCount: 2,
+        interval: 4000,
+        condition: (level) =>
+          level.enemies.some((e) => e instanceof EndbossLevel1 && !e.isDead()),
+      },
+    ],
+  }
 );
 
 /*
