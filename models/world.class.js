@@ -1,5 +1,5 @@
 class World {
-  character = new Character();
+  //character = new Character();
   characterDead = false;
   playerDied = false; //  unterscheidet "Tod" von "Endboss geschafft"
   endbossDefeated = false;
@@ -29,14 +29,16 @@ class World {
   collectableBottles = this.level.collectableObjects || [];
   collectableCoins = this.level.collectableCoins || [];
 
-  constructor(canvas, keyboard, character) {
+  constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
-    this.character = character; // Spieler speichern
+    //this.character = character; // Spieler speichern
 
     this.currentLevelIndex = 0;
     this.level = allLevels[this.currentLevelIndex];
+    // Character wird hier erstellt – World (this) wird übergeben!
+    this.character = new Character(this);
     this.enemies = this.level.enemies;
     this.clouds = this.level.clouds;
     this.backgroundObjects = this.level.backgroundObjects;

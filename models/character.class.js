@@ -54,8 +54,6 @@
   ];
  */
 
-
-
 class Character extends MovableObject {
   height = 250;
   width = 120;
@@ -86,8 +84,9 @@ class Character extends MovableObject {
     (_, i) => `img/2_character_pepe/5_dead/D-5${i + 1}.png`
   );
 
-  constructor() {
+  constructor(world) {
     super().loadImage(this.IMAGES_WALKING[0]);
+    this.world = world;
     this.loadImages(this.IMAGES_WALKING);
     this.loadImages(this.IMAGES_IDLE);
     this.loadImages(this.IMAGES_JUMPING);
@@ -100,28 +99,34 @@ class Character extends MovableObject {
   animate() {
     setInterval(() => {
       //this.moveCharacter();
-      if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+      if (
+        this.world?.keyboard?.RIGHT &&
+        this.x < this.world.level.level_end_x
+      ) {
         this.moveRight();
         this.otherDirection = false;
       }
 
-      if (this.world.keyboard.LEFT && this.x > 0) {
+      if (this.world?.keyboard?.LEFT && this.x > 0) {
         this.moveLeft();
         this.otherDirection = true;
       }
 
-      if (this.world.keyboard.UP && !this.isAboveGround()) {
+      if (this.world?.keyboard?.UP && !this.isAboveGround()) {
         this.jump();
       }
 
       // if (this.world.keyboard.SPACE) {
       //   this.throw();
       // }
-      if (this.world.keyboard.D) {
+      if (this.world?.keyboard?.D) {
         this.throw();
       }
 
-      this.world.camera_x = -this.x + 100;
+      //this.world.camera_x = -this.x + 100;
+      if (this.world) {
+        this.world.camera_x = -this.x + 100; // ✅ korrekt
+      }
     }, 1000 / 60);
 
     setInterval(() => {
@@ -250,8 +255,6 @@ class Character extends MovableObject {
     }
   }
 }
-
-
 
 /*
 class Character extends MovableObject {
