@@ -318,6 +318,7 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let character;
 //let character = new Character(); // <- FIX: character ist jetzt definiert
 //let allLevels = [level1, level2]; // <- FIX: Levels als Array verfügbar
 let soundEnabled = true;
