@@ -307,10 +307,7 @@
 //   }
 // });*/
 
-
-
 //--------------------------------------------------------------------------
-
 
 // =========================
 // Initialisierung
@@ -349,13 +346,13 @@ function setupMobileControls() {
     { id: "throw-btn", key: "D" },
   ];
 
-  controls.forEach(control => {
+  controls.forEach((control) => {
     const btn = document.getElementById(control.id);
-    btn.addEventListener("touchstart", e => {
+    btn.addEventListener("touchstart", (e) => {
       e.preventDefault();
       keyboard[control.key] = true;
     });
-    btn.addEventListener("touchend", e => {
+    btn.addEventListener("touchend", (e) => {
       e.preventDefault();
       keyboard[control.key] = false;
     });
@@ -365,7 +362,7 @@ function setupMobileControls() {
 // =========================
 // Tastatursteuerung
 // =========================
-window.addEventListener("keydown", e => {
+window.addEventListener("keydown", (e) => {
   if (e.keyCode == 37) keyboard.LEFT = true;
   if (e.keyCode == 38) keyboard.UP = true;
   if (e.keyCode == 39) keyboard.RIGHT = true;
@@ -373,7 +370,7 @@ window.addEventListener("keydown", e => {
   if (e.keyCode == 68) keyboard.D = true;
 });
 
-window.addEventListener("keyup", e => {
+window.addEventListener("keyup", (e) => {
   if (e.keyCode == 37) keyboard.LEFT = false;
   if (e.keyCode == 38) keyboard.UP = false;
   if (e.keyCode == 39) keyboard.RIGHT = false;
@@ -401,7 +398,7 @@ window.addEventListener("load", () => {
 document.getElementById("fullscreen-btn").addEventListener("click", () => {
   const canvas = document.getElementById("canvas");
   if (!document.fullscreenElement) {
-    canvas.requestFullscreen().catch(err => {
+    canvas.requestFullscreen().catch((err) => {
       console.error(`Vollbild-Fehler: ${err.message}`);
     });
   } else {

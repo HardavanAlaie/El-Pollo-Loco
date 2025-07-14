@@ -71,11 +71,15 @@ class World {
   }
 
   checkEndbossHit() {
-  if (!this.character.isHurt() && this.character.isColliding(this.level.enemies.find(e => e instanceof EndbossLevel1))) {
-    this.character.hit();
+    if (
+      !this.character.isHurt() &&
+      this.character.isColliding(
+        this.level.enemies.find((e) => e instanceof EndbossLevel1)
+      )
+    ) {
+      this.character.hit();
+    }
   }
-}
-
 
   checkThrowableObjects() {
     this.throwableObjects = this.throwableObjects.filter(
