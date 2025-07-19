@@ -78,9 +78,23 @@ class EndbossLevel2 extends MovableObject {
     return this.energy <= 0;
   }
 
+  // animate() {
+  //   setInterval(() => {
+  //     this.playAnimation(this.IMAGES_ALERT);
+  //   }, 200);
+  // }
   animate() {
-    setInterval(() => {
-      this.playAnimation(this.IMAGES_ALERT);
+    this.bossAnimationInterval = setInterval(() => {
+      if (this.isDead()) {
+        this.playAnimation(this.IMAGES_DEAD);
+        clearInterval(this.bossAnimationInterval); // Stoppe weitere Animationen
+      } else if (this.energy < 40) {
+        this.playAnimation(this.IMAGES_HURT);
+      } else if (this.isAttacking) {
+        this.playAnimation(this.IMAGES_ATTACK);
+      } else {
+        this.playAnimation(this.IMAGES_ALERT);
+      }
     }, 200);
   }
 }
