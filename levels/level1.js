@@ -139,7 +139,7 @@ const level2 = new Level(
         maxCount: 2,
         interval: 4000,
         condition: (level) =>
-          level.enemies.some((e) => e instanceof EndbossLevel1 && !e.isDead()),
+          level.enemies.some((e) => e instanceof EndbossLevel2 && !e.isDead()),
       },
     ],
   }
