@@ -65,16 +65,28 @@ class World {
         this.checkThrowableObjects();
         this.checkEndbossDefeated();
         this.removeOffscreenEnemies();
-        this.checkEndbossHit();
+        this.checkEndboss1Hit();
+        this.checkEndboss2Hit();
       }
     }, 200);
   }
 
-  checkEndbossHit() {
+  checkEndboss1Hit() {
     if (
       !this.character.isHurt() &&
       this.character.isColliding(
         this.level.enemies.find((e) => e instanceof EndbossLevel1)
+      )
+    ) {
+      this.character.hit();
+    }
+  }
+
+  checkEndboss2Hit() {
+    if (
+      !this.character.isHurt() &&
+      this.character.isColliding(
+        this.level.enemies.find((e) => e instanceof EndbossLevel2)
       )
     ) {
       this.character.hit();
