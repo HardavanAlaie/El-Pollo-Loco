@@ -68,6 +68,12 @@ class EndbossLevel2 extends MovableObject {
     }
   }
 
+  die() {
+    this.playAnimation(this.IMAGES_DEAD);
+    clearInterval(this.bossAnimationInterval);
+    // optional: removeFromWorld(), explosion etc.
+  }
+
   isDead() {
     return this.energy <= 0;
   }
