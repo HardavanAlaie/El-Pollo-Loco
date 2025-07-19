@@ -66,7 +66,7 @@ class World {
         this.checkEndbossDefeated();
         this.removeOffscreenEnemies();
         this.checkEndboss1Hit();
-        this.checkEndboss2Hit();
+        //this.checkEndboss2Hit();
       }
     }, 200);
   }
@@ -82,16 +82,16 @@ class World {
     }
   }
 
-  checkEndboss2Hit() {
-    if (
-      !this.character.isHurt() &&
-      this.character.isColliding(
-        this.level.enemies.find((e) => e instanceof EndbossLevel2)
-      )
-    ) {
-      this.character.hit();
-    }
-  }
+  // checkEndboss2Hit() {
+  //   if (
+  //     !this.character.isHurt() &&
+  //     this.character.isColliding(
+  //       this.level.enemies.find((e) => e instanceof EndbossLevel2)
+  //     )
+  //   ) {
+  //     this.character.hit();
+  //   }
+  // }
 
   checkThrowableObjects() {
     this.throwableObjects = this.throwableObjects.filter(
