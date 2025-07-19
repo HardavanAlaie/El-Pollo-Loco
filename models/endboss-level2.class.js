@@ -15,7 +15,7 @@ class EndbossLevel2 extends MovableObject {
     "img/4_enemie_boss_chicken/2_alert/G12.png",
   ];
 
-    IMAGES_ATTACK = [
+  IMAGES_ATTACK = [
     "img/4_enemie_boss_chicken/3_attack/G13.png",
     "img/4_enemie_boss_chicken/3_attack/G14.png",
     "img/4_enemie_boss_chicken/3_attack/G15.png",
@@ -41,6 +41,9 @@ class EndbossLevel2 extends MovableObject {
   constructor() {
     super().loadImage(this.IMAGES_ALERT[0]);
     this.loadImages(this.IMAGES_ALERT);
+    this.loadImages(this.IMAGES_ATTACK);
+    this.loadImages(this.IMAGES_HURT);
+    this.loadImages(this.IMAGES_DEAD);
 
     this.x = 2000;
     this.energy = 100;
@@ -48,10 +51,21 @@ class EndbossLevel2 extends MovableObject {
     this.animate();
   }
 
+  // hit() {
+  //   this.energy -= 20;
+  //   this.energy = Math.max(this.energy, 0);
+  //   this.statusBar.setPercentage(this.energy);
+  // }
   hit() {
+    if (this.isDead()) return;
+
     this.energy -= 20;
     this.energy = Math.max(this.energy, 0);
     this.statusBar.setPercentage(this.energy);
+
+    if (this.isDead()) {
+      this.die();
+    }
   }
 
   isDead() {
