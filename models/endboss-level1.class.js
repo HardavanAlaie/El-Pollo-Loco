@@ -56,11 +56,6 @@ class EndbossLevel1 extends MovableObject {
     //this.startAttackCycle();
   }
 
-  // hit() {
-  //   this.energy -= 20;
-  //   this.energy = Math.max(this.energy, 0);
-  //   this.statusBar.setPercentage(this.energy);
-  // }
   hit() {
     if (this.isDead()) return;
 
