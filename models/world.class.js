@@ -75,7 +75,7 @@ class World {
     if (
       !this.character.isHurt() &&
       this.character.isColliding(
-        this.level.enemies.find((e) => e instanceof EndbossLevel1)
+        this.level.enemies.find((e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2)
       )
     ) {
       this.character.hit();
@@ -139,7 +139,7 @@ class World {
           //   if (i >= 0) this.level.enemies.splice(i, 1);
           // }
           if (enemy.isDead?.()) {
-            if (enemy instanceof EndbossLevel1) {
+            if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
               enemy.isMarkedDead = true;
             } else {
               const i = this.level.enemies.indexOf(enemy);
@@ -175,7 +175,7 @@ class World {
           //   if (i >= 0) this.level.enemies.splice(i, 1);
           // }
           if (enemy.isDead?.()) {
-            if (enemy instanceof EndbossLevel1) {
+            if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
               enemy.isMarkedDead = true;
             } else {
               const i = this.level.enemies.indexOf(enemy);
@@ -233,7 +233,7 @@ class World {
   }
 
   checkEndbossDefeated() {
-    const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
+    const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2);
     //console.log("Endboss gefunden:", endboss);
 
     if (!endboss) return;
