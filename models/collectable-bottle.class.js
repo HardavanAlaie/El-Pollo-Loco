@@ -20,14 +20,4 @@ class CollectableBottle extends MovableObject {
       this.playAnimation(this.IMAGES);
     }, 250);
   }
-
-  generateRandomBottles(count, xMin, xMax, yMin, yMax) {
-    let bottles = [];
-    for (let i = 0; i < count; i++) {
-      let x = Math.floor(Math.random() * (xMax - xMin) + xMin);
-      let y = Math.floor(Math.random() * (yMax - yMin) + yMin);
-      bottles.push(new CollectableBottle(x, y));
-    }
-    return bottles;
-  }
 }
