@@ -391,6 +391,14 @@ class World {
     this.spawnEnemyLoop();
   }
 
+  spawnNewBottle() {
+    let x = Math.floor(Math.random() * 1700) + 300; // zwischen 300 und 2000
+    let y = Math.random() < 0.5 ? 300 : 350; // zufällige Höhe
+    let newBottle = new CollectableBottle(x, y);
+    this.collectableBottles.push(newBottle);
+}
+
+
   showBottleLimitMessage() {
     this.bottleLimitMessage = "Flaschenlimit erreicht!";
     clearTimeout(this.bottleLimitTimeout);
