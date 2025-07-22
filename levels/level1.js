@@ -54,7 +54,7 @@ const level1 = new Level(
     // new BackgroundObject("img/5_background/layers/2_second_layer/2.png", 719 * 3),
     // new BackgroundObject("img/5_background/layers/1_first_layer/2.png", 719 * 3),
   ],
-  generateRandomBottles(15, 300, 2000, 300, 300), // <== Hier passiert die Magie
+  generateRandomBottles(15, 300, 2000, 380, 380), // <== Hier passiert die Magie
   // [
   //   new CollectableBottle(300, 350),
   //   new CollectableBottle(350, 300),
