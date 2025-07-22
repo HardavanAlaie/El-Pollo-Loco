@@ -136,16 +136,17 @@ const level2 = new Level(
     // new BackgroundObject("img/5_background/layers/2_second_layer/2.png", 719 * 4),
     // new BackgroundObject("img/5_background/layers/1_first_layer/2.png", 719 * 4),
   ],
-  [
-    new CollectableBottle(300, 350),
-    new CollectableBottle(350, 300),
-    new CollectableBottle(400, 300),
-    new CollectableBottle(350, 350),
-    new CollectableBottle(400, 350),
-    new CollectableBottle(450, 350),
-    new CollectableBottle(600, 350),
-    new CollectableBottle(900, 350),
-  ],
+  generateRandomBottles(20, 300, 2000, 300, 350), // <== Hier passiert die Magie
+  // [
+  //   new CollectableBottle(300, 350),
+  //   new CollectableBottle(350, 300),
+  //   new CollectableBottle(400, 300),
+  //   new CollectableBottle(350, 350),
+  //   new CollectableBottle(400, 350),
+  //   new CollectableBottle(450, 350),
+  //   new CollectableBottle(600, 350),
+  //   new CollectableBottle(900, 350),
+  // ],
   [
     new CollectableCoin(100, 350),
     new CollectableCoin(150, 300),
