@@ -14,7 +14,7 @@ class ChickenSmall extends MovableObject {
     this.speed = 0.3 + Math.random() * 0.5;
     this.energy = 100;
     this.statusBar = new StatusBarEnemy(this);
-    this.animate();
+    //this.animate();
   }
 
   hit() {
@@ -27,13 +27,25 @@ class ChickenSmall extends MovableObject {
     return this.energy <= 0;
   }
 
-  animate() {
-    setInterval(() => {
-      this.moveLeft();
-    }, 1000 / 60);
+  // animate() {
+  //   setInterval(() => {
+  //     this.moveLeft();
+  //   }, 1000 / 60);
 
-    setInterval(() => {
-      this.playAnimation(this.IMAGES_RUNNING);
-    }, 100);
+  //   setInterval(() => {
+  //     this.playAnimation(this.IMAGES_RUNNING);
+  //   }, 100);
+  // }
+  start() {
+    this.moveInterval = setInterval(() => this.moveLeft(), 1000 / 60);
+    this.animationInterval = setInterval(
+      () => this.playAnimation(this.IMAGES_RUNNING),
+      100
+    );
+  }
+
+  stop() {
+    clearInterval(this.moveInterval);
+    clearInterval(this.animationInterval);
   }
 }
