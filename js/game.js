@@ -333,6 +333,11 @@ function startGame() {
 function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
+
+    // Nach Weltstart: alle kleinen Chickens aktivieren
+  world.level.enemies
+    .filter(e => e instanceof ChickenSmall)
+    .forEach(chicken => chicken.start());
 }
 
 // =========================
