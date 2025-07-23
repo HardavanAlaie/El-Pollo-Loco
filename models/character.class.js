@@ -230,12 +230,6 @@ class Character extends MovableObject {
     }
   }
 
-  // collectBottle() {
-  //   if (this.world.statusBarBottle.availableBottles < 5) {
-  //     this.world.statusBarBottle.availableBottles++;
-  //     this.world.statusBarBottle.update();
-  //   }
-  // }
   collectBottle() {
     if (this.world.statusBarBottle.availableBottles < 5) {
         this.world.statusBarBottle.availableBottles++;
