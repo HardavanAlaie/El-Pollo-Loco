@@ -338,6 +338,10 @@ function init() {
   world.level.enemies
     .filter(e => e instanceof ChickenSmall)
     .forEach(chicken => chicken.start());
+
+  world.level.enemies
+  .filter(e => e instanceof ChickenNormal)
+  .forEach(chicken => chicken.start());
 }
 
 // =========================
