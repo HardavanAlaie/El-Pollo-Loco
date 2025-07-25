@@ -332,16 +332,16 @@ function startGame() {
 
 function init() {
   canvas = document.getElementById("canvas");
-  world = new World(canvas, keyboard);
+  world = new World(canvas, keyboard, level);
 
     // Nach Weltstart: alle kleinen Chickens aktivieren
   world.level.enemies
-    .filter(e => e instanceof ChickenSmall)
+    .filter(e => e instanceof ChickenSmall || e instanceof ChickenNormal)
     .forEach(chicken => chicken.start());
 
-  world.level.enemies
-  .filter(e => e instanceof ChickenNormal)
-  .forEach(chicken => chicken.start());
+  // world.level.enemies
+  // .filter(e => e instanceof ChickenNormal)
+  // .forEach(chicken => chicken.start());
 }
 
 // =========================

@@ -29,14 +29,15 @@ class World {
   collectableBottles = this.level.collectableObjects || [];
   collectableCoins = this.level.collectableCoins || [];
 
-  constructor(canvas, keyboard) {
+  constructor(canvas, keyboard, level) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
     //this.character = character; // Spieler speichern
 
-    this.currentLevelIndex = 0;
-    this.level = allLevels[this.currentLevelIndex];
+    // this.currentLevelIndex = 0;
+    // this.level = allLevels[this.currentLevelIndex];
+    this.level = level;
     // Character wird hier erstellt – World (this) wird übergeben!
     this.character = new Character(this);
     this.enemies = this.level.enemies;
