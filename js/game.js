@@ -326,7 +326,7 @@ let soundEnabled = true;
 function startGame() {
   document.getElementById("start-screen").style.display = "none";
   document.getElementById("mobile-controls").style.display = "flex";
-  init();
+  init(level);
   setupMobileControls();
 }
 
