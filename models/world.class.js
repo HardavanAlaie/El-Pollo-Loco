@@ -35,9 +35,9 @@ class World {
     this.keyboard = keyboard;
     //this.character = character; // Spieler speichern
 
-    // this.currentLevelIndex = 0;
-    // this.level = allLevels[this.currentLevelIndex];
-    this.level = level;
+    this.currentLevelIndex = 0;
+    this.level = allLevels[this.currentLevelIndex];
+    //this.level = level;
     // Character wird hier erstellt – World (this) wird übergeben!
     this.character = new Character(this);
     this.enemies = this.level.enemies;
