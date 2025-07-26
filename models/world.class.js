@@ -29,7 +29,7 @@ class World {
   collectableBottles = this.level.collectableObjects || [];
   collectableCoins = this.level.collectableCoins || [];
 
-  constructor(canvas, keyboard, level) {
+  constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
