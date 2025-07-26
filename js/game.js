@@ -326,13 +326,13 @@ let soundEnabled = true;
 function startGame() {
   document.getElementById("start-screen").style.display = "none";
   document.getElementById("mobile-controls").style.display = "flex";
-  init(level);
+  init();
   setupMobileControls();
 }
 
 function init() {
   canvas = document.getElementById("canvas");
-  world = new World(canvas, keyboard, level);
+  world = new World(canvas, keyboard);
 
     // Nach Weltstart: alle kleinen Chickens aktivieren
   world.level.enemies
