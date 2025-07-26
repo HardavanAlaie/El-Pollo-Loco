@@ -86,7 +86,7 @@ const level1 = new Level(
     spawnConfig: [
       {
         type: ChickenSmall,
-        maxCount: 5,
+        maxCount: 15,
         interval: 3000,
         condition: (level) =>
           level.enemies.some((e) => e instanceof EndbossLevel1 && !e.isDead()),
@@ -104,6 +104,8 @@ const level1 = new Level(
 
 const level2 = new Level(
   [
+    new ChickenNormal(),
+    new ChickenNormal(),
     new ChickenNormal(),
     new ChickenNormal(),
     new ChickenNormal(),
@@ -136,7 +138,7 @@ const level2 = new Level(
     // new BackgroundObject("img/5_background/layers/2_second_layer/2.png", 719 * 4),
     // new BackgroundObject("img/5_background/layers/1_first_layer/2.png", 719 * 4),
   ],
-  generateRandomBottles(20, 300, 2000, 300, 350), // <== Hier passiert die Magie
+  generateRandomBottles(50, 300, 2000, 300, 350), // <== Hier passiert die Magie
   // [
   //   new CollectableBottle(300, 350),
   //   new CollectableBottle(350, 300),
