@@ -20,27 +20,27 @@ class ChickenNormal extends MovableObject {
     this.animate();
   }
 
-  // hit() {
-  //   this.energy -= 20;
-  //   this.energy = Math.max(this.energy, 0);
-  //   this.statusBar.setPercentage(this.energy);
-  // }
   hit() {
-    if (this.isDead()) return;
-
     this.energy -= 20;
     this.energy = Math.max(this.energy, 0);
     this.statusBar.setPercentage(this.energy);
-
-    if (this.isDead()) {
-      this.die();
-    }
   }
+  // hit() {
+  //   if (this.isDead()) return;
 
-  die() {
-    this.playAnimation(this.IMAGES_DEAD);
-    clearInterval(this.bossAnimationInterval);
-  }
+  //   this.energy -= 20;
+  //   this.energy = Math.max(this.energy, 0);
+  //   this.statusBar.setPercentage(this.energy);
+
+  //   if (this.isDead()) {
+  //     this.die();
+  //   }
+  // }
+
+  // die() {
+  //   this.playAnimation(this.IMAGES_DEAD);
+  //   clearInterval(this.chicekAnimationInterval);
+  // }
 
   isDead() {
     return this.energy <= 0;
@@ -55,6 +55,17 @@ class ChickenNormal extends MovableObject {
       this.playAnimation(this.IMAGES_RUNNING);
     }, 100);
   }
+  //   animate() {
+  //   this.chicekAnimationInterval = setInterval(() => {
+  //     if (this.isDead()) {
+  //       this.playAnimation(this.IMAGES_DEAD);
+  //       clearInterval(this.chicekAnimationInterval);
+  //     } else {
+  //       this.playAnimation(this.IMAGES_RUNNING);
+  //     }
+  //   }, 100);
+  // }
+
   //   start() {
   //   this.moveInterval = setInterval(() => this.moveLeft(), 1000 / 60);
   //   this.animationInterval = setInterval(
