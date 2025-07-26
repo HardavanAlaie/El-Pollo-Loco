@@ -336,7 +336,7 @@ function init() {
 
     // Nach Weltstart: alle kleinen Chickens aktivieren
   world.level.enemies
-    .filter(e => e instanceof ChickenSmall || e instanceof ChickenNormal)
+    .filter(e => e instanceof ChickenSmall)
     .forEach(chicken => chicken.start());
 
   // world.level.enemies
