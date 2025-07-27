@@ -408,32 +408,72 @@ class World {
     }, 2000);
   }
 
-  showRestartOverlay() {
-    if (!document.getElementById("restartButton")) {
-      const button = document.createElement("button");
-      button.innerText = "Spiel neu starten";
-      button.id = "restartButton";
-      button.style.position = "absolute";
-      button.style.top = "40%";
-      button.style.left = "50%";
-      button.style.transform = "translate(-50%, -50%)";
-      button.style.padding = "15px 30px";
-      button.style.fontSize = "20px";
-      button.style.backgroundColor = "#ff4444";
-      button.style.color = "white";
-      button.style.border = "none";
-      button.style.borderRadius = "10px";
-      button.style.cursor = "pointer";
-      button.style.boxShadow = "0 0 10px black";
-      button.style.zIndex = "999";
+  // showRestartOverlay() {
+  //   if (!document.getElementById("restartButton")) {
+  //     const button = document.createElement("button");
+  //     button.innerText = "Spiel neu starten";
+  //     button.id = "restartButton";
+  //     button.style.position = "absolute";
+  //     button.style.top = "40%";
+  //     button.style.left = "50%";
+  //     button.style.transform = "translate(-50%, -50%)";
+  //     button.style.padding = "15px 30px";
+  //     button.style.fontSize = "20px";
+  //     button.style.backgroundColor = "#ff4444";
+  //     button.style.color = "white";
+  //     button.style.border = "none";
+  //     button.style.borderRadius = "10px";
+  //     button.style.cursor = "pointer";
+  //     button.style.boxShadow = "0 0 10px black";
+  //     button.style.zIndex = "999";
 
-      button.addEventListener("click", () => {
-        location.reload();
-      });
+  //     button.addEventListener("click", () => {
+  //       location.reload();
+  //     });
 
-      document.body.appendChild(button);
-    }
-  }
+  //     document.body.appendChild(button);
+  //   }
+  // }
+
+  showGameOverScreen() {
+  // Game Over Bild
+  const gameOverImage = document.createElement("img");
+  gameOverImage.src = "img/You won, you lost/Game Over.png";
+  gameOverImage.style.position = "absolute";
+  gameOverImage.style.top = "20%";
+  gameOverImage.style.left = "50%";
+  gameOverImage.style.transform = "translate(-50%, -50%)";
+  gameOverImage.style.zIndex = "998";
+  gameOverImage.style.width = "60%";
+  gameOverImage.id = "gameOverImage";
+
+  // Restart Button
+  const button = document.createElement("button");
+  button.innerText = "🔁 Spiel neu starten";
+  button.id = "restartButton";
+  button.style.position = "absolute";
+  button.style.top = "60%";
+  button.style.left = "50%";
+  button.style.transform = "translate(-50%, -50%)";
+  button.style.padding = "15px 30px";
+  button.style.fontSize = "20px";
+  button.style.backgroundColor = "#ff4444";
+  button.style.color = "white";
+  button.style.border = "none";
+  button.style.borderRadius = "10px";
+  button.style.cursor = "pointer";
+  button.style.boxShadow = "0 0 10px black";
+  button.style.zIndex = "999";
+
+  button.addEventListener("click", () => {
+    location.reload();
+  });
+
+  // Zur Seite hinzufügen
+  document.body.appendChild(gameOverImage);
+  document.body.appendChild(button);
+}
+
 
   draw() {
     console.log("characterDead:", this.characterDead);
