@@ -497,6 +497,12 @@ class World {
 
 
   draw() {
+    if (this.playerDied) {
+  this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  this.showGameOverScreen(); // ← Das musst du definieren
+  return; // 🛑 Alles andere überspringen
+}
+
     console.log("characterDead:", this.characterDead);
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.translate(this.camera_x, 0);
