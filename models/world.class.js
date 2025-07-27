@@ -57,20 +57,41 @@ class World {
     this.spawnEnemyLoop();
   }
 
-  run() {
-    //console.log("Aktuelle Gegnerliste(run):", this.level.enemies);
+  // run() {
+  //   //console.log("Aktuelle Gegnerliste(run):", this.level.enemies);
 
-    this.gameInterval = setInterval(() => {
-      if (!this.levelEnded) {
-        this.checkCollisions();
-        this.checkThrowableObjects();
-        this.checkEndbossDefeated();
-        this.removeOffscreenEnemies();
-        this.checkEndboss1Hit();
-        this.checkEndboss2Hit();
-      }
-    }, 200);
-  }
+  //   this.gameInterval = setInterval(() => {
+  //     if (!this.levelEnded) {
+  //       this.checkCollisions();
+  //       this.checkThrowableObjects();
+  //       this.checkEndbossDefeated();
+  //       this.removeOffscreenEnemies();
+  //       this.checkEndboss1Hit();
+  //       this.checkEndboss2Hit();
+  //     }
+  //   }, 200);
+  // }
+  run() {
+  this.gameInterval = setInterval(() => {
+    if (!this.levelEnded) {
+      this.checkCollisions();
+      this.checkThrowableObjects();
+      this.checkEndbossDefeated();
+      this.removeOffscreenEnemies();
+      this.checkEndboss1Hit();
+      this.checkEndboss2Hit();
+    }
+
+    // 💀 Wenn Spieler tot ist, zeige Game Over Screen
+    if (this.character.isDead() && !this.gameOver) {
+      this.gameOver = true;
+      clearInterval(this.gameInterval);  // Stoppt die Spiel-Logik
+      cancelAnimationFrame(this.animationFrameId); // Falls du draw() mit requestAnimationFrame benutzt
+      this.showGameOverScreen(); // Zeige Game Over Bild und Button
+    }
+  }, 200);
+}
+
 
   checkEndboss1Hit() {
     if (
