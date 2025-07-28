@@ -267,40 +267,6 @@ class World {
     }
   }
 
-  //   spawnEnemyLoop() {
-  //   const spawnConfig = this.level.config?.spawnConfig || [];
-
-  //   this.spawnIntervals = [];
-
-  //   spawnConfig.forEach((config) => {
-  //     const intervalId = setInterval(() => {
-  //       const endbossAlive = this.level.enemies.some(
-  //         (e) =>
-  //           (e instanceof EndbossLevel1 || e instanceof EndbossLevel2) &&
-  //           !e.isDead()
-  //       );
-
-  //       if (!endbossAlive) {
-  //         clearInterval(intervalId);
-  //         return;
-  //       }
-
-  //       const currentEnemies = this.level.enemies.filter(
-  //         (e) => e instanceof config.type
-  //       );
-
-  //       if (currentEnemies.length < config.maxCount) {
-  //         const enemy = new config.type();
-  //         enemy.x = 900 + Math.random() * 400;
-  //         this.level.enemies.push(enemy);
-  //         //console.log(`Spawned: ${config.type.name}`);
-  //       }
-
-  //     }, config.interval);
-
-  //     this.spawnIntervals.push(intervalId);
-  //   });
-  // }
   spawnEnemyLoop() {
     const spawnConfigs = this.level.config?.spawnConfig || [];
     this.spawnIntervals = [];
