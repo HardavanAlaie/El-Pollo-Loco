@@ -240,15 +240,10 @@ class World {
     });
   }
 
-  // endGame() {
-  //   clearInterval(this.gameInterval); // stoppe alle Intervall-Schleifen
-  //   cancelAnimationFrame(this.animationFrame); // stoppe Zeichnung, falls nötig
-  //   this.levelEnded = true;
-  // }
   endGame() {
-    clearInterval(this.gameInterval);
+    clearInterval(this.gameInterval); // stoppe alle Intervall-Schleifen
     clearInterval(this.enemySpawnInterval);
-    //cancelAnimationFrame(this.animationFrame);
+    //cancelAnimationFrame(this.animationFrame); // stoppe Zeichnung, falls nötig
     this.levelEnded = true;
     this.gameOver = true;
     this.playerDied = true;
