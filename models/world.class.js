@@ -417,57 +417,77 @@ class World {
   //   }
   // }
 
-  showGameOverScreen() {
-  // Game Over Bild
-  const gameOverImage = document.createElement("img");
-  gameOverImage.src = "img/You won, you lost/Game Over.png";
-  gameOverImage.style.position = "absolute";
-  gameOverImage.style.top = "20%";
-  gameOverImage.style.left = "50%";
-  gameOverImage.style.transform = "translate(-50%, -50%)";
-  gameOverImage.style.zIndex = "998";
-  gameOverImage.style.width = "60%";
-  gameOverImage.id = "gameOverImage";
+//   showGameOverScreen() {
+//   // Game Over Bild
+//   const gameOverImage = document.createElement("img");
+//   gameOverImage.src = "img/You won, you lost/Game Over.png";
+//   gameOverImage.style.position = "absolute";
+//   gameOverImage.style.top = "20%";
+//   gameOverImage.style.left = "50%";
+//   gameOverImage.style.transform = "translate(-50%, -50%)";
+//   gameOverImage.style.zIndex = "998";
+//   gameOverImage.style.width = "60%";
+//   gameOverImage.id = "gameOverImage";
 
-  // Restart Button
-  const button = document.createElement("button");
-  button.innerText = "🔁 Spiel neu starten";
-  button.id = "restartButton";
-  button.style.position = "absolute";
-  button.style.top = "60%";
-  button.style.left = "50%";
-  button.style.transform = "translate(-50%, -50%)";
-  button.style.padding = "15px 30px";
-  button.style.fontSize = "20px";
-  button.style.backgroundColor = "#ff4444";
-  button.style.color = "white";
-  button.style.border = "none";
-  button.style.borderRadius = "10px";
-  button.style.cursor = "pointer";
-  button.style.boxShadow = "0 0 10px black";
-  button.style.zIndex = "999";
+//   // Restart Button
+//   const button = document.createElement("button");
+//   button.innerText = "🔁 Spiel neu starten";
+//   button.id = "restartButton";
+//   button.style.position = "absolute";
+//   button.style.top = "60%";
+//   button.style.left = "50%";
+//   button.style.transform = "translate(-50%, -50%)";
+//   button.style.padding = "15px 30px";
+//   button.style.fontSize = "20px";
+//   button.style.backgroundColor = "#ff4444";
+//   button.style.color = "white";
+//   button.style.border = "none";
+//   button.style.borderRadius = "10px";
+//   button.style.cursor = "pointer";
+//   button.style.boxShadow = "0 0 10px black";
+//   button.style.zIndex = "999";
 
-  button.addEventListener("click", () => {
-    location.reload();
-  });
+//   button.addEventListener("click", () => {
+//     location.reload();
+//   });
 
-  // Zur Seite hinzufügen
-  document.body.appendChild(gameOverImage);
-  document.body.appendChild(button);
+//   // Zur Seite hinzufügen
+//   document.body.appendChild(gameOverImage);
+//   document.body.appendChild(button);
+// }
+showGameOverScreen() {
+  // Hintergrund schwarz mit Transparenz
+  this.ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+  this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+  // Text "GAME OVER"
+  this.ctx.font = "bold 80px Comic Sans MS";
+  this.ctx.fillStyle = "red";
+  this.ctx.textAlign = "center";
+  this.ctx.fillText("GAME OVER", this.canvas.width / 2, this.canvas.height / 2 - 50);
+
+  // Text Button Hinweis
+  this.ctx.font = "30px Comic Sans MS";
+  this.ctx.fillStyle = "white";
+  this.ctx.fillText("Klicke, um neu zu starten", this.canvas.width / 2, this.canvas.height / 2 + 30);
+
+  // Restart mit Klick
+  this.canvas.addEventListener("click", () => location.reload(), { once: true });
 }
+
 
 
   draw() {
-//     if (this.playerDied) {
-//   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-//   this.showGameOverScreen(); // ← Das musst du definieren
-//   return; // 🛑 Alles andere überspringen
-// }
 if (this.playerDied) {
   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  this.showRestartOverlay();  // ✅ Richtiger Funktionsname
-  return;
+  this.showGameOverScreen(); // ← Das musst du definieren
+  return; // 🛑 Alles andere überspringen
 }
+// if (this.playerDied) {
+//   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+//   this.showRestartOverlay();  // ✅ Richtiger Funktionsname
+//   return;
+// }
 
 
     console.log("characterDead:", this.characterDead);
