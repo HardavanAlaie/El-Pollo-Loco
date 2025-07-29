@@ -390,32 +390,32 @@ class World {
     }, 2000);
   }
 
-  showRestartOverlay() {
-    if (!document.getElementById("restartButton")) {
-      const button = document.createElement("button");
-      button.innerText = "Spiel neu starten";
-      button.id = "restartButton";
-      button.style.position = "absolute";
-      button.style.top = "40%";
-      button.style.left = "50%";
-      button.style.transform = "translate(-50%, -50%)";
-      button.style.padding = "15px 30px";
-      button.style.fontSize = "20px";
-      button.style.backgroundColor = "#ff4444";
-      button.style.color = "white";
-      button.style.border = "none";
-      button.style.borderRadius = "10px";
-      button.style.cursor = "pointer";
-      button.style.boxShadow = "0 0 10px black";
-      button.style.zIndex = "999";
+  // showRestartOverlay() {
+  //   if (!document.getElementById("restartButton")) {
+  //     const button = document.createElement("button");
+  //     button.innerText = "Spiel neu starten";
+  //     button.id = "restartButton";
+  //     button.style.position = "absolute";
+  //     button.style.top = "40%";
+  //     button.style.left = "50%";
+  //     button.style.transform = "translate(-50%, -50%)";
+  //     button.style.padding = "15px 30px";
+  //     button.style.fontSize = "20px";
+  //     button.style.backgroundColor = "#ff4444";
+  //     button.style.color = "white";
+  //     button.style.border = "none";
+  //     button.style.borderRadius = "10px";
+  //     button.style.cursor = "pointer";
+  //     button.style.boxShadow = "0 0 10px black";
+  //     button.style.zIndex = "999";
 
-      button.addEventListener("click", () => {
-        location.reload();
-      });
+  //     button.addEventListener("click", () => {
+  //       location.reload();
+  //     });
 
-      document.body.appendChild(button);
-    }
-  }
+  //     document.body.appendChild(button);
+  //   }
+  // }
 
   showGameOverScreen() {
   // Game Over Bild
