@@ -458,11 +458,17 @@ class World {
 
 
   draw() {
-    if (this.playerDied) {
+//     if (this.playerDied) {
+//   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+//   this.showGameOverScreen(); // ← Das musst du definieren
+//   return; // 🛑 Alles andere überspringen
+// }
+if (this.playerDied) {
   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  this.showGameOverScreen(); // ← Das musst du definieren
-  return; // 🛑 Alles andere überspringen
+  this.showGameOverScreen();  // ✅ Richtiger Funktionsname
+  return;
 }
+
 
     console.log("characterDead:", this.characterDead);
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -508,9 +514,9 @@ class World {
 
     this.ctx.translate(-this.camera_x, 0);
 
-    if (this.playerDied) {
-      this.showRestartOverlay();
-    }
+    // if (this.playerDied) {
+    //   this.showRestartOverlay();
+    // }
 
     // if (!this.playerDied && !this.endbossDefeated) {
     //   this.animationFrame = requestAnimationFrame(() => this.draw());
