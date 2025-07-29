@@ -482,11 +482,23 @@ showGameOverScreen() {
   ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // 🧨 Game Over Text
-  ctx.font = "bold 80px Comic Sans MS";
-  ctx.fillStyle = "red";
-  ctx.textAlign = "center";
-  ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 100);
+  // // 🧨 Game Over Text
+  // ctx.font = "bold 80px Comic Sans MS";
+  // ctx.fillStyle = "red";
+  // ctx.textAlign = "center";
+  // ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 100);
+
+    // Game Over Bild anzeigen
+  const img = new Image();
+  img.src = "img/You won, you lost/Game Over.png"; // ← Dein Bildpfad
+
+  img.onload = () => {
+    const imgWidth = 400;
+    const imgHeight = 100;
+    const imgX = canvas.width / 2 - imgWidth / 2;
+    const imgY = canvas.height / 2 - 150;
+
+    ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
 
   // 🟥 Button zeichnen
   const buttonWidth = 250;
@@ -515,6 +527,7 @@ showGameOverScreen() {
     canvas.addEventListener("click", this.handleCanvasClick.bind(this));
     this.canvasClickListenerAdded = true;
   }
+};
 }
 
 handleCanvasClick(event) {
