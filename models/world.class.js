@@ -455,25 +455,85 @@ class World {
 //   document.body.appendChild(gameOverImage);
 //   document.body.appendChild(button);
 // }
+// showGameOverScreen() {
+//   // Hintergrund schwarz mit Transparenz
+//   this.ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+//   this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+//   // Text "GAME OVER"
+//   this.ctx.font = "bold 80px Comic Sans MS";
+//   this.ctx.fillStyle = "red";
+//   this.ctx.textAlign = "center";
+//   this.ctx.fillText("GAME OVER", this.canvas.width / 2, this.canvas.height / 2 - 50);
+
+//   // Text Button Hinweis
+//   this.ctx.font = "30px Comic Sans MS";
+//   this.ctx.fillStyle = "white";
+//   this.ctx.fillText("Klicke, um neu zu starten", this.canvas.width / 2, this.canvas.height / 2 + 30);
+
+//   // Restart mit Klick
+//   this.canvas.addEventListener("click", () => location.reload(), { once: true });
+// }
 showGameOverScreen() {
-  // Hintergrund schwarz mit Transparenz
-  this.ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-  this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  const ctx = this.ctx;
+  const canvas = this.canvas;
 
-  // Text "GAME OVER"
-  this.ctx.font = "bold 80px Comic Sans MS";
-  this.ctx.fillStyle = "red";
-  this.ctx.textAlign = "center";
-  this.ctx.fillText("GAME OVER", this.canvas.width / 2, this.canvas.height / 2 - 50);
+  // 🎨 Hintergrund abdunkeln
+  ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Text Button Hinweis
-  this.ctx.font = "30px Comic Sans MS";
-  this.ctx.fillStyle = "white";
-  this.ctx.fillText("Klicke, um neu zu starten", this.canvas.width / 2, this.canvas.height / 2 + 30);
+  // 🧨 Game Over Text
+  ctx.font = "bold 80px Comic Sans MS";
+  ctx.fillStyle = "red";
+  ctx.textAlign = "center";
+  ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 100);
 
-  // Restart mit Klick
-  this.canvas.addEventListener("click", () => location.reload(), { once: true });
+  // 🟥 Button zeichnen
+  const buttonWidth = 250;
+  const buttonHeight = 60;
+  const buttonX = canvas.width / 2 - buttonWidth / 2;
+  const buttonY = canvas.height / 2;
+
+  ctx.fillStyle = "#ff4444";
+  ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+  // 📝 Button-Text
+  ctx.font = "24px Comic Sans MS";
+  ctx.fillStyle = "white";
+  ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
+
+  // ☝️ Klickbereich speichern
+  this.restartButtonArea = {
+    x: buttonX,
+    y: buttonY,
+    width: buttonWidth,
+    height: buttonHeight,
+  };
+
+  // ✅ Nur 1x den Eventlistener anhängen
+  if (!this.canvasClickListenerAdded) {
+    canvas.addEventListener("click", this.handleCanvasClick.bind(this));
+    this.canvasClickListenerAdded = true;
+  }
 }
+
+handleCanvasClick(event) {
+  const rect = this.canvas.getBoundingClientRect();
+  const clickX = event.clientX - rect.left;
+  const clickY = event.clientY - rect.top;
+
+  const btn = this.restartButtonArea;
+
+  if (
+    clickX >= btn.x &&
+    clickX <= btn.x + btn.width &&
+    clickY >= btn.y &&
+    clickY <= btn.y + btn.height
+  ) {
+    location.reload(); // 🔁 Spiel neu laden
+  }
+}
+
 
 
 
