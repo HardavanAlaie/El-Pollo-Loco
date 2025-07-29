@@ -492,11 +492,32 @@ showGameOverScreen() {
   const img = new Image();
   img.src = "img/You won, you lost/Game Over.png"; // ← Dein Bildpfad
 
-  img.onload = () => {
-    const imgWidth = 400;
-    const imgHeight = 100;
+  // img.onload = () => {
+  //   const imgWidth = 400;
+  //   const imgHeight = 100;
+  //   const imgX = canvas.width / 2 - imgWidth / 2;
+  //   const imgY = canvas.height / 2 - 150;
+
+  //   ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+  
+    img.onload = () => {
+    // Berechne optimale Bildgröße
+    const maxWidth = canvas.width * 0.6;
+    const maxHeight = canvas.height * 0.3;
+
+    let imgWidth = img.width;
+    let imgHeight = img.height;
+
+    // Skaliere proportional
+    const widthRatio = maxWidth / imgWidth;
+    const heightRatio = maxHeight / imgHeight;
+    const scale = Math.min(widthRatio, heightRatio);
+
+    imgWidth *= scale;
+    imgHeight *= scale;
+
     const imgX = canvas.width / 2 - imgWidth / 2;
-    const imgY = canvas.height / 2 - 150;
+    const imgY = canvas.height / 2 - imgHeight - 40;
 
     ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
 
