@@ -138,30 +138,7 @@ class World {
         const isAboveEnemy =
           characterBottom <= enemyTop + 10 && characterVerticalSpeed >= 0;
 
-        if (isAboveEnemy) {
-          enemy.hit();
-          enemy.playDeathAnimation?.();
-
-          // if (enemy.isDead?.()) {
-          //   const i = this.level.enemies.indexOf(enemy);
-          //   if (i >= 0) this.level.enemies.splice(i, 1);
-          // }
-          this.ifEnemyIsDead(enemy);
-
-          this.character.jump();
-        } else {
-          this.character.hit();
-          this.statusBar.setPercentage(this.character.energy);
-          this.character.isHurt();
-          if (this.character.energy <= 0 && !this.characterDead) {
-            this.characterDead = true;
-            this.showLevelMessage("💀 Du bist gestorben!");
-
-            setTimeout(() => {
-              this.endGame();
-            }, 3000);
-          }
-        }
+        this.ifIsAboveEnemy(isAboveEnemy, enemy);
       }
     });
 
@@ -217,6 +194,26 @@ class World {
         this.statusBarCoin.update?.();
       }
     });
+  }
+
+  ifIsAboveEnemy(isAboveEnemy, enemy) {
+    if (isAboveEnemy) {
+      enemy.hit();
+      enemy.playDeathAnimation?.();
+      this.ifEnemyIsDead(enemy);
+      this.character.jump();
+    } else {
+      this.character.hit();
+      this.statusBar.setPercentage(this.character.energy);
+      this.character.isHurt();
+      if (this.character.energy <= 0 && !this.characterDead) {
+        this.characterDead = true;
+        this.showLevelMessage("💀 Du bist gestorben!");
+        setTimeout(() => {
+          this.endGame();
+        }, 3000);
+      }
+    }
   }
 
   ifEnemyIsDead(enemy) {
