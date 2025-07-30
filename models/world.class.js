@@ -57,20 +57,6 @@ class World {
     this.spawnEnemyLoop();
   }
 
-  // run() {
-  //   //console.log("Aktuelle Gegnerliste(run):", this.level.enemies);
-
-  //   this.gameInterval = setInterval(() => {
-  //     if (!this.levelEnded) {
-  //       this.checkCollisions();
-  //       this.checkThrowableObjects();
-  //       this.checkEndbossDefeated();
-  //       this.removeOffscreenEnemies();
-  //       this.checkEndboss1Hit();
-  //       this.checkEndboss2Hit();
-  //     }
-  //   }, 200);
-  // }
   run() {
   this.gameInterval = setInterval(() => {
     if (!this.levelEnded) {
