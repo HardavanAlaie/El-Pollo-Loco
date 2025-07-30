@@ -146,14 +146,7 @@ class World {
           //   const i = this.level.enemies.indexOf(enemy);
           //   if (i >= 0) this.level.enemies.splice(i, 1);
           // }
-          if (enemy.isDead?.()) {
-            if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-              enemy.isMarkedDead = true;
-            } else {
-              const i = this.level.enemies.indexOf(enemy);
-              if (i >= 0) this.level.enemies.splice(i, 1);
-            }
-          }
+          this.ifEnemyIsDead(enemy);
 
           this.character.jump();
         } else {
@@ -224,6 +217,17 @@ class World {
         this.statusBarCoin.update?.();
       }
     });
+  }
+
+  ifEnemyIsDead(enemy) {
+    if (enemy.isDead?.()) {
+      if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+        enemy.isMarkedDead = true;
+      } else {
+        const i = this.level.enemies.indexOf(enemy);
+        if (i >= 0) this.level.enemies.splice(i, 1);
+      }
+    }
   }
 
   endGame() {
