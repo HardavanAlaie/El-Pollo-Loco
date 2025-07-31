@@ -110,11 +110,13 @@ class World {
       (bottle) => !bottle.isDead?.()
     );
 
-    if (
-      this.keyboard.D &&
+    this.throwableBottles();
+  }
+
+  throwableBottles() {
+    if (this.keyboard.D &&
       this.canThrow &&
-      this.statusBarBottle.availableBottles > 0
-    ) {
+      this.statusBarBottle.availableBottles > 0) {
       this.canThrow = false;
       this.statusBarBottle.availableBottles--;
       this.statusBarBottle.update?.();
