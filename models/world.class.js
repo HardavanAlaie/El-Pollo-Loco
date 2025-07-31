@@ -69,15 +69,19 @@ class World {
     }
 
     // 💀 Wenn Spieler tot ist, zeige Game Over Screen
-    if (this.character.isDead() && !this.gameOver) {
-      this.gameOver = true;
-      clearInterval(this.gameInterval);  // Stoppt die Spiel-Logik
-      cancelAnimationFrame(this.animationFrameId); // Falls du draw() mit requestAnimationFrame benutzt
-      this.showGameOverScreen(); // Zeige Game Over Bild und Button
-    }
+    this.gameOverScreen();
   }, 200);
 }
 
+
+  gameOverScreen() {
+    if (this.character.isDead() && !this.gameOver) {
+      this.gameOver = true;
+      clearInterval(this.gameInterval); // Stoppt die Spiel-Logik
+      cancelAnimationFrame(this.animationFrameId); // Falls du draw() mit requestAnimationFrame benutzt
+      this.showGameOverScreen();
+    }
+  }
 
   checkEndboss1Hit() {
     if (
