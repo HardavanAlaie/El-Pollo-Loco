@@ -136,16 +136,7 @@ class World {
 
   checkCollisions() {
     (this.level.enemies || []).forEach((enemy) => {
-      if (this.character.isColliding(enemy)) {
-        const characterBottom = this.character.y + this.character.height;
-        const characterVerticalSpeed = this.character.speedY;
-        const enemyTop = enemy.y + enemy.height * 0.3;
-
-        const isAboveEnemy =
-          characterBottom <= enemyTop + 10 && characterVerticalSpeed >= 0;
-
-        this.ifIsAboveEnemy(isAboveEnemy, enemy);
-      }
+      this.characterColliding(enemy);
     });
 
     this.throwableObjects.forEach((bottle) => {
@@ -200,6 +191,18 @@ class World {
         this.statusBarCoin.update?.();
       }
     });
+  }
+
+  characterColliding(enemy) {
+    if (this.character.isColliding(enemy)) {
+      const characterBottom = this.character.y + this.character.height;
+      const characterVerticalSpeed = this.character.speedY;
+      const enemyTop = enemy.y + enemy.height * 0.3;
+
+      const isAboveEnemy = characterBottom <= enemyTop + 10 && characterVerticalSpeed >= 0;
+
+      this.ifIsAboveEnemy(isAboveEnemy, enemy);
+    }
   }
 
   ifIsAboveEnemy(isAboveEnemy, enemy) {
