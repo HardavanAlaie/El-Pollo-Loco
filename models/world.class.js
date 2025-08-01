@@ -169,6 +169,18 @@ class World {
       (bottle) => !bottle.isDead()
     );
 
+    this.characterCollidingBottle();
+
+    (this.collectableCoins || []).forEach((coin) => {
+      if (this.character.isColliding(coin)) {
+        this.statusBarCoin.availableCoins++;
+        this.collectableCoins.splice(this.collectableCoins.indexOf(coin), 1);
+        this.statusBarCoin.update?.();
+      }
+    });
+  }
+
+  characterCollidingBottle() {
     (this.collectableBottles || []).forEach((bottle) => {
       if (this.character.isColliding(bottle)) {
         if (this.statusBarBottle.availableBottles < 5) {
@@ -181,14 +193,6 @@ class World {
         } else {
           this.showBottleLimitMessage();
         }
-      }
-    });
-
-    (this.collectableCoins || []).forEach((coin) => {
-      if (this.character.isColliding(coin)) {
-        this.statusBarCoin.availableCoins++;
-        this.collectableCoins.splice(this.collectableCoins.indexOf(coin), 1);
-        this.statusBarCoin.update?.();
       }
     });
   }
