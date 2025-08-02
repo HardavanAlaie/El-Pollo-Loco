@@ -1,18 +1,12 @@
-
-// =========================
-// Initialisierung
-// =========================
 let canvas;
 let world;
 let keyboard = new Keyboard();
 let character;
-//let character = new Character(); // <- FIX: character ist jetzt definiert
-//let allLevels = [level1, level2]; // <- FIX: Levels als Array verfügbar
+//let character = new Character();
+//let allLevels = [level1, level2];
 let soundEnabled = true;
 
-// =========================
 // Spielstart
-// =========================
 function startGame() {
   document.getElementById("start-screen").style.display = "none";
   document.getElementById("mobile-controls").style.display = "flex";
@@ -24,15 +18,13 @@ function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
 
-    // Nach Weltstart: alle kleinen Chickens aktivieren
+  // Nach Weltstart: alle kleinen Chickens aktivieren
   world.level.enemies
-    .filter(e => e instanceof ChickenSmall)
-    .forEach(chicken => chicken.start());
+    .filter((e) => e instanceof ChickenSmall)
+    .forEach((chicken) => chicken.start());
 }
 
-// =========================
-// Mobile Steuerung
-// =========================
+// Mobile
 function setupMobileControls() {
   const controls = [
     { id: "left-btn", key: "LEFT" },
@@ -54,9 +46,6 @@ function setupMobileControls() {
   });
 }
 
-// =========================
-// Tastatursteuerung
-// =========================
 window.addEventListener("keydown", (e) => {
   if (e.keyCode == 37) keyboard.LEFT = true;
   if (e.keyCode == 38) keyboard.UP = true;
@@ -73,9 +62,7 @@ window.addEventListener("keyup", (e) => {
   if (e.keyCode == 68) keyboard.D = false;
 });
 
-// =========================
-// Startscreen-Bild zeichnen
-// =========================
+// Startscreen-Bild
 window.addEventListener("load", () => {
   canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
@@ -87,9 +74,7 @@ window.addEventListener("load", () => {
   };
 });
 
-// =========================
-// Vollbild-Toggle
-// =========================
+// Vollbild
 document.getElementById("fullscreen-btn").addEventListener("click", () => {
   const canvas = document.getElementById("canvas");
   if (!document.fullscreenElement) {
@@ -101,9 +86,7 @@ document.getElementById("fullscreen-btn").addEventListener("click", () => {
   }
 });
 
-// =========================
-// Sound-Toggle
-// =========================
+// Sound
 document.getElementById("sound-btn").addEventListener("click", () => {
   soundEnabled = !soundEnabled;
   const btn = document.getElementById("sound-btn");
