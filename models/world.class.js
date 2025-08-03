@@ -626,38 +626,38 @@ showGameOverScreen() {
 // //   };
 // // }
 
-pulseRestartButton() {
-  const ctx = this.ctx;
-  const canvas = this.canvas;
+// pulseRestartButton() {
+//   const ctx = this.ctx;
+//   const canvas = this.canvas;
 
-  const time = Date.now() / 300;
-  const pulse = Math.sin(time) * 10;
+//   const time = Date.now() / 300;
+//   const pulse = Math.sin(time) * 10;
 
-  const buttonWidth = 250 + pulse;
-  const buttonHeight = 60 + pulse * 0.4;
-  const buttonX = canvas.width / 2 - buttonWidth / 2;
-  const buttonY = canvas.height / 2 + 20;
+//   const buttonWidth = 250 + pulse;
+//   const buttonHeight = 60 + pulse * 0.4;
+//   const buttonX = canvas.width / 2 - buttonWidth / 2;
+//   const buttonY = canvas.height / 2 + 20;
 
-  // Optional: nur Button clearen
-  ctx.clearRect(0, buttonY - 10, canvas.width, buttonHeight + 20);
+//   // Optional: nur Button clearen
+//   ctx.clearRect(0, buttonY - 10, canvas.width, buttonHeight + 20);
 
-  ctx.fillStyle = "#ff4444";
-  ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+//   ctx.fillStyle = "#ff4444";
+//   ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
 
-  ctx.font = "24px Comic Sans MS";
-  ctx.fillStyle = "white";
-  ctx.textAlign = "center";
-  ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
+//   ctx.font = "24px Comic Sans MS";
+//   ctx.fillStyle = "white";
+//   ctx.textAlign = "center";
+//   ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
 
-  this.restartButtonArea = {
-    x: buttonX,
-    y: buttonY,
-    width: buttonWidth,
-    height: buttonHeight,
-  };
+//   this.restartButtonArea = {
+//     x: buttonX,
+//     y: buttonY,
+//     width: buttonWidth,
+//     height: buttonHeight,
+//   };
 
-  requestAnimationFrame(() => this.pulseRestartButton());
-}
+//   //requestAnimationFrame(() => this.pulseRestartButton());
+// }
 
 
 
