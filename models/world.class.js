@@ -564,12 +564,12 @@ showGameOverScreen() {
   //   this.gameOverSoundPlayed = true;
   // }
 
-  let scale = 0.1;
-  const maxScale = 0.6;
-  const scaleStep = 0.01;
+  // let scale = 0.1;
+  // const maxScale = 0.6;
+  // const scaleStep = 0.01;
 
-  const animateGameOver = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // const animateGameOver = () => {
+  //   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Hintergrund abdunkeln
     ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
