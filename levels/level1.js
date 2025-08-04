@@ -1,3 +1,31 @@
+  function generateBackgroundObjects({ screens = 4 } = {}) {
+  const basePath = "img/5_background/layers/";
+  const layers = [
+    { name: "air", path: "air.png", factor: 0.1 },
+    { name: "3rd", path: "3_third_layer", factor: 0.3 },
+    { name: "2nd", path: "2_second_layer", factor: 0.5 },
+    { name: "1st", path: "1_first_layer", factor: 1.0 },
+  ];
+
+  const backgroundObjects = [];
+
+  for (let i = -1; i < screens; i++) {
+    const x = i * 719;
+    const variant = (i % 2 === 0) ? "1.png" : "2.png";
+
+    layers.forEach((layer) => {
+      let imagePath = layer.path.endsWith(".png")
+        ? `${basePath}${layer.path}` // air
+        : `${basePath}${layer.path}/${variant}`; // other layers
+
+      backgroundObjects.push(new BackgroundObject(imagePath, x, layer.factor));
+    });
+  }
+
+  return backgroundObjects;
+}
+
+  
   function generateRandomBottles(count, xMin, xMax, yMin, yMax) {
     let bottles = [];
     for (let i = 0; i < count; i++) {
