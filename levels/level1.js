@@ -1,29 +1,53 @@
-  function generateBackgroundObjects({ screens = 4 } = {}) {
-  const basePath = "img/5_background/layers/";
+//   function generateBackgroundObjects({ screens = 4 } = {}) {
+//   const basePath = "img/5_background/layers/";
+//   const layers = [
+//     { name: "air", path: "img/5_background/layers/air.png", factor: 0.1 },
+//     { name: "3rd", path: "img/5_background/layers/3_third_layer/1.png", factor: 0.3 },
+//     { name: "2nd", path: "img/5_background/layers/2_second_layer/1.png", factor: 0.5 },
+//     { name: "1st", path: "img/5_background/layers/1_first_layer/1.png", factor: 1.0 },
+//   ];
+
+//   const backgroundObjects = [];
+
+//   for (let i = -1; i < screens; i++) {
+//     const x = i * 719;
+//     const variant = (i % 2 === 0) ? "1.png" : "2.png";
+
+//     layers.forEach((layer) => {
+//       let imagePath = layer.path.endsWith(".png")
+//         ? `${basePath}${layer.path}` // air
+//         : `${basePath}${layer.path}/${variant}`; // other layers
+
+//       backgroundObjects.push(new BackgroundObject(imagePath, x, layer.factor));
+//     });
+//   }
+
+//   return backgroundObjects;
+// }
+function generateBackgroundObjects(repeatCount = 4) {
   const layers = [
-    { name: "air", path: "img/5_background/layers/air.png", factor: 0.1 },
-    { name: "3rd", path: "img/5_background/layers/3_third_layer/1.png", factor: 0.3 },
-    { name: "2nd", path: "img/5_background/layers/2_second_layer/1.png", factor: 0.5 },
-    { name: "1st", path: "img/5_background/layers/1_first_layer/1.png", factor: 1.0 },
+    '5_background/layers/air.png',
+    '5_background/layers/3_third_layer/1.png',
+    '5_background/layers/2_second_layer/1.png',
+    '5_background/layers/1_first_layer/1.png',
+    '5_background/layers/3_third_layer/2.png',
+    '5_background/layers/2_second_layer/2.png',
+    '5_background/layers/1_first_layer/2.png',
   ];
 
   const backgroundObjects = [];
 
-  for (let i = -1; i < screens; i++) {
+  for (let i = -1; i < repeatCount; i++) {
     const x = i * 719;
-    const variant = (i % 2 === 0) ? "1.png" : "2.png";
-
-    layers.forEach((layer) => {
-      let imagePath = layer.path.endsWith(".png")
-        ? `${basePath}${layer.path}` // air
-        : `${basePath}${layer.path}/${variant}`; // other layers
-
-      backgroundObjects.push(new BackgroundObject(imagePath, x, layer.factor));
-    });
+    backgroundObjects.push(new BackgroundObject(layers[0], x)); // air
+    backgroundObjects.push(new BackgroundObject(layers[1 + (i % 2)], x)); // third layer
+    backgroundObjects.push(new BackgroundObject(layers[3 + (i % 2)], x)); // second layer
+    backgroundObjects.push(new BackgroundObject(layers[5 + (i % 2)], x)); // first layer
   }
 
   return backgroundObjects;
 }
+
 
   
   function generateRandomBottles(count, xMin, xMax, yMin, yMax) {
