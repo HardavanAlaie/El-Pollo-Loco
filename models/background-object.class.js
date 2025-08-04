@@ -11,3 +11,26 @@ class BackgroundObject extends MovableObject {
     //this.x = 10 + Math.random() * 500;
   }
 }
+
+class BackgroundObject extends DrawableObject {
+  constructor(imagePath, x, parallaxFactor = 1.0) {
+    super();
+    this.loadImage(imagePath);
+    this.x = x;
+    this.y = 0;
+    this.width = 720;
+    this.height = 480;
+    this.parallaxFactor = parallaxFactor; // 👈 wichtig für Bewegung
+  }
+
+  draw(ctx, camera_x) {
+    ctx.drawImage(
+      this.img,
+      this.x - camera_x * this.parallaxFactor, // 👈 parallax effect
+      this.y,
+      this.width,
+      this.height
+    );
+  }
+}
+
