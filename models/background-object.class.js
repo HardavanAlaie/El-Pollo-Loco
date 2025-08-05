@@ -52,8 +52,8 @@ class BackgroundObject extends MovableObject {
 
   /**
    * Zeichnet das Hintergrundbild mit Parallax-Effekt
-   * @param {CanvasRenderingContext2D} ctx 
-   * @param {number} camera_x 
+   * @param {CanvasRenderingContext2D} ctx
+   * @param {number} camera_x
    */
   draw(ctx, camera_x) {
     ctx.drawImage(
@@ -65,5 +65,3 @@ class BackgroundObject extends MovableObject {
     );
   }
 }
-
-
