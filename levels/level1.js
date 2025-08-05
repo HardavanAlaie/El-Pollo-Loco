@@ -24,29 +24,29 @@
 
 //   return backgroundObjects;
 // }
-function generateBackgroundObjects(repeatCount = 4) {
-  const layers = [
-    '5_background/layers/air.png',
-    '5_background/layers/3_third_layer/1.png',
-    '5_background/layers/2_second_layer/1.png',
-    '5_background/layers/1_first_layer/1.png',
-    '5_background/layers/3_third_layer/2.png',
-    '5_background/layers/2_second_layer/2.png',
-    '5_background/layers/1_first_layer/2.png',
-  ];
+// function generateBackgroundObjects(repeatCount = 4) {
+//   const layers = [
+//     '5_background/layers/air.png',
+//     '5_background/layers/3_third_layer/1.png',
+//     '5_background/layers/2_second_layer/1.png',
+//     '5_background/layers/1_first_layer/1.png',
+//     '5_background/layers/3_third_layer/2.png',
+//     '5_background/layers/2_second_layer/2.png',
+//     '5_background/layers/1_first_layer/2.png',
+//   ];
 
-  const backgroundObjects = [];
+//   const backgroundObjects = [];
 
-  for (let i = -1; i < repeatCount; i++) {
-    const x = i * 719;
-    backgroundObjects.push(new BackgroundObject(layers[0], x)); // air
-    backgroundObjects.push(new BackgroundObject(layers[1 + (i % 2)], x)); // third layer
-    backgroundObjects.push(new BackgroundObject(layers[3 + (i % 2)], x)); // second layer
-    backgroundObjects.push(new BackgroundObject(layers[5 + (i % 2)], x)); // first layer
-  }
+//   for (let i = -1; i < repeatCount; i++) {
+//     const x = i * 719;
+//     backgroundObjects.push(new BackgroundObject(layers[0], x)); // air
+//     backgroundObjects.push(new BackgroundObject(layers[1 + (i % 2)], x)); // third layer
+//     backgroundObjects.push(new BackgroundObject(layers[3 + (i % 2)], x)); // second layer
+//     backgroundObjects.push(new BackgroundObject(layers[5 + (i % 2)], x)); // first layer
+//   }
 
-  return backgroundObjects;
-}
+//   return backgroundObjects;
+// }
 
 
   
