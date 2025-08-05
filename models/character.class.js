@@ -232,19 +232,18 @@ class Character extends MovableObject {
 
   collectBottle() {
     if (this.world.statusBarBottle.availableBottles < 5) {
-        this.world.statusBarBottle.availableBottles++;
-        this.world.statusBarBottle.update();
+      this.world.statusBarBottle.availableBottles++;
+      this.world.statusBarBottle.update();
 
-        // Flasche entfernen
-        this.world.collectableBottles = this.world.collectableBottles.filter(
-            bottle => !this.isColliding(bottle)
-        );
+      // Flasche entfernen
+      this.world.collectableBottles = this.world.collectableBottles.filter(
+        (bottle) => !this.isColliding(bottle)
+      );
 
-        // Neue zufällige Flasche erzeugen
-        this.world.spawnNewBottle();
+      // Neue zufällige Flasche erzeugen
+      this.world.spawnNewBottle();
     }
-}
-
+  }
 
   throw() {
     if (this.world.statusBarBottle.availableBottles > 0) {
@@ -260,5 +259,3 @@ class Character extends MovableObject {
     }
   }
 }
-
-
