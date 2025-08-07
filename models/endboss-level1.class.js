@@ -48,7 +48,7 @@ class EndbossLevel1 extends MovableObject {
     this.loadImages(this.IMAGES_HURT);
     this.loadImages(this.IMAGES_DEAD);
 
-    this.x = 2000;
+    this.x = 1800;
     this.energy = 100;
     this.statusBar = new StatusBarEnemy(this);
     //this.character = character;
