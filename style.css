@@ -179,3 +179,23 @@ canvas {
 .hidden {
   display: none;
 }
+
+#instructions-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 50;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 2px solid #444;
+  border-radius: 10px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.2s ease;
+}
+
+#instructions-btn:hover {
+  background-color: rgba(255, 255, 255, 1);
+}
+
