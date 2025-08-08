@@ -96,3 +96,12 @@ document.getElementById("sound-btn").addEventListener("click", () => {
     world.toggleSound(soundEnabled);
   }
 });
+
+
+function showInstructions() {
+  document.getElementById("instructions-overlay").classList.remove("hidden");
+}
+
+function hideInstructions() {
+  document.getElementById("instructions-overlay").classList.add("hidden");
+}
