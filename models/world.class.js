@@ -211,7 +211,8 @@ class World {
       const enemyTop = enemy.y + enemy.height * 0.5;
 
       const isAboveEnemy =
-        characterBottom <= enemyTop + 10 && characterVerticalSpeed >= 0;
+        //characterBottom <= enemyTop + 10 && characterVerticalSpeed >= 0;
+        characterBottom <= enemyTop + 20 && characterVerticalSpeed >= 0;
 
       this.ifIsAboveEnemy(isAboveEnemy, enemy);
     }
