@@ -18,7 +18,7 @@ class ChickenSmall extends MovableObject {
   }
 
   hit() {
-    this.energy -= 50;
+    this.energy -= 100;
     this.energy = Math.max(this.energy, 0);
     this.statusBar.setPercentage(this.energy);
   }
