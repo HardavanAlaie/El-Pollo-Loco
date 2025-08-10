@@ -7,6 +7,7 @@ class ChickenSmall extends MovableObject {
   constructor() {
     super().loadImage(this.IMAGES_RUNNING[0]);
     this.loadImages(this.IMAGES_RUNNING);
+    this.loadImages(this.IMAGES_DEAD);
     this.x = 500 + Math.random() * 2000;
     this.y = 380;
     this.width = 50;
@@ -14,17 +15,41 @@ class ChickenSmall extends MovableObject {
     this.speed = 0.3 + Math.random() * 0.5;
     this.energy = 100;
     this.statusBar = new StatusBarEnemy(this);
-    //this.animate();
+    this.animate();
   }
 
-  hit() {
+    hit() {
+    if (this.isDead()) return;
+
     this.energy -= 100;
     this.energy = Math.max(this.energy, 0);
     this.statusBar.setPercentage(this.energy);
+
+    if (this.isDead()) {
+      this.die();
+    }
   }
+
+  // hit() {
+  //   this.energy -= 100;
+  //   this.energy = Math.max(this.energy, 0);
+  //   this.statusBar.setPercentage(this.energy);
+  // }
 
   isDead() {
     return this.energy <= 0;
+  }
+
+  animate() {
+    this.chickenAnimationInterval = setInterval(() => {
+      if (this.isDead()) {
+        this.playAnimation(this.IMAGES_DEAD);
+        clearInterval(this.chickenAnimationInterval);
+      } else {
+        this.playAnimation(this.IMAGES_RUNNING);
+        this.moveLeft();
+      }
+    }, 200);
   }
 
   // animate() {
