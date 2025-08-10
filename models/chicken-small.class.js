@@ -4,6 +4,7 @@ class ChickenSmall extends MovableObject {
     "img/3_enemies_chicken/chicken_small/1_walk/2_w.png",
     "img/3_enemies_chicken/chicken_small/1_walk/3_w.png",
   ];
+  IMAGES_DEAD = ["img/3_enemies_chicken/chicken_small/2_dead/dead.png"];
   constructor() {
     super().loadImage(this.IMAGES_RUNNING[0]);
     this.loadImages(this.IMAGES_RUNNING);
@@ -18,7 +19,7 @@ class ChickenSmall extends MovableObject {
     this.animate();
   }
 
-    hit() {
+  hit() {
     if (this.isDead()) return;
 
     this.energy -= 100;
@@ -35,6 +36,12 @@ class ChickenSmall extends MovableObject {
   //   this.energy = Math.max(this.energy, 0);
   //   this.statusBar.setPercentage(this.energy);
   // }
+
+  die() {
+    this.playAnimation(this.IMAGES_DEAD);
+    clearInterval(this.bossAnimationInterval);
+    // optional: removeFromWorld(), explosion etc.
+  }
 
   isDead() {
     return this.energy <= 0;
