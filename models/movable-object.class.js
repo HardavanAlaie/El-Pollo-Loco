@@ -41,28 +41,17 @@ class MovableObject extends DrawableObject {
   //     this.y < mo.y + mo.height
   //   );
   // }
-  // isColliding(mo) {
-  // if (!mo) return false; // ✅ schützt vor undefined
+  isColliding(mo) {
+  if (!mo) return false; // ✅ schützt vor undefined
 
-  // const hitboxPadding = 15; // ➕ Trefferfläche in alle Richtungen erweitern
-
-  // return (
-  //   this.x + this.width > mo.x - hitboxPadding &&
-  //   this.x - hitboxPadding < mo.x + mo.width + hitboxPadding &&
-  //   this.y + this.height > mo.y - hitboxPadding &&
-  //   this.y - hitboxPadding < mo.y + mo.height + hitboxPadding
-  // );
-  isColliding(mo, hitboxPadding = 0) {
-  if (!mo) return false;
+  const hitboxPadding = 15; // ➕ Trefferfläche in alle Richtungen erweitern
 
   return (
-    this.x + this.width - hitboxPadding > mo.x &&
-    this.x + hitboxPadding < mo.x + mo.width &&
-    this.y + this.height - hitboxPadding > mo.y &&
-    this.y + hitboxPadding < mo.y + mo.height
+    this.x + this.width > mo.x - hitboxPadding &&
+    this.x - hitboxPadding < mo.x + mo.width + hitboxPadding &&
+    this.y + this.height > mo.y - hitboxPadding &&
+    this.y - hitboxPadding < mo.y + mo.height + hitboxPadding
   );
-}
-
 }
 
 
