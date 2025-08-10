@@ -203,40 +203,77 @@ class World {
     });
   }
 
+  // characterColliding(enemy) {
+  //   if (this.character.isColliding(enemy)) {
+  //     const characterBottom = this.character.y + this.character.height;
+  //     const characterVerticalSpeed = this.character.speedY;
+  //     const enemyTop = enemy.y + enemy.height * 0.3;
+  //     //const enemyTop = enemy.y + enemy.height * 0.5;
+
+  //     const isAboveEnemy =
+  //       characterBottom <= enemyTop + 10 && characterVerticalSpeed >= 0;
+  //       //characterBottom <= enemyTop + 20 && characterVerticalSpeed >= 0;
+
+  //     this.ifIsAboveEnemy(isAboveEnemy, enemy);
+  //   }
+  // }
+
+  // ifIsAboveEnemy(isAboveEnemy, enemy) {
+  //   if (isAboveEnemy) {
+  //     enemy.hit();
+  //     enemy.playDeathAnimation?.();
+  //     this.ifEnemyIsDead(enemy);
+  //     this.character.jump();
+  //   } else {
+  //     this.character.hit();
+  //     this.statusBar.setPercentage(this.character.energy);
+  //     this.character.isHurt();
+  //     if (this.character.energy <= 0 && !this.characterDead) {
+  //       this.characterDead = true;
+  //       this.showLevelMessage("💀 Du bist gestorben!");
+  //       setTimeout(() => {
+  //         this.endGame();
+  //       }, 3000);
+  //     }
+  //   }
+  // }
   characterColliding(enemy) {
-    if (this.character.isColliding(enemy)) {
-      const characterBottom = this.character.y + this.character.height;
-      const characterVerticalSpeed = this.character.speedY;
-      const enemyTop = enemy.y + enemy.height * 0.3;
-      //const enemyTop = enemy.y + enemy.height * 0.5;
+  if (this.character.isColliding(enemy, -10)) { // ➕ größere Hitbox (-10 macht sie größer)
+    const characterBottom = this.character.y + this.character.height;
+    const characterVerticalSpeed = this.character.speedY;
+    const enemyTop = enemy.y + enemy.height * 0.3;
 
-      const isAboveEnemy =
-        characterBottom <= enemyTop + 10 && characterVerticalSpeed >= 0;
-        //characterBottom <= enemyTop + 20 && characterVerticalSpeed >= 0;
+    // ➕ Mehr Toleranz beim "von oben"-Treffer
+    const verticalTolerance = 20;
 
-      this.ifIsAboveEnemy(isAboveEnemy, enemy);
+    const isAboveEnemy =
+      characterBottom <= enemyTop + verticalTolerance &&
+      characterVerticalSpeed >= 0;
+
+    this.ifIsAboveEnemy(isAboveEnemy, enemy);
+  }
+}
+
+ifIsAboveEnemy(isAboveEnemy, enemy) {
+  if (isAboveEnemy) {
+    enemy.hit();
+    enemy.playDeathAnimation?.();
+    this.ifEnemyIsDead(enemy);
+    this.character.jump();
+  } else {
+    this.character.hit();
+    this.statusBar.setPercentage(this.character.energy);
+    this.character.isHurt();
+    if (this.character.energy <= 0 && !this.characterDead) {
+      this.characterDead = true;
+      this.showLevelMessage("💀 Du bist gestorben!");
+      setTimeout(() => {
+        this.endGame();
+      }, 3000);
     }
   }
+}
 
-  ifIsAboveEnemy(isAboveEnemy, enemy) {
-    if (isAboveEnemy) {
-      enemy.hit();
-      enemy.playDeathAnimation?.();
-      this.ifEnemyIsDead(enemy);
-      this.character.jump();
-    } else {
-      this.character.hit();
-      this.statusBar.setPercentage(this.character.energy);
-      this.character.isHurt();
-      if (this.character.energy <= 0 && !this.characterDead) {
-        this.characterDead = true;
-        this.showLevelMessage("💀 Du bist gestorben!");
-        setTimeout(() => {
-          this.endGame();
-        }, 3000);
-      }
-    }
-  }
 
   ifEnemyIsDead(enemy) {
     if (enemy.isDead?.()) {
