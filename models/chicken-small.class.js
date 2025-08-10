@@ -39,7 +39,7 @@ class ChickenSmall extends MovableObject {
 
   die() {
     this.playAnimation(this.IMAGES_DEAD);
-    clearInterval(this.bossAnimationInterval);
+    clearInterval(this.chickenAnimationInterval);
     // optional: removeFromWorld(), explosion etc.
   }
 
