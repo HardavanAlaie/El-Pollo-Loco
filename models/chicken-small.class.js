@@ -19,17 +19,26 @@ class ChickenSmall extends MovableObject {
     this.animate();
   }
 
+  // hit() {
+  //   if (this.isDead()) return;
+
+  //   this.energy -= 100;
+  //   this.energy = Math.max(this.energy, 0);
+  //   this.statusBar.setPercentage(this.energy);
+
+  //   if (this.isDead()) {
+  //     this.die();
+  //   }
+  // }
   hit() {
-    if (this.isDead()) return;
-
-    this.energy -= 100;
-    this.energy = Math.max(this.energy, 0);
-    this.statusBar.setPercentage(this.energy);
-
-    if (this.isDead()) {
-      this.die();
-    }
+  if (this.dead) return; // schon tot → ignorieren
+  this.energy -= 100;
+  this.statusBar.setPercentage(this.energy);
+  if (this.isDead()) {
+    this.die();
   }
+}
+
 
   // hit() {
   //   this.energy -= 100;
