@@ -37,27 +37,45 @@ class ChickenSmall extends MovableObject {
   //   this.statusBar.setPercentage(this.energy);
   // }
 
+  // die() {
+  //   this.playAnimation(this.IMAGES_DEAD);
+  //   clearInterval(this.chickenAnimationInterval);
+  //   // optional: removeFromWorld(), explosion etc.
+  // }
+
+  // isDead() {
+  //   return this.energy <= 0;
+  // }
+
+  // animate() {
+  //   this.chickenAnimationInterval = setInterval(() => {
+  //     if (this.isDead()) {
+  //       this.playAnimation(this.IMAGES_DEAD);
+  //       clearInterval(this.chickenAnimationInterval);
+  //     } else {
+  //       this.playAnimation(this.IMAGES_RUNNING);
+  //       this.moveLeft();
+  //     }
+  //   }, 200);
+  // }
   die() {
-    this.playAnimation(this.IMAGES_DEAD);
-    clearInterval(this.chickenAnimationInterval);
-    // optional: removeFromWorld(), explosion etc.
-  }
+  this.loadImage(this.IMAGES_DEAD[0]); // einmalig auf Dead-Bild setzen
+  this.dead = true; // Zustand merken
+  // Optional: Gegner nach kurzer Zeit entfernen
+  setTimeout(() => {
+    this.removeFromWorld?.();
+  }, 500);
+}
 
-  isDead() {
-    return this.energy <= 0;
-  }
+animate() {
+  this.chickenAnimationInterval = setInterval(() => {
+    if (!this.dead) {
+      this.playAnimation(this.IMAGES_RUNNING);
+      this.moveLeft();
+    }
+  }, 200);
+}
 
-  animate() {
-    this.chickenAnimationInterval = setInterval(() => {
-      if (this.isDead()) {
-        this.playAnimation(this.IMAGES_DEAD);
-        clearInterval(this.chickenAnimationInterval);
-      } else {
-        this.playAnimation(this.IMAGES_RUNNING);
-        this.moveLeft();
-      }
-    }, 200);
-  }
 
   // animate() {
   //   setInterval(() => {
