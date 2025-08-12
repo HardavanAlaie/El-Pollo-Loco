@@ -97,7 +97,6 @@ document.getElementById("sound-btn").addEventListener("click", () => {
   }
 });
 
-
 function showInstructions() {
   document.getElementById("instructions-overlay").classList.remove("hidden");
 }
