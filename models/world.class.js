@@ -238,16 +238,35 @@ class World {
     }
   }
 
+  // ifEnemyIsDead(enemy) {
+  //   if (enemy.isDead?.()) {
+  //     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+  //       enemy.isMarkedDead = true;
+  //     } else {
+  //       const i = this.level.enemies.indexOf(enemy);
+  //       if (i >= 0) this.level.enemies.splice(i, 1);
+  //     }
+  //   }
+  // }
   ifEnemyIsDead(enemy) {
     if (enemy.isDead?.()) {
-      if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-        enemy.isMarkedDead = true;
-      } else {
-        const i = this.level.enemies.indexOf(enemy);
-        if (i >= 0) this.level.enemies.splice(i, 1);
-      }
+        if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+            enemy.isMarkedDead = true;
+        } else {
+            // Dead-Animation/Bild setzen
+            enemy.die?.();
+
+            // Gegner erst nach 2 Sekunden entfernen
+            setTimeout(() => {
+                const i = this.level.enemies.indexOf(enemy);
+                if (i >= 0) {
+                    this.level.enemies.splice(i, 1);
+                }
+            }, 2000); // Zeit anpassen, je nach gewünschter Dauer
+        }
     }
-  }
+}
+
 
   endGame() {
     clearInterval(this.gameInterval); // stoppe alle Intervall-Schleifen
