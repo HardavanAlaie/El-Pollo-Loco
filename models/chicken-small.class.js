@@ -179,25 +179,46 @@ class ChickenSmall extends MovableObject {
   //     }
   //   }, 200);
   // }
-  die() {
-  this.dead = true;  
-  clearInterval(this.chickenAnimationInterval); // Laufanimation stoppen
-  this.loadImage(this.IMAGES_DEAD[0]); // Sofort auf Dead-Bild wechseln
+//   die() {
+//   this.dead = true;  
+//   clearInterval(this.chickenAnimationInterval); // Laufanimation stoppen
+//   this.loadImage(this.IMAGES_DEAD[0]); // Sofort auf Dead-Bild wechseln
 
-  // Gegner nach kurzer Zeit aus der Welt entfernen
-  setTimeout(() => {
-    this.removeFromWorld?.();
-  }, 500); // 0,5 Sekunden sichtbar bleiben
+//   // Gegner nach kurzer Zeit aus der Welt entfernen
+//   setTimeout(() => {
+//     this.removeFromWorld?.();
+//   }, 500); // 0,5 Sekunden sichtbar bleiben
+// }
+die() {
+  this.dead = true;  
+  clearInterval(this.chickenAnimationInterval); // Stoppe Laufanimation
+  this.loadImage(this.IMAGES_DEAD[0]); // Sofort Dead-Bild laden
+
+  // NICHT sofort entfernen, damit es sichtbar bleibt
+  // Falls du es nach einer Zeit doch entfernen willst:
+  // setTimeout(() => {
+  //   this.removeFromWorld?.();
+  // }, 2000); // 2 Sekunden sichtbar bleiben
 }
 
+
+// animate() {
+//   this.chickenAnimationInterval = setInterval(() => {
+//     if (!this.dead) { // Nur wenn nicht tot → Laufanimation
+//       this.playAnimation(this.IMAGES_RUNNING);
+//       this.moveLeft();
+//     }
+//   }, 200);
+// }
 animate() {
   this.chickenAnimationInterval = setInterval(() => {
-    if (!this.dead) { // Nur wenn nicht tot → Laufanimation
+    if (!this.dead) {
       this.playAnimation(this.IMAGES_RUNNING);
       this.moveLeft();
     }
   }, 200);
 }
+
 
 
   stop() {
