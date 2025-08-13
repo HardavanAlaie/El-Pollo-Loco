@@ -132,50 +132,66 @@ class ChickenSmall extends MovableObject {
     this.statusBar = new StatusBarEnemy(this);
   }
 
-  start() {
-    // Startet nur, wenn nicht schon animiert wird
-    if (!this.chickenAnimationInterval) {
-      this.animate();
-    }
-  }
-
   hit() {
-    if (this.dead) return; // Schon tot → nichts tun
-
     this.energy -= 100;
     this.energy = Math.max(this.energy, 0);
     this.statusBar.setPercentage(this.energy);
-
-    if (this.isDead()) {
-      this.die();
-    }
   }
 
-  die() {
-    this.dead = true;
-    clearInterval(this.chickenAnimationInterval); // Stoppe Laufanimation
-    this.loadImage(this.IMAGES_DEAD[0]); // Sofort Dead-Bild laden
+  // hit() {
+  //   if (this.dead) return; // Schon tot → nichts tun
 
-    //Gegner nach kurzer Zeit aus der Welt entfernen
-    // NICHT sofort entfernen, damit es sichtbar bleibt
-    // Falls du es nach einer Zeit doch entfernen willst:
-    setTimeout(() => {
-      this.removeFromWorld?.();
-    }, 500); // 0,5 Sekunden sichtbar bleiben
-  }
+  //   this.energy -= 100;
+  //   this.energy = Math.max(this.energy, 0);
+  //   this.statusBar.setPercentage(this.energy);
+
+  //   if (this.isDead()) {
+  //     this.die();
+  //   }
+  // }
+
+  // die() {
+  //   this.dead = true;
+  //   clearInterval(this.chickenAnimationInterval); // Stoppe Laufanimation
+  //   this.loadImage(this.IMAGES_DEAD[0]); // Sofort Dead-Bild laden
+
+  //   //Gegner nach kurzer Zeit aus der Welt entfernen
+  //   // NICHT sofort entfernen, damit es sichtbar bleibt
+  //   // Falls du es nach einer Zeit doch entfernen willst:
+  //   setTimeout(() => {
+  //     this.removeFromWorld?.();
+  //   }, 500); // 0,5 Sekunden sichtbar bleiben
+  // }
 
   isDead() {
     return this.energy <= 0;
   }
 
   animate() {
-    this.chickenAnimationInterval = setInterval(() => {
-      if (!this.dead) {
-        // Nur wenn nicht tot → Laufanimation
-        this.playAnimation(this.IMAGES_RUNNING);
-        this.moveLeft();
-      }
-    }, 200);
+    setInterval(() => {
+      this.moveLeft();
+    }, 1000 / 60);
+
+    setInterval(() => {
+      this.playAnimation(this.IMAGES_RUNNING);
+    }, 100);
+  }
+
+  // animate() {
+  //   this.chickenAnimationInterval = setInterval(() => {
+  //     if (!this.dead) {
+  //       // Nur wenn nicht tot → Laufanimation
+  //       this.playAnimation(this.IMAGES_RUNNING);
+  //       this.moveLeft();
+  //     }
+  //   }, 200);
+  // }
+
+  start() {
+    // Startet nur, wenn nicht schon animiert wird
+    if (!this.chickenAnimationInterval) {
+      this.animate();
+    }
   }
 
   stop() {
