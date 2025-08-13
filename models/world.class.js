@@ -203,20 +203,70 @@ class World {
     });
   }
 
+  // characterColliding(enemy) {
+  //   if (this.character.isColliding(enemy)) {
+  //     const characterBottom = this.character.y + this.character.height;
+  //     const characterVerticalSpeed = this.character.speedY;
+  //     const enemyTop = enemy.y + enemy.height * 0.3;
+  //     //const enemyTop = enemy.y + enemy.height * 0.5;
+
+  //     const isAboveEnemy =
+  //       characterBottom <= enemyTop + 10 && characterVerticalSpeed >= 0;
+  //       //characterBottom <= enemyTop + 20 && characterVerticalSpeed >= 0;
+
+  //     this.ifIsAboveEnemy(isAboveEnemy, enemy);
+  //   }
+  // }
   characterColliding(enemy) {
     if (this.character.isColliding(enemy)) {
-      const characterBottom = this.character.y + this.character.height;
-      const characterVerticalSpeed = this.character.speedY;
-      const enemyTop = enemy.y + enemy.height * 0.3;
-      //const enemyTop = enemy.y + enemy.height * 0.5;
+        const ctx = this.world?.ctx; // Canvas-Kontext holen
+        if (ctx) {
+            // Spieler-Hitbox
+            ctx.strokeStyle = "blue";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(
+                this.character.x,
+                this.character.y,
+                this.character.width,
+                this.character.height
+            );
 
-      const isAboveEnemy =
-        characterBottom <= enemyTop + 10 && characterVerticalSpeed >= 0;
-        //characterBottom <= enemyTop + 20 && characterVerticalSpeed >= 0;
+            // Gegner-Hitbox
+            ctx.strokeStyle = "red";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(
+                enemy.x,
+                enemy.y,
+                enemy.width,
+                enemy.height
+            );
 
-      this.ifIsAboveEnemy(isAboveEnemy, enemy);
+            // Treffer-von-oben-Zone
+            let enemyTop = enemy.y + enemy.height * (enemy.height < 100 ? 0.8 : 0.3);
+            let extraOffset = enemy.height < 100 ? 20 : 10;
+            ctx.strokeStyle = "green";
+            ctx.lineWidth = 1;
+            ctx.strokeRect(
+                enemy.x - 5,
+                enemyTop,
+                enemy.width + 10,
+                extraOffset
+            );
+        }
+
+        // Normale Logik
+        const characterBottom = this.character.y + this.character.height;
+        const characterVerticalSpeed = this.character.speedY;
+        let enemyTop = enemy.y + enemy.height * (enemy.height < 100 ? 0.8 : 0.3);
+        let extraOffset = enemy.height < 100 ? 20 : 10;
+
+        const isAboveEnemy =
+            characterBottom <= enemyTop + extraOffset && characterVerticalSpeed >= 0;
+
+        this.ifIsAboveEnemy(isAboveEnemy, enemy);
     }
-  }
+}
+
 
   ifIsAboveEnemy(isAboveEnemy, enemy) {
     if (isAboveEnemy) {
