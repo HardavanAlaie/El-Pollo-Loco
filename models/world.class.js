@@ -219,54 +219,45 @@ class World {
   // }
   characterColliding(enemy) {
     if (this.character.isColliding(enemy)) {
-        const ctx = this.world?.ctx; // Canvas-Kontext holen
-        if (ctx) {
-            // Spieler-Hitbox
-            ctx.strokeStyle = "blue";
-            ctx.lineWidth = 2;
-            ctx.strokeRect(
-                this.character.x,
-                this.character.y,
-                this.character.width,
-                this.character.height
-            );
+      const ctx = this.world?.ctx; // Canvas-Kontext holen
+      if (ctx) {
+        // Spieler-Hitbox
+        ctx.strokeStyle = "blue";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(
+          this.character.x,
+          this.character.y,
+          this.character.width,
+          this.character.height
+        );
 
-            // Gegner-Hitbox
-            ctx.strokeStyle = "red";
-            ctx.lineWidth = 2;
-            ctx.strokeRect(
-                enemy.x,
-                enemy.y,
-                enemy.width,
-                enemy.height
-            );
+        // Gegner-Hitbox
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(enemy.x, enemy.y, enemy.width, enemy.height);
 
-            // Treffer-von-oben-Zone
-            let enemyTop = enemy.y + enemy.height * (enemy.height < 100 ? 0.8 : 0.3);
-            let extraOffset = enemy.height < 100 ? 20 : 10;
-            ctx.strokeStyle = "green";
-            ctx.lineWidth = 1;
-            ctx.strokeRect(
-                enemy.x - 5,
-                enemyTop,
-                enemy.width + 10,
-                extraOffset
-            );
-        }
-
-        // Normale Logik
-        const characterBottom = this.character.y + this.character.height;
-        const characterVerticalSpeed = this.character.speedY;
-        let enemyTop = enemy.y + enemy.height * (enemy.height < 100 ? 0.8 : 0.3);
+        // Treffer-von-oben-Zone
+        let enemyTop =
+          enemy.y + enemy.height * (enemy.height < 100 ? 0.8 : 0.3);
         let extraOffset = enemy.height < 100 ? 20 : 10;
+        ctx.strokeStyle = "green";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(enemy.x - 5, enemyTop, enemy.width + 10, extraOffset);
+      }
 
-        const isAboveEnemy =
-            characterBottom <= enemyTop + extraOffset && characterVerticalSpeed >= 0;
+      // Normale Logik
+      const characterBottom = this.character.y + this.character.height;
+      const characterVerticalSpeed = this.character.speedY;
+      let enemyTop = enemy.y + enemy.height * (enemy.height < 100 ? 0.8 : 0.3);
+      let extraOffset = enemy.height < 100 ? 20 : 10;
 
-        this.ifIsAboveEnemy(isAboveEnemy, enemy);
+      const isAboveEnemy =
+        characterBottom <= enemyTop + extraOffset &&
+        characterVerticalSpeed >= 0;
+
+      this.ifIsAboveEnemy(isAboveEnemy, enemy);
     }
-}
-
+  }
 
   ifIsAboveEnemy(isAboveEnemy, enemy) {
     if (isAboveEnemy) {
@@ -298,25 +289,24 @@ class World {
       }
     }
   }
-//   ifEnemyIsDead(enemy) {
-//     if (enemy.isDead?.()) {
-//         if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-//             enemy.isMarkedDead = true;
-//         } else {
-//             // Dead-Animation/Bild setzen
-//             enemy.die?.();
+  //   ifEnemyIsDead(enemy) {
+  //     if (enemy.isDead?.()) {
+  //         if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+  //             enemy.isMarkedDead = true;
+  //         } else {
+  //             // Dead-Animation/Bild setzen
+  //             enemy.die?.();
 
-//             // Gegner erst nach 2 Sekunden entfernen
-//             setTimeout(() => {
-//                 const i = this.level.enemies.indexOf(enemy);
-//                 if (i >= 0) {
-//                     this.level.enemies.splice(i, 1);
-//                 }
-//             }, 2000); // Zeit anpassen, je nach gewünschter Dauer
-//         }
-//     }
-// }
-
+  //             // Gegner erst nach 2 Sekunden entfernen
+  //             setTimeout(() => {
+  //                 const i = this.level.enemies.indexOf(enemy);
+  //                 if (i >= 0) {
+  //                     this.level.enemies.splice(i, 1);
+  //                 }
+  //             }, 2000); // Zeit anpassen, je nach gewünschter Dauer
+  //         }
+  //     }
+  // }
 
   endGame() {
     clearInterval(this.gameInterval); // stoppe alle Intervall-Schleifen
