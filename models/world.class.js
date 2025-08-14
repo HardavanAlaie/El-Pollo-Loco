@@ -258,6 +258,39 @@ class World {
       this.ifIsAboveEnemy(isAboveEnemy, enemy);
     }
   }
+//   characterColliding(enemy) {
+//     if (this.character.isColliding(enemy)) {
+        
+//         // Positionen auslesen
+//         const characterBottom = this.character.y + this.character.height;
+//         const characterVerticalSpeed = this.character.speedY;
+
+//         // Kill-Zone berechnen (wie in drawFrame)
+//         let killZoneTop;
+//         let killZoneHeight;
+
+//         if (enemy.height < 100) { 
+//             // kleine Gegner wie ChickenSmall
+//             killZoneTop = enemy.y + enemy.height * 0.8;
+//             killZoneHeight = 20;
+//         } else { 
+//             // große Gegner / Endboss
+//             killZoneTop = enemy.y + enemy.height * 0.3;
+//             killZoneHeight = 10;
+//         }
+
+//         const killZoneBottom = killZoneTop + killZoneHeight;
+
+//         // Prüfen, ob Charakter von oben in die Kill-Zone kommt
+//         const isAboveEnemy = 
+//             characterBottom >= killZoneTop &&
+//             characterBottom <= killZoneBottom &&
+//             characterVerticalSpeed >= 0;
+
+//         this.ifIsAboveEnemy(isAboveEnemy, enemy);
+//     }
+// }
+
 
   ifIsAboveEnemy(isAboveEnemy, enemy) {
     if (isAboveEnemy) {
