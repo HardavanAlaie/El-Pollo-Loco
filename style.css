@@ -76,13 +76,13 @@ canvas {
   font-size: 24px;
   border-radius: 50%;
   border: none;
-  background-color: rgba(0, 0, 0, 0.7);
+  /* background-color: rgba(0, 0, 0, 0.7); */
   color: white;
   box-shadow: 0 0 10px black;
 }
 
 #mobile-controls button:active {
-  background-color: rgba(255, 255, 255, 0.6);
+  /* background-color: rgba(255, 255, 255, 0.6); */
   color: black;
 }
 
@@ -129,7 +129,7 @@ canvas {
   font-size: 22px;
   border-radius: 50%;
   border: none;
-  background-color: rgba(0, 0, 0, 0.6);
+  /* background-color: rgba(0, 0, 0, 0.6); */
   color: white;
   cursor: pointer;
   box-shadow: 0 0 10px black;
@@ -137,7 +137,7 @@ canvas {
 }
 
 #canvas-buttons button:hover {
-  background-color: rgba(255, 255, 255, 0.7);
+  /* background-color: rgba(255, 255, 255, 0.7); */
   color: black;
 }
 
@@ -148,7 +148,7 @@ canvas {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.8);
+  /* background-color: rgba(0, 0, 0, 0.8); */
   z-index: 1000;
   display: flex;
   justify-content: center;
