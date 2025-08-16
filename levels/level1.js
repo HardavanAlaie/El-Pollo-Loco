@@ -186,22 +186,8 @@ const level2 = new Level(
     new BackgroundObject("img/5_background/layers/3_third_layer/2.png", 719 * 3),
     new BackgroundObject("img/5_background/layers/2_second_layer/2.png", 719 * 3),
     new BackgroundObject("img/5_background/layers/1_first_layer/2.png", 719 * 3),
-    // new BackgroundObject("img/5_background/layers/air.png", 719 * 4),
-    // new BackgroundObject("img/5_background/layers/3_third_layer/2.png", 719 * 4),
-    // new BackgroundObject("img/5_background/layers/2_second_layer/2.png", 719 * 4),
-    // new BackgroundObject("img/5_background/layers/1_first_layer/2.png", 719 * 4),
   ],
   generateRandomBottles(50, 300, 2000, 300, 350), // <== Hier passiert die Magie
-  // [
-  //   new CollectableBottle(300, 350),
-  //   new CollectableBottle(350, 300),
-  //   new CollectableBottle(400, 300),
-  //   new CollectableBottle(350, 350),
-  //   new CollectableBottle(400, 350),
-  //   new CollectableBottle(450, 350),
-  //   new CollectableBottle(600, 350),
-  //   new CollectableBottle(900, 350),
-  // ],
   [
     new CollectableCoin(100, 350),
     new CollectableCoin(150, 300),
@@ -215,13 +201,6 @@ const level2 = new Level(
 
     {
     spawnConfig: [
-      // {
-      //   type: ChickenSmall,
-      //   maxCount: 5,
-      //   interval: 3000,
-      //   condition: (level) =>
-      //     level.enemies.some((e) => e instanceof EndbossLevel1 && !e.isDead()),
-      // },
       {
         type: ChickenNormal,
         maxCount: 2,
