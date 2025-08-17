@@ -61,8 +61,9 @@
   }
 
 
-const level1 = new Level(
-  [new ChickenSmall(), new ChickenSmall(), new ChickenSmall(), new EndbossLevel1()],
+// const level1 = new Level(
+  const level1 = (world) => new Level(
+  [new ChickenSmall(world), new ChickenSmall(world), new ChickenSmall(world), new EndbossLevel1()],
   [new Cloud(), new Cloud(), new Cloud()],
   //generateBackgroundObjects({ screens: 4 }), // <== Hier passiert die Magie
   [
