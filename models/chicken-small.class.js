@@ -66,7 +66,7 @@ class ChickenSmall extends MovableObject {
 
   IMAGES_DEAD = ["img/3_enemies_chicken/chicken_small/2_dead/dead.png"];
 
-  constructor() {
+  constructor(world) {
     super().loadImage(this.IMAGES_RUNNING[0]);
     this.loadImages(this.IMAGES_RUNNING);
     this.loadImages(this.IMAGES_DEAD);
@@ -79,6 +79,7 @@ class ChickenSmall extends MovableObject {
     this.energy = 100;
     this.dead = false;
 
+    this.world = world; // Store the world reference
     this.statusBar = new StatusBarEnemy(this);
   }
 
