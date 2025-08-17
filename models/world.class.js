@@ -37,6 +37,8 @@ class World {
 
     this.currentLevelIndex = 0;
     this.level = allLevels[this.currentLevelIndex];
+    this.level = level1(this); // 👈 Welt reinreichen
+
     //this.level = level;
     // Character wird hier erstellt – World (this) wird übergeben!
     this.character = new Character(this);
