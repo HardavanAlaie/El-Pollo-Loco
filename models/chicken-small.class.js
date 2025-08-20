@@ -223,80 +223,80 @@
 //---------------------------------------------------------------------------
 
 
-class ChickenSmall extends MovableObject {
-  IMAGES_RUNNING = [
-    "img/3_enemies_chicken/chicken_small/1_walk/1_w.png",
-    "img/3_enemies_chicken/chicken_small/1_walk/2_w.png",
-    "img/3_enemies_chicken/chicken_small/1_walk/3_w.png",
-  ];
+// class ChickenSmall extends MovableObject {
+//   IMAGES_RUNNING = [
+//     "img/3_enemies_chicken/chicken_small/1_walk/1_w.png",
+//     "img/3_enemies_chicken/chicken_small/1_walk/2_w.png",
+//     "img/3_enemies_chicken/chicken_small/1_walk/3_w.png",
+//   ];
 
-  IMAGES_DEAD = ["img/3_enemies_chicken/chicken_small/2_dead/dead.png"];
+//   IMAGES_DEAD = ["img/3_enemies_chicken/chicken_small/2_dead/dead.png"];
 
-  constructor(world) {
-    super().loadImage(this.IMAGES_RUNNING[0]);
-    this.loadImages(this.IMAGES_RUNNING);
-    this.loadImages(this.IMAGES_DEAD);
+//   constructor(world) {
+//     super().loadImage(this.IMAGES_RUNNING[0]);
+//     this.loadImages(this.IMAGES_RUNNING);
+//     this.loadImages(this.IMAGES_DEAD);
 
-    this.world = world; // Referenz auf die Welt
-    this.x = 500 + Math.random() * 2000;
-    this.y = 380;
-    this.width = 50;
-    this.height = 50;
-    this.speed = 0.3 + Math.random() * 0.5;
-    this.energy = 100;
-    this.dead = false;
+//     this.world = world; // Referenz auf die Welt
+//     this.x = 500 + Math.random() * 2000;
+//     this.y = 380;
+//     this.width = 50;
+//     this.height = 50;
+//     this.speed = 0.3 + Math.random() * 0.5;
+//     this.energy = 100;
+//     this.dead = false;
 
-    this.statusBar = new StatusBarEnemy(this);
-    this.animate();
-  }
+//     this.statusBar = new StatusBarEnemy(this);
+//     this.animate();
+//   }
 
-  hit() {
-    if (this.dead) return; // schon tot? Dann nichts machen
-    this.energy -= 100;
-    this.energy = Math.max(this.energy, 0);
-    this.statusBar.setPercentage(this.energy);
+//   hit() {
+//     if (this.dead) return; // schon tot? Dann nichts machen
+//     this.energy -= 100;
+//     this.energy = Math.max(this.energy, 0);
+//     this.statusBar.setPercentage(this.energy);
 
-    if (this.isDead()) {
-      this.die();
-    }
-  }
+//     if (this.isDead()) {
+//       this.die();
+//     }
+//   }
 
-  isDead() {
-    return this.energy <= 0;
-  }
+//   isDead() {
+//     return this.energy <= 0;
+//   }
 
-  die() {
-    if (this.dead) return; // doppelt aufrufen verhindern
-    this.dead = true;
+//   die() {
+//     if (this.dead) return; // doppelt aufrufen verhindern
+//     this.dead = true;
 
-    this.loadImage(this.IMAGES_DEAD[0]); // nur ein Bild anzeigen
-    this.speed = 0;
+//     this.loadImage(this.IMAGES_DEAD[0]); // nur ein Bild anzeigen
+//     this.speed = 0;
 
-    // Animation stoppen
-    this.stopAnimation();
+//     // Animation stoppen
+//     this.stopAnimation();
 
-    // Gegner nach 1 Sekunde entfernen
-    setTimeout(() => {
-      const i = this.world.level.enemies.indexOf(this);
-      if (i >= 0) {
-        this.world.level.enemies.splice(i, 1);
-      }
-    }, 1000);
-  }
+//     // Gegner nach 1 Sekunde entfernen
+//     setTimeout(() => {
+//       const i = this.world.level.enemies.indexOf(this);
+//       if (i >= 0) {
+//         this.world.level.enemies.splice(i, 1);
+//       }
+//     }, 1000);
+//   }
 
-  animate() {
-    this.moveInterval = setInterval(() => {
-      if (!this.dead) this.moveLeft();
-    }, 1000 / 60);
+//   animate() {
+//     this.moveInterval = setInterval(() => {
+//       if (!this.dead) this.moveLeft();
+//     }, 1000 / 60);
 
-    this.runInterval = setInterval(() => {
-      if (!this.dead) this.playAnimation(this.IMAGES_RUNNING);
-    }, 100);
-  }
+//     this.runInterval = setInterval(() => {
+//       if (!this.dead) this.playAnimation(this.IMAGES_RUNNING);
+//     }, 100);
+//   }
 
-  stopAnimation() {
-    clearInterval(this.moveInterval);
-    clearInterval(this.runInterval);
-  }
-}
+//   stopAnimation() {
+//     clearInterval(this.moveInterval);
+//     clearInterval(this.runInterval);
+//   }
+// }
 
