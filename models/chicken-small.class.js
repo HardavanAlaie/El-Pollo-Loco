@@ -344,42 +344,21 @@ class ChickenSmall extends MovableObject {
     return this.energy <= 0;
   }
 
-  // die() {
-  //   this.dead = true;               // 👈 Zustand merken
-  //   this.loadImage(this.IMAGES_DEAD[0]); // nur das eine Bild
-  //   this.speed = 0;                 // Bewegung stoppen
-  //   this.stop();                    // Animation stoppen
-
-  //   // Gegner nach kurzer Zeit entfernen (z. B. 1 Sekunde)
-  //   setTimeout(() => {
-  //     const i = world.level.enemies.indexOf(this);
-  //     if (i >= 0) {
-  //       world.level.enemies.splice(i, 1);
-  //     }
-  //   }, 1000);
-  // }
   die() {
-  if (this.dead) return; // nur einmal sterben
-  this.dead = true;
+    this.dead = true;               // 👈 Zustand merken
+    this.loadImage(this.IMAGES_DEAD[0]); // nur das eine Bild
+    this.speed = 0;                 // Bewegung stoppen
+    this.stop();                    // Animation stoppen
 
-  this.loadImage(this.IMAGES_DEAD[0]); 
-  this.speed = 0;
-
-  // Animation stoppen
-  this.stopAnimation();
-
-  // Hitbox deaktivieren, damit keine weiteren Kollisionen erkannt werden
-  this.width = 0;
-  this.height = 0;
-
-  // Gegner nach 1 Sekunde entfernen
-  setTimeout(() => {
-    const i = this.world.level.enemies.indexOf(this);
-    if (i >= 0) {
-      this.world.level.enemies.splice(i, 1);
-    }
-  }, 1000);
-}
+    // Gegner nach kurzer Zeit entfernen (z. B. 1 Sekunde)
+    setTimeout(() => {
+      const i = world.level.enemies.indexOf(this);
+      if (i >= 0) {
+        world.level.enemies.splice(i, 1);
+      }
+    }, 1000);
+  }
+ 
 
 
   animate() {
