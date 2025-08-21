@@ -56,7 +56,6 @@
 
 //--------------------------------------------------------------------------
 
-
 // class ChickenSmall extends MovableObject {
 //   IMAGES_RUNNING = [
 //     "img/3_enemies_chicken/chicken_small/1_walk/1_w.png",
@@ -122,7 +121,6 @@
 //     if (i >= 0) this.world.level.enemies.splice(i, 1);
 //   }, 1500);
 // }
-
 
 //   isDead() {
 //     return this.dead;
@@ -221,7 +219,6 @@
 // }
 
 //---------------------------------------------------------------------------
-
 
 // class ChickenSmall extends MovableObject {
 //   IMAGES_RUNNING = [
@@ -345,10 +342,10 @@ class ChickenSmall extends MovableObject {
   }
 
   die() {
-    this.dead = true;               // 👈 Zustand merken
+    this.dead = true; // 👈 Zustand merken
     this.loadImage(this.IMAGES_DEAD[0]); // nur das eine Bild
-    this.speed = 0;                 // Bewegung stoppen
-    this.stop();                    // Animation stoppen
+    this.speed = 0; // Bewegung stoppen
+    this.stop(); // Animation stoppen
 
     // Gegner nach kurzer Zeit entfernen (z. B. 1 Sekunde)
     setTimeout(() => {
@@ -358,8 +355,6 @@ class ChickenSmall extends MovableObject {
       }
     }, 1000);
   }
- 
-
 
   animate() {
     this.moveInterval = setInterval(() => {
@@ -382,4 +377,3 @@ class ChickenSmall extends MovableObject {
     clearInterval(this.runInterval);
   }
 }
-
