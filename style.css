@@ -199,27 +199,3 @@ canvas {
   background-color: rgba(255, 255, 255, 1);
 } */
 
-/* Querformat (Landscape) */
-/*
-@media screen and (orientation: landscape) {
-  body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden; 
-  }
-
-  canvas {
-    width: 100vw;
-    height: 100vh;
-    display: block;
-  }
-
-  h1 {
-    display: none;
-  }
-
-  #mobile-controls,
-  #canvas-buttons {
-    display: none !important; /* Buttons im Querformat ausblenden */
-  }
-}*/
