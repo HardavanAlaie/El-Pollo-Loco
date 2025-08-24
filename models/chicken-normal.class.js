@@ -109,23 +109,57 @@ class ChickenNormal extends MovableObject {
     this.start(); // 👈 startet automatisch
   }
 
-  hit() {
+  // hit() {
+  //   this.energy -= 100;
+  //   this.energy = Math.max(this.energy, 0);
+  //   this.statusBar.setPercentage(this.energy);
+  // }
+    hit() {
+    if (this.dead) return; // 👈 wenn schon tot, nichts mehr machen
     this.energy -= 100;
     this.energy = Math.max(this.energy, 0);
     this.statusBar.setPercentage(this.energy);
+
+    if (this.isDead()) {
+      this.die();
+    }
   }
 
   isDead() {
     return this.energy <= 0;
   }
 
-  animate() {
-    setInterval(() => {
-      this.moveLeft();
+    die() {
+    this.dead = true; // 👈 Zustand merken
+    this.loadImage(this.IMAGES_DEAD[0]); // nur das eine Bild
+    this.speed = 0; // Bewegung stoppen
+    this.stop(); // Animation stoppen
+
+    // Gegner nach kurzer Zeit entfernen (z. B. 1 Sekunde)
+    setTimeout(() => {
+      const i = world.level.enemies.indexOf(this);
+      if (i >= 0) {
+        world.level.enemies.splice(i, 1);
+      }
+    }, 1000);
+  }
+
+  // animate() {
+  //   setInterval(() => {
+  //     this.moveLeft();
+  //   }, 1000 / 60);
+
+  //   setInterval(() => {
+  //     this.playAnimation(this.IMAGES_RUNNING);
+  //   }, 100);
+  // }
+    animate() {
+    this.moveInterval = setInterval(() => {
+      if (!this.dead) this.moveLeft();
     }, 1000 / 60);
 
-    setInterval(() => {
-      this.playAnimation(this.IMAGES_RUNNING);
+    this.runInterval = setInterval(() => {
+      if (!this.dead) this.playAnimation(this.IMAGES_RUNNING);
     }, 100);
   }
 
@@ -135,8 +169,12 @@ class ChickenNormal extends MovableObject {
     }
   }
 
-  stop() {
-    clearInterval(this.chickenAnimationInterval);
+  // stop() {
+  //   clearInterval(this.chickenAnimationInterval);
+  // }
+    stop() {
+    clearInterval(this.moveInterval);
+    clearInterval(this.runInterval);
   }
 }
 
