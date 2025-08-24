@@ -219,47 +219,106 @@ class World {
   //     this.ifIsAboveEnemy(isAboveEnemy, enemy);
   //   }
   // }
+
+  //--------------------------------------------------------------------------
+
+  // characterColliding(enemy) {
+  //   if (this.character.isColliding(enemy)) {
+  //     const ctx = this.world?.ctx; // Canvas-Kontext holen
+  //     if (ctx) {
+  //       // Spieler-Hitbox
+  //       ctx.strokeStyle = "blue";
+  //       ctx.lineWidth = 2;
+  //       ctx.strokeRect(
+  //         this.character.x,
+  //         this.character.y,
+  //         this.character.width,
+  //         this.character.height
+  //       );
+
+  //       // Gegner-Hitbox
+  //       ctx.strokeStyle = "red";
+  //       ctx.lineWidth = 2;
+  //       ctx.strokeRect(enemy.x, enemy.y, enemy.width, enemy.height);
+
+  //       // Treffer-von-oben-Zone
+  //       let enemyTop =
+  //         enemy.y + enemy.height * (enemy.height < 100 ? 0.7 : 0.25);
+  //       let extraOffset = enemy.height < 100 ? 25 : 15;
+  //       ctx.strokeStyle = "green";
+  //       ctx.lineWidth = 1;
+  //       ctx.strokeRect(enemy.x - 5, enemyTop, enemy.width + 10, extraOffset);
+  //     }
+
+  //     // Normale Logik
+  //     const characterBottom = this.character.y + this.character.height;
+  //     const characterVerticalSpeed = this.character.speedY;
+  //     let enemyTop = enemy.y + enemy.height * (enemy.height < 100 ? 0.8 : 0.3);
+  //     let extraOffset = enemy.height < 100 ? 20 : 10;
+
+  //     // const isAboveEnemy =
+  //     //   characterBottom <= enemyTop + extraOffset &&
+  //     //   characterVerticalSpeed >= 0;
+
+  //      const isAboveEnemy =
+  //        characterBottom <= enemyTop + extraOffset &&
+  //        characterVerticalSpeed > 0;
+
+  //     //     const isAboveEnemy =
+  //     // characterBottom <= enemyTop + extraOffset &&
+  //     // this.character.speedY > 0;  // statt >= 0
+
+  //     this.ifIsAboveEnemy(isAboveEnemy, enemy);
+  //   }
+  // }
+
+  //--------------------------------------------------------------------------
+
   characterColliding(enemy) {
-    if (this.character.isColliding(enemy)) {
-      const ctx = this.world?.ctx; // Canvas-Kontext holen
-      if (ctx) {
-        // Spieler-Hitbox
-        ctx.strokeStyle = "blue";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(
-          this.character.x,
-          this.character.y,
-          this.character.width,
-          this.character.height
-        );
+  if (this.character.isColliding(enemy)) {
+    const characterBottom = this.character.y + this.character.height;
+    const characterVerticalSpeed = this.character.speedY;
 
-        // Gegner-Hitbox
-        ctx.strokeStyle = "red";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(enemy.x, enemy.y, enemy.width, enemy.height);
+    // ✅ neue Berechnung für die "von oben"-Hitbox
+    let enemyTop = enemy.y + enemy.height * (enemy.height < 100 ? 0.7 : 0.25);
+    let extraOffset = enemy.height < 100 ? 25 : 15;
 
-        // Treffer-von-oben-Zone
-        let enemyTop =
-          enemy.y + enemy.height * (enemy.height < 100 ? 0.8 : 0.3);
-        let extraOffset = enemy.height < 100 ? 20 : 10;
-        ctx.strokeStyle = "green";
-        ctx.lineWidth = 1;
-        ctx.strokeRect(enemy.x - 5, enemyTop, enemy.width + 10, extraOffset);
-      }
+    // Debug-Ausgabe in Konsole
+    console.log("enemyTop:", enemyTop, "extraOffset:", extraOffset);
 
-      // Normale Logik
-      const characterBottom = this.character.y + this.character.height;
-      const characterVerticalSpeed = this.character.speedY;
-      let enemyTop = enemy.y + enemy.height * (enemy.height < 100 ? 0.8 : 0.3);
-      let extraOffset = enemy.height < 100 ? 20 : 10;
+    // ✅ grüne Zone zeichnen
+    const ctx = this.world?.ctx;
+    if (ctx) {
+      ctx.strokeStyle = "blue";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(
+        this.character.x,
+        this.character.y,
+        this.character.width,
+        this.character.height
+      );
 
-      const isAboveEnemy =
-        characterBottom <= enemyTop + extraOffset &&
-        characterVerticalSpeed >= 0;
+      ctx.strokeStyle = "red";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(enemy.x, enemy.y, enemy.width, enemy.height);
 
-      this.ifIsAboveEnemy(isAboveEnemy, enemy);
+      ctx.strokeStyle = "green";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(enemy.x - 5, enemyTop, enemy.width + 10, extraOffset);
     }
+
+    // ✅ Kollisionslogik
+    const isAboveEnemy =
+      characterBottom <= enemyTop + extraOffset &&
+      characterVerticalSpeed > 0;
+
+    this.ifIsAboveEnemy(isAboveEnemy, enemy);
   }
+}
+
+
+  //--------------------------------------------------------------------------
+
   //   characterColliding(enemy) {
   //     if (this.character.isColliding(enemy)) {
 
@@ -312,6 +371,26 @@ class World {
       }
     }
   }
+  //--------------------------------------------------------------------------
+  // ifIsAboveEnemy(isAboveEnemy, enemy) {
+  //   if (isAboveEnemy) {
+  //     // ✅ Gegner sofort treffen
+  //     enemy.hit();
+
+  //     // ✅ Rückstoß nach oben (Mario-Style)
+  //     this.character.speedY = -10;
+
+  //     // optional: kleinen Sound abspielen
+  //     if (this.world && this.world.audio && this.world.audio.jumpOnEnemy) {
+  //       this.world.audio.jumpOnEnemy.play();
+  //     }
+  //   } else {
+  //     // ❌ nur wenn der Gegner nicht von oben getroffen wird → Schaden für Character
+  //     if (!enemy.dead) {
+  //       this.character.hit();
+  //     }
+  //   }
+  // }
 
   // ifEnemyIsDead(enemy) {
   //   if (enemy.isDead?.()) {
