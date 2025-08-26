@@ -275,47 +275,45 @@ class World {
   //--------------------------------------------------------------------------
 
   characterColliding(enemy) {
-  if (this.character.isColliding(enemy)) {
-    const characterBottom = this.character.y + this.character.height;
-    const characterVerticalSpeed = this.character.speedY;
+    if (this.character.isColliding(enemy)) {
+      const characterBottom = this.character.y + this.character.height;
+      const characterVerticalSpeed = this.character.speedY;
 
-    // ✅ neue Berechnung für die "von oben"-Hitbox
-    let enemyTop = enemy.y + enemy.height * (enemy.height < 100 ? 0.7 : 0.25);
-    let extraOffset = enemy.height < 100 ? 25 : 15;
+      // ✅ neue Berechnung für die "von oben"-Hitbox
+      let enemyTop = enemy.y + enemy.height * (enemy.height < 100 ? 0.7 : 0.25);
+      let extraOffset = enemy.height < 100 ? 25 : 15;
 
-    // Debug-Ausgabe in Konsole
-    console.log("enemyTop:", enemyTop, "extraOffset:", extraOffset);
+      // Debug-Ausgabe in Konsole
+      console.log("enemyTop:", enemyTop, "extraOffset:", extraOffset);
 
-    // ✅ grüne Zone zeichnen
-    const ctx = this.world?.ctx;
-    if (ctx) {
-      ctx.strokeStyle = "blue";
-      ctx.lineWidth = 2;
-      ctx.strokeRect(
-        this.character.x,
-        this.character.y,
-        this.character.width,
-        this.character.height
-      );
+      // ✅ grüne Zone zeichnen
+      const ctx = this.world?.ctx;
+      if (ctx) {
+        ctx.strokeStyle = "blue";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(
+          this.character.x,
+          this.character.y,
+          this.character.width,
+          this.character.height
+        );
 
-      ctx.strokeStyle = "red";
-      ctx.lineWidth = 2;
-      ctx.strokeRect(enemy.x, enemy.y, enemy.width, enemy.height);
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(enemy.x, enemy.y, enemy.width, enemy.height);
 
-      ctx.strokeStyle = "green";
-      ctx.lineWidth = 1;
-      ctx.strokeRect(enemy.x - 5, enemyTop, enemy.width + 10, extraOffset);
+        ctx.strokeStyle = "green";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(enemy.x - 5, enemyTop, enemy.width + 10, extraOffset);
+      }
+
+      // ✅ Kollisionslogik
+      const isAboveEnemy =
+        characterBottom <= enemyTop + extraOffset && characterVerticalSpeed > 0;
+
+      this.ifIsAboveEnemy(isAboveEnemy, enemy);
     }
-
-    // ✅ Kollisionslogik
-    const isAboveEnemy =
-      characterBottom <= enemyTop + extraOffset &&
-      characterVerticalSpeed > 0;
-
-    this.ifIsAboveEnemy(isAboveEnemy, enemy);
   }
-}
-
 
   //--------------------------------------------------------------------------
 
@@ -414,21 +412,21 @@ class World {
   //   }
   // }
   ifEnemyIsDead(enemy) {
-  if (enemy.isDead?.()) {
-    if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-      // Endboss wird als "tot" markiert UND entfernt
-      enemy.isMarkedDead = true;
+    if (enemy.isDead?.()) {
+      if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+        // Endboss wird als "tot" markiert UND entfernt
+        enemy.isMarkedDead = true;
 
-      const i = this.level.enemies.indexOf(enemy);
-      if (i >= 0) {
-        this.level.enemies.splice(i, 1);
+        const i = this.level.enemies.indexOf(enemy);
+        if (i >= 0) {
+          this.level.enemies.splice(i, 1);
+        }
+      } else {
+        // ChickenSmall & Co. kümmern sich selbst ums Entfernen
+        enemy.die?.();
       }
-    } else {
-      // ChickenSmall & Co. kümmern sich selbst ums Entfernen
-      enemy.die?.();
     }
   }
-}
 
   //--------------------------------------------------------------------------
   //   ifEnemyIsDead(enemy) {
@@ -478,112 +476,118 @@ class World {
   //     }, 3000);
   //   }
   // }
-//   checkEndbossDefeated() {
-//   const endboss = this.level.enemies.find(
-//     (e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2
-//   );
+  //   checkEndbossDefeated() {
+  //   const endboss = this.level.enemies.find(
+  //     (e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2
+  //   );
 
-//   if (!endboss) return;
+  //   if (!endboss) return;
 
-//   if (endboss.isDead() && !this.endbossDefeated && !this.playerDied) {
-//     console.log("✅ Endboss besiegt – Win Screen!");
-//     this.endbossDefeated = true;
-//     this.levelEnded = true;
+  //   if (endboss.isDead() && !this.endbossDefeated && !this.playerDied) {
+  //     console.log("✅ Endboss besiegt – Win Screen!");
+  //     this.endbossDefeated = true;
+  //     this.levelEnded = true;
 
-//     // Spiel-Logik stoppen
-//     clearInterval(this.gameInterval);
-//     cancelAnimationFrame(this.animationFrameId);
+  //     // Spiel-Logik stoppen
+  //     clearInterval(this.gameInterval);
+  //     cancelAnimationFrame(this.animationFrameId);
 
-//     // Win-Screen anzeigen
-//     this.showWinScreen();
-//   }
-// }
-// checkEndbossDefeated() {
-//   const endboss = this.level.enemies.find(
-//     (e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2
-//   );
+  //     // Win-Screen anzeigen
+  //     this.showWinScreen();
+  //   }
+  // }
+  // checkEndbossDefeated() {
+  //   const endboss = this.level.enemies.find(
+  //     (e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2
+  //   );
 
-//   if (!endboss) return;
+  //   if (!endboss) return;
 
-//   if (endboss.isDead() && !this.endbossDefeated && !this.playerDied) {
-//     console.log("✅ Endboss besiegt – nächstes Level wird geladen!");
-//     this.endbossDefeated = true;
-//     this.levelEnded = true;
+  //   if (endboss.isDead() && !this.endbossDefeated && !this.playerDied) {
+  //     console.log("✅ Endboss besiegt – nächstes Level wird geladen!");
+  //     this.endbossDefeated = true;
+  //     this.levelEnded = true;
 
-//     this.showLevelMessage("🎉 Level " + (this.currentLevelIndex + 1) + " geschafft!");
+  //     this.showLevelMessage("🎉 Level " + (this.currentLevelIndex + 1) + " geschafft!");
 
-//     clearInterval(this.gameInterval); // ⛔ alte Loop stoppen
+  //     clearInterval(this.gameInterval); // ⛔ alte Loop stoppen
 
-//     setTimeout(() => {
-//       this.loadNextLevel();
-//     }, 3000);
-//   }
-// }
-checkEndbossDefeated() {
-  const endboss = (this.level.enemies || []).find(
-    (e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2
-  );
+  //     setTimeout(() => {
+  //       this.loadNextLevel();
+  //     }, 3000);
+  //   }
+  // }
+  checkEndbossDefeated() {
+    const endboss = (this.level.enemies || []).find(
+      (e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2
+    );
 
-  // Nichts tun, wenn kein Boss da oder bereits behandelt
-  if (!endboss || this.endbossDefeated || this.playerDied || this._handlingBossDefeat) return;
+    // Nichts tun, wenn kein Boss da oder bereits behandelt
+    if (
+      !endboss ||
+      this.endbossDefeated ||
+      this.playerDied ||
+      this._handlingBossDefeat
+    )
+      return;
 
-  if (endboss.isDead?.()) {
-    console.log("✅ Endboss besiegt!");
-    this._handlingBossDefeat = true; // Re-Entrys verhindern
-    this.endbossDefeated = true;
-    this.levelEnded = true;
+    if (endboss.isDead?.()) {
+      console.log("✅ Endboss besiegt!");
+      this._handlingBossDefeat = true; // Re-Entrys verhindern
+      this.endbossDefeated = true;
+      this.levelEnded = true;
 
-    // ALLES anhalten (Loop, RAF, Gegner-/Cloud-Intervalle, Character)
-    this.stopGameLoopHard();
+      // ALLES anhalten (Loop, RAF, Gegner-/Cloud-Intervalle, Character)
+      this.stopGameLoopHard();
 
-    // Letztes Level?
-    const isLastLevel = this.currentLevelIndex >= (allLevels.length - 1);
+      // Letztes Level?
+      const isLastLevel = this.currentLevelIndex >= allLevels.length - 1;
 
-    if (isLastLevel) {
-      // 🎉 Endscreen
-      this.showWinScreen();
-    } else {
-      // 🎉 Meldung & Levelwechsel
-      this.showLevelMessage("🎉 Level " + (this.currentLevelIndex + 1) + " geschafft!");
-      setTimeout(() => {
-        this._handlingBossDefeat = false; // Guard für nächstes Level zurücksetzen
-        this.loadNextLevel();
-      }, 2000);
+      if (isLastLevel) {
+        // 🎉 Endscreen
+        this.showWinScreen();
+      } else {
+        // 🎉 Meldung & Levelwechsel
+        this.showLevelMessage(
+          "🎉 Level " + (this.currentLevelIndex + 1) + " geschafft!"
+        );
+        setTimeout(() => {
+          this._handlingBossDefeat = false; // Guard für nächstes Level zurücksetzen
+          this.loadNextLevel();
+        }, 2000);
+      }
     }
   }
-}
 
-stopGameLoopHard() {
-  // Haupt-Logik stoppen
-  if (this.gameInterval) clearInterval(this.gameInterval);
-  if (this.enemySpawnInterval) clearInterval(this.enemySpawnInterval);
+  stopGameLoopHard() {
+    // Haupt-Logik stoppen
+    if (this.gameInterval) clearInterval(this.gameInterval);
+    if (this.enemySpawnInterval) clearInterval(this.enemySpawnInterval);
 
-  // Zeichen-Loop stoppen (falls du in draw() this.animationFrameId setzt)
-  if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
+    // Zeichen-Loop stoppen (falls du in draw() this.animationFrameId setzt)
+    if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
 
-  // Character stoppen (falls er eigene Intervalle/Animationen hat)
-  this.character?.stop?.();
-  if (this.character?.moveInterval) clearInterval(this.character.moveInterval);
-  if (this.character?.runInterval) clearInterval(this.character.runInterval);
-  this.character.speed = 0;
+    // Character stoppen (falls er eigene Intervalle/Animationen hat)
+    this.character?.stop?.();
+    if (this.character?.moveInterval)
+      clearInterval(this.character.moveInterval);
+    if (this.character?.runInterval) clearInterval(this.character.runInterval);
+    this.character.speed = 0;
 
-  // Gegner stoppen
-  (this.level?.enemies || []).forEach((e) => {
-    e.stop?.();
-    if (e.moveInterval) clearInterval(e.moveInterval);
-    if (e.runInterval) clearInterval(e.runInterval);
-    e.speed = 0;
-  });
+    // Gegner stoppen
+    (this.level?.enemies || []).forEach((e) => {
+      e.stop?.();
+      if (e.moveInterval) clearInterval(e.moveInterval);
+      if (e.runInterval) clearInterval(e.runInterval);
+      e.speed = 0;
+    });
 
-  // Clouds / Hintergrundobjekte stoppen (falls sie eigene Intervalle/Animationen haben)
-  (this.clouds || []).forEach((c) => {
-    c.stop?.();
-    if (c.moveInterval) clearInterval(c.moveInterval);
-  });
-}
-
-
-
+    // Clouds / Hintergrundobjekte stoppen (falls sie eigene Intervalle/Animationen haben)
+    (this.clouds || []).forEach((c) => {
+      c.stop?.();
+      if (c.moveInterval) clearInterval(c.moveInterval);
+    });
+  }
 
   spawnEnemyLoop() {
     const spawnConfigs = this.level.config?.spawnConfig || [];
@@ -694,201 +698,198 @@ stopGameLoopHard() {
 
   //----------------------------------------------------------------
 
-//   loadNextLevel() {
-//   this.currentLevelIndex++;
+  //   loadNextLevel() {
+  //   this.currentLevelIndex++;
 
-//   // if (this.currentLevelIndex >= allLevels.length) {
-//   //   console.log("🏁 Spiel beendet – alle Levels abgeschlossen!");
-//   //   this.levelEnded = true;
-//   //   this.showWinScreen(); // ⛔ Statt Message einen richtigen Win-Screen
-//   //   return;
-//   // }
-//   if (this.currentLevelIndex >= allLevels.length) {
-//     console.log("🏁 Spiel beendet – alle Levels abgeschlossen!");
+  //   // if (this.currentLevelIndex >= allLevels.length) {
+  //   //   console.log("🏁 Spiel beendet – alle Levels abgeschlossen!");
+  //   //   this.levelEnded = true;
+  //   //   this.showWinScreen(); // ⛔ Statt Message einen richtigen Win-Screen
+  //   //   return;
+  //   // }
+  //   if (this.currentLevelIndex >= allLevels.length) {
+  //     console.log("🏁 Spiel beendet – alle Levels abgeschlossen!");
 
-//     // 🚫 Stoppe Spielschleifen
-//     clearInterval(this.gameInterval);
-//     clearInterval(this.enemySpawnInterval);
-//     cancelAnimationFrame(this.animationFrameId);
+  //     // 🚫 Stoppe Spielschleifen
+  //     clearInterval(this.gameInterval);
+  //     clearInterval(this.enemySpawnInterval);
+  //     cancelAnimationFrame(this.animationFrameId);
 
-//     this.levelEnded = true;
-//     this.gameOver = true;
+  //     this.levelEnded = true;
+  //     this.gameOver = true;
 
-//     // 🎉 Win-Screen anzeigen
-//     this.showWinScreen();
-//     return;
-//   }
+  //     // 🎉 Win-Screen anzeigen
+  //     this.showWinScreen();
+  //     return;
+  //   }
 
-//   this.level = allLevels[this.currentLevelIndex];
-//   this.enemies = this.level.enemies;
-//   this.clouds = this.level.clouds;
-//   this.backgroundObjects = this.level.backgroundObjects;
-//   this.collectableBottles = this.level.collectableObjects || [];
-//   this.collectableCoins = this.level.collectableCoins || [];
+  //   this.level = allLevels[this.currentLevelIndex];
+  //   this.enemies = this.level.enemies;
+  //   this.clouds = this.level.clouds;
+  //   this.backgroundObjects = this.level.backgroundObjects;
+  //   this.collectableBottles = this.level.collectableObjects || [];
+  //   this.collectableCoins = this.level.collectableCoins || [];
 
-//   this.playerDied = false;
-//   this.endbossDefeated = false; // 👈 wichtig!
-//   this.levelEnded = false;
-//   this.throwableObjects = [];
+  //   this.playerDied = false;
+  //   this.endbossDefeated = false; // 👈 wichtig!
+  //   this.levelEnded = false;
+  //   this.throwableObjects = [];
 
-//   this.statusBarBottle.availableBottles = 3;
-//   this.statusBarCoin.availableCoins = 0;
-//   this.statusBar.setPercentage(100);
-//   this.statusBarBottle.update?.();
-//   this.statusBarCoin.update?.();
+  //   this.statusBarBottle.availableBottles = 3;
+  //   this.statusBarCoin.availableCoins = 0;
+  //   this.statusBar.setPercentage(100);
+  //   this.statusBarBottle.update?.();
+  //   this.statusBarCoin.update?.();
 
-//   this.character.x = 100;
-//   this.character.y = 185;
-//   this.camera_x = 0;
+  //   this.character.x = 100;
+  //   this.character.y = 185;
+  //   this.camera_x = 0;
 
-//   clearInterval(this.gameInterval);
-//   this.run();
+  //   clearInterval(this.gameInterval);
+  //   this.run();
 
-//   this.showLevelMessage(`🚀 Level ${this.currentLevelIndex + 1} beginnt!`);
+  //   this.showLevelMessage(`🚀 Level ${this.currentLevelIndex + 1} beginnt!`);
 
-//   this.spawnEnemyLoop();
-// }
+  //   this.spawnEnemyLoop();
+  // }
 
-//----------------------------------------------------------------
+  //----------------------------------------------------------------
 
-loadNextLevel() {
-  this.currentLevelIndex++;
+  loadNextLevel() {
+    this.currentLevelIndex++;
 
-  // ✅ Spiel gewonnen?
-  if (this.currentLevelIndex >= allLevels.length) {
-    console.log("🏁 Spiel beendet – alle Levels abgeschlossen!");
+    // ✅ Spiel gewonnen?
+    if (this.currentLevelIndex >= allLevels.length) {
+      console.log("🏁 Spiel beendet – alle Levels abgeschlossen!");
 
-    // 🚫 Alles stoppen
+      // 🚫 Alles stoppen
+      clearInterval(this.gameInterval);
+      clearInterval(this.enemySpawnInterval);
+      cancelAnimationFrame(this.animationFrameId);
+
+      this.levelEnded = true;
+      this.gameOver = true;
+
+      // 🎉 Win-Screen anzeigen
+      this.showWinScreen();
+      return;
+    }
+
+    // ✅ Neues Level laden
+    this.level = allLevels[this.currentLevelIndex];
+    this.enemies = this.level.enemies;
+    this.clouds = this.level.clouds;
+    this.backgroundObjects = this.level.backgroundObjects;
+    this.collectableBottles = this.level.collectableObjects || [];
+    this.collectableCoins = this.level.collectableCoins || [];
+
+    // Reset Flags
+    this.playerDied = false;
+    this.endbossDefeated = false;
+    this.levelEnded = false;
+    this.throwableObjects = [];
+
+    // Statusbars zurücksetzen
+    this.statusBarBottle.availableBottles = 3;
+    this.statusBarCoin.availableCoins = 0;
+    this.statusBar.setPercentage(100);
+    this.statusBarBottle.update?.();
+    this.statusBarCoin.update?.();
+
+    // Character Reset
+    // this.character.x = 100;
+    // this.character.y = 185;
+    // this.camera_x = 0;
+    // Character Reset NUR beim Start
+    if (this.character) {
+      this.character.x = 100;
+      this.character.y = 185;
+    }
+    this.camera_x = 0;
+
+    // ⏩ Character & Gegner wieder starten (falls sie stop-Methoden hatten)
+    if (this.character.start) this.character.start();
+    this.enemies.forEach((e) => e.start?.());
+    this.clouds.forEach((c) => c.start?.());
+
+    // Loop neu starten
     clearInterval(this.gameInterval);
-    clearInterval(this.enemySpawnInterval);
-    cancelAnimationFrame(this.animationFrameId);
+    this.run();
 
-    this.levelEnded = true;
-    this.gameOver = true;
+    this.showLevelMessage(`🚀 Level ${this.currentLevelIndex + 1} beginnt!`);
 
-    // 🎉 Win-Screen anzeigen
-    this.showWinScreen();
-    return;
+    this.spawnEnemyLoop();
   }
+  // loadNextLevel() {
+  //   // ⛔ Doppelte Aufrufe verhindern
+  //   if (this.levelEnded) {
+  //     console.warn("⚠️ loadNextLevel() wurde blockiert – Level ist bereits beendet!");
+  //     return;
+  //   }
 
-  // ✅ Neues Level laden
-  this.level = allLevels[this.currentLevelIndex];
-  this.enemies = this.level.enemies;
-  this.clouds = this.level.clouds;
-  this.backgroundObjects = this.level.backgroundObjects;
-  this.collectableBottles = this.level.collectableObjects || [];
-  this.collectableCoins = this.level.collectableCoins || [];
+  //   this.levelEnded = true; // ✅ direkt blockieren
 
-  // Reset Flags
-  this.playerDied = false;
-  this.endbossDefeated = false;
-  this.levelEnded = false;
-  this.throwableObjects = [];
+  //   this.currentLevelIndex++;
+  //   console.log("⚡ Lade nächstes Level:", this.currentLevelIndex);
 
-  // Statusbars zurücksetzen
-  this.statusBarBottle.availableBottles = 3;
-  this.statusBarCoin.availableCoins = 0;
-  this.statusBar.setPercentage(100);
-  this.statusBarBottle.update?.();
-  this.statusBarCoin.update?.();
+  //   // ✅ Spiel gewonnen?
+  //   if (this.currentLevelIndex >= allLevels.length) {
+  //     console.log("🏁 Spiel beendet – alle Levels abgeschlossen!");
 
-  // Character Reset
-  // this.character.x = 100;
-  // this.character.y = 185;
-  // this.camera_x = 0;
-  // Character Reset NUR beim Start
-if (this.character) {
-  this.character.x = 100;
-  this.character.y = 185;
-}
-this.camera_x = 0;
+  //     // 🚫 Alles stoppen
+  //     clearInterval(this.gameInterval);
+  //     clearInterval(this.enemySpawnInterval);
+  //     cancelAnimationFrame(this.animationFrameId);
 
+  //     this.gameOver = true;
 
-  // ⏩ Character & Gegner wieder starten (falls sie stop-Methoden hatten)
-  if (this.character.start) this.character.start();
-  this.enemies.forEach(e => e.start?.());
-  this.clouds.forEach(c => c.start?.());
+  //     // 🎉 Win-Screen anzeigen
+  //     this.showWinScreen();
+  //     return;
+  //   }
 
-  // Loop neu starten
-  clearInterval(this.gameInterval);
-  this.run();
+  //   // ✅ Neues Level laden
+  //   this.level = allLevels[this.currentLevelIndex];
+  //   this.enemies = this.level.enemies;
+  //   this.clouds = this.level.clouds;
+  //   this.backgroundObjects = this.level.backgroundObjects;
+  //   this.collectableBottles = this.level.collectableObjects || [];
+  //   this.collectableCoins = this.level.collectableCoins || [];
 
-  this.showLevelMessage(`🚀 Level ${this.currentLevelIndex + 1} beginnt!`);
+  //   // Reset Flags
+  //   this.playerDied = false;
+  //   this.endbossDefeated = false;
+  //   this.levelEnded = false; // 🔄 wieder freigeben für neues Level-Ende
+  //   this.throwableObjects = [];
 
-  this.spawnEnemyLoop();
-}
-// loadNextLevel() {
-//   // ⛔ Doppelte Aufrufe verhindern
-//   if (this.levelEnded) {
-//     console.warn("⚠️ loadNextLevel() wurde blockiert – Level ist bereits beendet!");
-//     return;
-//   }
+  //   // Statusbars zurücksetzen
+  //   this.statusBarBottle.availableBottles = 3;
+  //   this.statusBarCoin.availableCoins = 0;
+  //   this.statusBar.setPercentage(100);
+  //   this.statusBarBottle.update?.();
+  //   this.statusBarCoin.update?.();
 
-//   this.levelEnded = true; // ✅ direkt blockieren
+  //   // Character Reset (nur 1x pro Levelwechsel)
+  //   if (this.character) {
+  //     this.character.x = 100;
+  //     this.character.y = 185;
+  //     console.log("👤 Character zurückgesetzt auf X=100, Y=185");
+  //   }
+  //   this.camera_x = 0;
 
-//   this.currentLevelIndex++;
-//   console.log("⚡ Lade nächstes Level:", this.currentLevelIndex);
+  //   // ⏩ Character & Gegner wieder starten
+  //   this.character?.start?.();
+  //   this.enemies.forEach(e => e.start?.());
+  //   this.clouds.forEach(c => c.start?.());
 
-//   // ✅ Spiel gewonnen?
-//   if (this.currentLevelIndex >= allLevels.length) {
-//     console.log("🏁 Spiel beendet – alle Levels abgeschlossen!");
+  //   // Loop neu starten
+  //   clearInterval(this.gameInterval);
+  //   this.run();
 
-//     // 🚫 Alles stoppen
-//     clearInterval(this.gameInterval);
-//     clearInterval(this.enemySpawnInterval);
-//     cancelAnimationFrame(this.animationFrameId);
+  //   this.showLevelMessage(`🚀 Level ${this.currentLevelIndex + 1} beginnt!`);
 
-//     this.gameOver = true;
-
-//     // 🎉 Win-Screen anzeigen
-//     this.showWinScreen();
-//     return;
-//   }
-
-//   // ✅ Neues Level laden
-//   this.level = allLevels[this.currentLevelIndex];
-//   this.enemies = this.level.enemies;
-//   this.clouds = this.level.clouds;
-//   this.backgroundObjects = this.level.backgroundObjects;
-//   this.collectableBottles = this.level.collectableObjects || [];
-//   this.collectableCoins = this.level.collectableCoins || [];
-
-//   // Reset Flags
-//   this.playerDied = false;
-//   this.endbossDefeated = false;
-//   this.levelEnded = false; // 🔄 wieder freigeben für neues Level-Ende
-//   this.throwableObjects = [];
-
-//   // Statusbars zurücksetzen
-//   this.statusBarBottle.availableBottles = 3;
-//   this.statusBarCoin.availableCoins = 0;
-//   this.statusBar.setPercentage(100);
-//   this.statusBarBottle.update?.();
-//   this.statusBarCoin.update?.();
-
-//   // Character Reset (nur 1x pro Levelwechsel)
-//   if (this.character) {
-//     this.character.x = 100;
-//     this.character.y = 185;
-//     console.log("👤 Character zurückgesetzt auf X=100, Y=185");
-//   }
-//   this.camera_x = 0;
-
-//   // ⏩ Character & Gegner wieder starten
-//   this.character?.start?.();
-//   this.enemies.forEach(e => e.start?.());
-//   this.clouds.forEach(c => c.start?.());
-
-//   // Loop neu starten
-//   clearInterval(this.gameInterval);
-//   this.run();
-
-//   this.showLevelMessage(`🚀 Level ${this.currentLevelIndex + 1} beginnt!`);
-
-//   this.spawnEnemyLoop();
-// }
-
-
+  //   this.spawnEnemyLoop();
+  // }
 
   spawnNewBottle() {
     let x = Math.floor(Math.random() * 1700) + 300; // zwischen 300 und 2000
@@ -991,124 +992,121 @@ this.camera_x = 0;
   // }
   //-----------------------------------------------------------------
 
-//   showWinScreen() {
-//   const ctx = this.ctx;
-//   ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  //   showWinScreen() {
+  //   const ctx = this.ctx;
+  //   ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-//   // Hintergrund
-//   ctx.fillStyle = "rgba(0,0,0,0.7)";
-//   ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  //   // Hintergrund
+  //   ctx.fillStyle = "rgba(0,0,0,0.7)";
+  //   ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-//   // Text
-//   ctx.fillStyle = "white";
-//   ctx.font = "bold 60px Arial";
-//   ctx.textAlign = "center";
-//   ctx.fillText("🎉 YOU WIN! 🎉", this.canvas.width / 2, this.canvas.height / 2);
+  //   // Text
+  //   ctx.fillStyle = "white";
+  //   ctx.font = "bold 60px Arial";
+  //   ctx.textAlign = "center";
+  //   ctx.fillText("🎉 YOU WIN! 🎉", this.canvas.width / 2, this.canvas.height / 2);
 
-//   ctx.font = "30px Arial";
-//   ctx.fillText("Drücke R für Restart", this.canvas.width / 2, this.canvas.height / 2 + 60);
+  //   ctx.font = "30px Arial";
+  //   ctx.fillText("Drücke R für Restart", this.canvas.width / 2, this.canvas.height / 2 + 60);
 
-//   this.winScreenShown = true;
+  //   this.winScreenShown = true;
 
-//   // Optional: Restart per Taste "R"
-//   window.addEventListener("keydown", (e) => {
-//     if (e.key.toLowerCase() === "r" && this.winScreenShown) {
-//       location.reload(); // ganze Seite neuladen
-//     }
-//   });
-// }
-// showWinScreen() {
-//   const ctx = this.ctx;
-//   ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  //   // Optional: Restart per Taste "R"
+  //   window.addEventListener("keydown", (e) => {
+  //     if (e.key.toLowerCase() === "r" && this.winScreenShown) {
+  //       location.reload(); // ganze Seite neuladen
+  //     }
+  //   });
+  // }
+  // showWinScreen() {
+  //   const ctx = this.ctx;
+  //   ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-//   // Hintergrund dunkel einfärben
-//   ctx.fillStyle = "rgba(0,0,0,0.7)";
-//   ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  //   // Hintergrund dunkel einfärben
+  //   ctx.fillStyle = "rgba(0,0,0,0.7)";
+  //   ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-//   // Text anzeigen
-//   ctx.fillStyle = "white";
-//   ctx.font = "bold 60px Arial";
-//   ctx.textAlign = "center";
-//   ctx.fillText("🎉 YOU WIN! 🎉", this.canvas.width / 2, this.canvas.height / 2);
+  //   // Text anzeigen
+  //   ctx.fillStyle = "white";
+  //   ctx.font = "bold 60px Arial";
+  //   ctx.textAlign = "center";
+  //   ctx.fillText("🎉 YOU WIN! 🎉", this.canvas.width / 2, this.canvas.height / 2);
 
-//   ctx.font = "30px Arial";
-//   ctx.fillText("Drücke R zum Neustarten", this.canvas.width / 2, this.canvas.height / 2 + 60);
+  //   ctx.font = "30px Arial";
+  //   ctx.fillText("Drücke R zum Neustarten", this.canvas.width / 2, this.canvas.height / 2 + 60);
 
-//   this.winScreenShown = true;
+  //   this.winScreenShown = true;
 
-//   // Neustart bei Taste "R"
-//   window.addEventListener("keydown", (e) => {
-//     if (e.key.toLowerCase() === "r" && this.winScreenShown) {
-//       location.reload(); // Seite neuladen → Spiel neu starten
-//     }
-//   });
-// }
-showWinScreen() {
-  const ctx = this.ctx;
-  const canvas = this.canvas;
+  //   // Neustart bei Taste "R"
+  //   window.addEventListener("keydown", (e) => {
+  //     if (e.key.toLowerCase() === "r" && this.winScreenShown) {
+  //       location.reload(); // Seite neuladen → Spiel neu starten
+  //     }
+  //   });
+  // }
+  showWinScreen() {
+    const ctx = this.ctx;
+    const canvas = this.canvas;
 
-  // 🎨 Hintergrund abdunkeln
-  ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // 🎨 Hintergrund abdunkeln
+    ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Win-Bild laden
-  const img = new Image();
-  img.src = "img/You won, you lost/You win B.png"; // 👈 Pfad zu deinem Win-Bild
+    // Win-Bild laden
+    const img = new Image();
+    img.src = "img/You won, you lost/You win B.png"; // 👈 Pfad zu deinem Win-Bild
 
-  img.onload = () => {
-    // Berechne optimale Bildgröße
-    const maxWidth = canvas.width * 0.6;
-    const maxHeight = canvas.height * 0.3;
+    img.onload = () => {
+      // Berechne optimale Bildgröße
+      const maxWidth = canvas.width * 0.6;
+      const maxHeight = canvas.height * 0.3;
 
-    let imgWidth = img.width;
-    let imgHeight = img.height;
+      let imgWidth = img.width;
+      let imgHeight = img.height;
 
-    // Skaliere proportional
-    const widthRatio = maxWidth / imgWidth;
-    const heightRatio = maxHeight / imgHeight;
-    const scale = Math.min(widthRatio, heightRatio);
+      // Skaliere proportional
+      const widthRatio = maxWidth / imgWidth;
+      const heightRatio = maxHeight / imgHeight;
+      const scale = Math.min(widthRatio, heightRatio);
 
-    imgWidth *= scale;
-    imgHeight *= scale;
+      imgWidth *= scale;
+      imgHeight *= scale;
 
-    const imgX = canvas.width / 2 - imgWidth / 2;
-    const imgY = canvas.height / 2 - imgHeight - 40;
+      const imgX = canvas.width / 2 - imgWidth / 2;
+      const imgY = canvas.height / 2 - imgHeight - 40;
 
-    ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+      ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
 
-    // 🟩 Button zeichnen
-    const buttonWidth = 250;
-    const buttonHeight = 60;
-    const buttonX = canvas.width / 2 - buttonWidth / 2;
-    const buttonY = canvas.height / 2;
+      // 🟩 Button zeichnen
+      const buttonWidth = 250;
+      const buttonHeight = 60;
+      const buttonX = canvas.width / 2 - buttonWidth / 2;
+      const buttonY = canvas.height / 2;
 
-    ctx.fillStyle = "#44cc44"; // Grün für "Sieg"
-    ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+      ctx.fillStyle = "#44cc44"; // Grün für "Sieg"
+      ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
 
-    // 📝 Button-Text
-    ctx.font = "24px Comic Sans MS";
-    ctx.fillStyle = "white";
-    ctx.textAlign = "center";
-    ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
+      // 📝 Button-Text
+      ctx.font = "24px Comic Sans MS";
+      ctx.fillStyle = "white";
+      ctx.textAlign = "center";
+      ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
 
-    // ☝️ Klickbereich speichern
-    this.restartButtonArea = {
-      x: buttonX,
-      y: buttonY,
-      width: buttonWidth,
-      height: buttonHeight,
+      // ☝️ Klickbereich speichern
+      this.restartButtonArea = {
+        x: buttonX,
+        y: buttonY,
+        width: buttonWidth,
+        height: buttonHeight,
+      };
+
+      // ✅ Nur 1x den Eventlistener anhängen
+      if (!this.canvasClickListenerAdded) {
+        canvas.addEventListener("click", this.handleCanvasClick.bind(this));
+        this.canvasClickListenerAdded = true;
+      }
     };
-
-    // ✅ Nur 1x den Eventlistener anhängen
-    if (!this.canvasClickListenerAdded) {
-      canvas.addEventListener("click", this.handleCanvasClick.bind(this));
-      this.canvasClickListenerAdded = true;
-    }
-  };
-}
-
-
-
+  }
 
   showGameOverScreen() {
     const ctx = this.ctx;
