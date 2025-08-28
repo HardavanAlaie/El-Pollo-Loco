@@ -1,7 +1,7 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
-let character;
+world.character;
 //let character = new Character();
 //let allLevels = [level1, level2];
 let soundEnabled = true;
