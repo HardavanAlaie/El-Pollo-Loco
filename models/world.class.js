@@ -755,71 +755,144 @@ class World {
 
   //----------------------------------------------------------------
 
+  // loadNextLevel() {
+  //   this.currentLevelIndex++;
+
+  //   // ✅ Spiel gewonnen?
+  //   if (this.currentLevelIndex >= allLevels.length) {
+  //     console.log("🏁 Spiel beendet – alle Levels abgeschlossen!");
+
+  //     // 🚫 Alles stoppen
+  //     clearInterval(this.gameInterval);
+  //     clearInterval(this.enemySpawnInterval);
+  //     cancelAnimationFrame(this.animationFrameId);
+
+  //     this.levelEnded = true;
+  //     this.gameOver = true;
+
+  //     // 🎉 Win-Screen anzeigen
+  //     this.showWinScreen();
+  //     return;
+  //   }
+
+  //   // ✅ Neues Level laden
+  //   this.level = allLevels[this.currentLevelIndex];
+  //   this.enemies = this.level.enemies;
+  //   this.clouds = this.level.clouds;
+  //   this.backgroundObjects = this.level.backgroundObjects;
+  //   this.collectableBottles = this.level.collectableObjects || [];
+  //   this.collectableCoins = this.level.collectableCoins || [];
+
+  //   // Reset Flags
+  //   this.playerDied = false;
+  //   this.endbossDefeated = false;
+  //   this.levelEnded = false;
+  //   this.throwableObjects = [];
+
+  //   // Statusbars zurücksetzen
+  //   this.statusBarBottle.availableBottles = 3;
+  //   this.statusBarCoin.availableCoins = 0;
+  //   this.statusBar.setPercentage(100);
+  //   this.statusBarBottle.update?.();
+  //   this.statusBarCoin.update?.();
+
+  //   // Character Reset
+  //   // this.character.x = 100;
+  //   // this.character.y = 185;
+  //   // this.camera_x = 0;
+  //   // Character Reset NUR beim Start
+  //   if (this.character) {
+  //     this.character.x = 100;
+  //     this.character.y = 185;
+  //   }
+  //   this.camera_x = 0;
+
+  //   // ⏩ Character & Gegner wieder starten (falls sie stop-Methoden hatten)
+  //   if (this.character.start) this.character.start();
+  //   this.enemies.forEach((e) => e.start?.());
+  //   this.clouds.forEach((c) => c.start?.());
+
+  //   // Loop neu starten
+  //   clearInterval(this.gameInterval);
+  //   this.run();
+
+  //   this.showLevelMessage(`🚀 Level ${this.currentLevelIndex + 1} beginnt!`);
+
+  //   this.spawnEnemyLoop();
+  // }
+
+  //----------------------------------------------------------------
+
   loadNextLevel() {
-    this.currentLevelIndex++;
+  this.currentLevelIndex++;
 
-    // ✅ Spiel gewonnen?
-    if (this.currentLevelIndex >= allLevels.length) {
-      console.log("🏁 Spiel beendet – alle Levels abgeschlossen!");
+  // ✅ Spiel gewonnen?
+  if (this.currentLevelIndex >= allLevels.length) {
+    console.log("🏁 Spiel beendet – alle Levels abgeschlossen!");
 
-      // 🚫 Alles stoppen
-      clearInterval(this.gameInterval);
-      clearInterval(this.enemySpawnInterval);
-      cancelAnimationFrame(this.animationFrameId);
+    // 🚫 Alles stoppen
+    clearInterval(this.gameInterval);
+    clearInterval(this.enemySpawnInterval);
+    cancelAnimationFrame(this.animationFrameId);
 
-      this.levelEnded = true;
-      this.gameOver = true;
+    this.levelEnded = true;
+    this.gameOver = true;
 
-      // 🎉 Win-Screen anzeigen
-      this.showWinScreen();
-      return;
-    }
+    // 🎉 Win-Screen anzeigen
+    this.showWinScreen();
+    return;
+  }
 
-    // ✅ Neues Level laden
-    this.level = allLevels[this.currentLevelIndex];
-    this.enemies = this.level.enemies;
-    this.clouds = this.level.clouds;
-    this.backgroundObjects = this.level.backgroundObjects;
-    this.collectableBottles = this.level.collectableObjects || [];
-    this.collectableCoins = this.level.collectableCoins || [];
+  // ✅ Neues Level laden
+  this.level = allLevels[this.currentLevelIndex];
+  this.enemies = this.level.enemies;
+  this.clouds = this.level.clouds;
+  this.backgroundObjects = this.level.backgroundObjects;
+  this.collectableBottles = this.level.collectableObjects || [];
+  this.collectableCoins = this.level.collectableCoins || [];
 
-    // Reset Flags
-    this.playerDied = false;
-    this.endbossDefeated = false;
-    this.levelEnded = false;
-    this.throwableObjects = [];
+  // Reset Flags
+  this.playerDied = false;
+  this.endbossDefeated = false;
+  this.levelEnded = false;
+  this.throwableObjects = [];
 
-    // Statusbars zurücksetzen
-    this.statusBarBottle.availableBottles = 3;
-    this.statusBarCoin.availableCoins = 0;
-    this.statusBar.setPercentage(100);
-    this.statusBarBottle.update?.();
-    this.statusBarCoin.update?.();
+  // Statusbars zurücksetzen
+  this.statusBarBottle.availableBottles = 3;
+  this.statusBarCoin.availableCoins = 0;
+  this.statusBar.setPercentage(100);
+  this.statusBarBottle.update?.();
+  this.statusBarCoin.update?.();
 
-    // Character Reset
-    // this.character.x = 100;
-    // this.character.y = 185;
-    // this.camera_x = 0;
-    // Character Reset NUR beim Start
-    if (this.character) {
+  // 👤 Character Reset NUR beim ersten Start oder nach Tod
+  if (this.character) {
+    // Nicht immer X=100 überschreiben → nur falls er gestorben ist
+    if (this.playerDied) {
       this.character.x = 100;
       this.character.y = 185;
     }
-    this.camera_x = 0;
-
-    // ⏩ Character & Gegner wieder starten (falls sie stop-Methoden hatten)
-    if (this.character.start) this.character.start();
-    this.enemies.forEach((e) => e.start?.());
-    this.clouds.forEach((c) => c.start?.());
-
-    // Loop neu starten
-    clearInterval(this.gameInterval);
-    this.run();
-
-    this.showLevelMessage(`🚀 Level ${this.currentLevelIndex + 1} beginnt!`);
-
-    this.spawnEnemyLoop();
   }
+
+  // Kamera zurücksetzen
+  this.camera_x = -this.character.x + 100;
+
+  // ⏩ Character & Gegner wieder starten (falls sie stop-Methoden hatten)
+  this.character?.start();
+  this.enemies.forEach((e) => e.start?.());
+  this.clouds.forEach((c) => c.start?.());
+
+  // Loop neu starten
+  clearInterval(this.gameInterval);
+  this.run();
+
+  this.showLevelMessage(`🚀 Level ${this.currentLevelIndex + 1} beginnt!`);
+
+  this.spawnEnemyLoop();
+}
+
+  //----------------------------------------------------------------
+
+
   // loadNextLevel() {
   //   // ⛔ Doppelte Aufrufe verhindern
   //   if (this.levelEnded) {
