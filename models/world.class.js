@@ -401,32 +401,33 @@ class World {
   //   }
   // }
   //--------------------------------------------------------------------------
-  // ifEnemyIsDead(enemy) {
-  //   if (enemy.isDead?.()) {
-  //     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-  //       enemy.isMarkedDead = true;
-  //     } else {
-  //       // ❌ nicht mehr sofort entfernen
-  //       enemy.die?.(); // ChickenSmall kümmert sich selbst ums Entfernen
-  //     }
-  //   }
-  // }
   ifEnemyIsDead(enemy) {
     if (enemy.isDead?.()) {
       if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-        // Endboss wird als "tot" markiert UND entfernt
         enemy.isMarkedDead = true;
-
-        const i = this.level.enemies.indexOf(enemy);
-        if (i >= 0) {
-          this.level.enemies.splice(i, 1);
-        }
       } else {
-        // ChickenSmall & Co. kümmern sich selbst ums Entfernen
-        enemy.die?.();
+        // ❌ nicht mehr sofort entfernen
+        enemy.die?.(); // ChickenSmall kümmert sich selbst ums Entfernen
       }
     }
   }
+  //--------------------------------------------------------------------------
+  // ifEnemyIsDead(enemy) {
+  //   if (enemy.isDead?.()) {
+  //     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+  //       // Endboss wird als "tot" markiert UND entfernt
+  //       enemy.isMarkedDead = true;
+
+  //       const i = this.level.enemies.indexOf(enemy);
+  //       if (i >= 0) {
+  //         this.level.enemies.splice(i, 1);
+  //       }
+  //     } else {
+  //       // ChickenSmall & Co. kümmern sich selbst ums Entfernen
+  //       enemy.die?.();
+  //     }
+  //   }
+  // }
 
   //--------------------------------------------------------------------------
   //   ifEnemyIsDead(enemy) {
