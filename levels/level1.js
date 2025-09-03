@@ -156,13 +156,13 @@
   }
 );
 
-const level2 = (world) => new Level(
+const level2 = new Level(
   [
-    new ChickenNormal(world),
-    new ChickenNormal(world),
-    new ChickenNormal(world),
-    new ChickenNormal(world),
-    new ChickenNormal(world),
+    new ChickenNormal(),
+    new ChickenNormal(),
+    new ChickenNormal(),
+    new ChickenNormal(),
+    new ChickenNormal(),
     new EndbossLevel2(),
   ],
   [new Cloud(), new Cloud(), new Cloud()],
