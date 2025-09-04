@@ -136,6 +136,7 @@
     new CollectableCoin(400, 350),
     new CollectableCoin(700, 350),
   ],
+  2250 ,
   {
     spawnConfig: [
       {
@@ -199,6 +200,7 @@ const level2 = new Level(
     new CollectableCoin(400, 350),
     new CollectableCoin(700, 350),
   ],
+  2250,
 
     {
     spawnConfig: [
