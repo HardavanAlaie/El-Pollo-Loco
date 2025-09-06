@@ -156,60 +156,60 @@
   }
 );
 
-const level2 = new Level(
-  [
-    new ChickenNormal(),
-    new ChickenNormal(),
-    new ChickenNormal(),
-    new ChickenNormal(),
-    new ChickenNormal(),
-    new EndbossLevel2(),
-  ],
-  [new Cloud(), new Cloud(), new Cloud()],
-  [
-    new BackgroundObject("img/5_background/layers/air.png", 0),
-    new BackgroundObject("img/5_background/layers/3_third_layer/1.png", 0),
-    new BackgroundObject("img/5_background/layers/2_second_layer/1.png", 0),
-    new BackgroundObject("img/5_background/layers/1_first_layer/1.png", 0),
-    new BackgroundObject("img/5_background/layers/air.png", 719),
-    new BackgroundObject("img/5_background/layers/3_third_layer/2.png", 719),
-    new BackgroundObject("img/5_background/layers/2_second_layer/2.png", 719),
-    new BackgroundObject("img/5_background/layers/1_first_layer/2.png", 719),
-    new BackgroundObject("img/5_background/layers/air.png", -720),
-    new BackgroundObject("img/5_background/layers/3_third_layer/2.png", -720),
-    new BackgroundObject("img/5_background/layers/2_second_layer/2.png", -720),
-    new BackgroundObject("img/5_background/layers/1_first_layer/2.png", -720),
-    new BackgroundObject("img/5_background/layers/air.png", 719 * 2),
-    new BackgroundObject("img/5_background/layers/3_third_layer/1.png", 719 * 2),
-    new BackgroundObject("img/5_background/layers/2_second_layer/1.png", 719 * 2),
-    new BackgroundObject("img/5_background/layers/1_first_layer/1.png", 719 * 2),
-    new BackgroundObject("img/5_background/layers/air.png", 719 * 3),
-    new BackgroundObject("img/5_background/layers/3_third_layer/2.png", 719 * 3),
-    new BackgroundObject("img/5_background/layers/2_second_layer/2.png", 719 * 3),
-    new BackgroundObject("img/5_background/layers/1_first_layer/2.png", 719 * 3),
-  ],
-  generateRandomBottles(50, 300, 2000, 300, 350), // <== Hier passiert die Magie
-  [
-    new CollectableCoin(100, 350),
-    new CollectableCoin(150, 300),
-    new CollectableCoin(200, 300),
-    new CollectableCoin(150, 350),
-    new CollectableCoin(200, 350),
-    new CollectableCoin(250, 350),
-    new CollectableCoin(400, 350),
-    new CollectableCoin(700, 350),
-  ],
+// const level2 = new Level(
+//   [
+//     new ChickenNormal(),
+//     new ChickenNormal(),
+//     new ChickenNormal(),
+//     new ChickenNormal(),
+//     new ChickenNormal(),
+//     new EndbossLevel2(),
+//   ],
+//   [new Cloud(), new Cloud(), new Cloud()],
+//   [
+//     new BackgroundObject("img/5_background/layers/air.png", 0),
+//     new BackgroundObject("img/5_background/layers/3_third_layer/1.png", 0),
+//     new BackgroundObject("img/5_background/layers/2_second_layer/1.png", 0),
+//     new BackgroundObject("img/5_background/layers/1_first_layer/1.png", 0),
+//     new BackgroundObject("img/5_background/layers/air.png", 719),
+//     new BackgroundObject("img/5_background/layers/3_third_layer/2.png", 719),
+//     new BackgroundObject("img/5_background/layers/2_second_layer/2.png", 719),
+//     new BackgroundObject("img/5_background/layers/1_first_layer/2.png", 719),
+//     new BackgroundObject("img/5_background/layers/air.png", -720),
+//     new BackgroundObject("img/5_background/layers/3_third_layer/2.png", -720),
+//     new BackgroundObject("img/5_background/layers/2_second_layer/2.png", -720),
+//     new BackgroundObject("img/5_background/layers/1_first_layer/2.png", -720),
+//     new BackgroundObject("img/5_background/layers/air.png", 719 * 2),
+//     new BackgroundObject("img/5_background/layers/3_third_layer/1.png", 719 * 2),
+//     new BackgroundObject("img/5_background/layers/2_second_layer/1.png", 719 * 2),
+//     new BackgroundObject("img/5_background/layers/1_first_layer/1.png", 719 * 2),
+//     new BackgroundObject("img/5_background/layers/air.png", 719 * 3),
+//     new BackgroundObject("img/5_background/layers/3_third_layer/2.png", 719 * 3),
+//     new BackgroundObject("img/5_background/layers/2_second_layer/2.png", 719 * 3),
+//     new BackgroundObject("img/5_background/layers/1_first_layer/2.png", 719 * 3),
+//   ],
+//   generateRandomBottles(50, 300, 2000, 300, 350), // <== Hier passiert die Magie
+//   [
+//     new CollectableCoin(100, 350),
+//     new CollectableCoin(150, 300),
+//     new CollectableCoin(200, 300),
+//     new CollectableCoin(150, 350),
+//     new CollectableCoin(200, 350),
+//     new CollectableCoin(250, 350),
+//     new CollectableCoin(400, 350),
+//     new CollectableCoin(700, 350),
+//   ],
 
-    {
-    spawnConfig: [
-      {
-        type: ChickenNormal,
-        maxCount: 2,
-        interval: 4000,
-        condition: (level) =>
-          level.enemies.some((e) => e instanceof EndbossLevel2 && !e.isDead()),
-      },
-    ],
-  }
-);
+//     {
+//     spawnConfig: [
+//       {
+//         type: ChickenNormal,
+//         maxCount: 2,
+//         interval: 4000,
+//         condition: (level) =>
+//           level.enemies.some((e) => e instanceof EndbossLevel2 && !e.isDead()),
+//       },
+//     ],
+//   }
+// );
 
