@@ -518,47 +518,81 @@ class World {
   //     }, 3000);
   //   }
   // }
+
+
+  //--------------------------------------------------------------------------
+
+
+  // checkEndbossDefeated() {
+  //   const endboss = (this.level.enemies || []).find(
+  //     (e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2
+  //   );
+
+  //   // Nichts tun, wenn kein Boss da oder bereits behandelt
+  //   if (
+  //     !endboss ||
+  //     this.endbossDefeated ||
+  //     this.playerDied ||
+  //     this._handlingBossDefeat
+  //   )
+  //     return;
+
+  //   if (endboss.isDead?.()) {
+  //     console.log("✅ Endboss besiegt!");
+  //     this._handlingBossDefeat = true; // Re-Entrys verhindern
+  //     this.endbossDefeated = true;
+  //     this.levelEnded = true;
+
+  //     // ALLES anhalten (Loop, RAF, Gegner-/Cloud-Intervalle, Character)
+  //     this.stopGameLoopHard();
+
+  //     // Letztes Level?
+  //     const isLastLevel = this.currentLevelIndex >= allLevels.length - 1;
+
+  //     if (isLastLevel) {
+  //       // 🎉 Endscreen
+  //       this.showWinScreen();
+  //     } else {
+  //       // 🎉 Meldung & Levelwechsel
+  //       this.showLevelMessage(
+  //         "🎉 Level " + (this.currentLevelIndex + 1) + " geschafft!"
+  //       );
+  //       setTimeout(() => {
+  //         this._handlingBossDefeat = false; // Guard für nächstes Level zurücksetzen
+  //         this.loadNextLevel();
+  //       }, 2000);
+  //     }
+  //   }
+  // }
   checkEndbossDefeated() {
-    const endboss = (this.level.enemies || []).find(
-      (e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2
-    );
+  // Nur nach Endboss Level 1 suchen
+  const endboss = (this.level.enemies || []).find(
+    (e) => e instanceof EndbossLevel1
+  );
 
-    // Nichts tun, wenn kein Boss da oder bereits behandelt
-    if (
-      !endboss ||
-      this.endbossDefeated ||
-      this.playerDied ||
-      this._handlingBossDefeat
-    )
-      return;
+  // Nichts tun, wenn kein Boss da oder bereits behandelt
+  if (
+    !endboss ||
+    this.endbossDefeated ||
+    this.playerDied ||
+    this._handlingBossDefeat
+  )
+    return;
 
-    if (endboss.isDead?.()) {
-      console.log("✅ Endboss besiegt!");
-      this._handlingBossDefeat = true; // Re-Entrys verhindern
-      this.endbossDefeated = true;
-      this.levelEnded = true;
+  if (endboss.isDead?.()) {
+    console.log("✅ Endboss besiegt!");
+    this._handlingBossDefeat = true; // Re-Entrys verhindern
+    this.endbossDefeated = true;
+    this.levelEnded = true;
 
-      // ALLES anhalten (Loop, RAF, Gegner-/Cloud-Intervalle, Character)
-      this.stopGameLoopHard();
+    // ALLES anhalten (Loop, RAF, Gegner-/Cloud-Intervalle, Character)
+    this.stopGameLoopHard();
 
-      // Letztes Level?
-      const isLastLevel = this.currentLevelIndex >= allLevels.length - 1;
-
-      if (isLastLevel) {
-        // 🎉 Endscreen
-        this.showWinScreen();
-      } else {
-        // 🎉 Meldung & Levelwechsel
-        this.showLevelMessage(
-          "🎉 Level " + (this.currentLevelIndex + 1) + " geschafft!"
-        );
-        setTimeout(() => {
-          this._handlingBossDefeat = false; // Guard für nächstes Level zurücksetzen
-          this.loadNextLevel();
-        }, 2000);
-      }
-    }
+    // Direkt den Win-Screen anzeigen
+    this.showWinScreen();
   }
+}
+
 
   stopGameLoopHard() {
     // Haupt-Logik stoppen
