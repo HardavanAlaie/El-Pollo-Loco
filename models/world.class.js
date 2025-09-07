@@ -285,64 +285,132 @@ class World {
   }
 
   
-  checkEndbossDefeated() {
-    // Nur nach Endboss Level 1 suchen
-    const endboss = (this.level.enemies || []).find(
-      (e) => e instanceof EndbossLevel1
-    );
+  // checkEndbossDefeated() {
+  //   // Nur nach Endboss Level 1 suchen
+  //   const endboss = (this.level.enemies || []).find(
+  //     (e) => e instanceof EndbossLevel1
+  //   );
 
-    // Nichts tun, wenn kein Boss da oder bereits behandelt
-    if (
-      !endboss ||
-      this.endbossDefeated ||
-      this.playerDied ||
-      this._handlingBossDefeat
-    )
-      return;
+  //   // Nichts tun, wenn kein Boss da oder bereits behandelt
+  //   if (
+  //     !endboss ||
+  //     this.endbossDefeated ||
+  //     this.playerDied ||
+  //     this._handlingBossDefeat
+  //   )
+  //     return;
 
-    if (endboss.isDead?.()) {
-      console.log("✅ Endboss besiegt!");
-      this._handlingBossDefeat = true; // Re-Entrys verhindern
-      this.endbossDefeated = true;
-      this.levelEnded = true;
+  //   if (endboss.isDead?.()) {
+  //     console.log("✅ Endboss besiegt!");
+  //     this._handlingBossDefeat = true; // Re-Entrys verhindern
+  //     this.endbossDefeated = true;
+  //     this.levelEnded = true;
 
-      // ALLES anhalten (Loop, RAF, Gegner-/Cloud-Intervalle, Character)
-      this.stopGameLoopHard();
+  //     // ALLES anhalten (Loop, RAF, Gegner-/Cloud-Intervalle, Character)
+  //     this.stopGameLoopHard();
 
-      // Direkt den Win-Screen anzeigen
-      this.showWinScreen();
-    }
+  //     // Direkt den Win-Screen anzeigen
+  //     this.showWinScreen();
+  //   }
+  // }
+//   checkEndbossDefeated() {
+//   const endboss = (this.level.enemies || []).find(
+//     (e) => e instanceof EndbossLevel1
+//   );
+
+//   if (
+//     !endboss ||
+//     this.endbossDefeated ||
+//     this.playerDied ||
+//     this._handlingBossDefeat
+//   )
+//     return;
+
+//   if (endboss.isDead?.()) {
+//     console.log("✅ Endboss besiegt!");
+//     this._handlingBossDefeat = true;
+//     this.endbossDefeated = true;
+//     this.levelEnded = true;
+
+//     this.stopGameLoopHard();
+
+//     // 👉 Sieg-Screen anzeigen
+//     this.showWinScreen();
+//   }
+// }
+checkEndbossDefeated() {
+  const endboss = (this.level.enemies || []).find(e => e instanceof EndbossLevel1);
+  if (!endboss || this.endbossDefeated || this.playerDied || this._handlingBossDefeat) return;
+
+  if (endboss.isDead?.()) {
+    console.log("✅ Endboss besiegt!");
+    this._handlingBossDefeat = true;
+    this.endbossDefeated   = true;
+    this.levelEnded        = true;
+
+    this.stopGameLoopHard();   // nur Loops stoppen, nicht zeichnen/clearen
+    this.showWinScreen();      // sofort den Sieg-Screen rendern
   }
+}
 
+
+
+  // stopGameLoopHard() {
+  //   // Haupt-Logik stoppen
+  //   if (this.gameInterval) clearInterval(this.gameInterval);
+  //   if (this.enemySpawnInterval) clearInterval(this.enemySpawnInterval);
+
+  //   // Zeichen-Loop stoppen (falls du in draw() this.animationFrameId setzt)
+  //   if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
+
+  //   // Character stoppen (falls er eigene Intervalle/Animationen hat)
+  //   this.character?.stop?.();
+  //   if (this.character?.moveInterval)
+  //     clearInterval(this.character.moveInterval);
+  //   if (this.character?.runInterval) clearInterval(this.character.runInterval);
+  //   this.character.speed = 0;
+
+  //   // Gegner stoppen
+  //   (this.level?.enemies || []).forEach((e) => {
+  //     e.stop?.();
+  //     if (e.moveInterval) clearInterval(e.moveInterval);
+  //     if (e.runInterval) clearInterval(e.runInterval);
+  //     e.speed = 0;
+  //   });
+
+  //   // Clouds / Hintergrundobjekte stoppen (falls sie eigene Intervalle/Animationen haben)
+  //   (this.clouds || []).forEach((c) => {
+  //     c.stop?.();
+  //     if (c.moveInterval) clearInterval(c.moveInterval);
+  //   });
+  // }
   stopGameLoopHard() {
-    // Haupt-Logik stoppen
-    if (this.gameInterval) clearInterval(this.gameInterval);
-    if (this.enemySpawnInterval) clearInterval(this.enemySpawnInterval);
+  console.log("⏹️ Stoppe komplettes Spiel");
 
-    // Zeichen-Loop stoppen (falls du in draw() this.animationFrameId setzt)
-    if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
-
-    // Character stoppen (falls er eigene Intervalle/Animationen hat)
-    this.character?.stop?.();
-    if (this.character?.moveInterval)
-      clearInterval(this.character.moveInterval);
-    if (this.character?.runInterval) clearInterval(this.character.runInterval);
-    this.character.speed = 0;
-
-    // Gegner stoppen
-    (this.level?.enemies || []).forEach((e) => {
-      e.stop?.();
-      if (e.moveInterval) clearInterval(e.moveInterval);
-      if (e.runInterval) clearInterval(e.runInterval);
-      e.speed = 0;
-    });
-
-    // Clouds / Hintergrundobjekte stoppen (falls sie eigene Intervalle/Animationen haben)
-    (this.clouds || []).forEach((c) => {
-      c.stop?.();
-      if (c.moveInterval) clearInterval(c.moveInterval);
-    });
+  // Haupt-GameLoop stoppen
+  if (this.animationFrameId) {
+    cancelAnimationFrame(this.animationFrameId);
+    this.animationFrameId = null;
   }
+
+  // Alle Intervalle stoppen (z. B. Gegner, Wolken, Items)
+  if (this.enemyInterval) {
+    clearInterval(this.enemyInterval);
+    this.enemyInterval = null;
+  }
+  if (this.cloudInterval) {
+    clearInterval(this.cloudInterval);
+    this.cloudInterval = null;
+  }
+  if (this.characterInterval) {
+    clearInterval(this.characterInterval);
+    this.characterInterval = null;
+  }
+
+  // ⚠️ Wichtig: NICHT den Canvas löschen oder clearRect aufrufen!
+  // Das Bild bleibt so stehen, und danach wird z.B. showWinScreen() drüber gezeichnet.
+}
+
 
   spawnEnemyLoop() {
     const spawnConfigs = this.level.config?.spawnConfig || [];
@@ -620,69 +688,324 @@ class World {
   //     }
   //   });
   // }
-  showWinScreen() {
-    const ctx = this.ctx;
-    const canvas = this.canvas;
+  // showWinScreen() {
+  //   const ctx = this.ctx;
+  //   const canvas = this.canvas;
 
-    // 🎨 Hintergrund abdunkeln
-    ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  //   // 🎨 Hintergrund abdunkeln
+  //   ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+  //   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Win-Bild laden
-    const img = new Image();
-    img.src = "img/You won, you lost/You win B.png"; // 👈 Pfad zu deinem Win-Bild
+  //   // Win-Bild laden
+  //   const img = new Image();
+  //   img.src = "img/You won, you lost/You win B.png"; // 👈 Pfad zu deinem Win-Bild
 
-    img.onload = () => {
-      // Berechne optimale Bildgröße
-      const maxWidth = canvas.width * 0.6;
-      const maxHeight = canvas.height * 0.3;
+  //   img.onload = () => {
+  //     // Berechne optimale Bildgröße
+  //     const maxWidth = canvas.width * 0.6;
+  //     const maxHeight = canvas.height * 0.3;
 
-      let imgWidth = img.width;
-      let imgHeight = img.height;
+  //     let imgWidth = img.width;
+  //     let imgHeight = img.height;
 
-      // Skaliere proportional
-      const widthRatio = maxWidth / imgWidth;
-      const heightRatio = maxHeight / imgHeight;
-      const scale = Math.min(widthRatio, heightRatio);
+  //     // Skaliere proportional
+  //     const widthRatio = maxWidth / imgWidth;
+  //     const heightRatio = maxHeight / imgHeight;
+  //     const scale = Math.min(widthRatio, heightRatio);
 
-      imgWidth *= scale;
-      imgHeight *= scale;
+  //     imgWidth *= scale;
+  //     imgHeight *= scale;
 
-      const imgX = canvas.width / 2 - imgWidth / 2;
-      const imgY = canvas.height / 2 - imgHeight - 40;
+  //     const imgX = canvas.width / 2 - imgWidth / 2;
+  //     const imgY = canvas.height / 2 - imgHeight - 40;
 
-      ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+  //     ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
 
-      // 🟩 Button zeichnen
-      const buttonWidth = 250;
-      const buttonHeight = 60;
-      const buttonX = canvas.width / 2 - buttonWidth / 2;
-      const buttonY = canvas.height / 2;
+  //     // 🟩 Button zeichnen
+  //     const buttonWidth = 250;
+  //     const buttonHeight = 60;
+  //     const buttonX = canvas.width / 2 - buttonWidth / 2;
+  //     const buttonY = canvas.height / 2;
 
-      ctx.fillStyle = "#44cc44"; // Grün für "Sieg"
-      ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+  //     ctx.fillStyle = "#44cc44"; // Grün für "Sieg"
+  //     ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
 
-      // 📝 Button-Text
-      ctx.font = "24px Comic Sans MS";
-      ctx.fillStyle = "white";
-      ctx.textAlign = "center";
-      ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
+  //     // 📝 Button-Text
+  //     ctx.font = "24px Comic Sans MS";
+  //     ctx.fillStyle = "white";
+  //     ctx.textAlign = "center";
+  //     ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
 
-      // ☝️ Klickbereich speichern
-      this.restartButtonArea = {
-        x: buttonX,
-        y: buttonY,
-        width: buttonWidth,
-        height: buttonHeight,
-      };
+  //     // ☝️ Klickbereich speichern
+  //     this.restartButtonArea = {
+  //       x: buttonX,
+  //       y: buttonY,
+  //       width: buttonWidth,
+  //       height: buttonHeight,
+  //     };
 
-      // ✅ Nur 1x den Eventlistener anhängen
-      if (!this.canvasClickListenerAdded) {
-        canvas.addEventListener("click", this.handleCanvasClick.bind(this));
-        this.canvasClickListenerAdded = true;
-      }
-    };
+  //     // ✅ Nur 1x den Eventlistener anhängen
+  //     if (!this.canvasClickListenerAdded) {
+  //       canvas.addEventListener("click", this.handleCanvasClick.bind(this));
+  //       this.canvasClickListenerAdded = true;
+  //     }
+  //   };
+  // }
+//   showWinScreen() {
+//   const ctx = this.ctx;
+//   const canvas = this.canvas;
+
+//   // 🎨 Hintergrund abdunkeln
+//   ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+//   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+//   // Win-Bild laden
+//   const img = new Image();
+//   img.src = "img/You won, you lost/You win B.png"; // ← Dein Win-Bild
+
+//   img.onload = () => {
+//     const maxWidth = canvas.width * 0.6;
+//     const maxHeight = canvas.height * 0.3;
+
+//     let imgWidth = img.width;
+//     let imgHeight = img.height;
+
+//     const widthRatio = maxWidth / imgWidth;
+//     const heightRatio = maxHeight / imgHeight;
+//     const scale = Math.min(widthRatio, heightRatio);
+
+//     imgWidth *= scale;
+//     imgHeight *= scale;
+
+//     const imgX = canvas.width / 2 - imgWidth / 2;
+//     const imgY = canvas.height / 2 - imgHeight - 40;
+
+//     ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+
+//     // 🟩 Button zeichnen
+//     const buttonWidth = 250;
+//     const buttonHeight = 60;
+//     const buttonX = canvas.width / 2 - buttonWidth / 2;
+//     const buttonY = canvas.height / 2;
+
+//     ctx.fillStyle = "#44cc44"; // Grün für Sieg
+//     ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+//     // 📝 Button-Text
+//     ctx.font = "24px Comic Sans MS";
+//     ctx.fillStyle = "white";
+//     ctx.textAlign = "center";
+//     ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
+
+//     // ☝️ Klickbereich speichern
+//     this.restartButtonArea = {
+//       x: buttonX,
+//       y: buttonY,
+//       width: buttonWidth,
+//       height: buttonHeight,
+//     };
+
+//     if (!this.canvasClickListenerAdded) {
+//       canvas.addEventListener("click", this.handleCanvasClick.bind(this));
+//       this.canvasClickListenerAdded = true;
+//     }
+//   };
+// }
+// showWinScreen() {
+//   const ctx = this.ctx;
+//   const canvas = this.canvas;
+
+//   // Hintergrund abdunkeln
+//   ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+//   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+//   // Win-Bild vorbereiten
+//   const img = new Image();
+//   img.src = "img/You won, you lost/You win B.png";
+
+//   img.onload = () => {
+//     this.drawWinScreen(img);
+//   };
+
+//   // Falls Bild aus dem Cache geladen wird → direkt zeichnen
+//   if (img.complete) {
+//     this.drawWinScreen(img);
+//   }
+// }
+// showWinScreen() {
+//   // wir merken uns, dass ein Endscreen aktiv ist (optional für andere Logik)
+//   this.uiScreen = 'win';
+
+//   // Bild vorbereiten
+//   const img = new Image();
+//   img.onload  = () => this._drawWinScreen(img);
+//   img.onerror = () => this._drawWinScreen(null); // Fallback ohne Bild
+//   img.src = "img/You won, you lost/You win B.png";
+
+//   // Falls bereits aus dem Cache verfügbar (und valide), sofort zeichnen
+//   if (img.complete && img.naturalWidth) {
+//     this._drawWinScreen(img);
+//   } else if (img.complete && !img.naturalWidth) {
+//     // Bild ist "fertig", aber fehlgeschlagen -> Fallback
+//     this._drawWinScreen(null);
+//   }
+// }
+showWinScreen() {
+  const ctx = this.ctx;
+  const canvas = this.canvas;
+
+  // Reset Transform, damit alles sichtbar bleibt
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+  // Hintergrund abdunkeln
+  ctx.fillStyle = "rgba(0,0,0,0.8)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // TEST: nur Text anzeigen
+  ctx.font = "bold 64px Comic Sans MS";
+  ctx.fillStyle = "white";
+  ctx.textAlign = "center";
+  ctx.fillText("YOU WIN!", canvas.width / 2, canvas.height / 2 - 100);
+
+  // Button zeichnen
+  const buttonWidth = 250;
+  const buttonHeight = 60;
+  const buttonX = canvas.width / 2 - buttonWidth / 2;
+  const buttonY = canvas.height / 2;
+
+  ctx.fillStyle = "#44cc44";
+  ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+  ctx.font = "24px Comic Sans MS";
+  ctx.fillStyle = "white";
+  ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
+
+  this.restartButtonArea = { x: buttonX, y: buttonY, width: buttonWidth, height: buttonHeight };
+
+  if (!this.canvasClickListenerAdded) {
+    canvas.addEventListener("click", this.handleCanvasClick.bind(this));
+    this.canvasClickListenerAdded = true;
   }
+}
+
+
+_drawWinScreen(img) {
+  const ctx = this.ctx;
+  const canvas = this.canvas;
+
+  // *** Kritisch: Canvas-Zustand auf Neutral zurücksetzen ***
+  ctx.save();
+  try {
+    ctx.setTransform(1, 0, 0, 1, 0, 0); // alle Übersetzungen/Zooms neutralisieren
+  } catch {}
+  ctx.globalAlpha = 1;
+  ctx.imageSmoothingEnabled = true;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "alphabetic"; // definierter Zustand
+
+  // Hintergrund abdunkeln
+  ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Win-Grafik (oder Fallback-Text) zeichnen
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+
+  if (img && img.naturalWidth && img.naturalHeight) {
+    const maxWidth  = canvas.width * 0.6;
+    const maxHeight = canvas.height * 0.3;
+    const scale = Math.min(maxWidth / img.naturalWidth, maxHeight / img.naturalHeight);
+
+    const w = img.naturalWidth  * scale;
+    const h = img.naturalHeight * scale;
+    const x = centerX - w / 2;
+    const y = centerY - h - 40;
+
+    ctx.drawImage(img, x, y, w, h);
+  } else {
+    // Fallback: Text falls Bildpfad nicht stimmt/404
+    ctx.font = "bold 64px Comic Sans MS";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("YOU WIN!", centerX, centerY - 80);
+  }
+
+  // Button
+  const buttonWidth = 250;
+  const buttonHeight = 60;
+  const buttonX = centerX - buttonWidth / 2;
+  const buttonY = centerY;
+
+  ctx.fillStyle = "#44cc44";
+  ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+  ctx.font = "24px Comic Sans MS";
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText("Spiel neu starten", centerX, buttonY + 38);
+
+  // Klickbereich speichern
+  this.restartButtonArea = { x: buttonX, y: buttonY, width: buttonWidth, height: buttonHeight };
+
+  // Click-Listener nur einmal anhängen
+  if (!this.canvasClickListenerAdded) {
+    this.canvas.addEventListener("click", this.handleCanvasClick.bind(this));
+    this.canvasClickListenerAdded = true;
+  }
+
+  ctx.restore();
+}
+
+
+drawWinScreen(img) {
+  const ctx = this.ctx;
+  const canvas = this.canvas;
+
+  const maxWidth = canvas.width * 0.6;
+  const maxHeight = canvas.height * 0.3;
+
+  let imgWidth = img.width;
+  let imgHeight = img.height;
+
+  const widthRatio = maxWidth / imgWidth;
+  const heightRatio = maxHeight / imgHeight;
+  const scale = Math.min(widthRatio, heightRatio);
+
+  imgWidth *= scale;
+  imgHeight *= scale;
+
+  const imgX = canvas.width / 2 - imgWidth / 2;
+  const imgY = canvas.height / 2 - imgHeight - 40;
+
+  ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+
+  // 🟩 Button zeichnen
+  const buttonWidth = 250;
+  const buttonHeight = 60;
+  const buttonX = canvas.width / 2 - buttonWidth / 2;
+  const buttonY = canvas.height / 2;
+
+  ctx.fillStyle = "#44cc44"; // Grün
+  ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+  ctx.font = "24px Comic Sans MS";
+  ctx.fillStyle = "white";
+  ctx.textAlign = "center";
+  ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
+
+  // Klickbereich speichern
+  this.restartButtonArea = {
+    x: buttonX,
+    y: buttonY,
+    width: buttonWidth,
+    height: buttonHeight,
+  };
+
+  if (!this.canvasClickListenerAdded) {
+    canvas.addEventListener("click", this.handleCanvasClick.bind(this));
+    this.canvasClickListenerAdded = true;
+  }
+}
+
+
 
   showGameOverScreen() {
     const ctx = this.ctx;
@@ -762,22 +1085,39 @@ class World {
   }
   
 
+  // handleCanvasClick(event) {
+  //   const rect = this.canvas.getBoundingClientRect();
+  //   const clickX = event.clientX - rect.left;
+  //   const clickY = event.clientY - rect.top;
+
+  //   const btn = this.restartButtonArea;
+
+  //   if (
+  //     clickX >= btn.x &&
+  //     clickX <= btn.x + btn.width &&
+  //     clickY >= btn.y &&
+  //     clickY <= btn.y + btn.height
+  //   ) {
+  //     location.reload(); // 🔁 Spiel neu laden
+  //   }
+  // }
   handleCanvasClick(event) {
-    const rect = this.canvas.getBoundingClientRect();
-    const clickX = event.clientX - rect.left;
-    const clickY = event.clientY - rect.top;
+  if (!this.restartButtonArea || this.uiScreen !== 'win' && this.uiScreen !== 'gameover') return;
 
-    const btn = this.restartButtonArea;
+  const rect = this.canvas.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  const { x: bx, y: by, width, height } = this.restartButtonArea;
 
-    if (
-      clickX >= btn.x &&
-      clickX <= btn.x + btn.width &&
-      clickY >= btn.y &&
-      clickY <= btn.y + btn.height
-    ) {
-      location.reload(); // 🔁 Spiel neu laden
-    }
+  if (x >= bx && x <= bx + width && y >= by && y <= by + height) {
+    // schnelle Lösung:
+    location.reload();
+
+    // oder saubere Lösung:
+    // this.restartGame();
   }
+}
+
 
   draw() {
     if (this.playerDied) {
