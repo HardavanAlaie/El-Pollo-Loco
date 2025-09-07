@@ -67,7 +67,7 @@ class World {
         this.checkEndbossDefeated();
         this.removeOffscreenEnemies();
         this.checkEndboss1Hit();
-        this.checkEndboss2Hit();
+        //this.checkEndboss2Hit();
       }
 
       // 💀 Wenn Spieler tot ist, zeige Game Over Screen
@@ -97,16 +97,16 @@ class World {
     }
   }
 
-  checkEndboss2Hit() {
-    if (
-      !this.character.isHurt() &&
-      this.character.isColliding(
-        this.level.enemies.find((e) => e instanceof EndbossLevel2)
-      )
-    ) {
-      this.character.hit();
-    }
-  }
+  // checkEndboss2Hit() {
+  //   if (
+  //     !this.character.isHurt() &&
+  //     this.character.isColliding(
+  //       this.level.enemies.find((e) => e instanceof EndbossLevel2)
+  //     )
+  //   ) {
+  //     this.character.hit();
+  //   }
+  // }
 
   checkThrowableObjects() {
     this.throwableObjects = this.throwableObjects.filter(
@@ -155,10 +155,7 @@ class World {
           //   if (i >= 0) this.level.enemies.splice(i, 1);
           // }
           if (enemy.isDead?.()) {
-            if (
-              enemy instanceof EndbossLevel1 ||
-              enemy instanceof EndbossLevel2
-            ) {
+            if (enemy instanceof EndbossLevel1) {
               enemy.isMarkedDead = true;
             } else {
               const i = this.level.enemies.indexOf(enemy);
@@ -519,9 +516,7 @@ class World {
   //   }
   // }
 
-
   //--------------------------------------------------------------------------
-
 
   // checkEndbossDefeated() {
   //   const endboss = (this.level.enemies || []).find(
@@ -565,34 +560,33 @@ class World {
   //   }
   // }
   checkEndbossDefeated() {
-  // Nur nach Endboss Level 1 suchen
-  const endboss = (this.level.enemies || []).find(
-    (e) => e instanceof EndbossLevel1
-  );
+    // Nur nach Endboss Level 1 suchen
+    const endboss = (this.level.enemies || []).find(
+      (e) => e instanceof EndbossLevel1
+    );
 
-  // Nichts tun, wenn kein Boss da oder bereits behandelt
-  if (
-    !endboss ||
-    this.endbossDefeated ||
-    this.playerDied ||
-    this._handlingBossDefeat
-  )
-    return;
+    // Nichts tun, wenn kein Boss da oder bereits behandelt
+    if (
+      !endboss ||
+      this.endbossDefeated ||
+      this.playerDied ||
+      this._handlingBossDefeat
+    )
+      return;
 
-  if (endboss.isDead?.()) {
-    console.log("✅ Endboss besiegt!");
-    this._handlingBossDefeat = true; // Re-Entrys verhindern
-    this.endbossDefeated = true;
-    this.levelEnded = true;
+    if (endboss.isDead?.()) {
+      console.log("✅ Endboss besiegt!");
+      this._handlingBossDefeat = true; // Re-Entrys verhindern
+      this.endbossDefeated = true;
+      this.levelEnded = true;
 
-    // ALLES anhalten (Loop, RAF, Gegner-/Cloud-Intervalle, Character)
-    this.stopGameLoopHard();
+      // ALLES anhalten (Loop, RAF, Gegner-/Cloud-Intervalle, Character)
+      this.stopGameLoopHard();
 
-    // Direkt den Win-Screen anzeigen
-    this.showWinScreen();
+      // Direkt den Win-Screen anzeigen
+      this.showWinScreen();
+    }
   }
-}
-
 
   stopGameLoopHard() {
     // Haupt-Logik stoppen
