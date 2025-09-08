@@ -889,70 +889,70 @@ showWinScreen() {
 }
 
 
-_drawWinScreen(img) {
-  const ctx = this.ctx;
-  const canvas = this.canvas;
+// _drawWinScreen(img) {
+//   const ctx = this.ctx;
+//   const canvas = this.canvas;
 
-  // *** Kritisch: Canvas-Zustand auf Neutral zurücksetzen ***
-  ctx.save();
-  try {
-    ctx.setTransform(1, 0, 0, 1, 0, 0); // alle Übersetzungen/Zooms neutralisieren
-  } catch {}
-  ctx.globalAlpha = 1;
-  ctx.imageSmoothingEnabled = true;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "alphabetic"; // definierter Zustand
+//   // *** Kritisch: Canvas-Zustand auf Neutral zurücksetzen ***
+//   ctx.save();
+//   try {
+//     ctx.setTransform(1, 0, 0, 1, 0, 0); // alle Übersetzungen/Zooms neutralisieren
+//   } catch {}
+//   ctx.globalAlpha = 1;
+//   ctx.imageSmoothingEnabled = true;
+//   ctx.textAlign = "center";
+//   ctx.textBaseline = "alphabetic"; // definierter Zustand
 
-  // Hintergrund abdunkeln
-  ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+//   // Hintergrund abdunkeln
+//   ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+//   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Win-Grafik (oder Fallback-Text) zeichnen
-  const centerX = canvas.width / 2;
-  const centerY = canvas.height / 2;
+//   // Win-Grafik (oder Fallback-Text) zeichnen
+//   const centerX = canvas.width / 2;
+//   const centerY = canvas.height / 2;
 
-  if (img && img.naturalWidth && img.naturalHeight) {
-    const maxWidth  = canvas.width * 0.6;
-    const maxHeight = canvas.height * 0.3;
-    const scale = Math.min(maxWidth / img.naturalWidth, maxHeight / img.naturalHeight);
+//   if (img && img.naturalWidth && img.naturalHeight) {
+//     const maxWidth  = canvas.width * 0.6;
+//     const maxHeight = canvas.height * 0.3;
+//     const scale = Math.min(maxWidth / img.naturalWidth, maxHeight / img.naturalHeight);
 
-    const w = img.naturalWidth  * scale;
-    const h = img.naturalHeight * scale;
-    const x = centerX - w / 2;
-    const y = centerY - h - 40;
+//     const w = img.naturalWidth  * scale;
+//     const h = img.naturalHeight * scale;
+//     const x = centerX - w / 2;
+//     const y = centerY - h - 40;
 
-    ctx.drawImage(img, x, y, w, h);
-  } else {
-    // Fallback: Text falls Bildpfad nicht stimmt/404
-    ctx.font = "bold 64px Comic Sans MS";
-    ctx.fillStyle = "#ffffff";
-    ctx.fillText("YOU WIN!", centerX, centerY - 80);
-  }
+//     ctx.drawImage(img, x, y, w, h);
+//   } else {
+//     // Fallback: Text falls Bildpfad nicht stimmt/404
+//     ctx.font = "bold 64px Comic Sans MS";
+//     ctx.fillStyle = "#ffffff";
+//     ctx.fillText("YOU WIN!", centerX, centerY - 80);
+//   }
 
-  // Button
-  const buttonWidth = 250;
-  const buttonHeight = 60;
-  const buttonX = centerX - buttonWidth / 2;
-  const buttonY = centerY;
+//   // Button
+//   const buttonWidth = 250;
+//   const buttonHeight = 60;
+//   const buttonX = centerX - buttonWidth / 2;
+//   const buttonY = centerY;
 
-  ctx.fillStyle = "#44cc44";
-  ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+//   ctx.fillStyle = "#44cc44";
+//   ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
 
-  ctx.font = "24px Comic Sans MS";
-  ctx.fillStyle = "#ffffff";
-  ctx.fillText("Spiel neu starten", centerX, buttonY + 38);
+//   ctx.font = "24px Comic Sans MS";
+//   ctx.fillStyle = "#ffffff";
+//   ctx.fillText("Spiel neu starten", centerX, buttonY + 38);
 
-  // Klickbereich speichern
-  this.restartButtonArea = { x: buttonX, y: buttonY, width: buttonWidth, height: buttonHeight };
+//   // Klickbereich speichern
+//   this.restartButtonArea = { x: buttonX, y: buttonY, width: buttonWidth, height: buttonHeight };
 
-  // Click-Listener nur einmal anhängen
-  if (!this.canvasClickListenerAdded) {
-    this.canvas.addEventListener("click", this.handleCanvasClick.bind(this));
-    this.canvasClickListenerAdded = true;
-  }
+//   // Click-Listener nur einmal anhängen
+//   if (!this.canvasClickListenerAdded) {
+//     this.canvas.addEventListener("click", this.handleCanvasClick.bind(this));
+//     this.canvasClickListenerAdded = true;
+//   }
 
-  ctx.restore();
-}
+//   ctx.restore();
+// }
 
 
 drawWinScreen(img) {
