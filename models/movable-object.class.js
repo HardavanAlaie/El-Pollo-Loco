@@ -42,18 +42,17 @@ class MovableObject extends DrawableObject {
   //   );
   // }
   isColliding(mo) {
-  if (!mo) return false; // ✅ schützt vor undefined
+    if (!mo) return false; // ✅ schützt vor undefined
 
-  const hitboxPadding = 15; // ➕ Trefferfläche in alle Richtungen erweitern
+    const hitboxPadding = 15; // ➕ Trefferfläche in alle Richtungen erweitern
 
-  return (
-    this.x + this.width > mo.x - hitboxPadding &&
-    this.x - hitboxPadding < mo.x + mo.width + hitboxPadding &&
-    this.y + this.height > mo.y - hitboxPadding &&
-    this.y - hitboxPadding < mo.y + mo.height + hitboxPadding
-  );
-}
-
+    return (
+      this.x + this.width > mo.x - hitboxPadding &&
+      this.x - hitboxPadding < mo.x + mo.width + hitboxPadding &&
+      this.y + this.height > mo.y - hitboxPadding &&
+      this.y - hitboxPadding < mo.y + mo.height + hitboxPadding
+    );
+  }
 
   hit() {
     this.energy -= 5;
