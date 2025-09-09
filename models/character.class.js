@@ -1,5 +1,3 @@
-
-
 // class Character extends MovableObject {
 //   height = 250;
 //   width = 120;
@@ -143,7 +141,7 @@
 //       this.playImages(this.IMAGES_HURT);
 //     } else if (this.isAboveGround()) {
 //       this.playImages(this.IMAGES_JUMPING);
-//     } else { 
+//     } else {
 //       if (this.world && this.world.keyboard.RIGHT || this.world.keyboard.LEFT)
 //           this.playImages(this.IMAGES_WALKING);
 //     } //else {
@@ -156,10 +154,10 @@
 //   //     this.playImages(this.IMAGES_HURT);
 //   //   } else if (this.isAboveGround()) {
 //   //     this.playImages(this.IMAGES_JUMPING);
-//   //   } else { 
+//   //   } else {
 //   //     if (this.world && this.world.keyboard.RIGHT || this.world.keyboard.LEFT)
 //   //         this.playImages(this.IMAGES_WALKING);
-//   //   } 
+//   //   }
 //   }*/
 
 //   // isHurt() {
