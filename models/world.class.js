@@ -59,21 +59,44 @@ class World {
     this.spawnEnemyLoop();
   }
 
-  run() {
-    this.gameInterval = setInterval(() => {
-      if (!this.levelEnded) {
-        this.checkCollisions();
-        this.checkThrowableObjects();
-        this.checkEndbossDefeated();
-        this.removeOffscreenEnemies();
-        this.checkEndboss1Hit();
-        //this.checkEndboss2Hit();
-      }
+  // run() {
+  //   this.gameInterval = setInterval(() => {
+  //     if (!this.levelEnded) {
+  //       this.checkCollisions();
+  //       this.checkThrowableObjects();
+  //       this.checkEndbossDefeated();
+  //       this.removeOffscreenEnemies();
+  //       this.checkEndboss1Hit();
+  //       //this.checkEndboss2Hit();
+  //     }
 
-      // 💀 Wenn Spieler tot ist, zeige Game Over Screen
-      this.gameOverScreen();
-    }, 200);
-  }
+  //     // 💀 Wenn Spieler tot ist, zeige Game Over Screen
+  //     this.gameOverScreen();
+  //   }, 200);
+  // }
+  run() {
+  this.gameInterval = setInterval(() => {
+    // Wenn Spiel beendet → Loop komplett stoppen
+    if (this.levelEnded || this.gameOver) {
+      clearInterval(this.gameInterval);
+      this.gameInterval = null;
+      console.log("⏹️ Game Loop gestoppt");
+      return; // Wichtig: nichts mehr ausführen
+    }
+
+    // Normale Logik
+    this.checkCollisions();
+    this.checkThrowableObjects();
+    this.checkEndbossDefeated();
+    this.removeOffscreenEnemies();
+    this.checkEndboss1Hit();
+    // this.checkEndboss2Hit();
+
+    // Falls Spieler tot ist → Game Over Screen anzeigen
+    this.gameOverScreen();
+  }, 200);
+}
+
 
   gameOverScreen() {
     if (this.character.isDead() && !this.gameOver) {
@@ -936,70 +959,101 @@ stopGameLoopHard() {
 //     this.canvasClickListenerAdded = true;
 //   }
 // }
+// showWinScreen() {
+//   const ctx = this.ctx;
+//   const canvas = this.canvas;
+
+//   console.log("🎉 showWinScreen läuft!");
+
+//   // Kamera zurücksetzen, damit immer im Sichtfeld gezeichnet wird
+//   ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+//   // Hintergrund abdunkeln
+//   ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+//   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+//   // Win-Bild
+//   const img = new Image();
+//   img.src = "img/You won, you lost/You win B.png";
+
+//   img.onload = () => {
+//     const maxWidth = canvas.width * 0.6;
+//     const maxHeight = canvas.height * 0.3;
+
+//     let imgWidth = img.width;
+//     let imgHeight = img.height;
+
+//     const widthRatio = maxWidth / imgWidth;
+//     const heightRatio = maxHeight / imgHeight;
+//     const scale = Math.min(widthRatio, heightRatio);
+
+//     imgWidth *= scale;
+//     imgHeight *= scale;
+
+//     const imgX = canvas.width / 2 - imgWidth / 2;
+//     const imgY = canvas.height / 2 - imgHeight - 40;
+
+//     ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+
+//     // Button zeichnen
+//     const buttonWidth = 250;
+//     const buttonHeight = 60;
+//     const buttonX = canvas.width / 2 - buttonWidth / 2;
+//     const buttonY = canvas.height / 2;
+
+//     ctx.fillStyle = "#44cc44";
+//     ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+//     ctx.font = "24px Comic Sans MS";
+//     ctx.fillStyle = "white";
+//     ctx.textAlign = "center";
+//     ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
+
+//     // Klickbereich merken
+//     this.restartButtonArea = {
+//       x: buttonX,
+//       y: buttonY,
+//       width: buttonWidth,
+//       height: buttonHeight,
+//     };
+
+//     if (!this.canvasClickListenerAdded) {
+//       canvas.addEventListener("click", this.handleCanvasClick.bind(this));
+//       this.canvasClickListenerAdded = true;
+//     }
+//   };
+// }
 showWinScreen() {
   const ctx = this.ctx;
   const canvas = this.canvas;
 
   console.log("🎉 showWinScreen läuft!");
 
-  // Kamera zurücksetzen, damit immer im Sichtfeld gezeichnet wird
+  // Kamera zurücksetzen, damit wirklich die Mitte angezeigt wird
   ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-  // Hintergrund abdunkeln
+  // Hintergrund abdunkeln (sofort sichtbar!)
   ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Win-Bild
+  // Bild laden
   const img = new Image();
   img.src = "img/You won, you lost/You win B.png";
 
   img.onload = () => {
-    const maxWidth = canvas.width * 0.6;
-    const maxHeight = canvas.height * 0.3;
+    this.drawWinScreen(img);
+  };
 
-    let imgWidth = img.width;
-    let imgHeight = img.height;
-
-    const widthRatio = maxWidth / imgWidth;
-    const heightRatio = maxHeight / imgHeight;
-    const scale = Math.min(widthRatio, heightRatio);
-
-    imgWidth *= scale;
-    imgHeight *= scale;
-
-    const imgX = canvas.width / 2 - imgWidth / 2;
-    const imgY = canvas.height / 2 - imgHeight - 40;
-
-    ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-
-    // Button zeichnen
-    const buttonWidth = 250;
-    const buttonHeight = 60;
-    const buttonX = canvas.width / 2 - buttonWidth / 2;
-    const buttonY = canvas.height / 2;
-
-    ctx.fillStyle = "#44cc44";
-    ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-    ctx.font = "24px Comic Sans MS";
+  img.onerror = () => {
+    console.warn("⚠️ Win-Bild konnte nicht geladen werden!");
+    // Fallback → nur Text anzeigen
+    ctx.font = "bold 64px Comic Sans MS";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
-    ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
-
-    // Klickbereich merken
-    this.restartButtonArea = {
-      x: buttonX,
-      y: buttonY,
-      width: buttonWidth,
-      height: buttonHeight,
-    };
-
-    if (!this.canvasClickListenerAdded) {
-      canvas.addEventListener("click", this.handleCanvasClick.bind(this));
-      this.canvasClickListenerAdded = true;
-    }
+    ctx.fillText("YOU WIN!", canvas.width / 2, canvas.height / 2 - 40);
   };
 }
+
 
 
 
