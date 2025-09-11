@@ -1,12 +1,9 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
-//let character;
-//let character = new Character();
-//let allLevels = [level1, level2];
+
 let soundEnabled = true;
 
-// Spielstart
 function startGame() {
   document.getElementById("start-screen").style.display = "none";
   document.getElementById("mobile-controls").style.display = "flex";
@@ -17,11 +14,6 @@ function startGame() {
 function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
-
-  // Nach Weltstart: alle kleinen Chickens aktivieren
-  // world.level.enemies
-  //   .filter((e) => e instanceof ChickenSmall)
-  //   .forEach((chicken) => chicken.start());
 }
 
 // Mobile
