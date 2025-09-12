@@ -688,8 +688,26 @@ class World {
   //     // this.restartGame();
   //   }
   // }
-  handleCanvasClick(event) {
-  if (!this.restartButtonArea || (this.uiScreen !== 'win' && this.uiScreen !== 'gameover')) return;
+//   handleCanvasClick(event) {
+//   if (!this.restartButtonArea || (this.uiScreen !== 'win' && this.uiScreen !== 'gameover')) return;
+
+//   const rect = this.canvas.getBoundingClientRect();
+//   const clickX = event.clientX - rect.left;
+//   const clickY = event.clientY - rect.top;
+
+//   const btn = this.restartButtonArea;
+
+//   if (
+//     clickX >= btn.x &&
+//     clickX <= btn.x + btn.width &&
+//     clickY >= btn.y &&
+//     clickY <= btn.y + btn.height
+//   ) {
+//     location.reload(); // 🔁 Spiel neu laden
+//   }
+// }
+handleCanvasClick(event) {
+  if (!this.restartButtonArea) return;
 
   const rect = this.canvas.getBoundingClientRect();
   const clickX = event.clientX - rect.left;
@@ -703,9 +721,10 @@ class World {
     clickY >= btn.y &&
     clickY <= btn.y + btn.height
   ) {
-    location.reload(); // 🔁 Spiel neu laden
+    location.reload(); // 🔄 Spiel neu laden
   }
 }
+
 
 
   draw() {
