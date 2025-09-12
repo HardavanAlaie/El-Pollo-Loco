@@ -97,22 +97,22 @@ class World {
     if (this.playerDied && !this.gameOver) {
       this.gameOver = true;
       this.stopGameLoopHard();   // alles anhalten
-      this.uiScreen = "gameover";
+      //this.uiScreen = "gameover";
       this.showGameOverScreen();
     }
   }, 200);
 }
 
 
-  gameOverScreen() {
-    if (this.character.isDead() && !this.gameOver) {
-      this.gameOver = true;
-      clearInterval(this.gameInterval); // Stoppt die Spiel-Logik
-      cancelAnimationFrame(this.animationFrameId); // Falls du draw() mit requestAnimationFrame benutzt
-      this.uiScreen = "gameover";
-      this.showGameOverScreen();
-    }
-  }
+  // gameOverScreen() {
+  //   if (this.character.isDead() && !this.gameOver) {
+  //     this.gameOver = true;
+  //     clearInterval(this.gameInterval); // Stoppt die Spiel-Logik
+  //     cancelAnimationFrame(this.animationFrameId); // Falls du draw() mit requestAnimationFrame benutzt
+  //     this.uiScreen = "gameover";
+  //     this.showGameOverScreen();
+  //   }
+  // }
 
   checkEndboss1Hit() {
     if (
