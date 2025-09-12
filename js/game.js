@@ -54,17 +54,25 @@ window.addEventListener("keyup", (e) => {
   if (e.keyCode == 68) keyboard.D = false;
 });
 
-// Startscreen-Bild
-window.addEventListener("load", () => {
-  canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
-  const startImage = new Image();
-  startImage.src = "img/9_intro_outro_screens/start/startscreen_1.png";
+// // Startscreen-Bild
+// window.addEventListener("load", () => {
+//   canvas = document.getElementById("canvas");
+//   const ctx = canvas.getContext("2d");
+//   const startImage = new Image();
+//   startImage.src = "img/9_intro_outro_screens/start/startscreen_1.png";
 
-  startImage.onload = () => {
-    ctx.drawImage(startImage, 0, 0, canvas.width, canvas.height);
-  };
+//   startImage.onload = () => {
+//     ctx.drawImage(startImage, 0, 0, canvas.width, canvas.height);
+//   };
+// });
+window.addEventListener("load", () => {
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+
+  // 🎬 Menü starten
+  const menu = new Menu(canvas, ctx);
 });
+
 
 // Vollbild
 document.getElementById("fullscreen-btn").addEventListener("click", () => {
