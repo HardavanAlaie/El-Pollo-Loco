@@ -580,7 +580,7 @@ class World {
       const buttonX = canvas.width / 2 - buttonWidth / 2;
       const buttonY = canvas.height / 2;
 
-      ctx.fillStyle = "#ff4444";
+      ctx.fillStyle = "#fca534ff";
       ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
 
       // 📝 Button-Text

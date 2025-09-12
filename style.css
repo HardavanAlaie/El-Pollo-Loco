@@ -70,14 +70,14 @@ canvas {
   padding: 15px 30px;
   font-size: 24px;
   cursor: pointer;
-  background-color: #28a745;
+  background-color: #fca534ff;
   color: white;
   border: none;
   border-radius: 10px;
 }
 
 #start-screen button:hover {
-  background-color: #218838;
+  background-color: rgb(175, 103, 8);
 }
 
 
