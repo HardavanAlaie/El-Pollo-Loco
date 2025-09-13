@@ -43,12 +43,13 @@ class Menu {
   img.onload = () => {
     // Bild auf gesamte Canvasgröße zeichnen
     this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
+    
 
-    // 🟢 Start-Button
-    const startBtn = this.drawButton("▶️ Start", this.canvas.width / 2, 300, "#fca534ff");
+    // Start-Button
+    const startBtn = this.drawButton("Start", this.canvas.width / 5, 30, "#fca534ff");
 
-    // 📖 Anleitung-Button
-    const instrBtn = this.drawButton("📖 Anleitung", this.canvas.width / 2, 380, "#fca534ff");
+    // Anleitung-Button
+    const instrBtn = this.drawButton("📖 Anleitung", this.canvas.width / 1.3, 30, "#fca534ff");
 
     this.buttons = { startBtn, instrBtn };
   };
