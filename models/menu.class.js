@@ -12,27 +12,48 @@ class Menu {
     this.drawStartScreen();
   }
 
-  // 🎨 Startbildschirm
+  // // 🎨 Startbildschirm
+  // drawStartScreen() {
+  //   this.clear();
+  //   this.currentScreen = "start";
+
+  //   this.ctx.fillStyle = "rgba(0, 0, 0, 0.9)";
+  //   this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+  //   this.ctx.font = "bold 48px Comic Sans MS";
+  //   this.ctx.fillStyle = "orange";
+  //   this.ctx.textAlign = "center";
+  //   this.ctx.fillText("El Pollo Loco", this.canvas.width / 2, 150);
+
+  //   // Start-Button
+  //   const startBtn = this.drawButton("Start", this.canvas.width / 2, 240, "#fca534ff");
+
+  //   // Anleitung-Button
+  //   const instrBtn = this.drawButton("📖 Anleitung", this.canvas.width / 2, 320, "#fca534ff");
+
+  //   this.buttons = { startBtn, instrBtn };
+  // }
   drawStartScreen() {
-    this.clear();
-    this.currentScreen = "start";
+  this.clear();
+  this.currentScreen = "start";
 
-    this.ctx.fillStyle = "rgba(0, 0, 0, 0.9)";
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  const img = new Image();
+  img.src = "img/9_intro_outro_screens/start/startscreen_1.png";
 
-    this.ctx.font = "bold 48px Comic Sans MS";
-    this.ctx.fillStyle = "orange";
-    this.ctx.textAlign = "center";
-    this.ctx.fillText("El Pollo Loco", this.canvas.width / 2, 150);
+  img.onload = () => {
+    // Bild auf gesamte Canvasgröße zeichnen
+    this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
 
-    // Start-Button
-    const startBtn = this.drawButton("Start", this.canvas.width / 2, 240, "#fca534ff");
+    // 🟢 Start-Button
+    const startBtn = this.drawButton("▶️ Start", this.canvas.width / 2, 300, "#fca534ff");
 
-    // Anleitung-Button
-    const instrBtn = this.drawButton("📖 Anleitung", this.canvas.width / 2, 320, "#fca534ff");
+    // 📖 Anleitung-Button
+    const instrBtn = this.drawButton("📖 Anleitung", this.canvas.width / 2, 380, "#fca534ff");
 
     this.buttons = { startBtn, instrBtn };
-  }
+  };
+}
+
 
   // Anleitung
   drawInstructions() {
