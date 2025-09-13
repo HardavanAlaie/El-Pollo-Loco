@@ -25,21 +25,21 @@ class Menu {
     this.ctx.textAlign = "center";
     this.ctx.fillText("El Pollo Loco", this.canvas.width / 2, 150);
 
-    // 🟢 Start-Button
+    // Start-Button
     const startBtn = this.drawButton("Start", this.canvas.width / 2, 240, "#fca534ff");
 
-    // 📖 Anleitung-Button
+    // Anleitung-Button
     const instrBtn = this.drawButton("📖 Anleitung", this.canvas.width / 2, 320, "#fca534ff");
 
     this.buttons = { startBtn, instrBtn };
   }
 
-  // 🎨 Anleitung
+  // Anleitung
   drawInstructions() {
     this.clear();
     this.currentScreen = "instructions";
 
-    this.ctx.fillStyle = "rgba(0, 0, 0, 0.95)";
+    this.ctx.fillStyle = "#fca534ff";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.ctx.fillStyle = "white";
@@ -59,8 +59,8 @@ class Menu {
       this.ctx.fillText(line, this.canvas.width / 2, 160 + i * 40);
     });
 
-    // 🔙 Zurück-Button
-    const backBtn = this.drawButton("🔙 Zurück", this.canvas.width / 2, this.canvas.height - 100, "#fca534ff");
+    // Zurück-Button
+    const backBtn = this.drawButton("Zurück", this.canvas.width / 2, this.canvas.height - 100, "#fca534ff");
 
     this.buttons = { backBtn };
   }
