@@ -26,10 +26,10 @@ class Menu {
     this.ctx.fillText("El Pollo Loco", this.canvas.width / 2, 150);
 
     // 🟢 Start-Button
-    const startBtn = this.drawButton("▶️ Start", this.canvas.width / 2, 240, "#44cc44");
+    const startBtn = this.drawButton("Start", this.canvas.width / 2, 240, "#fca534ff");
 
     // 📖 Anleitung-Button
-    const instrBtn = this.drawButton("📖 Anleitung", this.canvas.width / 2, 320, "#0077cc");
+    const instrBtn = this.drawButton("📖 Anleitung", this.canvas.width / 2, 320, "#fca534ff");
 
     this.buttons = { startBtn, instrBtn };
   }
@@ -60,7 +60,7 @@ class Menu {
     });
 
     // 🔙 Zurück-Button
-    const backBtn = this.drawButton("🔙 Zurück", this.canvas.width / 2, this.canvas.height - 100, "#ff4444");
+    const backBtn = this.drawButton("🔙 Zurück", this.canvas.width / 2, this.canvas.height - 100, "#fca534ff");
 
     this.buttons = { backBtn };
   }
