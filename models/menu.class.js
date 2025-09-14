@@ -302,22 +302,46 @@ class Menu {
     this.drawStartScreen();
   }
 
+  // drawStartScreen() {
+  //   this.clear();
+  //   this.currentScreen = "start";
+
+  //   const img = new Image();
+  //   img.src = "img/9_intro_outro_screens/start/startscreen_1.png";
+
+  //   img.onload = () => {
+  //     this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
+
+  //     const startBtn = this.drawButton("Start", this.canvas.width / 5, 30, "#fca534ff", "start");
+  //     const instrBtn = this.drawButton("📖", this.canvas.width / 1.3, 30, "#fca534ff", "instructions");
+
+  //     this.buttons = { startBtn, instrBtn };
+  //   };
+  // }
   drawStartScreen() {
-    this.clear();
-    this.currentScreen = "start";
+  this.clear();
+  this.currentScreen = "start";
 
-    const img = new Image();
-    img.src = "img/9_intro_outro_screens/start/startscreen_1.png";
+  const img = new Image();
+  img.src = "img/9_intro_outro_screens/start/startscreen_1.png";
 
-    img.onload = () => {
-      this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
+  img.onload = () => {
+    this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
 
-      const startBtn = this.drawButton("Start", this.canvas.width / 5, 30, "#fca534ff", "start");
-      const instrBtn = this.drawButton("📖", this.canvas.width / 1.3, 30, "#fca534ff", "instructions");
+    // 📌 Beide Buttons rechts oben nebeneinander platzieren
+    const padding = 20; // Abstand vom Rand
+    const buttonSpacing = 80; // Abstand zwischen den Buttons
 
-      this.buttons = { startBtn, instrBtn };
-    };
-  }
+    // Start-Text
+    const startBtn = this.drawButton("Start", this.canvas.width - padding - buttonSpacing, 40, "#fca534ff", "start");
+
+    // Anleitung-Icon 📖
+    const instrBtn = this.drawButton("📖", this.canvas.width - padding, 40, "#fca534ff", "instructions");
+
+    this.buttons = { startBtn, instrBtn };
+  };
+}
+
 
   // 🖱️ Klick-Verarbeitung
   handleClick(event) {
@@ -376,7 +400,7 @@ class Menu {
     });
 
     // Zurück
-    const backBtn = this.drawButton("Zurück", this.canvas.width / 2, this.canvas.height - 100, "#fca534ff", "back");
+    const backBtn = this.drawButton("Zurück", this.canvas.width / 2, this.canvas.height - 100, "#fffafaff", "back");
 
     this.buttons = { backBtn };
   }
