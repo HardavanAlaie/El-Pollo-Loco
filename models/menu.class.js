@@ -375,22 +375,39 @@ drawStartScreen() {
 
 
   // 🖱️ Klick-Verarbeitung
-  handleClick(event) {
-    const rect = this.canvas.getBoundingClientRect();
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
+  // handleClick(event) {
+  //   const rect = this.canvas.getBoundingClientRect();
+  //   const mouseX = event.clientX - rect.left;
+  //   const mouseY = event.clientY - rect.top;
 
-    Object.values(this.buttons).forEach((btn) => {
-      if (
-        mouseX >= btn.x &&
-        mouseX <= btn.x + btn.width &&
-        mouseY >= btn.y &&
-        mouseY <= btn.y + btn.height
-      ) {
-        this.handleButtonClick(btn.action); // 👈 jetzt action übergeben
-      }
-    });
-  }
+  //   Object.values(this.buttons).forEach((btn) => {
+  //     if (
+  //       mouseX >= btn.x &&
+  //       mouseX <= btn.x + btn.width &&
+  //       mouseY >= btn.y &&
+  //       mouseY <= btn.y + btn.height
+  //     ) {
+  //       this.handleButtonClick(btn.action); // 👈 jetzt action übergeben
+  //     }
+  //   });
+  // }
+  handleClick(event) {
+  const rect = this.canvas.getBoundingClientRect();
+  const mouseX = event.clientX - rect.left;
+  const mouseY = event.clientY - rect.top;
+
+  Object.values(this.buttons).forEach((btn) => {
+    if (
+      mouseX >= btn.x &&
+      mouseX <= btn.x + btn.width &&
+      mouseY >= btn.y &&
+      mouseY <= btn.y + btn.height
+    ) {
+      this.handleButtonClick(btn.action); // 👈 statt btn.text
+    }
+  });
+}
+
 
   // // 🎯 Aktionen bei Klick
   // handleButtonClick(action) {
