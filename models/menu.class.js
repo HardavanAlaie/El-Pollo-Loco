@@ -778,6 +778,12 @@ class Menu {
     if (action === "back") {
       this.drawStartScreen();
     }
+
+      // Mobile Controls
+  if (action === "left") keyboard.LEFT = true;
+  if (action === "right") keyboard.RIGHT = true;
+  if (action === "jump") keyboard.UP = true;
+  if (action === "throw") keyboard.D = true;
   }
 
   clear() {
