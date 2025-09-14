@@ -75,27 +75,27 @@ window.addEventListener("load", () => {
 
 
 // Vollbild
-document.getElementById("fullscreen-btn").addEventListener("click", () => {
-  const canvas = document.getElementById("canvas");
-  if (!document.fullscreenElement) {
-    canvas.requestFullscreen().catch((err) => {
-      console.error(`Vollbild-Fehler: ${err.message}`);
-    });
-  } else {
-    document.exitFullscreen();
-  }
-});
+// document.getElementById("fullscreen-btn").addEventListener("click", () => {
+//   const canvas = document.getElementById("canvas");
+//   if (!document.fullscreenElement) {
+//     canvas.requestFullscreen().catch((err) => {
+//       console.error(`Vollbild-Fehler: ${err.message}`);
+//     });
+//   } else {
+//     document.exitFullscreen();
+//   }
+// });
 
 // Sound
-document.getElementById("sound-btn").addEventListener("click", () => {
-  soundEnabled = !soundEnabled;
-  const btn = document.getElementById("sound-btn");
-  btn.innerText = soundEnabled ? "🔊" : "🔇";
+// document.getElementById("sound-btn").addEventListener("click", () => {
+//   soundEnabled = !soundEnabled;
+//   const btn = document.getElementById("sound-btn");
+//   btn.innerText = soundEnabled ? "🔊" : "🔇";
 
-  if (world && world.toggleSound) {
-    world.toggleSound(soundEnabled);
-  }
-});
+//   if (world && world.toggleSound) {
+//     world.toggleSound(soundEnabled);
+//   }
+// });
 
 function showInstructions() {
   document.getElementById("instructions-overlay").classList.remove("hidden");
