@@ -667,6 +667,33 @@ class Menu {
     };
   }
 
+  drawIconButton(icon, x, y, action) {
+  const size = 40;
+  const padding = 10;
+
+  // Hintergrund-Kreis
+  this.ctx.fillStyle = "#fca534"; // Orange passend zum Spiel
+  this.ctx.beginPath();
+  this.ctx.arc(x, y, size / 2, 0, Math.PI * 2);
+  this.ctx.fill();
+
+  // Icon reinzeichnen
+  this.ctx.font = "24px Comic Sans MS";
+  this.ctx.fillStyle = "white";
+  this.ctx.textAlign = "center";
+  this.ctx.textBaseline = "middle";
+  this.ctx.fillText(icon, x, y);
+
+  return {
+    x: x - size / 2,
+    y: y - size / 2,
+    width: size,
+    height: size,
+    action: action,
+  };
+}
+
+
   handleClick(event) {
     if (!this.buttons) return;
 
