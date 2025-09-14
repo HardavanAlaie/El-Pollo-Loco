@@ -221,3 +221,20 @@ function showInstructions() {
 function hideInstructions() {
   document.getElementById("instructions-overlay").classList.add("hidden");
 }
+
+function toggleFullscreen(canvas) {
+  if (!document.fullscreenElement) {
+    canvas.requestFullscreen().catch((err) => {
+      console.error(`Vollbild-Fehler: ${err.message}`);
+    });
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  if (world && world.toggleSound) {
+    world.toggleSound(soundEnabled);
+  }
+}

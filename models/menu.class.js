@@ -597,17 +597,17 @@ class Menu {
       this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
 
       // Start (Text)
-      const startBtn = this.drawButton("Start", this.canvas.width / 5, 30, "#fca534ff", "start");
+      const startBtn = this.drawButton("Start", this.canvas.width / 10, 35, "#fca534ff", "start");
 
       // Anleitung (📖 Icon)
-      const instrBtn = this.drawButton("📖", this.canvas.width / 1.3, 30, "#fca534ff", "instructions");
+      const instrBtn = this.drawButton("📖", this.canvas.width - 120, 35, "#fca534ff", "instructions");
 
       // Vollbild (🖥️ Icon, rechts oben)
-      const fullBtn = this.drawButton("🖥️", this.canvas.width - 60, 30, "#fca534ff", "fullscreen");
+      const fullBtn = this.drawButton("🖥️", this.canvas.width - 80, 35, "#fca534ff", "fullscreen");
 
       // Sound (🔊 oder 🔇 Icon, ganz rechts oben)
       const soundIcon = soundEnabled ? "🔊" : "🔇";
-      const soundBtn = this.drawButton(soundIcon, this.canvas.width - 20, 30, "#fca534ff", "sound");
+      const soundBtn = this.drawButton(soundIcon, this.canvas.width - 40, 35, "#fca534ff", "sound");
 
       this.buttons = { startBtn, instrBtn, fullBtn, soundBtn };
     };
