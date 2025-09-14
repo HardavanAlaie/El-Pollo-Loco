@@ -33,7 +33,28 @@ class Menu {
 
   //   this.buttons = { startBtn, instrBtn };
   // }
-  drawStartScreen() {
+//   drawStartScreen() {
+//   this.clear();
+//   this.currentScreen = "start";
+
+//   const img = new Image();
+//   img.src = "img/9_intro_outro_screens/start/startscreen_1.png";
+
+//   img.onload = () => {
+//     // Bild auf gesamte Canvasgröße zeichnen
+//     this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
+    
+
+//     // Start-Button
+//     const startBtn = this.drawButton("Start", this.canvas.width / 5, 30, "#fca534ff");
+
+//     // Anleitung-Button
+//     const instrBtn = this.drawButton("📖 Anleitung", this.canvas.width / 1.3, 30, "#fca534ff");
+
+//     this.buttons = { startBtn, instrBtn };
+//   };
+// }
+drawStartScreen() {
   this.clear();
   this.currentScreen = "start";
 
@@ -43,17 +64,65 @@ class Menu {
   img.onload = () => {
     // Bild auf gesamte Canvasgröße zeichnen
     this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
-    
 
-    // Start-Button
-    const startBtn = this.drawButton("Start", this.canvas.width / 5, 30, "#fca534ff");
+    // 🔹 Start-Text
+    this.ctx.font = "32px Comic Sans MS";
+    this.ctx.fillStyle = "#fca534"; // Orange passend zum Bild
+    this.ctx.textAlign = "left";
+    this.ctx.fillText("Start", this.canvas.width / 5, 50);
 
-    // Anleitung-Button
-    const instrBtn = this.drawButton("📖 Anleitung", this.canvas.width / 1.3, 30, "#fca534ff");
+    // 🔹 Anleitung (nur Icon)
+    this.ctx.font = "32px Comic Sans MS";
+    this.ctx.fillStyle = "#fca534";
+    this.ctx.textAlign = "right";
+    this.ctx.fillText("📖", this.canvas.width / 1.2, 50);
 
-    this.buttons = { startBtn, instrBtn };
+    // Klickbereiche speichern (damit handleClick weiß, wo geklickt wurde)
+    this.buttons = {
+      startBtn: {
+        x: this.canvas.width / 5,
+        y: 20,
+        width: 100,   // grober Klickbereich für Text
+        height: 40,
+        action: "start",
+      },
+      instrBtn: {
+        x: this.canvas.width / 1.2 - 20,
+        y: 20,
+        width: 40,    // kleiner Bereich um das Icon
+        height: 40,
+        action: "instructions",
+      },
+    };
   };
 }
+
+handleClick(event) {
+  if (!this.buttons) return;
+
+  const rect = this.canvas.getBoundingClientRect();
+  const clickX = event.clientX - rect.left;
+  const clickY = event.clientY - rect.top;
+
+  Object.values(this.buttons).forEach((btn) => {
+    if (
+      clickX >= btn.x &&
+      clickX <= btn.x + btn.width &&
+      clickY >= btn.y &&
+      clickY <= btn.y + btn.height
+    ) {
+      // 🎮 Aktion ausführen
+      if (btn.action === "start") {
+        startGame(); // deine Spiel-Start-Funktion
+      }
+      if (btn.action === "instructions") {
+        this.drawInstructionsScreen();
+      }
+    }
+  });
+}
+
+
 
 
   // Anleitung
