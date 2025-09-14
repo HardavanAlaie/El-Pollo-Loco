@@ -318,7 +318,30 @@ class Menu {
   //     this.buttons = { startBtn, instrBtn };
   //   };
   // }
-  drawStartScreen() {
+//   drawStartScreen() {
+//   this.clear();
+//   this.currentScreen = "start";
+
+//   const img = new Image();
+//   img.src = "img/9_intro_outro_screens/start/startscreen_1.png";
+
+//   img.onload = () => {
+//     this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
+
+//     // 📌 Beide Buttons rechts oben nebeneinander platzieren
+//     const padding = 20; // Abstand vom Rand
+//     const buttonSpacing = 80; // Abstand zwischen den Buttons
+
+//     // Start-Text
+//     const startBtn = this.drawButton("Start", this.canvas.width - padding - buttonSpacing, 40, "#fca534ff", "start");
+
+//     // Anleitung-Icon 📖
+//     const instrBtn = this.drawButton("📖", this.canvas.width - padding, 40, "#fca534ff", "instructions");
+
+//     this.buttons = { startBtn, instrBtn };
+//   };
+// }
+drawStartScreen() {
   this.clear();
   this.currentScreen = "start";
 
@@ -328,19 +351,27 @@ class Menu {
   img.onload = () => {
     this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
 
-    // 📌 Beide Buttons rechts oben nebeneinander platzieren
-    const padding = 20; // Abstand vom Rand
-    const buttonSpacing = 80; // Abstand zwischen den Buttons
+    // 📌 Buttons rechts oben platzieren
+    const padding = 20;      // Abstand vom Rand
+    const buttonSpacing = 80; // Abstand zwischen Buttons
+    const baseY = 40;        // Y-Position (alle auf gleicher Höhe)
 
-    // Start-Text
-    const startBtn = this.drawButton("Start", this.canvas.width - padding - buttonSpacing, 40, "#fca534ff", "start");
+    // Start
+    const startBtn = this.drawButton("Start", this.canvas.width - padding - buttonSpacing * 3, baseY, "#fca534ff", "start");
 
-    // Anleitung-Icon 📖
-    const instrBtn = this.drawButton("📖", this.canvas.width - padding, 40, "#fca534ff", "instructions");
+    // Anleitung (📖)
+    const instrBtn = this.drawButton("📖", this.canvas.width - padding - buttonSpacing * 2, baseY, "#fca534ff", "instructions");
 
-    this.buttons = { startBtn, instrBtn };
+    // Vollbild (🖥️)
+    const fullscreenBtn = this.drawButton("🖥️", this.canvas.width - padding - buttonSpacing, baseY, "#fca534ff", "fullscreen");
+
+    // Sound (🔊)
+    const soundBtn = this.drawButton("🔊", this.canvas.width - padding, baseY, "#fca534ff", "sound");
+
+    this.buttons = { startBtn, instrBtn, fullscreenBtn, soundBtn };
   };
 }
+
 
 
   // 🖱️ Klick-Verarbeitung
