@@ -716,30 +716,29 @@ class Menu {
   }
 
   drawControlButton(icon, x, y, action) {
-  const size = 50;
+    const size = 50;
 
-  // Hintergrund-Kreis
-  this.ctx.fillStyle = "#fca534"; 
-  this.ctx.beginPath();
-  this.ctx.arc(x, y, size / 2, 0, Math.PI * 2);
-  this.ctx.fill();
+    // Hintergrund-Kreis
+    this.ctx.fillStyle = "#fca534";
+    this.ctx.beginPath();
+    this.ctx.arc(x, y, size / 2, 0, Math.PI * 2);
+    this.ctx.fill();
 
-  // Icon
-  this.ctx.font = "28px Comic Sans MS";
-  this.ctx.fillStyle = "white";
-  this.ctx.textAlign = "center";
-  this.ctx.textBaseline = "middle";
-  this.ctx.fillText(icon, x, y);
+    // Icon
+    this.ctx.font = "28px Comic Sans MS";
+    this.ctx.fillStyle = "white";
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+    this.ctx.fillText(icon, x, y);
 
-  return {
-    x: x - size / 2,
-    y: y - size / 2,
-    width: size,
-    height: size,
-    action: action,
-  };
-}
-
+    return {
+      x: x - size / 2,
+      y: y - size / 2,
+      width: size,
+      height: size,
+      action: action,
+    };
+  }
 
   handleClick(event) {
     if (!this.buttons) return;
@@ -757,6 +756,20 @@ class Menu {
       ) {
         this.handleButtonClick(btn.action);
       }
+    });
+
+    this.canvas.addEventListener("mouseup", () => {
+      keyboard.LEFT = false;
+      keyboard.RIGHT = false;
+      keyboard.UP = false;
+      keyboard.D = false;
+    });
+
+    this.canvas.addEventListener("touchend", () => {
+      keyboard.LEFT = false;
+      keyboard.RIGHT = false;
+      keyboard.UP = false;
+      keyboard.D = false;
     });
   }
 
@@ -779,11 +792,11 @@ class Menu {
       this.drawStartScreen();
     }
 
-      // Mobile Controls
-  if (action === "left") keyboard.LEFT = true;
-  if (action === "right") keyboard.RIGHT = true;
-  if (action === "jump") keyboard.UP = true;
-  if (action === "throw") keyboard.D = true;
+    // Mobile Controls
+    if (action === "left") keyboard.LEFT = true;
+    if (action === "right") keyboard.RIGHT = true;
+    if (action === "jump") keyboard.UP = true;
+    if (action === "throw") keyboard.D = true;
   }
 
   clear() {
