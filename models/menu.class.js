@@ -43,7 +43,6 @@
 // // //   img.onload = () => {
 // // //     // Bild auf gesamte Canvasgröße zeichnen
 // // //     this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
-    
 
 // // //     // Start-Button
 // // //     const startBtn = this.drawButton("Start", this.canvas.width / 5, 30, "#fca534ff");
@@ -138,8 +137,6 @@
 // //   };
 // // }
 
-
-
 // // handleClick(event) {
 // //   if (!this.buttons) return;
 
@@ -164,10 +161,6 @@
 // //     }
 // //   });
 // // }
-
-
-
-
 
 // //   // Anleitung
 // //   drawInstructions() {
@@ -242,7 +235,6 @@
 // //   };
 // // }
 
-
 // //   // 🧹 Canvas löschen
 // //   clear() {
 // //     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -287,14 +279,12 @@
 // //   }
 // // }
 
-
-
 // class Menu {
 //   constructor(canvas, ctx) {
 //     this.canvas = canvas;
 //     this.ctx = ctx;
 //     this.buttons = {};
-//     this.currentScreen = "start"; 
+//     this.currentScreen = "start";
 //     this.clickHandler = this.handleClick.bind(this);
 
 //     this.canvas.addEventListener("click", this.clickHandler);
@@ -398,8 +388,6 @@
 //   };
 // }
 
-
-
 //   // 🖱️ Klick-Verarbeitung
 //   // handleClick(event) {
 //   //   const rect = this.canvas.getBoundingClientRect();
@@ -434,12 +422,11 @@
 //   });
 // }
 
-
 //   // // 🎯 Aktionen bei Klick
 //   // handleButtonClick(action) {
 //   //   if (action === "start") {
 //   //     this.destroy();
-//   //     startGame(); 
+//   //     startGame();
 //   //   }
 //   //   if (action === "instructions") {
 //   //     this.drawInstructions();
@@ -506,8 +493,6 @@
 //   }
 // }
 
-
-
 //   drawInstructions() {
 //     this.clear();
 //     this.currentScreen = "instructions";
@@ -572,7 +557,6 @@
 //   }
 // }
 
-
 class Menu {
   constructor(canvas, ctx) {
     this.canvas = canvas;
@@ -597,17 +581,49 @@ class Menu {
       this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
 
       // Start (Text)
-      const startBtn = this.drawButton("Start", this.canvas.width / 10, 35, "#fca534ff", "start");
+      const startBtn = this.drawButton(
+        "Start",
+        this.canvas.width / 10,
+        35,
+        "#fca534ff",
+        "start"
+      );
 
-      // Anleitung (📖 Icon)
-      const instrBtn = this.drawButton("📖", this.canvas.width - 120, 35, "#fca534ff", "instructions");
+      // // Anleitung (📖 Icon)
+      // const instrBtn = this.drawButton("📖", this.canvas.width - 120, 35, "#fca534ff", "instructions");
 
-      // Vollbild (🖥️ Icon, rechts oben)
-      const fullBtn = this.drawButton("🖥️", this.canvas.width - 80, 35, "#fca534ff", "fullscreen");
+      // // Vollbild (🖥️ Icon, rechts oben)
+      // const fullBtn = this.drawButton("🖥️", this.canvas.width - 80, 35, "#fca534ff", "fullscreen");
 
-      // Sound (🔊 oder 🔇 Icon, ganz rechts oben)
+      // // Sound (🔊 oder 🔇 Icon, ganz rechts oben)
+      // const soundIcon = soundEnabled ? "🔊" : "🔇";
+      // const soundBtn = this.drawButton(soundIcon, this.canvas.width - 40, 35, "#fca534ff", "sound");
+
+      // this.buttons = { startBtn, instrBtn, fullBtn, soundBtn };
+      // 📖 Anleitung
+      const instrBtn = this.drawIconButton(
+        "📖",
+        this.canvas.width - 120,
+        40,
+        "instructions"
+      );
+
+      // 🖥️ Vollbild
+      const fullBtn = this.drawIconButton(
+        "🖥️",
+        this.canvas.width - 70,
+        40,
+        "fullscreen"
+      );
+
+      // 🔊 / 🔇 Sound
       const soundIcon = soundEnabled ? "🔊" : "🔇";
-      const soundBtn = this.drawButton(soundIcon, this.canvas.width - 40, 35, "#fca534ff", "sound");
+      const soundBtn = this.drawIconButton(
+        soundIcon,
+        this.canvas.width - 20,
+        40,
+        "sound"
+      );
 
       this.buttons = { startBtn, instrBtn, fullBtn, soundBtn };
     };
@@ -639,7 +655,13 @@ class Menu {
     });
 
     // Zurück
-    const backBtn = this.drawButton("Zurück", this.canvas.width / 2, this.canvas.height - 100, "white", "back");
+    const backBtn = this.drawButton(
+      "Zurück",
+      this.canvas.width / 2,
+      this.canvas.height - 100,
+      "white",
+      "back"
+    );
     this.buttons = { backBtn };
   }
 
@@ -663,36 +685,35 @@ class Menu {
       width: width,
       height: height,
       action: action,
-      text: text
+      text: text,
     };
   }
 
   drawIconButton(icon, x, y, action) {
-  const size = 40;
-  const padding = 10;
+    const size = 40;
+    const padding = 10;
 
-  // Hintergrund-Kreis
-  this.ctx.fillStyle = "#fca534"; // Orange passend zum Spiel
-  this.ctx.beginPath();
-  this.ctx.arc(x, y, size / 2, 0, Math.PI * 2);
-  this.ctx.fill();
+    // Hintergrund-Kreis
+    this.ctx.fillStyle = "#fca534"; // Orange passend zum Spiel
+    this.ctx.beginPath();
+    this.ctx.arc(x, y, size / 2, 0, Math.PI * 2);
+    this.ctx.fill();
 
-  // Icon reinzeichnen
-  this.ctx.font = "24px Comic Sans MS";
-  this.ctx.fillStyle = "white";
-  this.ctx.textAlign = "center";
-  this.ctx.textBaseline = "middle";
-  this.ctx.fillText(icon, x, y);
+    // Icon reinzeichnen
+    this.ctx.font = "24px Comic Sans MS";
+    this.ctx.fillStyle = "white";
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+    this.ctx.fillText(icon, x, y);
 
-  return {
-    x: x - size / 2,
-    y: y - size / 2,
-    width: size,
-    height: size,
-    action: action,
-  };
-}
-
+    return {
+      x: x - size / 2,
+      y: y - size / 2,
+      width: size,
+      height: size,
+      action: action,
+    };
+  }
 
   handleClick(event) {
     if (!this.buttons) return;
