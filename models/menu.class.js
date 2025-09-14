@@ -466,21 +466,42 @@ drawStartScreen() {
 //     this.drawStartScreen();
 //   }
 // }
-handleButtonClick(action) {
-  if (action === "start") {
+// handleButtonClick(action) {
+//   if (action === "start") {
+//     this.destroy();
+//     startGame();
+//   }
+//   if (action === "instructions") {
+//     this.drawInstructions();
+//   }
+//   if (action === "fullscreen") {
+//     toggleFullscreen(this.canvas); // deine Funktion
+//   }
+//   if (action === "sound") {
+//     toggleSound(); // deine Funktion
+//   }
+//   if (action === "back") {
+//     this.drawStartScreen();
+//   }
+// }
+handleButtonClick(text) {
+  if (text.includes("Start")) {
     this.destroy();
     startGame();
   }
-  if (action === "instructions") {
+  if (text.includes("📖")) {
     this.drawInstructions();
   }
-  if (action === "fullscreen") {
-    toggleFullscreen(this.canvas); // deine Funktion
+  if (text.includes("🖥️")) {
+    toggleFullscreen(this.canvas);
   }
-  if (action === "sound") {
-    toggleSound(); // deine Funktion
+  if (text.includes("🔊") || text.includes("🔇")) {
+    toggleSound();
+
+    // 🖌️ Neu zeichnen, damit Symbol wechselt
+    this.drawStartScreen();
   }
-  if (action === "back") {
+  if (text.includes("Zurück")) {
     this.drawStartScreen();
   }
 }
