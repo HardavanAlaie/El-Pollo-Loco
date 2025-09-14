@@ -422,24 +422,43 @@ drawStartScreen() {
   //     this.drawStartScreen();
   //   }
   // }
-  handleButtonClick(text) {
-  if (text.includes("Start")) {
+//   handleButtonClick(text) {
+//   if (text.includes("Start")) {
+//     this.destroy();
+//     startGame();
+//   }
+//   if (text.includes("📖")) {
+//     this.drawInstructions();
+//   }
+//   if (text.includes("🖥️")) {
+//     toggleFullscreen(this.canvas); // deine Vollbild-Funktion
+//   }
+//   if (text.includes("🔊")) {
+//     toggleSound(); // deine Sound-Funktion
+//   }
+//   if (text.includes("Zurück")) {
+//     this.drawStartScreen();
+//   }
+// }
+handleButtonClick(action) {
+  if (action === "start") {
     this.destroy();
     startGame();
   }
-  if (text.includes("📖")) {
+  if (action === "instructions") {
     this.drawInstructions();
   }
-  if (text.includes("🖥️")) {
-    toggleFullscreen(this.canvas); // deine Vollbild-Funktion
+  if (action === "fullscreen") {
+    toggleFullscreen(this.canvas); // deine Funktion
   }
-  if (text.includes("🔊")) {
-    toggleSound(); // deine Sound-Funktion
+  if (action === "sound") {
+    toggleSound(); // deine Funktion
   }
-  if (text.includes("Zurück")) {
+  if (action === "back") {
     this.drawStartScreen();
   }
 }
+
 
 
   drawInstructions() {
