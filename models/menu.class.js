@@ -341,6 +341,36 @@ class Menu {
 //     this.buttons = { startBtn, instrBtn };
 //   };
 // }
+// drawStartScreen() {
+//   this.clear();
+//   this.currentScreen = "start";
+
+//   const img = new Image();
+//   img.src = "img/9_intro_outro_screens/start/startscreen_1.png";
+
+//   img.onload = () => {
+//     this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
+
+//     // 📌 Buttons rechts oben platzieren
+//     const padding = 20;      // Abstand vom Rand
+//     const buttonSpacing = 80; // Abstand zwischen Buttons
+//     const baseY = 40;        // Y-Position (alle auf gleicher Höhe)
+
+//     // Start
+//     const startBtn = this.drawButton("Start", this.canvas.width - padding - buttonSpacing * 3, baseY, "#fca534ff", "start");
+
+//     // Anleitung (📖)
+//     const instrBtn = this.drawButton("📖", this.canvas.width - padding - buttonSpacing * 2, baseY, "#fca534ff", "instructions");
+
+//     // Vollbild (🖥️)
+//     const fullscreenBtn = this.drawButton("🖥️", this.canvas.width - padding - buttonSpacing, baseY, "#fca534ff", "fullscreen");
+
+//     // Sound (🔊)
+//     const soundBtn = this.drawButton("🔊", this.canvas.width - padding, baseY, "#fca534ff", "sound");
+
+//     this.buttons = { startBtn, instrBtn, fullscreenBtn, soundBtn };
+//   };
+// }
 drawStartScreen() {
   this.clear();
   this.currentScreen = "start";
@@ -351,24 +381,20 @@ drawStartScreen() {
   img.onload = () => {
     this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
 
-    // 📌 Buttons rechts oben platzieren
-    const padding = 20;      // Abstand vom Rand
-    const buttonSpacing = 80; // Abstand zwischen Buttons
-    const baseY = 40;        // Y-Position (alle auf gleicher Höhe)
+    // Start-Text
+    const startBtn = this.drawButton("Start", this.canvas.width / 5, 30, "#fca534ff", "start");
 
-    // Start
-    const startBtn = this.drawButton("Start", this.canvas.width - padding - buttonSpacing * 3, baseY, "#fca534ff", "start");
+    // Anleitung (📖 Icon)
+    const instrBtn = this.drawButton("📖", this.canvas.width / 1.3, 30, "#fca534ff", "instructions");
 
-    // Anleitung (📖)
-    const instrBtn = this.drawButton("📖", this.canvas.width - padding - buttonSpacing * 2, baseY, "#fca534ff", "instructions");
+    // Vollbild (🖥️ Icon, rechts oben)
+    const fullBtn = this.drawButton("🖥️", this.canvas.width - 60, 30, "#fca534ff", "fullscreen");
 
-    // Vollbild (🖥️)
-    const fullscreenBtn = this.drawButton("🖥️", this.canvas.width - padding - buttonSpacing, baseY, "#fca534ff", "fullscreen");
+    // Sound (🔊 oder 🔇, rechts daneben)
+    const soundIcon = soundEnabled ? "🔊" : "🔇";
+    const soundBtn = this.drawButton(soundIcon, this.canvas.width - 20, 30, "#fca534ff", "sound");
 
-    // Sound (🔊)
-    const soundBtn = this.drawButton("🔊", this.canvas.width - padding, baseY, "#fca534ff", "sound");
-
-    this.buttons = { startBtn, instrBtn, fullscreenBtn, soundBtn };
+    this.buttons = { startBtn, instrBtn, fullBtn, soundBtn };
   };
 }
 
