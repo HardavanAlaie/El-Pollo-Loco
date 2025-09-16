@@ -7,7 +7,7 @@
   background-position: center;
   background-size: cover;
   /* filter: blur(5px); */
-  /* font-family: 'myFont', sans-serif;
+/* font-family: 'myFont', sans-serif;
 } */
 body {
   display: flex;
@@ -29,15 +29,21 @@ body::before {
   background-image: url('img/5_background/cactus-9085905_1280.jpg');
   background-position: center;
   background-size: cover;
-  filter: blur(3px);   /* 👈 Weichzeichnen */
-  transform: scale(1.1); /* Rand gegen Blur-Ränder absichern */
-  z-index: -1;         /* Hinter dem Canvas */
+  filter: blur(3px);
+  /* 👈 Weichzeichnen */
+  transform: scale(1.1);
+  /* Rand gegen Blur-Ränder absichern */
+  z-index: -1;
+  /* Hinter dem Canvas */
 }
 
 #canvas {
-  border-radius: 20px;   /* 👈 Rundung */
-  overflow: hidden;      /* Damit nichts aus den Ecken rausragt */
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5); /* optional: schöner Schatten */
+  border-radius: 20px;
+  /* 👈 Rundung */
+  overflow: hidden;
+  /* Damit nichts aus den Ecken rausragt */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  /* optional: schöner Schatten */
 }
 
 
@@ -104,7 +110,8 @@ canvas {
   height: 70px;
   font-size: 28px;
   border-radius: 50%;
-  border: 3px solid #fff;          /* weißer Rand wie Comic-Stil */
+  border: 3px solid #fff;
+  /* weißer Rand wie Comic-Stil */
   background: radial-gradient(circle, #fca534 0%, #e88b1b 100%);
   color: #fff;
   font-weight: bold;
@@ -233,4 +240,3 @@ canvas {
 #instructions-btn:hover {
   background-color: rgba(255, 255, 255, 1);
 } */
-
