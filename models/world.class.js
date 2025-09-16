@@ -5,7 +5,6 @@ class World {
   endbossDefeated = false;
   uiScreen = null; // "gameover" | "win" | null
 
-
   gameOver = false;
   canvas;
   ctx;
@@ -84,25 +83,24 @@ class World {
   //   }, 200);
   // }
   run() {
-  this.gameInterval = setInterval(() => {
-    if (!this.levelEnded) {
-      this.checkCollisions();
-      this.checkThrowableObjects();
-      this.checkEndbossDefeated();
-      this.removeOffscreenEnemies();
-      this.checkEndboss1Hit();
-    }
+    this.gameInterval = setInterval(() => {
+      if (!this.levelEnded) {
+        this.checkCollisions();
+        this.checkThrowableObjects();
+        this.checkEndbossDefeated();
+        this.removeOffscreenEnemies();
+        this.checkEndboss1Hit();
+      }
 
-    // 💀 Wenn Spieler tot ist, zeige Game Over Screen EINMAL
-    if (this.playerDied && !this.gameOver) {
-      this.gameOver = true;
-      this.stopGameLoopHard();   // alles anhalten
-      //this.uiScreen = "gameover";
-      this.showGameOverScreen();
-    }
-  }, 200);
-}
-
+      // 💀 Wenn Spieler tot ist, zeige Game Over Screen EINMAL
+      if (this.playerDied && !this.gameOver) {
+        this.gameOver = true;
+        this.stopGameLoopHard(); // alles anhalten
+        //this.uiScreen = "gameover";
+        this.showGameOverScreen();
+      }
+    }, 200);
+  }
 
   // gameOverScreen() {
   //   if (this.character.isDead() && !this.gameOver) {
@@ -604,26 +602,24 @@ class World {
     };
   }
 
-handleCanvasClick(event) {
-  if (!this.restartButtonArea) return;
+  handleCanvasClick(event) {
+    if (!this.restartButtonArea) return;
 
-  const rect = this.canvas.getBoundingClientRect();
-  const clickX = event.clientX - rect.left;
-  const clickY = event.clientY - rect.top;
+    const rect = this.canvas.getBoundingClientRect();
+    const clickX = event.clientX - rect.left;
+    const clickY = event.clientY - rect.top;
 
-  const btn = this.restartButtonArea;
+    const btn = this.restartButtonArea;
 
-  if (
-    clickX >= btn.x &&
-    clickX <= btn.x + btn.width &&
-    clickY >= btn.y &&
-    clickY <= btn.y + btn.height
-  ) {
-    location.reload(); // 🔄 Spiel neu laden
+    if (
+      clickX >= btn.x &&
+      clickX <= btn.x + btn.width &&
+      clickY >= btn.y &&
+      clickY <= btn.y + btn.height
+    ) {
+      location.reload(); // 🔄 Spiel neu laden
+    }
   }
-}
-
-
 
   draw() {
     if (this.playerDied) {
