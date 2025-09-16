@@ -73,7 +73,6 @@
 //   const menu = new Menu(canvas, ctx);
 // });
 
-
 // // Vollbild
 // // document.getElementById("fullscreen-btn").addEventListener("click", () => {
 // //   const canvas = document.getElementById("canvas");
@@ -104,7 +103,6 @@
 // function hideInstructions() {
 //   document.getElementById("instructions-overlay").classList.add("hidden");
 // }
-
 
 let canvas;
 let world;
@@ -155,7 +153,7 @@ function setupMobileControls() {
 
   // globale Release-Sicherung: wenn Pointer losgelassen wird außerhalb des Buttons
   const clearAllKeys = () => {
-    controls.forEach(c => keyboard[c.key] = false);
+    controls.forEach((c) => (keyboard[c.key] = false));
   };
 
   window.addEventListener("pointerup", clearAllKeys);
@@ -198,7 +196,6 @@ function setupMobileControls() {
   });
 }
 
-
 window.addEventListener("keydown", (e) => {
   if (e.keyCode == 37) keyboard.LEFT = true;
   if (e.keyCode == 38) keyboard.UP = true;
@@ -233,17 +230,21 @@ function toggleFullscreen(canvas) {
   if (!document.fullscreenElement) {
     if (canvas.requestFullscreen) {
       canvas.requestFullscreen();
-    } else if (canvas.webkitRequestFullscreen) { // Safari
+    } else if (canvas.webkitRequestFullscreen) {
+      // Safari
       canvas.webkitRequestFullscreen();
-    } else if (canvas.msRequestFullscreen) { // IE11
+    } else if (canvas.msRequestFullscreen) {
+      // IE11
       canvas.msRequestFullscreen();
     }
   } else {
     if (document.exitFullscreen) {
       document.exitFullscreen();
-    } else if (document.webkitExitFullscreen) { // Safari
+    } else if (document.webkitExitFullscreen) {
+      // Safari
       document.webkitExitFullscreen();
-    } else if (document.msExitFullscreen) { // IE11
+    } else if (document.msExitFullscreen) {
+      // IE11
       document.msExitFullscreen();
     }
   }
