@@ -87,10 +87,15 @@ class EndbossLevel1 extends MovableObject {
     }
   }
 
-  die() {
+  // die() {
+  //   this.playAnimation(this.IMAGES_DEAD);
+  //   clearInterval(this.bossAnimationInterval);
+  //   // optional: removeFromWorld(), explosion etc.
+  // }
+    die() {
     this.playAnimation(this.IMAGES_DEAD);
     clearInterval(this.bossAnimationInterval);
-    // optional: removeFromWorld(), explosion etc.
+    clearInterval(this.bossMoveInterval);
   }
 
   isDead() {
