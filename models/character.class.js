@@ -59,7 +59,7 @@ class Character extends MovableObject {
         this.jump();
       }
       if (this.world?.keyboard?.D) {
-        this.throw();
+        this.world.throwableBottles();
       }
 
       if (this.world) {
