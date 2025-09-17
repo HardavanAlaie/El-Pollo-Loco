@@ -38,7 +38,12 @@ class EndbossLevel1 extends MovableObject {
     "img/4_enemie_boss_chicken/5_dead/G26.png",
   ];
 
-  alertDistance = 300; // wie nah der Spieler sein muss
+  // alertDistance = 300; // wie nah der Spieler sein muss
+  // attackMode = false;
+  alertDistance = 400; // wie nah der Spieler sein muss, damit Boss reagiert
+  speed = 1; // normale Geschwindigkeit
+  aggroSpeed = 3; // Geschwindigkeit wenn getroffen
+  isAggressive = false; // wird true wenn er getroffen wird
   attackMode = false;
 
   constructor() {
@@ -56,12 +61,26 @@ class EndbossLevel1 extends MovableObject {
     //this.startAttackCycle();
   }
 
-  hit() {
+  // hit() {
+  //   if (this.isDead()) return;
+
+  //   this.energy -= 20;
+  //   this.energy = Math.max(this.energy, 0);
+  //   this.statusBar.setPercentage(this.energy);
+
+  //   if (this.isDead()) {
+  //     this.die();
+  //   }
+  // }
+    hit() {
     if (this.isDead()) return;
 
     this.energy -= 20;
     this.energy = Math.max(this.energy, 0);
     this.statusBar.setPercentage(this.energy);
+
+    // 👉 Aggressiv machen
+    this.isAggressive = true;
 
     if (this.isDead()) {
       this.die();
