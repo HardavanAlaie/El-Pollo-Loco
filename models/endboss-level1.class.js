@@ -72,20 +72,38 @@ class EndbossLevel1 extends MovableObject {
   //     this.die();
   //   }
   // }
-    hit() {
-    if (this.isDead()) return;
+  //   hit() {
+  //   if (this.isDead()) return;
 
-    this.energy -= 20;
-    this.energy = Math.max(this.energy, 0);
-    this.statusBar.setPercentage(this.energy);
+  //   this.energy -= 20;
+  //   this.energy = Math.max(this.energy, 0);
+  //   this.statusBar.setPercentage(this.energy);
 
-    // 👉 Aggressiv machen
+  //   // 👉 Aggressiv machen
+  //   this.isAggressive = true;
+
+  //   if (this.isDead()) {
+  //     this.die();
+  //   }
+  // }
+  hit() {
+  if (this.isDead()) return;
+
+  this.energy -= 20;
+  this.energy = Math.max(this.energy, 0);
+  this.statusBar.setPercentage(this.energy);
+
+  // 👉 Sofort aggressiv werden
+  if (!this.isAggressive) {
     this.isAggressive = true;
-
-    if (this.isDead()) {
-      this.die();
-    }
+    this.attackMode = true; // Animation sofort wechseln
   }
+
+  if (this.isDead()) {
+    this.die();
+  }
+}
+
 
   // die() {
   //   this.playAnimation(this.IMAGES_DEAD);
