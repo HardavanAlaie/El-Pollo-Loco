@@ -135,6 +135,31 @@ class EndbossLevel1 extends MovableObject {
       }
     }, 200);
   }
+
+    moveLogic() {
+    this.bossMoveInterval = setInterval(() => {
+      if (this.isDead() || !this.world?.character) return;
+
+      const player = this.world.character;
+
+      // Abstand zum Spieler berechnen
+      const distance = Math.abs(this.x - player.x);
+
+      if (distance < this.alertDistance) {
+        // Boss bewegt sich auf den Spieler zu
+        this.attackMode = true;
+        const speed = this.isAggressive ? this.aggroSpeed : this.speed;
+
+        if (this.x > player.x) {
+          this.x -= speed;  // nach links laufen
+        } else {
+          this.x += speed;  // nach rechts laufen
+        }
+      } else {
+        this.attackMode = false;
+      }
+    }, 1000 / 60); // 60 FPS Bewegung
+  }
   // animate() {
   //   setInterval(() => {
   //     const distance = this.x - this.character.x;
