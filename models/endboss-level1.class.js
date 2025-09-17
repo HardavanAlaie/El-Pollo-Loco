@@ -154,30 +154,54 @@ class EndbossLevel1 extends MovableObject {
     }, 200);
   }
 
-    moveLogic() {
-    this.bossMoveInterval = setInterval(() => {
-      if (this.isDead() || !this.world?.character) return;
+  //   moveLogic() {
+  //   this.bossMoveInterval = setInterval(() => {
+  //     if (this.isDead() || !this.world?.character) return;
 
-      const player = this.world.character;
+  //     const player = this.world.character;
 
-      // Abstand zum Spieler berechnen
-      const distance = Math.abs(this.x - player.x);
+  //     // Abstand zum Spieler berechnen
+  //     const distance = Math.abs(this.x - player.x);
 
-      if (distance < this.alertDistance) {
-        // Boss bewegt sich auf den Spieler zu
-        this.attackMode = true;
-        const speed = this.isAggressive ? this.aggroSpeed : this.speed;
+  //     if (distance < this.alertDistance) {
+  //       // Boss bewegt sich auf den Spieler zu
+  //       this.attackMode = true;
+  //       const speed = this.isAggressive ? this.aggroSpeed : this.speed;
 
-        if (this.x > player.x) {
-          this.x -= speed;  // nach links laufen
-        } else {
-          this.x += speed;  // nach rechts laufen
-        }
+  //       if (this.x > player.x) {
+  //         this.x -= speed;  // nach links laufen
+  //       } else {
+  //         this.x += speed;  // nach rechts laufen
+  //       }
+  //     } else {
+  //       this.attackMode = false;
+  //     }
+  //   }, 1000 / 60); // 60 FPS Bewegung
+  // }
+  moveLogic() {
+  this.bossMoveInterval = setInterval(() => {
+    if (this.isDead() || !this.world?.character) return;
+
+    const player = this.world.character;
+    const distance = Math.abs(this.x - player.x);
+
+    if (distance < this.alertDistance) {
+      // sofort in Angriffsmodus
+      this.attackMode = true;
+      this.isAggressive = true; 
+
+      const speed = this.isAggressive ? this.aggroSpeed : this.speed;
+      if (this.x > player.x) {
+        this.x -= speed;
       } else {
-        this.attackMode = false;
+        this.x += speed;
       }
-    }, 1000 / 60); // 60 FPS Bewegung
-  }
+    } else {
+      this.attackMode = false;
+    }
+  }, 1000 / 60);
+}
+
   // animate() {
   //   setInterval(() => {
   //     const distance = this.x - this.character.x;
