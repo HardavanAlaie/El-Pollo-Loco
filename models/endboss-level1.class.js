@@ -664,10 +664,10 @@ class EndbossLevel1 extends MovableObject {
     this.energy = 100;
     this.statusBar = new StatusBarEnemy(this);
 
-    //     // 🎵 Sound vorbereiten
+    // // 🎵 Sound vorbereiten
     // this.screamSound = new Audio("audio/chicken.mp3");
     // this.screamSound.volume = 0.5;
-        // 🎵 Nur Pfad merken, Instanz dynamisch erstellen
+    // 🎵 Nur Pfad merken, Instanz dynamisch erstellen
     this.screamSoundPath = "audio/chicken.mp3";
 
     this.animate();
@@ -680,12 +680,18 @@ class EndbossLevel1 extends MovableObject {
 
     this.isScreaming = true;
 
-    // const screamSound = new Audio("audio/chicken.mp3");
-    // screamSound.volume = 0.5;
-    // screamSound.play();
-        // von Anfang abspielen
-    this.screamSound.currentTime = 0;
-    this.screamSound.play();
+    // // const screamSound = new Audio("audio/chicken.mp3");
+    // // screamSound.volume = 0.5;
+    // // screamSound.play();
+    // // von Anfang abspielen
+    // this.screamSound.currentTime = 0;
+    // this.screamSound.play();
+    // Jedes Mal eine neue Instanz → unabhängig von Character-Sounds
+    const screamSound = new Audio(this.screamSoundPath);
+    screamSound.volume = 0.5;
+    screamSound.play();
+
+    this.activeScreamSound = screamSound; // merken, um später stoppen zu können
 
     setTimeout(() => {
       this.isScreaming = false;
