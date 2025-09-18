@@ -297,12 +297,12 @@ class Character extends MovableObject {
     this.applyGravity();
     this.start();
 
-    // // 🎵 Sounds nur einmal erzeugen
-    // this.jumpSound = new Audio("audio/jump.mp3");
-    // this.jumpSound.volume = 0.5;
+    // 🎵 Sounds nur einmal erzeugen
+    this.jumpSound = new Audio("audio/jump.mp3");
+    this.jumpSound.volume = 0.5;
 
-    // this.coinSound = new Audio("audio/coins.mp3");
-    // this.coinSound.volume = 0.5;
+    this.coinSound = new Audio("audio/coins.mp3");
+    this.coinSound.volume = 0.5;
   }
 
   start() {
