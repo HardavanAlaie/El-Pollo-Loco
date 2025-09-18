@@ -714,18 +714,34 @@ class EndbossLevel1 extends MovableObject {
     }
   }
 
+  // die() {
+  //   this.playAnimation(this.IMAGES_DEAD);
+  //   clearInterval(this.bossAnimationInterval);
+  //   clearInterval(this.bossMoveInterval);
+
+  //   // // 🎵 Sound sofort stoppen
+  //   // this.screamSound.pause();
+  //   // this.screamSound.currentTime = 0;
+
+  //   // 🎵 Sound sofort stoppen
+  //   this.screamSound.pause();
+  //   this.screamSound.currentTime = 0;
+  // }
   die() {
     this.playAnimation(this.IMAGES_DEAD);
     clearInterval(this.bossAnimationInterval);
     clearInterval(this.bossMoveInterval);
 
-    // // 🎵 Sound sofort stoppen
-    // this.screamSound.pause();
-    // this.screamSound.currentTime = 0;
-
-    // 🎵 Sound sofort stoppen
-    this.screamSound.pause();
-    this.screamSound.currentTime = 0;
+    // 🎵 Aktiven Sound stoppen, nur wenn vorhanden
+    if (this.activeScreamSound) {
+      try {
+        this.activeScreamSound.pause();
+        this.activeScreamSound.currentTime = 0;
+        this.activeScreamSound = null; // Referenz leeren
+      } catch (e) {
+        console.warn("Fehler beim Stoppen des Boss-Sounds:", e);
+      }
+    }
   }
 
   isDead() {
