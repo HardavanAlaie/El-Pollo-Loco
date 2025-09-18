@@ -193,13 +193,20 @@ class World {
 
     this.characterCollidingBottle();
 
+    // (this.collectableCoins || []).forEach((coin) => {
+    //   if (this.character.isColliding(coin)) {
+    //     this.statusBarCoin.availableCoins++;
+    //     this.collectableCoins.splice(this.collectableCoins.indexOf(coin), 1);
+    //     this.statusBarCoin.update?.();
+    //   }
+    // });
     (this.collectableCoins || []).forEach((coin) => {
-      if (this.character.isColliding(coin)) {
-        this.statusBarCoin.availableCoins++;
-        this.collectableCoins.splice(this.collectableCoins.indexOf(coin), 1);
-        this.statusBarCoin.update?.();
-      }
-    });
+  if (this.character.isColliding(coin)) {
+    this.character.collectCoin(); // 👉 jetzt Sound + StatusBar
+    this.collectableCoins.splice(this.collectableCoins.indexOf(coin), 1);
+  }
+});
+
   }
 
   characterCollidingBottle() {
