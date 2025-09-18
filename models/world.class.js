@@ -200,13 +200,29 @@ class World {
     //     this.statusBarCoin.update?.();
     //   }
     // });
+    // (this.collectableCoins || []).forEach((coin) => {
+    //   if (this.character.isColliding(coin)) {
+    //     this.character.collectCoin(); // 👉 jetzt Sound + StatusBar
+    //     this.collectableCoins.splice(this.collectableCoins.indexOf(coin), 1);
+    //   }
+    // });
     (this.collectableCoins || []).forEach((coin) => {
-  if (this.character.isColliding(coin)) {
-    this.character.collectCoin(); // 👉 jetzt Sound + StatusBar
-    this.collectableCoins.splice(this.collectableCoins.indexOf(coin), 1);
-  }
-});
+      if (this.character.isColliding(coin)) {
+        // StatusBar hochzählen
+        if (this.statusBarCoin) {
+          this.statusBarCoin.availableCoins++;
+          this.statusBarCoin.update();
+        }
 
+        // 🎵 Coin-Sound direkt hier abspielen
+        const coinSound = new Audio("audio/coins.mp3");
+        coinSound.volume = 0.5;
+        coinSound.play().catch(() => {});
+
+        // Coin entfernen
+        this.collectableCoins.splice(this.collectableCoins.indexOf(coin), 1);
+      }
+    });
   }
 
   characterCollidingBottle() {
