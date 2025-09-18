@@ -696,17 +696,28 @@ class EndbossLevel1 extends MovableObject {
   //     this.isScreaming = false;
   //   }, 2000); // nach 2s darf er wieder schreien
   // }
-  scream() {
-    if (!this.isDead()) {
-      // Falls Sound noch läuft → zurücksetzen
-      this.screamSound.pause();
-      this.screamSound.currentTime = 0;
+  // scream() {
+  //   if (!this.isDead()) {
+  //     // Falls Sound noch läuft → zurücksetzen
+  //     this.screamSound.pause();
+  //     this.screamSound.currentTime = 0;
 
+  //     this.screamSound.play().catch((e) => {
+  //       console.warn("Konnte Schrei nicht abspielen:", e);
+  //     });
+  //   }
+  // }
+  scream() {
+  if (!this.isDead() && this.screamSound) {
+    if (this.screamSound.paused) {
+      // Nur starten, wenn er noch nicht läuft
+      this.screamSound.currentTime = 0;
       this.screamSound.play().catch((e) => {
         console.warn("Konnte Schrei nicht abspielen:", e);
       });
     }
   }
+}
 
   hit() {
     if (this.isDead()) return;
