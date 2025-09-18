@@ -60,28 +60,6 @@ class World {
     this.spawnEnemyLoop();
   }
 
-  // run() {
-  //   this.gameInterval = setInterval(() => {
-  //     // Wenn Spiel beendet → Loop komplett stoppen
-  //     if (this.levelEnded || this.gameOver) {
-  //       clearInterval(this.gameInterval);
-  //       this.gameInterval = null;
-  //       console.log("⏹️ Game Loop gestoppt");
-  //       return; // Wichtig: nichts mehr ausführen
-  //     }
-
-  //     // Normale Logik
-  //     this.checkCollisions();
-  //     this.checkThrowableObjects();
-  //     this.checkEndbossDefeated();
-  //     this.removeOffscreenEnemies();
-  //     this.checkEndboss1Hit();
-  //     // this.checkEndboss2Hit();
-
-  //     // Falls Spieler tot ist → Game Over Screen anzeigen
-  //     this.gameOverScreen();
-  //   }, 200);
-  // }
   run() {
     this.gameInterval = setInterval(() => {
       if (!this.levelEnded) {
@@ -101,16 +79,6 @@ class World {
       }
     }, 200);
   }
-
-  // gameOverScreen() {
-  //   if (this.character.isDead() && !this.gameOver) {
-  //     this.gameOver = true;
-  //     clearInterval(this.gameInterval); // Stoppt die Spiel-Logik
-  //     cancelAnimationFrame(this.animationFrameId); // Falls du draw() mit requestAnimationFrame benutzt
-  //     this.uiScreen = "gameover";
-  //     this.showGameOverScreen();
-  //   }
-  // }
 
   checkEndboss1Hit() {
     if (
@@ -167,10 +135,6 @@ class World {
           bottle.break();
           enemy.hit();
 
-          // if (enemy.isDead?.()) {
-          //   const i = this.level.enemies.indexOf(enemy);
-          //   if (i >= 0) this.level.enemies.splice(i, 1);
-          // }
           if (enemy.isDead?.()) {
             if (enemy instanceof EndbossLevel1) {
               enemy.isMarkedDead = true;
@@ -193,19 +157,6 @@ class World {
 
     this.characterCollidingBottle();
 
-    // (this.collectableCoins || []).forEach((coin) => {
-    //   if (this.character.isColliding(coin)) {
-    //     this.statusBarCoin.availableCoins++;
-    //     this.collectableCoins.splice(this.collectableCoins.indexOf(coin), 1);
-    //     this.statusBarCoin.update?.();
-    //   }
-    // });
-    // (this.collectableCoins || []).forEach((coin) => {
-    //   if (this.character.isColliding(coin)) {
-    //     this.character.collectCoin(); // 👉 jetzt Sound + StatusBar
-    //     this.collectableCoins.splice(this.collectableCoins.indexOf(coin), 1);
-    //   }
-    // });
     (this.collectableCoins || []).forEach((coin) => {
       if (this.character.isColliding(coin)) {
         // StatusBar hochzählen
@@ -314,51 +265,6 @@ class World {
     }
   }
 
-  // endGame() {
-  //   clearInterval(this.gameInterval); // stoppe alle Intervall-Schleifen
-  //   clearInterval(this.enemySpawnInterval);
-  //   //cancelAnimationFrame(this.animationFrame); // stoppe Zeichnung, falls nötig
-  //   this.levelEnded = true;
-  //   this.gameOver = true;
-  //   this.playerDied = true;
-  //   this.uiScreen = "gameover"; // 👈 wichtig für handleCanvasClick
-  // }
-  // endGame() {
-  //   clearInterval(this.gameInterval);
-  //   clearInterval(this.enemySpawnInterval);
-  //   this.levelEnded = true;
-  //   this.gameOver = true;
-  //   this.playerDied = true;
-  //   this.uiScreen = "gameover";
-
-  //   // ⏹️ Sicherstellen, dass GameOver-Sound gestoppt wird, falls schon läuft
-  //   if (this.gameOverSound) {
-  //     this.gameOverSound.pause();
-  //     this.gameOverSound.currentTime = 0;
-  //   }
-  // }
-  // endGame() {
-  //   clearInterval(this.gameInterval);
-  //   clearInterval(this.enemySpawnInterval);
-  //   this.levelEnded = true;
-  //   this.gameOver = true;
-  //   this.playerDied = true;
-  //   this.uiScreen = "gameover";
-
-  //   // ⏹️ GameOver-Sound stoppen
-  //   if (this.gameOverSound) {
-  //     this.gameOverSound.pause();
-  //     this.gameOverSound.currentTime = 0;
-  //   }
-
-  //   // ⏹️ Endboss-Sound auch sicher stoppen
-  //   this.enemies.forEach((enemy) => {
-  //     if (enemy instanceof EndbossLevel1 && enemy.screamSound) {
-  //       enemy.screamSound.pause();
-  //       enemy.screamSound.currentTime = 0;
-  //     }
-  //   });
-  // }
   endGame() {
     // ⏹️ Alle Intervalle stoppen
     clearInterval(this.gameInterval);
@@ -547,12 +453,26 @@ class World {
 
     console.log("🎉 showWinScreen läuft!");
 
-    // Kamera zurücksetzen, damit wirklich die Mitte angezeigt wird
+    // Kamera zurücksetzen
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-    // Hintergrund abdunkeln (sofort sichtbar!)
+    // Hintergrund abdunkeln
     ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // ⏹️ Endboss-Sounds stoppen (falls noch aktiv)
+    this.stopEnemySounds();
+
+    // 🎵 Win-Sound abspielen (Loop)
+    if (!this.winSound) {
+      this.winSound = new Audio("audio/win.mp3");
+      this.winSound.volume = 0.7;
+      this.winSound.loop = true; // ✅ Dauerschleife
+    }
+    this.winSound.currentTime = 0;
+    this.winSound.play().catch((e) => {
+      console.warn("Konnte Win-Sound nicht abspielen:", e);
+    });
 
     // Bild laden
     const img = new Image();
@@ -564,7 +484,6 @@ class World {
 
     img.onerror = () => {
       console.warn("⚠️ Win-Bild konnte nicht geladen werden!");
-      // Fallback → nur Text anzeigen
       ctx.font = "bold 64px Comic Sans MS";
       ctx.fillStyle = "white";
       ctx.textAlign = "center";
@@ -622,82 +541,6 @@ class World {
     }
   }
 
-  // showGameOverScreen() {
-  //   const ctx = this.ctx;
-  //   const canvas = this.canvas;
-
-  //   // 🎨 Hintergrund abdunkeln
-  //   ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-  //   ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  //   // // 🧨 Game Over Text
-  //   // ctx.font = "bold 80px Comic Sans MS";
-  //   // ctx.fillStyle = "red";
-  //   // ctx.textAlign = "center";
-  //   // ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 100);
-
-  //   // Game Over Bild anzeigen
-  //   const img = new Image();
-  //   img.src = "img/You won, you lost/Game Over.png"; // ← Dein Bildpfad
-
-  //   // img.onload = () => {
-  //   //   const imgWidth = 400;
-  //   //   const imgHeight = 100;
-  //   //   const imgX = canvas.width / 2 - imgWidth / 2;
-  //   //   const imgY = canvas.height / 2 - 150;
-
-  //   //   ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-
-  //   img.onload = () => {
-  //     // Berechne optimale Bildgröße
-  //     const maxWidth = canvas.width * 0.6;
-  //     const maxHeight = canvas.height * 0.3;
-
-  //     let imgWidth = img.width;
-  //     let imgHeight = img.height;
-
-  //     // Skaliere proportional
-  //     const widthRatio = maxWidth / imgWidth;
-  //     const heightRatio = maxHeight / imgHeight;
-  //     const scale = Math.min(widthRatio, heightRatio);
-
-  //     imgWidth *= scale;
-  //     imgHeight *= scale;
-
-  //     const imgX = canvas.width / 2 - imgWidth / 2;
-  //     const imgY = canvas.height / 2 - imgHeight - 40;
-
-  //     ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-
-  //     // 🟥 Button zeichnen
-  //     const buttonWidth = 250;
-  //     const buttonHeight = 60;
-  //     const buttonX = canvas.width / 2 - buttonWidth / 2;
-  //     const buttonY = canvas.height / 2;
-
-  //     ctx.fillStyle = "#fca534ff";
-  //     ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-  //     // 📝 Button-Text
-  //     ctx.font = "24px Comic Sans MS";
-  //     ctx.fillStyle = "white";
-  //     ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
-
-  //     // ☝️ Klickbereich speichern
-  //     this.restartButtonArea = {
-  //       x: buttonX,
-  //       y: buttonY,
-  //       width: buttonWidth,
-  //       height: buttonHeight,
-  //     };
-
-  //     // ✅ Nur 1x den Eventlistener anhängen
-  //     if (!this.canvasClickListenerAdded) {
-  //       canvas.addEventListener("click", this.handleCanvasClick.bind(this));
-  //       this.canvasClickListenerAdded = true;
-  //     }
-  //   };
-  // }
   showGameOverScreen() {
     const ctx = this.ctx;
     const canvas = this.canvas;
