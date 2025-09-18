@@ -314,14 +314,50 @@ class World {
     }
   }
 
+  // endGame() {
+  //   clearInterval(this.gameInterval); // stoppe alle Intervall-Schleifen
+  //   clearInterval(this.enemySpawnInterval);
+  //   //cancelAnimationFrame(this.animationFrame); // stoppe Zeichnung, falls nötig
+  //   this.levelEnded = true;
+  //   this.gameOver = true;
+  //   this.playerDied = true;
+  //   this.uiScreen = "gameover"; // 👈 wichtig für handleCanvasClick
+  // }
+  // endGame() {
+  //   clearInterval(this.gameInterval);
+  //   clearInterval(this.enemySpawnInterval);
+  //   this.levelEnded = true;
+  //   this.gameOver = true;
+  //   this.playerDied = true;
+  //   this.uiScreen = "gameover";
+
+  //   // ⏹️ Sicherstellen, dass GameOver-Sound gestoppt wird, falls schon läuft
+  //   if (this.gameOverSound) {
+  //     this.gameOverSound.pause();
+  //     this.gameOverSound.currentTime = 0;
+  //   }
+  // }
   endGame() {
-    clearInterval(this.gameInterval); // stoppe alle Intervall-Schleifen
+    clearInterval(this.gameInterval);
     clearInterval(this.enemySpawnInterval);
-    //cancelAnimationFrame(this.animationFrame); // stoppe Zeichnung, falls nötig
     this.levelEnded = true;
     this.gameOver = true;
     this.playerDied = true;
-    this.uiScreen = "gameover"; // 👈 wichtig für handleCanvasClick
+    this.uiScreen = "gameover";
+
+    // ⏹️ GameOver-Sound stoppen
+    if (this.gameOverSound) {
+      this.gameOverSound.pause();
+      this.gameOverSound.currentTime = 0;
+    }
+
+    // ⏹️ Endboss-Sound auch sicher stoppen
+    this.enemies.forEach((enemy) => {
+      if (enemy instanceof EndbossLevel1 && enemy.screamSound) {
+        enemy.screamSound.pause();
+        enemy.screamSound.currentTime = 0;
+      }
+    });
   }
 
   checkEndbossDefeated() {
@@ -625,71 +661,71 @@ class World {
   //   };
   // }
   showGameOverScreen() {
-  const ctx = this.ctx;
-  const canvas = this.canvas;
+    const ctx = this.ctx;
+    const canvas = this.canvas;
 
-  // 🎵 Game Over Sound abspielen
-  if (!this.gameOverSound) {
-    this.gameOverSound = new Audio("audio/gameover.mp3");
-    this.gameOverSound.volume = 0.6;
-  }
-  this.gameOverSound.currentTime = 0;
-  this.gameOverSound.play().catch((e) => {
-    console.warn("GameOver-Sound konnte nicht abgespielt werden:", e);
-  });
-
-  // 🎨 Hintergrund abdunkeln
-  ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  const img = new Image();
-  img.src = "img/You won, you lost/Game Over.png"; 
-
-  img.onload = () => {
-    const maxWidth = canvas.width * 0.6;
-    const maxHeight = canvas.height * 0.3;
-
-    let imgWidth = img.width;
-    let imgHeight = img.height;
-
-    const widthRatio = maxWidth / imgWidth;
-    const heightRatio = maxHeight / imgHeight;
-    const scale = Math.min(widthRatio, heightRatio);
-
-    imgWidth *= scale;
-    imgHeight *= scale;
-
-    const imgX = canvas.width / 2 - imgWidth / 2;
-    const imgY = canvas.height / 2 - imgHeight - 40;
-
-    ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-
-    // 🟥 Button zeichnen
-    const buttonWidth = 250;
-    const buttonHeight = 60;
-    const buttonX = canvas.width / 2 - buttonWidth / 2;
-    const buttonY = canvas.height / 2;
-
-    ctx.fillStyle = "#fca534ff";
-    ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-    ctx.font = "24px Comic Sans MS";
-    ctx.fillStyle = "white";
-    ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
-
-    this.restartButtonArea = {
-      x: buttonX,
-      y: buttonY,
-      width: buttonWidth,
-      height: buttonHeight,
-    };
-
-    if (!this.canvasClickListenerAdded) {
-      canvas.addEventListener("click", this.handleCanvasClick.bind(this));
-      this.canvasClickListenerAdded = true;
+    // 🎵 Game Over Sound abspielen
+    if (!this.gameOverSound) {
+      this.gameOverSound = new Audio("audio/gameover.mp3");
+      this.gameOverSound.volume = 0.6;
     }
-  };
-}
+    this.gameOverSound.currentTime = 0;
+    this.gameOverSound.play().catch((e) => {
+      console.warn("GameOver-Sound konnte nicht abgespielt werden:", e);
+    });
+
+    // 🎨 Hintergrund abdunkeln
+    ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const img = new Image();
+    img.src = "img/You won, you lost/Game Over.png";
+
+    img.onload = () => {
+      const maxWidth = canvas.width * 0.6;
+      const maxHeight = canvas.height * 0.3;
+
+      let imgWidth = img.width;
+      let imgHeight = img.height;
+
+      const widthRatio = maxWidth / imgWidth;
+      const heightRatio = maxHeight / imgHeight;
+      const scale = Math.min(widthRatio, heightRatio);
+
+      imgWidth *= scale;
+      imgHeight *= scale;
+
+      const imgX = canvas.width / 2 - imgWidth / 2;
+      const imgY = canvas.height / 2 - imgHeight - 40;
+
+      ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+
+      // 🟥 Button zeichnen
+      const buttonWidth = 250;
+      const buttonHeight = 60;
+      const buttonX = canvas.width / 2 - buttonWidth / 2;
+      const buttonY = canvas.height / 2;
+
+      ctx.fillStyle = "#fca534ff";
+      ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+      ctx.font = "24px Comic Sans MS";
+      ctx.fillStyle = "white";
+      ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
+
+      this.restartButtonArea = {
+        x: buttonX,
+        y: buttonY,
+        width: buttonWidth,
+        height: buttonHeight,
+      };
+
+      if (!this.canvasClickListenerAdded) {
+        canvas.addEventListener("click", this.handleCanvasClick.bind(this));
+        this.canvasClickListenerAdded = true;
+      }
+    };
+  }
 
   handleCanvasClick(event) {
     if (!this.restartButtonArea) return;
