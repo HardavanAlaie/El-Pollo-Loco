@@ -337,27 +337,57 @@ class World {
   //     this.gameOverSound.currentTime = 0;
   //   }
   // }
+  // endGame() {
+  //   clearInterval(this.gameInterval);
+  //   clearInterval(this.enemySpawnInterval);
+  //   this.levelEnded = true;
+  //   this.gameOver = true;
+  //   this.playerDied = true;
+  //   this.uiScreen = "gameover";
+
+  //   // ⏹️ GameOver-Sound stoppen
+  //   if (this.gameOverSound) {
+  //     this.gameOverSound.pause();
+  //     this.gameOverSound.currentTime = 0;
+  //   }
+
+  //   // ⏹️ Endboss-Sound auch sicher stoppen
+  //   this.enemies.forEach((enemy) => {
+  //     if (enemy instanceof EndbossLevel1 && enemy.screamSound) {
+  //       enemy.screamSound.pause();
+  //       enemy.screamSound.currentTime = 0;
+  //     }
+  //   });
+  // }
   endGame() {
+    // ⏹️ Alle Intervalle stoppen
     clearInterval(this.gameInterval);
     clearInterval(this.enemySpawnInterval);
+    if (this.animationFrame) {
+      cancelAnimationFrame(this.animationFrame);
+    }
+
+    // 🏁 Status setzen
     this.levelEnded = true;
     this.gameOver = true;
     this.playerDied = true;
     this.uiScreen = "gameover";
 
-    // ⏹️ GameOver-Sound stoppen
-    if (this.gameOverSound) {
-      this.gameOverSound.pause();
-      this.gameOverSound.currentTime = 0;
-    }
+    // ⏹️ Boss-Schrei sicher stoppen
+    this.stopEnemySounds();
 
-    // ⏹️ Endboss-Sound auch sicher stoppen
-    this.enemies.forEach((enemy) => {
-      if (enemy instanceof EndbossLevel1 && enemy.screamSound) {
-        enemy.screamSound.pause();
-        enemy.screamSound.currentTime = 0;
-      }
+    // 🎵 GameOver-Sound abspielen
+    if (!this.gameOverSound) {
+      this.gameOverSound = new Audio("audio/gameover.mp3");
+      this.gameOverSound.volume = 0.7;
+    }
+    this.gameOverSound.currentTime = 0;
+    this.gameOverSound.play().catch((e) => {
+      console.warn("Konnte GameOver-Sound nicht abspielen:", e);
     });
+
+    // 📺 Game Over Screen zeichnen
+    this.showGameOverScreen();
   }
 
   checkEndbossDefeated() {
@@ -448,6 +478,14 @@ class World {
         return false;
       }
       return true;
+    });
+  }
+
+  stopEnemySounds() {
+    (this.level?.enemies || this.enemies || []).forEach((e) => {
+      if (e instanceof EndbossLevel1 && e.stopScreamSound) {
+        e.stopScreamSound();
+      }
     });
   }
 
