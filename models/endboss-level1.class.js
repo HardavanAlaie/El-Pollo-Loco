@@ -104,7 +104,6 @@
 //   }
 // }
 
-
 //   // die() {
 //   //   this.playAnimation(this.IMAGES_DEAD);
 //   //   clearInterval(this.bossAnimationInterval);
@@ -188,7 +187,7 @@
 //     if (distance < this.alertDistance) {
 //       // sofort in Angriffsmodus
 //       this.attackMode = true;
-//       this.isAggressive = true; 
+//       this.isAggressive = true;
 
 //       const speed = this.isAggressive ? this.aggroSpeed : this.speed;
 //       if (this.x > player.x) {
@@ -347,7 +346,6 @@
 //   }
 // }*/
 
-
 // class EndbossLevel1 extends MovableObject {
 //   y = 240;
 //   width = 200;
@@ -475,8 +473,6 @@
 //     }, 1000 / 60);
 //   }
 // }
-
-
 
 // class EndbossLevel1 extends MovableObject {
 //   y = 240;
@@ -606,7 +602,6 @@
 //   }
 // }
 
-
 class EndbossLevel1 extends MovableObject {
   y = 240;
   width = 200;
@@ -724,7 +719,11 @@ class EndbossLevel1 extends MovableObject {
     clearInterval(this.bossAnimationInterval);
     clearInterval(this.bossMoveInterval);
 
-        // 🎵 Sound sofort stoppen
+    // // 🎵 Sound sofort stoppen
+    // this.screamSound.pause();
+    // this.screamSound.currentTime = 0;
+
+    // 🎵 Sound sofort stoppen
     this.screamSound.pause();
     this.screamSound.currentTime = 0;
   }
