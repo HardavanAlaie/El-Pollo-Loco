@@ -663,34 +663,49 @@ class EndbossLevel1 extends MovableObject {
     // this.screamSound = new Audio("audio/chicken.mp3");
     // this.screamSound.volume = 0.5;
     // 🎵 Nur Pfad merken, Instanz dynamisch erstellen
-    this.screamSoundPath = "audio/chicken.mp3";
+    //this.screamSoundPath = "audio/chicken.mp3";
+    // 🎵 Sound-Instanz nur einmal erstellen
+    this.screamSound = new Audio("audio/chicken.mp3");
+    this.screamSound.loop = false; // nicht dauerhaft loopen
+    this.screamSound.volume = 0.5; // etwas leiser, optional
 
     this.animate();
     this.moveLogic();
   }
 
   /** 🎵 Schrei-Sound abspielen */
+  // scream() {
+  //   if (this.isScreaming || this.isDead()) return;
+
+  //   this.isScreaming = true;
+
+  //   // // const screamSound = new Audio("audio/chicken.mp3");
+  //   // // screamSound.volume = 0.5;
+  //   // // screamSound.play();
+  //   // // von Anfang abspielen
+  //   // this.screamSound.currentTime = 0;
+  //   // this.screamSound.play();
+  //   // Jedes Mal eine neue Instanz → unabhängig von Character-Sounds
+  //   const screamSound = new Audio(this.screamSoundPath);
+  //   screamSound.volume = 0.5;
+  //   screamSound.play();
+
+  //   this.activeScreamSound = screamSound; // merken, um später stoppen zu können
+
+  //   setTimeout(() => {
+  //     this.isScreaming = false;
+  //   }, 2000); // nach 2s darf er wieder schreien
+  // }
   scream() {
-    if (this.isScreaming || this.isDead()) return;
+    if (!this.isDead()) {
+      // Falls Sound noch läuft → zurücksetzen
+      this.screamSound.pause();
+      this.screamSound.currentTime = 0;
 
-    this.isScreaming = true;
-
-    // // const screamSound = new Audio("audio/chicken.mp3");
-    // // screamSound.volume = 0.5;
-    // // screamSound.play();
-    // // von Anfang abspielen
-    // this.screamSound.currentTime = 0;
-    // this.screamSound.play();
-    // Jedes Mal eine neue Instanz → unabhängig von Character-Sounds
-    const screamSound = new Audio(this.screamSoundPath);
-    screamSound.volume = 0.5;
-    screamSound.play();
-
-    this.activeScreamSound = screamSound; // merken, um später stoppen zu können
-
-    setTimeout(() => {
-      this.isScreaming = false;
-    }, 2000); // nach 2s darf er wieder schreien
+      this.screamSound.play().catch((e) => {
+        console.warn("Konnte Schrei nicht abspielen:", e);
+      });
+    }
   }
 
   hit() {
