@@ -297,12 +297,12 @@ class Character extends MovableObject {
     this.applyGravity();
     this.start();
 
-    // 🎵 Sounds nur einmal erzeugen
-    this.jumpSound = new Audio("audio/jump.mp3");
-    this.jumpSound.volume = 0.5;
+    // // 🎵 Sounds nur einmal erzeugen
+    // this.jumpSound = new Audio("audio/jump.mp3");
+    // this.jumpSound.volume = 0.5;
 
-    this.coinSound = new Audio("audio/coins.mp3");
-    this.coinSound.volume = 0.5;
+    // this.coinSound = new Audio("audio/coins.mp3");
+    // this.coinSound.volume = 0.5;
   }
 
   start() {
@@ -357,24 +357,37 @@ class Character extends MovableObject {
     clearInterval(this.animationInterval);
   }
 
-  jump() {
-    super.jump(); // 🟢 ursprüngliche Sprunglogik von MovableObject
+  // jump() {
+  //   super.jump(); // 🟢 ursprüngliche Sprunglogik von MovableObject
 
-    // 🎵 Jump-Sound abspielen (zurücksetzen, dann play)
-    this.jumpSound.pause();
-    this.jumpSound.currentTime = 0;
-    this.jumpSound.play().catch(() => {});
+  //   // 🎵 Jump-Sound abspielen (zurücksetzen, dann play)
+  //   this.jumpSound.pause();
+  //   this.jumpSound.currentTime = 0;
+  //   this.jumpSound.play().catch(() => {});
+  // }
+  jump() {
+    super.jump(); // alte Logik behalten
+    this.playSound(this.jumpSound);
   }
 
+  // collectCoin() {
+  //   if (this.world.statusBarCoin.availableCoins < 5) {
+  //     this.world.statusBarCoin.availableCoins++;
+  //     this.world.statusBarCoin.update();
+
+  //     // 🎵 Coin-Sound abspielen
+  //     this.coinSound.pause();
+  //     this.coinSound.currentTime = 0;
+  //     this.coinSound.play().catch(() => {});
+  //   }
+  // }
   collectCoin() {
     if (this.world.statusBarCoin.availableCoins < 5) {
       this.world.statusBarCoin.availableCoins++;
       this.world.statusBarCoin.update();
 
-      // 🎵 Coin-Sound abspielen
-      this.coinSound.pause();
-      this.coinSound.currentTime = 0;
-      this.coinSound.play().catch(() => {});
+      // 🎵 Sound abspielen
+      this.playSound(this.coinSound);
     }
   }
 
@@ -389,5 +402,14 @@ class Character extends MovableObject {
 
       this.world.spawnNewBottle();
     }
+  }
+
+  playSound(sound) {
+    if (!sound) return;
+    sound.pause();
+    sound.currentTime = 0;
+    sound.play().catch((e) => {
+      console.warn("Sound konnte nicht abgespielt werden:", e);
+    });
   }
 }
