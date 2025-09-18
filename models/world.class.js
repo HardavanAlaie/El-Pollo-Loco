@@ -548,82 +548,148 @@ class World {
     }
   }
 
+  // showGameOverScreen() {
+  //   const ctx = this.ctx;
+  //   const canvas = this.canvas;
+
+  //   // 🎨 Hintergrund abdunkeln
+  //   ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+  //   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  //   // // 🧨 Game Over Text
+  //   // ctx.font = "bold 80px Comic Sans MS";
+  //   // ctx.fillStyle = "red";
+  //   // ctx.textAlign = "center";
+  //   // ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 100);
+
+  //   // Game Over Bild anzeigen
+  //   const img = new Image();
+  //   img.src = "img/You won, you lost/Game Over.png"; // ← Dein Bildpfad
+
+  //   // img.onload = () => {
+  //   //   const imgWidth = 400;
+  //   //   const imgHeight = 100;
+  //   //   const imgX = canvas.width / 2 - imgWidth / 2;
+  //   //   const imgY = canvas.height / 2 - 150;
+
+  //   //   ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+
+  //   img.onload = () => {
+  //     // Berechne optimale Bildgröße
+  //     const maxWidth = canvas.width * 0.6;
+  //     const maxHeight = canvas.height * 0.3;
+
+  //     let imgWidth = img.width;
+  //     let imgHeight = img.height;
+
+  //     // Skaliere proportional
+  //     const widthRatio = maxWidth / imgWidth;
+  //     const heightRatio = maxHeight / imgHeight;
+  //     const scale = Math.min(widthRatio, heightRatio);
+
+  //     imgWidth *= scale;
+  //     imgHeight *= scale;
+
+  //     const imgX = canvas.width / 2 - imgWidth / 2;
+  //     const imgY = canvas.height / 2 - imgHeight - 40;
+
+  //     ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+
+  //     // 🟥 Button zeichnen
+  //     const buttonWidth = 250;
+  //     const buttonHeight = 60;
+  //     const buttonX = canvas.width / 2 - buttonWidth / 2;
+  //     const buttonY = canvas.height / 2;
+
+  //     ctx.fillStyle = "#fca534ff";
+  //     ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+  //     // 📝 Button-Text
+  //     ctx.font = "24px Comic Sans MS";
+  //     ctx.fillStyle = "white";
+  //     ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
+
+  //     // ☝️ Klickbereich speichern
+  //     this.restartButtonArea = {
+  //       x: buttonX,
+  //       y: buttonY,
+  //       width: buttonWidth,
+  //       height: buttonHeight,
+  //     };
+
+  //     // ✅ Nur 1x den Eventlistener anhängen
+  //     if (!this.canvasClickListenerAdded) {
+  //       canvas.addEventListener("click", this.handleCanvasClick.bind(this));
+  //       this.canvasClickListenerAdded = true;
+  //     }
+  //   };
+  // }
   showGameOverScreen() {
-    const ctx = this.ctx;
-    const canvas = this.canvas;
+  const ctx = this.ctx;
+  const canvas = this.canvas;
 
-    // 🎨 Hintergrund abdunkeln
-    ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // // 🧨 Game Over Text
-    // ctx.font = "bold 80px Comic Sans MS";
-    // ctx.fillStyle = "red";
-    // ctx.textAlign = "center";
-    // ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 100);
-
-    // Game Over Bild anzeigen
-    const img = new Image();
-    img.src = "img/You won, you lost/Game Over.png"; // ← Dein Bildpfad
-
-    // img.onload = () => {
-    //   const imgWidth = 400;
-    //   const imgHeight = 100;
-    //   const imgX = canvas.width / 2 - imgWidth / 2;
-    //   const imgY = canvas.height / 2 - 150;
-
-    //   ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-
-    img.onload = () => {
-      // Berechne optimale Bildgröße
-      const maxWidth = canvas.width * 0.6;
-      const maxHeight = canvas.height * 0.3;
-
-      let imgWidth = img.width;
-      let imgHeight = img.height;
-
-      // Skaliere proportional
-      const widthRatio = maxWidth / imgWidth;
-      const heightRatio = maxHeight / imgHeight;
-      const scale = Math.min(widthRatio, heightRatio);
-
-      imgWidth *= scale;
-      imgHeight *= scale;
-
-      const imgX = canvas.width / 2 - imgWidth / 2;
-      const imgY = canvas.height / 2 - imgHeight - 40;
-
-      ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-
-      // 🟥 Button zeichnen
-      const buttonWidth = 250;
-      const buttonHeight = 60;
-      const buttonX = canvas.width / 2 - buttonWidth / 2;
-      const buttonY = canvas.height / 2;
-
-      ctx.fillStyle = "#fca534ff";
-      ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-      // 📝 Button-Text
-      ctx.font = "24px Comic Sans MS";
-      ctx.fillStyle = "white";
-      ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
-
-      // ☝️ Klickbereich speichern
-      this.restartButtonArea = {
-        x: buttonX,
-        y: buttonY,
-        width: buttonWidth,
-        height: buttonHeight,
-      };
-
-      // ✅ Nur 1x den Eventlistener anhängen
-      if (!this.canvasClickListenerAdded) {
-        canvas.addEventListener("click", this.handleCanvasClick.bind(this));
-        this.canvasClickListenerAdded = true;
-      }
-    };
+  // 🎵 Game Over Sound abspielen
+  if (!this.gameOverSound) {
+    this.gameOverSound = new Audio("audio/gameover.mp3");
+    this.gameOverSound.volume = 0.6;
   }
+  this.gameOverSound.currentTime = 0;
+  this.gameOverSound.play().catch((e) => {
+    console.warn("GameOver-Sound konnte nicht abgespielt werden:", e);
+  });
+
+  // 🎨 Hintergrund abdunkeln
+  ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const img = new Image();
+  img.src = "img/You won, you lost/Game Over.png"; 
+
+  img.onload = () => {
+    const maxWidth = canvas.width * 0.6;
+    const maxHeight = canvas.height * 0.3;
+
+    let imgWidth = img.width;
+    let imgHeight = img.height;
+
+    const widthRatio = maxWidth / imgWidth;
+    const heightRatio = maxHeight / imgHeight;
+    const scale = Math.min(widthRatio, heightRatio);
+
+    imgWidth *= scale;
+    imgHeight *= scale;
+
+    const imgX = canvas.width / 2 - imgWidth / 2;
+    const imgY = canvas.height / 2 - imgHeight - 40;
+
+    ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+
+    // 🟥 Button zeichnen
+    const buttonWidth = 250;
+    const buttonHeight = 60;
+    const buttonX = canvas.width / 2 - buttonWidth / 2;
+    const buttonY = canvas.height / 2;
+
+    ctx.fillStyle = "#fca534ff";
+    ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+    ctx.font = "24px Comic Sans MS";
+    ctx.fillStyle = "white";
+    ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
+
+    this.restartButtonArea = {
+      x: buttonX,
+      y: buttonY,
+      width: buttonWidth,
+      height: buttonHeight,
+    };
+
+    if (!this.canvasClickListenerAdded) {
+      canvas.addEventListener("click", this.handleCanvasClick.bind(this));
+      this.canvasClickListenerAdded = true;
+    }
+  };
+}
 
   handleCanvasClick(event) {
     if (!this.restartButtonArea) return;
