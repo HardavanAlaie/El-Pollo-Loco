@@ -544,19 +544,19 @@ class Character extends MovableObject {
   //     this.playSound("audio/coins.mp3");
   //   }
   // }
-  collectCoin() {
-  if (this.world.statusBarCoin.availableCoins < 5) {
-    this.world.statusBarCoin.availableCoins++;
-    this.world.statusBarCoin.update();
+//   collectCoin() {
+//   if (this.world.statusBarCoin.availableCoins < 5) {
+//     this.world.statusBarCoin.availableCoins++;
+//     this.world.statusBarCoin.update();
 
-    // 🎵 Coin-Sound bei jedem Coin neu erzeugen
-    const coinSound = new Audio("audio/coins.mp3");
-    coinSound.volume = 0.5;
-    coinSound.play().catch((e) => {
-      console.warn("Coin-Sound konnte nicht abgespielt werden:", e);
-    });
-  }
-}
+//     // 🎵 Coin-Sound bei jedem Coin neu erzeugen
+//     const coinSound = new Audio("audio/coins.mp3");
+//     coinSound.volume = 0.5;
+//     coinSound.play().catch((e) => {
+//       console.warn("Coin-Sound konnte nicht abgespielt werden:", e);
+//     });
+//   }
+// }
 
 
   // 🔵 Flaschen sammeln (ohne Sound)
