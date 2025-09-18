@@ -664,9 +664,11 @@ class EndbossLevel1 extends MovableObject {
     this.energy = 100;
     this.statusBar = new StatusBarEnemy(this);
 
-        // 🎵 Sound vorbereiten
-    this.screamSound = new Audio("audio/chicken.mp3");
-    this.screamSound.volume = 0.5;
+    //     // 🎵 Sound vorbereiten
+    // this.screamSound = new Audio("audio/chicken.mp3");
+    // this.screamSound.volume = 0.5;
+        // 🎵 Nur Pfad merken, Instanz dynamisch erstellen
+    this.screamSoundPath = "audio/chicken.mp3";
 
     this.animate();
     this.moveLogic();
