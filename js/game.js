@@ -250,37 +250,48 @@ function toggleFullscreen(canvas) {
   }
 }
 
+// // Sound ein/aus
+// function toggleSound() {
+//   soundEnabled = !soundEnabled;
+//   console.log("Sound:", soundEnabled ? "🔊 an" : "🔇 aus");
+
+//   // World-Objekt informieren
+//   if (world && world.toggleSound) {
+//     world.toggleSound(soundEnabled);
+//   }
+
+//   // Alle aktuell laufenden Sounds stumm schalten oder wieder aktivieren
+//   if (world) {
+//     if (world.endboss && world.endboss.screamSound) {
+//       world.endboss.screamSound.muted = !soundEnabled;
+//     }
+//     if (world.gameOverSound) {
+//       world.gameOverSound.muted = !soundEnabled;
+//     }
+//     if (world.winSound) {
+//       world.winSound.muted = !soundEnabled;
+//     }
+//     if (world.character) {
+//       if (world.character.jumpSound) {
+//         world.character.jumpSound.muted = !soundEnabled;
+//       }
+//       if (world.character.coinSound) {
+//         world.character.coinSound.muted = !soundEnabled;
+//       }
+//     }
+//   }
+// }
 // Sound ein/aus
 function toggleSound() {
   soundEnabled = !soundEnabled;
   console.log("Sound:", soundEnabled ? "🔊 an" : "🔇 aus");
 
-  // World-Objekt informieren
+  // World informieren
   if (world && world.toggleSound) {
     world.toggleSound(soundEnabled);
   }
-
-  // Alle aktuell laufenden Sounds stumm schalten oder wieder aktivieren
-  if (world) {
-    if (world.endboss && world.endboss.screamSound) {
-      world.endboss.screamSound.muted = !soundEnabled;
-    }
-    if (world.gameOverSound) {
-      world.gameOverSound.muted = !soundEnabled;
-    }
-    if (world.winSound) {
-      world.winSound.muted = !soundEnabled;
-    }
-    if (world.character) {
-      if (world.character.jumpSound) {
-        world.character.jumpSound.muted = !soundEnabled;
-      }
-      if (world.character.coinSound) {
-        world.character.coinSound.muted = !soundEnabled;
-      }
-    }
-  }
 }
+
 
 
 // Sound ein/aus
