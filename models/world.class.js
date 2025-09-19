@@ -627,6 +627,25 @@ class World {
     }
   }
 
+  toggleSound(enabled) {
+  if (this.endboss?.screamSound) {
+    this.endboss.screamSound.muted = !enabled;
+  }
+  if (this.gameOverSound) {
+    this.gameOverSound.muted = !enabled;
+  }
+  if (this.winSound) {
+    this.winSound.muted = !enabled;
+  }
+  if (this.character?.jumpSound) {
+    this.character.jumpSound.muted = !enabled;
+  }
+  if (this.character?.coinSound) {
+    this.character.coinSound.muted = !enabled;
+  }
+}
+
+
   draw() {
     if (this.playerDied) {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
