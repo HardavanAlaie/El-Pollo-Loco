@@ -22,11 +22,11 @@ class ChickenSmall extends MovableObject {
 
     this.statusBar = new StatusBarEnemy(this);
 
-    this.start(); // automatisch starten
+    this.start();
   }
 
   hit() {
-    if (this.dead) return; // 👈 wenn schon tot, nichts mehr machen
+    if (this.dead) return;
     this.energy -= 100;
     this.energy = Math.max(this.energy, 0);
     this.statusBar.setPercentage(this.energy);
@@ -41,12 +41,11 @@ class ChickenSmall extends MovableObject {
   }
 
   die() {
-    this.dead = true; // 👈 Zustand merken
-    this.loadImage(this.IMAGES_DEAD[0]); // nur das eine Bild
-    this.speed = 0; // Bewegung stoppen
-    this.stop(); // Animation stoppen
+    this.dead = true;
+    this.loadImage(this.IMAGES_DEAD[0]);
+    this.speed = 0;
+    this.stop();
 
-    // Gegner nach kurzer Zeit entfernen (z. B. 1 Sekunde)
     setTimeout(() => {
       const i = world.level.enemies.indexOf(this);
       if (i >= 0) {

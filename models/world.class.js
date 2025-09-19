@@ -1,9 +1,8 @@
 class World {
-  //character = new Character();
   characterDead = false;
-  playerDied = false; //  unterscheidet "Tod" von "Endboss geschafft"
+  playerDied = false;
   endbossDefeated = false;
-  uiScreen = null; // "gameover" | "win" | null
+  uiScreen = null;
 
   gameOver = false;
   canvas;
@@ -34,14 +33,11 @@ class World {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
-    //this.character = character; // Spieler speichern
 
     this.currentLevelIndex = 0;
-    //this.level = allLevels[this.currentLevelIndex];
-    this.level = level1(this); // 👈 Welt reinreichen
 
-    //this.level = level;
-    // Character wird hier erstellt – World (this) wird übergeben!
+    this.level = level1(this);
+
     this.character = new Character(this);
     this.enemies = this.level.enemies;
     this.clouds = this.level.clouds;
@@ -70,11 +66,10 @@ class World {
         this.checkEndboss1Hit();
       }
 
-      // 💀 Wenn Spieler tot ist, zeige Game Over Screen EINMAL
       if (this.playerDied && !this.gameOver) {
         this.gameOver = true;
-        this.stopGameLoopHard(); // alles anhalten
-        //this.uiScreen = "gameover";
+        this.stopGameLoopHard();
+
         this.showGameOverScreen();
       }
     }, 200);
@@ -159,18 +154,15 @@ class World {
 
     (this.collectableCoins || []).forEach((coin) => {
       if (this.character.isColliding(coin)) {
-        // StatusBar hochzählen
         if (this.statusBarCoin) {
           this.statusBarCoin.availableCoins++;
           this.statusBarCoin.update();
         }
 
-        // 🎵 Coin-Sound direkt hier abspielen
         const coinSound = new Audio("audio/coins.mp3");
         coinSound.volume = 0.5;
         coinSound.play().catch(() => {});
 
-        // Coin entfernen
         this.collectableCoins.splice(this.collectableCoins.indexOf(coin), 1);
       }
     });
@@ -198,14 +190,11 @@ class World {
       const characterBottom = this.character.y + this.character.height;
       const characterVerticalSpeed = this.character.speedY;
 
-      // ✅ neue Berechnung für die "von oben"-Hitbox
       let enemyTop = enemy.y + enemy.height * (enemy.height < 100 ? 0.7 : 0.25);
       let extraOffset = enemy.height < 100 ? 25 : 15;
 
-      // Debug-Ausgabe in Konsole
       console.log("enemyTop:", enemyTop, "extraOffset:", extraOffset);
 
-      // ✅ grüne Zone zeichnen
       const ctx = this.world?.ctx;
       if (ctx) {
         ctx.strokeStyle = "blue";
@@ -226,7 +215,6 @@ class World {
         ctx.strokeRect(enemy.x - 5, enemyTop, enemy.width + 15, extraOffset);
       }
 
-      // ✅ Kollisionslogik
       const isAboveEnemy =
         characterBottom <= enemyTop + extraOffset && characterVerticalSpeed > 0;
 
@@ -259,30 +247,25 @@ class World {
       if (enemy instanceof EndbossLevel1) {
         enemy.isMarkedDead = true;
       } else {
-        // ❌ nicht mehr sofort entfernen
-        enemy.die?.(); // ChickenSmall kümmert sich selbst ums Entfernen
+        enemy.die?.();
       }
     }
   }
 
   endGame() {
-    // ⏹️ Alle Intervalle stoppen
     clearInterval(this.gameInterval);
     clearInterval(this.enemySpawnInterval);
     if (this.animationFrame) {
       cancelAnimationFrame(this.animationFrame);
     }
 
-    // 🏁 Status setzen
     this.levelEnded = true;
     this.gameOver = true;
     this.playerDied = true;
     this.uiScreen = "gameover";
 
-    // ⏹️ Boss-Schrei sicher stoppen
     this.stopEnemySounds();
 
-    // 🎵 GameOver-Sound abspielen
     if (!this.gameOverSound) {
       this.gameOverSound = new Audio("audio/gameover.mp3");
       this.gameOverSound.volume = 0.7;
@@ -292,7 +275,6 @@ class World {
       console.warn("Konnte GameOver-Sound nicht abspielen:", e);
     });
 
-    // 📺 Game Over Screen zeichnen
     this.showGameOverScreen();
   }
 
@@ -316,13 +298,10 @@ class World {
       this.endbossDefeated = true;
       this.levelEnded = true;
 
-      // Alles anhalten
       this.stopGameLoopHard();
 
-      // Flag setzen, damit draw() nicht mehr weiterläuft
       this.uiScreen = "win";
 
-      // Direkt den Win-Screen anzeigen
       this.showWinScreen();
     }
   }
@@ -330,14 +309,9 @@ class World {
   stopGameLoopHard() {
     console.log("⏹️ Stoppe komplettes Spiel");
 
-    // Alle Timer killen
     clearInterval(this.gameInterval);
     clearInterval(this.enemySpawnInterval);
 
-    // ❌ KEIN cancelAnimationFrame hier!
-    // cancelAnimationFrame(this.animationFrameId);
-
-    // Flags setzen
     this.levelEnded = true;
     this.gameOver = true;
   }
@@ -348,7 +322,6 @@ class World {
 
     spawnConfigs.forEach((config) => {
       const intervalId = setInterval(() => {
-        // Bedingung prüfen (optional)
         const allowed =
           typeof config.condition === "function"
             ? config.condition(this.level)
@@ -358,7 +331,6 @@ class World {
           return;
         }
 
-        // Aktuelle Anzahl dieser Gegner zählen
         const current = this.level.enemies.filter(
           (e) => e instanceof config.type
         );
@@ -367,7 +339,6 @@ class World {
           const newEnemy = new config.type();
           newEnemy.x = 900 + Math.random() * 400;
           this.level.enemies.push(newEnemy);
-          // console.log(`Spawned ${config.type.name}`);
         }
       }, config.interval);
 
@@ -406,8 +377,8 @@ class World {
   }
 
   spawnNewBottle() {
-    let x = Math.floor(Math.random() * 1700) + 300; // zwischen 300 und 2000
-    let y = Math.random() < 0.5 ? 300 : 350; // zufällige Höhe
+    let x = Math.floor(Math.random() * 1700) + 300;
+    let y = Math.random() < 0.5 ? 300 : 350;
     let newBottle = new CollectableBottle(x, y);
     this.collectableBottles.push(newBottle);
   }
@@ -453,32 +424,24 @@ class World {
 
     console.log("🎉 showWinScreen läuft!");
 
-    // Kamera zurücksetzen
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-    // Hintergrund abdunkeln
     ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // ⏹️ Endboss-Sounds stoppen (falls noch aktiv)
     this.stopEnemySounds();
 
-    // 🎵 Win-Sound abspielen (Loop)
     if (!this.winSound) {
       this.winSound = new Audio("audio/win.mp3");
       this.winSound.volume = 0.7;
-      this.winSound.loop = true; // ✅ Dauerschleife
+      this.winSound.loop = true;
     }
-    // this.winSound.currentTime = 0;
-    // this.winSound.play().catch((e) => {
-    //   console.warn("Konnte Win-Sound nicht abspielen:", e);
-    // });
-      if (soundEnabled) {
-    this.winSound.currentTime = 0;
-    this.winSound.play().catch(() => {});
-  }
 
-    // Bild laden
+    if (soundEnabled) {
+      this.winSound.currentTime = 0;
+      this.winSound.play().catch(() => {});
+    }
+
     const img = new Image();
     img.src = "img/You won, you lost/You win B.png";
 
@@ -517,13 +480,12 @@ class World {
 
     ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
 
-    // 🟩 Button zeichnen
     const buttonWidth = 250;
     const buttonHeight = 60;
     const buttonX = canvas.width / 2 - buttonWidth / 2;
     const buttonY = canvas.height / 2;
 
-    ctx.fillStyle = "#44cc44"; // Grün
+    ctx.fillStyle = "#44cc44";
     ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
 
     ctx.font = "24px Comic Sans MS";
@@ -531,7 +493,6 @@ class World {
     ctx.textAlign = "center";
     ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
 
-    // Klickbereich speichern
     this.restartButtonArea = {
       x: buttonX,
       y: buttonY,
@@ -549,21 +510,16 @@ class World {
     const ctx = this.ctx;
     const canvas = this.canvas;
 
-    // 🎵 Game Over Sound abspielen
     if (!this.gameOverSound) {
       this.gameOverSound = new Audio("audio/gameover.mp3");
       this.gameOverSound.volume = 0.6;
     }
-    // this.gameOverSound.currentTime = 0;
-    // this.gameOverSound.play().catch((e) => {
-    //   console.warn("GameOver-Sound konnte nicht abgespielt werden:", e);
-    // });
+
     if (soundEnabled) {
       this.gameOverSound.currentTime = 0;
       this.gameOverSound.play().catch(() => {});
     }
 
-    // 🎨 Hintergrund abdunkeln
     ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -589,7 +545,6 @@ class World {
 
       ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
 
-      // 🟥 Button zeichnen
       const buttonWidth = 250;
       const buttonHeight = 60;
       const buttonX = canvas.width / 2 - buttonWidth / 2;
@@ -631,53 +586,11 @@ class World {
       clickY >= btn.y &&
       clickY <= btn.y + btn.height
     ) {
-      location.reload(); // 🔄 Spiel neu laden
+      location.reload();
     }
   }
 
-  //   toggleSound(enabled) {
-  //   if (this.endboss?.screamSound) {
-  //     this.endboss.screamSound.muted = !enabled;
-  //   }
-  //   if (this.gameOverSound) {
-  //     this.gameOverSound.muted = !enabled;
-  //   }
-  //   if (this.winSound) {
-  //     this.winSound.muted = !enabled;
-  //   }
-  //   if (this.character?.jumpSound) {
-  //     this.character.jumpSound.muted = !enabled;
-  //   }
-  //   if (this.character?.coinSound) {
-  //     this.character.coinSound.muted = !enabled;
-  //   }
-  // }
-  // toggleSound(enabled) {
-  //   // Endboss
-  //   if (this.endboss?.screamSound) {
-  //     this.endboss.screamSound.muted = !enabled;
-  //   }
-
-  //   // Game Over
-  //   if (this.gameOverSound) {
-  //     this.gameOverSound.muted = !enabled;
-  //   }
-
-  //   // Win
-  //   if (this.winSound) {
-  //     this.winSound.muted = !enabled;
-  //   }
-
-  //   // Character Sounds
-  //   if (this.character?.jumpSound) {
-  //     this.character.jumpSound.muted = !enabled;
-  //   }
-  //   if (this.character?.coinSound) {
-  //     this.character.coinSound.muted = !enabled;
-  //   }
-  // }
   toggleSound(enabled) {
-    // 👉 Character
     if (this.character?.jumpSound) {
       this.character.jumpSound.muted = !enabled;
     }
@@ -685,19 +598,16 @@ class World {
       this.character.coinSound.muted = !enabled;
     }
 
-    // 👉 Endboss
-    this.enemies.forEach(enemy => {
+    this.enemies.forEach((enemy) => {
       if (enemy instanceof EndbossLevel1 && enemy.screamSound) {
         enemy.screamSound.muted = !enabled;
       }
     });
 
-    // 👉 GameOver
     if (this.gameOverSound) {
       this.gameOverSound.muted = !enabled;
     }
 
-    // 👉 Win
     if (this.winSound) {
       this.winSound.muted = !enabled;
     }
@@ -706,8 +616,8 @@ class World {
   draw() {
     if (this.playerDied) {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.showGameOverScreen(); // ← Das musst du definieren
-      return; // 🛑 Alles andere überspringen
+      this.showGameOverScreen();
+      return;
     }
 
     console.log("characterDead:", this.characterDead);
@@ -715,9 +625,6 @@ class World {
     this.ctx.translate(this.camera_x, 0);
 
     this.addObjectsToMap(this.level.backgroundObjects || []);
-    // (this.level.backgroundObjects || []).forEach((obj) => {
-    //   obj.draw(this.ctx, this.camera_x);
-    // });
 
     this.ctx.translate(-this.camera_x, 0);
 
@@ -741,8 +648,7 @@ class World {
     this.ctx.translate(this.camera_x, 0);
 
     this.addToMap(this.character);
-    //this.addObjectsToMap(this.clouds || []);
-    //this.addObjectsToMap(this.enemies || []);
+
     this.addObjectsToMap(this.level.enemies || []);
 
     (this.level.enemies || []).forEach((enemy) => {

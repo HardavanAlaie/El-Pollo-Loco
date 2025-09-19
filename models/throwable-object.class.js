@@ -54,7 +54,6 @@ class ThrowableObject extends MovableObject {
     this.playAnimation(this.IMAGES_SPLASH);
 
     setTimeout(() => {
-      //this.remove(); // Flasche nach Splash entfernen
       this.markedForRemoval = true;
     }, 400);
   }
