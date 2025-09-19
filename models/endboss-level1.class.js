@@ -927,14 +927,26 @@ class EndbossLevel1 extends MovableObject {
     if (this.isDead()) this.die();
   }
 
-  die() {
-    this.playAnimation(this.IMAGES_DEAD);
-    clearInterval(this.bossAnimationInterval);
-    clearInterval(this.bossMoveInterval);
+  // die() {
+  //   this.playAnimation(this.IMAGES_DEAD);
+  //   clearInterval(this.bossAnimationInterval);
+  //   clearInterval(this.bossMoveInterval);
 
-    // 🎵 Schrei-Sound SOFORT stoppen
-    this.stopScreamSound();
+  //   // 🎵 Schrei-Sound SOFORT stoppen
+  //   this.stopScreamSound();
+  // }
+  die() {
+  this.playAnimation(this.IMAGES_DEAD);
+  clearInterval(this.bossAnimationInterval);
+  clearInterval(this.bossMoveInterval);
+
+  if (this.screamSound) {
+    this.screamSound.pause();
+    this.screamSound.currentTime = 0;
   }
+}
+
+
 
   stopScreamSound() {
     try {
