@@ -469,10 +469,14 @@ class World {
       this.winSound.volume = 0.7;
       this.winSound.loop = true; // ✅ Dauerschleife
     }
+    // this.winSound.currentTime = 0;
+    // this.winSound.play().catch((e) => {
+    //   console.warn("Konnte Win-Sound nicht abspielen:", e);
+    // });
+      if (soundEnabled) {
     this.winSound.currentTime = 0;
-    this.winSound.play().catch((e) => {
-      console.warn("Konnte Win-Sound nicht abspielen:", e);
-    });
+    this.winSound.play().catch(() => {});
+  }
 
     // Bild laden
     const img = new Image();
@@ -550,10 +554,14 @@ class World {
       this.gameOverSound = new Audio("audio/gameover.mp3");
       this.gameOverSound.volume = 0.6;
     }
-    this.gameOverSound.currentTime = 0;
-    this.gameOverSound.play().catch((e) => {
-      console.warn("GameOver-Sound konnte nicht abgespielt werden:", e);
-    });
+    // this.gameOverSound.currentTime = 0;
+    // this.gameOverSound.play().catch((e) => {
+    //   console.warn("GameOver-Sound konnte nicht abgespielt werden:", e);
+    // });
+    if (soundEnabled) {
+      this.gameOverSound.currentTime = 0;
+      this.gameOverSound.play().catch(() => {});
+    }
 
     // 🎨 Hintergrund abdunkeln
     ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
@@ -627,49 +635,47 @@ class World {
     }
   }
 
-//   toggleSound(enabled) {
-//   if (this.endboss?.screamSound) {
-//     this.endboss.screamSound.muted = !enabled;
-//   }
-//   if (this.gameOverSound) {
-//     this.gameOverSound.muted = !enabled;
-//   }
-//   if (this.winSound) {
-//     this.winSound.muted = !enabled;
-//   }
-//   if (this.character?.jumpSound) {
-//     this.character.jumpSound.muted = !enabled;
-//   }
-//   if (this.character?.coinSound) {
-//     this.character.coinSound.muted = !enabled;
-//   }
-// }
-toggleSound(enabled) {
-  // Endboss
-  if (this.endboss?.screamSound) {
-    this.endboss.screamSound.muted = !enabled;
-  }
+  //   toggleSound(enabled) {
+  //   if (this.endboss?.screamSound) {
+  //     this.endboss.screamSound.muted = !enabled;
+  //   }
+  //   if (this.gameOverSound) {
+  //     this.gameOverSound.muted = !enabled;
+  //   }
+  //   if (this.winSound) {
+  //     this.winSound.muted = !enabled;
+  //   }
+  //   if (this.character?.jumpSound) {
+  //     this.character.jumpSound.muted = !enabled;
+  //   }
+  //   if (this.character?.coinSound) {
+  //     this.character.coinSound.muted = !enabled;
+  //   }
+  // }
+  toggleSound(enabled) {
+    // Endboss
+    if (this.endboss?.screamSound) {
+      this.endboss.screamSound.muted = !enabled;
+    }
 
-  // Game Over
-  if (this.gameOverSound) {
-    this.gameOverSound.muted = !enabled;
-  }
+    // Game Over
+    if (this.gameOverSound) {
+      this.gameOverSound.muted = !enabled;
+    }
 
-  // Win
-  if (this.winSound) {
-    this.winSound.muted = !enabled;
-  }
+    // Win
+    if (this.winSound) {
+      this.winSound.muted = !enabled;
+    }
 
-  // Character Sounds
-  if (this.character?.jumpSound) {
-    this.character.jumpSound.muted = !enabled;
+    // Character Sounds
+    if (this.character?.jumpSound) {
+      this.character.jumpSound.muted = !enabled;
+    }
+    if (this.character?.coinSound) {
+      this.character.coinSound.muted = !enabled;
+    }
   }
-  if (this.character?.coinSound) {
-    this.character.coinSound.muted = !enabled;
-  }
-}
-
-
 
   draw() {
     if (this.playerDied) {
