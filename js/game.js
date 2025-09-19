@@ -255,17 +255,50 @@ function toggleSound() {
   soundEnabled = !soundEnabled;
   console.log("Sound:", soundEnabled ? "🔊 an" : "🔇 aus");
 
-  // Falls dein World-Objekt Soundsteuerung hat
+  // World-Objekt informieren
   if (world && world.toggleSound) {
     world.toggleSound(soundEnabled);
   }
 
-  // Beispiel: alle <audio>-Elemente stumm schalten
-  const audios = document.querySelectorAll("audio");
-  audios.forEach((audio) => {
-    audio.muted = !soundEnabled;
-  });
+  // Alle aktuell laufenden Sounds stumm schalten oder wieder aktivieren
+  if (world) {
+    if (world.endboss && world.endboss.screamSound) {
+      world.endboss.screamSound.muted = !soundEnabled;
+    }
+    if (world.gameOverSound) {
+      world.gameOverSound.muted = !soundEnabled;
+    }
+    if (world.winSound) {
+      world.winSound.muted = !soundEnabled;
+    }
+    if (world.character) {
+      if (world.character.jumpSound) {
+        world.character.jumpSound.muted = !soundEnabled;
+      }
+      if (world.character.coinSound) {
+        world.character.coinSound.muted = !soundEnabled;
+      }
+    }
+  }
 }
+
+
+// Sound ein/aus
+// function toggleSound() {
+//   soundEnabled = !soundEnabled;
+//   console.log("Sound:", soundEnabled ? "🔊 an" : "🔇 aus");
+
+//   // Falls dein World-Objekt Soundsteuerung hat
+//   if (world && world.toggleSound) {
+//     world.toggleSound(soundEnabled);
+//   }
+
+//   // Beispiel: alle <audio>-Elemente stumm schalten
+//   const audios = document.querySelectorAll("audio");
+//   audios.forEach((audio) => {
+//     audio.muted = !soundEnabled;
+//   });
+// }
 
 // Overlay für Anleitung (falls du es behalten willst)
 function showInstructions() {
@@ -286,9 +319,9 @@ function toggleFullscreen(canvas) {
   }
 }
 
-function toggleSound() {
-  soundEnabled = !soundEnabled;
-  if (world && world.toggleSound) {
-    world.toggleSound(soundEnabled);
-  }
-}
+// function toggleSound() {
+//   soundEnabled = !soundEnabled;
+//   if (world && world.toggleSound) {
+//     world.toggleSound(soundEnabled);
+//   }
+// }
