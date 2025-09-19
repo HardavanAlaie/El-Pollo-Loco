@@ -467,6 +467,13 @@ class Character extends MovableObject {
     this.loadImages(this.IMAGES_DEAD);
     this.applyGravity();
     this.start();
+
+      // 🎵 Sounds
+  this.jumpSound = new Audio("audio/jump.mp3");
+  this.jumpSound.volume = 0.5;
+
+  this.coinSound = new Audio("audio/coins.mp3");
+  this.coinSound.volume = 0.5;
   }
 
   start() {
@@ -526,14 +533,22 @@ class Character extends MovableObject {
   //   super.jump(); // normale Sprunglogik von MovableObject
   //   this.playSound("audio/jump.mp3");
   // }
-  jump() {
-  super.jump(); // normale Sprunglogik
-  const jumpSound = new Audio("audio/jump.mp3");
-  jumpSound.volume = 0.5;
-  jumpSound.play().catch((e) => {
-    console.warn("Jump-Sound konnte nicht abgespielt werden:", e);
-  });
+//   jump() {
+//   super.jump(); // normale Sprunglogik
+//   const jumpSound = new Audio("audio/jump.mp3");
+//   jumpSound.volume = 0.5;
+//   jumpSound.play().catch((e) => {
+//     console.warn("Jump-Sound konnte nicht abgespielt werden:", e);
+//   });
+// }
+jump() {
+  super.jump();
+  if (soundEnabled) {
+    this.jumpSound.currentTime = 0;
+    this.jumpSound.play().catch(() => {});
+  }
 }
+
 
 
   // 🟡 Coins sammeln + Sound
@@ -557,6 +572,18 @@ class Character extends MovableObject {
 //     });
 //   }
 // }
+collectCoin() {
+  if (this.world.statusBarCoin.availableCoins < 5) {
+    this.world.statusBarCoin.availableCoins++;
+    this.world.statusBarCoin.update();
+
+    if (soundEnabled) {
+      this.coinSound.currentTime = 0;
+      this.coinSound.play().catch(() => {});
+    }
+  }
+}
+
 
 
   // 🔵 Flaschen sammeln (ohne Sound)
