@@ -643,6 +643,24 @@ class World {
   });
 }
 
+setupCanvasControls() {
+  this.canvas.addEventListener("click", (e) => {
+    const rect = this.canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    this.mobileButtons.forEach(btn => {
+      if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
+        keyboard[btn.key] = true;
+
+        // Nur kurz aktivieren (wie ein Klick)
+        setTimeout(() => (keyboard[btn.key] = false), 200);
+      }
+    });
+  });
+}
+
+
 
   draw() {
     if (this.playerDied) {
