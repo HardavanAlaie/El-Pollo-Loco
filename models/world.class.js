@@ -34,6 +34,9 @@ class World {
     this.canvas = canvas;
     this.keyboard = keyboard;
 
+    this.mobileButtons = []; // 👉 Array vorbereiten
+
+
     this.currentLevelIndex = 0;
 
     this.level = level1(this);
@@ -46,9 +49,14 @@ class World {
     this.collectableCoins = this.level.collectableCoins || [];
     this.levelEnded = false;
 
+    
     this.setWorld();
+    this.setupCanvasControls(); // 👉 erst Eventlistener
     this.draw();
     this.run();
+
+    
+    this.setupCanvasControls();
   }
 
   setWorld() {
@@ -613,55 +621,6 @@ class World {
     }
   }
 
-  drawMobileControls() {
-  const ctx = this.ctx;
-  const canvas = this.canvas;
-
-  // Größe & Position
-  const size = 60;
-  const padding = 15;
-
-  // Links: ⬅️ ➡️
-  this.leftBtn = { x: padding, y: canvas.height - size - padding, w: size, h: size, key: "LEFT", label: "⬅️" };
-  this.rightBtn = { x: padding + size + 10, y: canvas.height - size - padding, w: size, h: size, key: "RIGHT", label: "➡️" };
-
-  // Rechts: ⤴️ 🧴
-  this.jumpBtn = { x: canvas.width - (size * 2 + padding + 10), y: canvas.height - size - padding, w: size, h: size, key: "UP", label: "⤴️" };
-  this.throwBtn = { x: canvas.width - (size + padding), y: canvas.height - size - padding, w: size, h: size, key: "D", label: "🧴" };
-
-  this.mobileButtons = [this.leftBtn, this.rightBtn, this.jumpBtn, this.throwBtn];
-
-  this.mobileButtons.forEach(btn => {
-    ctx.fillStyle = "rgba(0,0,0,0.5)";
-    ctx.fillRect(btn.x, btn.y, btn.w, btn.h);
-
-    ctx.font = "28px Comic Sans MS";
-    ctx.fillStyle = "white";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(btn.label, btn.x + btn.w/2, btn.y + btn.h/2);
-  });
-}
-
-setupCanvasControls() {
-  this.canvas.addEventListener("click", (e) => {
-    const rect = this.canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    this.mobileButtons.forEach(btn => {
-      if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
-        keyboard[btn.key] = true;
-
-        // Nur kurz aktivieren (wie ein Klick)
-        setTimeout(() => (keyboard[btn.key] = false), 200);
-      }
-    });
-  });
-}
-
-
-
   draw() {
     if (this.playerDied) {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -713,15 +672,196 @@ setupCanvasControls() {
 
     this.ctx.translate(-this.camera_x, 0);
 
+    // 👉 Mobile Controls ins Canvas zeichnen
+    this.drawMobileControls();
+
     if (!this.playerDied && !this.endbossDefeated) {
       this.animationFrame = requestAnimationFrame(() => this.draw());
     }
 
-    if (this.mobileButtons) {
-  this.drawMobileControls();
+    //   if (this.mobileButtons) {
+    // this.drawMobileControls();
+    //}
+  }
+
+  // drawMobileControls() {
+  //   const ctx = this.ctx;
+  //   const canvas = this.canvas;
+
+  //   // Größe & Position
+  //   const size = 60;
+  //   const padding = 15;
+
+  //   // Links: ⬅️ ➡️
+  //   this.leftBtn = {
+  //     x: padding,
+  //     y: canvas.height - size - padding,
+  //     w: size,
+  //     h: size,
+  //     key: "LEFT",
+  //     label: "⬅️",
+  //   };
+  //   this.rightBtn = {
+  //     x: padding + size + 10,
+  //     y: canvas.height - size - padding,
+  //     w: size,
+  //     h: size,
+  //     key: "RIGHT",
+  //     label: "➡️",
+  //   };
+
+  //   // Rechts: ⤴️ 🧴
+  //   this.jumpBtn = {
+  //     x: canvas.width - (size * 2 + padding + 10),
+  //     y: canvas.height - size - padding,
+  //     w: size,
+  //     h: size,
+  //     key: "UP",
+  //     label: "⤴️",
+  //   };
+  //   this.throwBtn = {
+  //     x: canvas.width - (size + padding),
+  //     y: canvas.height - size - padding,
+  //     w: size,
+  //     h: size,
+  //     key: "D",
+  //     label: "🧴",
+  //   };
+
+  //   this.mobileButtons = [
+  //     this.leftBtn,
+  //     this.rightBtn,
+  //     this.jumpBtn,
+  //     this.throwBtn,
+  //   ];
+
+  //   this.mobileButtons.forEach((btn) => {
+  //     ctx.fillStyle = "rgba(0,0,0,0.5)";
+  //     ctx.fillRect(btn.x, btn.y, btn.w, btn.h);
+
+  //     ctx.font = "28px Comic Sans MS";
+  //     ctx.fillStyle = "white";
+  //     ctx.textAlign = "center";
+  //     ctx.textBaseline = "middle";
+  //     ctx.fillText(btn.label, btn.x + btn.w / 2, btn.y + btn.h / 2);
+  //   });
+  // }
+
+  // setupCanvasControls() {
+  //   this.canvas.addEventListener("click", (e) => {
+  //     const rect = this.canvas.getBoundingClientRect();
+  //     const x = e.clientX - rect.left;
+  //     const y = e.clientY - rect.top;
+
+  //     this.mobileButtons.forEach((btn) => {
+  //       if (
+  //         x >= btn.x &&
+  //         x <= btn.x + btn.w &&
+  //         y >= btn.y &&
+  //         y <= btn.y + btn.h
+  //       ) {
+  //         keyboard[btn.key] = true;
+
+  //         // Nur kurz aktivieren (wie ein Klick)
+  //         setTimeout(() => (keyboard[btn.key] = false), 200);
+  //       }
+  //     });
+  //   });
+  // }
+  // drawMobileControls() {
+  //   const ctx = this.ctx;
+  //   const canvas = this.canvas;
+
+  //   const size = 60;
+  //   const padding = 15;
+
+  //   // Links
+  //   const leftBtn = { x: padding, y: canvas.height - size - padding, w: size, h: size, key: "LEFT", label: "⬅️" };
+  //   const rightBtn = { x: padding + size + 10, y: canvas.height - size - padding, w: size, h: size, key: "RIGHT", label: "➡️" };
+
+  //   // Rechts
+  //   const jumpBtn = { x: canvas.width - (size * 2 + padding + 10), y: canvas.height - size - padding, w: size, h: size, key: "UP", label: "⤴️" };
+  //   const throwBtn = { x: canvas.width - (size + padding), y: canvas.height - size - padding, w: size, h: size, key: "D", label: "🧴" };
+
+  //   this.mobileButtons = [leftBtn, rightBtn, jumpBtn, throwBtn];
+
+  //   this.mobileButtons.forEach(btn => {
+  //     ctx.fillStyle = "rgba(0,0,0,0.6)";
+  //     ctx.fillRect(btn.x, btn.y, btn.w, btn.h);
+
+  //     ctx.font = "28px Comic Sans MS";
+  //     ctx.fillStyle = "white";
+  //     ctx.textAlign = "center";
+  //     ctx.textBaseline = "middle";
+  //     ctx.fillText(btn.label, btn.x + btn.w / 2, btn.y + btn.h / 2);
+  //   });
+  // }
+  drawMobileControls() {
+  const ctx = this.ctx;
+  const canvas = this.canvas;
+
+  const size = 60;      // Button-Größe
+  const padding = 15;   // Abstand vom Rand
+
+  // Links unten
+  const leftBtn = { x: padding, y: canvas.height - size - padding, w: size, h: size, key: "LEFT", label: "⬅️" };
+  const rightBtn = { x: padding + size + 10, y: canvas.height - size - padding, w: size, h: size, key: "RIGHT", label: "➡️" };
+
+  // Rechts unten
+  const jumpBtn = { x: canvas.width - (size * 2 + padding + 10), y: canvas.height - size - padding, w: size, h: size, key: "UP", label: "⤴️" };
+  const throwBtn = { x: canvas.width - (size + padding), y: canvas.height - size - padding, w: size, h: size, key: "D", label: "🧴" };
+
+  // 👉 Buttons merken für Klicks
+  this.mobileButtons = [leftBtn, rightBtn, jumpBtn, throwBtn];
+
+  this.mobileButtons.forEach(btn => {
+    // Button-Hintergrund
+    ctx.fillStyle = "rgba(0,0,0,0.5)";
+    ctx.beginPath();
+    ctx.arc(btn.x + btn.w / 2, btn.y + btn.h / 2, btn.w / 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Symbol in der Mitte
+    ctx.font = "28px Comic Sans MS";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(btn.label, btn.x + btn.w / 2, btn.y + btn.h / 2);
+  });
 }
 
-  }
+
+//   setupCanvasControls() {
+//     this.canvas.addEventListener("click", (e) => {
+//       const rect = this.canvas.getBoundingClientRect();
+//       const x = e.clientX - rect.left;
+//       const y = e.clientY - rect.top;
+
+//       this.mobileButtons.forEach(btn => {
+//         if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
+//           this.keyboard[btn.key] = true;
+//           setTimeout(() => (this.keyboard[btn.key] = false), 200);
+//         }
+//       });
+//     });
+  
+// }
+setupCanvasControls() {
+  this.canvas.addEventListener("click", (e) => {
+    const rect = this.canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    this.mobileButtons.forEach(btn => {
+      if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
+        this.keyboard[btn.key] = true;
+        setTimeout(() => (this.keyboard[btn.key] = false), 150); // kurze Eingabe
+      }
+    });
+  });
+}
+
+
 
   addObjectsToMap(objects) {
     if (!Array.isArray(objects)) return;

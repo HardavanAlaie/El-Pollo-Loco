@@ -6,9 +6,9 @@ let soundEnabled = true;
 
 function startGame() {
   document.getElementById("start-screen").style.display = "none";
-  document.getElementById("mobile-controls").style.display = "flex";
+  //document.getElementById("mobile-controls").style.display = "flex";
   init();
-  setupMobileControls();
+  //setupMobileControls();
 }
 
 function init() {
@@ -37,49 +37,49 @@ function init() {
 //     });
 //   });
 // }
-function setupMobileControls() {
-  const controls = [
-    { id: "left-btn", key: "LEFT" },
-    { id: "right-btn", key: "RIGHT" },
-    { id: "jump-btn", key: "UP" },
-    { id: "throw-btn", key: "D" },
-  ];
+// function setupMobileControls() {
+//   const controls = [
+//     { id: "left-btn", key: "LEFT" },
+//     { id: "right-btn", key: "RIGHT" },
+//     { id: "jump-btn", key: "UP" },
+//     { id: "throw-btn", key: "D" },
+//   ];
 
-  const clearAllKeys = () => {
-    controls.forEach((c) => (keyboard[c.key] = false));
-  };
+//   const clearAllKeys = () => {
+//     controls.forEach((c) => (keyboard[c.key] = false));
+//   };
 
-  window.addEventListener("pointerup", clearAllKeys);
-  window.addEventListener("mouseup", clearAllKeys);
-  window.addEventListener("touchend", clearAllKeys);
+//   window.addEventListener("pointerup", clearAllKeys);
+//   window.addEventListener("mouseup", clearAllKeys);
+//   window.addEventListener("touchend", clearAllKeys);
 
-  controls.forEach((control) => {
-    const btn = document.getElementById(control.id);
-    if (!btn) {
-      console.warn("setupMobileControls: Button nicht gefunden:", control.id);
-      return;
-    }
+//   controls.forEach((control) => {
+//     const btn = document.getElementById(control.id);
+//     if (!btn) {
+//       console.warn("setupMobileControls: Button nicht gefunden:", control.id);
+//       return;
+//     }
 
-    const down = (e) => {
-      if (e.cancelable) e.preventDefault();
-      keyboard[control.key] = true;
-    };
-    const up = (e) => {
-      if (e && e.cancelable) e.preventDefault();
-      keyboard[control.key] = false;
-    };
+//     const down = (e) => {
+//       if (e.cancelable) e.preventDefault();
+//       keyboard[control.key] = true;
+//     };
+//     const up = (e) => {
+//       if (e && e.cancelable) e.preventDefault();
+//       keyboard[control.key] = false;
+//     };
 
-    btn.addEventListener("pointerdown", down);
-    btn.addEventListener("pointerup", up);
-    btn.addEventListener("pointercancel", up);
+//     btn.addEventListener("pointerdown", down);
+//     btn.addEventListener("pointerup", up);
+//     btn.addEventListener("pointercancel", up);
 
-    btn.addEventListener("touchstart", down, { passive: false });
-    btn.addEventListener("touchend", up);
-    btn.addEventListener("mousedown", down);
-    btn.addEventListener("mouseup", up);
-    btn.addEventListener("mouseleave", up);
-  });
-}
+//     btn.addEventListener("touchstart", down, { passive: false });
+//     btn.addEventListener("touchend", up);
+//     btn.addEventListener("mousedown", down);
+//     btn.addEventListener("mouseup", up);
+//     btn.addEventListener("mouseleave", up);
+//   });
+// }
 
 window.addEventListener("keydown", (e) => {
   if (e.keyCode == 37) keyboard.LEFT = true;
