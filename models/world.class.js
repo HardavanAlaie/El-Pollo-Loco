@@ -613,6 +613,37 @@ class World {
     }
   }
 
+  drawMobileControls() {
+  const ctx = this.ctx;
+  const canvas = this.canvas;
+
+  // Größe & Position
+  const size = 60;
+  const padding = 15;
+
+  // Links: ⬅️ ➡️
+  this.leftBtn = { x: padding, y: canvas.height - size - padding, w: size, h: size, key: "LEFT", label: "⬅️" };
+  this.rightBtn = { x: padding + size + 10, y: canvas.height - size - padding, w: size, h: size, key: "RIGHT", label: "➡️" };
+
+  // Rechts: ⤴️ 🧴
+  this.jumpBtn = { x: canvas.width - (size * 2 + padding + 10), y: canvas.height - size - padding, w: size, h: size, key: "UP", label: "⤴️" };
+  this.throwBtn = { x: canvas.width - (size + padding), y: canvas.height - size - padding, w: size, h: size, key: "D", label: "🧴" };
+
+  this.mobileButtons = [this.leftBtn, this.rightBtn, this.jumpBtn, this.throwBtn];
+
+  this.mobileButtons.forEach(btn => {
+    ctx.fillStyle = "rgba(0,0,0,0.5)";
+    ctx.fillRect(btn.x, btn.y, btn.w, btn.h);
+
+    ctx.font = "28px Comic Sans MS";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(btn.label, btn.x + btn.w/2, btn.y + btn.h/2);
+  });
+}
+
+
   draw() {
     if (this.playerDied) {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
