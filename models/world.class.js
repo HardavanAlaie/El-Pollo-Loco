@@ -716,6 +716,11 @@ setupCanvasControls() {
     if (!this.playerDied && !this.endbossDefeated) {
       this.animationFrame = requestAnimationFrame(() => this.draw());
     }
+
+    if (this.mobileButtons) {
+  this.drawMobileControls();
+}
+
   }
 
   addObjectsToMap(objects) {
