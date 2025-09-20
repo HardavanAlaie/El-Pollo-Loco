@@ -796,39 +796,99 @@ class World {
   //     ctx.fillText(btn.label, btn.x + btn.w / 2, btn.y + btn.h / 2);
   //   });
   // }
-  drawMobileControls() {
-  const ctx = this.ctx;
-  const canvas = this.canvas;
+//   drawMobileControls() {
+//   const ctx = this.ctx;
+//   const canvas = this.canvas;
 
-  const size = 60;      // Button-Größe
-  const padding = 15;   // Abstand vom Rand
+//   const size = 60;      // Button-Größe
+//   const padding = 15;   // Abstand vom Rand
 
-  // Links unten
-  const leftBtn = { x: padding, y: canvas.height - size - padding, w: size, h: size, key: "LEFT", label: "⬅️" };
-  const rightBtn = { x: padding + size + 10, y: canvas.height - size - padding, w: size, h: size, key: "RIGHT", label: "➡️" };
+//   // Links unten
+//   const leftBtn = { x: padding, y: canvas.height - size - padding, w: size, h: size, key: "LEFT", label: "⬅️" };
+//   const rightBtn = { x: padding + size + 10, y: canvas.height - size - padding, w: size, h: size, key: "RIGHT", label: "➡️" };
 
-  // Rechts unten
-  const jumpBtn = { x: canvas.width - (size * 2 + padding + 10), y: canvas.height - size - padding, w: size, h: size, key: "UP", label: "⤴️" };
-  const throwBtn = { x: canvas.width - (size + padding), y: canvas.height - size - padding, w: size, h: size, key: "D", label: "🧴" };
+//   // Rechts unten
+//   const jumpBtn = { x: canvas.width - (size * 2 + padding + 10), y: canvas.height - size - padding, w: size, h: size, key: "UP", label: "⤴️" };
+//   const throwBtn = { x: canvas.width - (size + padding), y: canvas.height - size - padding, w: size, h: size, key: "D", label: "🧴" };
 
-  // 👉 Buttons merken für Klicks
-  this.mobileButtons = [leftBtn, rightBtn, jumpBtn, throwBtn];
+//   // 👉 Buttons merken für Klicks
+//   this.mobileButtons = [leftBtn, rightBtn, jumpBtn, throwBtn];
 
-  this.mobileButtons.forEach(btn => {
-    // Button-Hintergrund
+//   this.mobileButtons.forEach(btn => {
+//     // Button-Hintergrund
+//     ctx.fillStyle = "rgba(0,0,0,0.5)";
+//     ctx.beginPath();
+//     ctx.arc(btn.x + btn.w / 2, btn.y + btn.h / 2, btn.w / 2, 0, Math.PI * 2);
+//     ctx.fill();
+
+//     // Symbol in der Mitte
+//     ctx.font = "28px Comic Sans MS";
+//     ctx.fillStyle = "white";
+//     ctx.textAlign = "center";
+//     ctx.textBaseline = "middle";
+//     ctx.fillText(btn.label, btn.x + btn.w / 2, btn.y + btn.h / 2);
+//   });
+// }
+// drawMobileControls() {
+//   const ctx = this.ctx;
+//   const h = this.canvas.height;
+//   const w = this.canvas.width;
+
+//   ctx.font = "32px Comic Sans MS";
+//   ctx.textAlign = "center";
+//   ctx.textBaseline = "middle";
+
+//   // 🎮 Links
+//   this.leftBtnArea = { x: 30, y: h - 80, width: 60, height: 60 };
+//   ctx.fillStyle = "rgba(0,0,0,0.5)";
+//   ctx.fillRect(this.leftBtnArea.x, this.leftBtnArea.y, this.leftBtnArea.width, this.leftBtnArea.height);
+//   ctx.fillStyle = "white";
+//   ctx.fillText("⬅️", this.leftBtnArea.x + this.leftBtnArea.width / 2, this.leftBtnArea.y + this.leftBtnArea.height / 2);
+
+//   // 🎮 Rechts
+//   this.rightBtnArea = { x: 110, y: h - 80, width: 60, height: 60 };
+//   ctx.fillStyle = "rgba(0,0,0,0.5)";
+//   ctx.fillRect(this.rightBtnArea.x, this.rightBtnArea.y, this.rightBtnArea.width, this.rightBtnArea.height);
+//   ctx.fillStyle = "white";
+//   ctx.fillText("➡️", this.rightBtnArea.x + this.rightBtnArea.width / 2, this.rightBtnArea.y + this.rightBtnArea.height / 2);
+
+//   // 🟢 Springen
+//   this.jumpBtnArea = { x: w - 140, y: h - 80, width: 60, height: 60 };
+//   ctx.fillStyle = "rgba(0,0,0,0.5)";
+//   ctx.fillRect(this.jumpBtnArea.x, this.jumpBtnArea.y, this.jumpBtnArea.width, this.jumpBtnArea.height);
+//   ctx.fillStyle = "white";
+//   ctx.fillText("⤴️", this.jumpBtnArea.x + this.jumpBtnArea.width / 2, this.jumpBtnArea.y + this.jumpBtnArea.height / 2);
+
+//   // 🧴 Werfen
+//   this.throwBtnArea = { x: w - 60, y: h - 80, width: 60, height: 60 };
+//   ctx.fillStyle = "rgba(0,0,0,0.5)";
+//   ctx.fillRect(this.throwBtnArea.x, this.throwBtnArea.y, this.throwBtnArea.width, this.throwBtnArea.height);
+//   ctx.fillStyle = "white";
+//   ctx.fillText("🧴", this.throwBtnArea.x + this.throwBtnArea.width / 2, this.throwBtnArea.y + this.throwBtnArea.height / 2);
+// }
+drawMobileControls() {
+  const ctx = this.ctx, w = this.canvas.width, h = this.canvas.height;
+  ctx.font = "32px Comic Sans MS";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  this.leftBtnArea  = { x: 30,     y: h - 80, width: 60, height: 60, label: "⬅️" };
+  this.rightBtnArea = { x: 100,    y: h - 80, width: 60, height: 60, label: "➡️" };
+  this.jumpBtnArea  = { x: w - 140,y: h - 80, width: 60, height: 60, label: "⤴️" };
+  this.throwBtnArea = { x: w - 60, y: h - 80, width: 60, height: 60, label: "🧴" };
+
+  [this.leftBtnArea, this.rightBtnArea, this.jumpBtnArea, this.throwBtnArea].forEach(btn => {
     ctx.fillStyle = "rgba(0,0,0,0.5)";
     ctx.beginPath();
-    ctx.arc(btn.x + btn.w / 2, btn.y + btn.h / 2, btn.w / 2, 0, Math.PI * 2);
+    ctx.arc(btn.x + btn.width/2, btn.y + btn.height/2, btn.width/2, 0, Math.PI*2);
     ctx.fill();
 
-    // Symbol in der Mitte
-    ctx.font = "28px Comic Sans MS";
     ctx.fillStyle = "white";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(btn.label, btn.x + btn.w / 2, btn.y + btn.h / 2);
+    ctx.fillText(btn.label, btn.x + btn.width/2, btn.y + btn.height/2);
   });
 }
+
+
 
 
 //   setupCanvasControls() {
@@ -846,20 +906,142 @@ class World {
 //     });
   
 // }
-setupCanvasControls() {
-  this.canvas.addEventListener("click", (e) => {
-    const rect = this.canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+// setupCanvasControls() {
+//   this.canvas.addEventListener("click", (e) => {
+//     const rect = this.canvas.getBoundingClientRect();
+//     const x = e.clientX - rect.left;
+//     const y = e.clientY - rect.top;
 
-    this.mobileButtons.forEach(btn => {
-      if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
-        this.keyboard[btn.key] = true;
-        setTimeout(() => (this.keyboard[btn.key] = false), 150); // kurze Eingabe
-      }
-    });
-  });
+//     this.mobileButtons.forEach(btn => {
+//       if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
+//         this.keyboard[btn.key] = true;
+//         setTimeout(() => (this.keyboard[btn.key] = false), 150); // kurze Eingabe
+//       }
+//     });
+//   });
+// }
+// setupCanvasControls() {
+//   const handleDown = (x, y) => {
+//     if (this.leftBtnArea && this.isInsideButton(x, y, this.leftBtnArea)) {
+//       this.keyboard.LEFT = true;
+//     }
+//     if (this.rightBtnArea && this.isInsideButton(x, y, this.rightBtnArea)) {
+//       this.keyboard.RIGHT = true;
+//     }
+//     if (this.jumpBtnArea && this.isInsideButton(x, y, this.jumpBtnArea)) {
+//       this.keyboard.UP = true;
+//     }
+//     if (this.throwBtnArea && this.isInsideButton(x, y, this.throwBtnArea)) {
+//       this.keyboard.D = true;
+//     }
+//   };
+
+//   const handleUp = () => {
+//     this.keyboard.LEFT = false;
+//     this.keyboard.RIGHT = false;
+//     this.keyboard.UP = false;
+//     this.keyboard.D = false;
+//   };
+
+//   // 🖱️ Klick mit Maus
+//   this.canvas.addEventListener("mousedown", (e) => {
+//     const rect = this.canvas.getBoundingClientRect();
+//     handleDown(e.clientX - rect.left, e.clientY - rect.top);
+//   });
+
+//   this.canvas.addEventListener("mouseup", handleUp);
+
+//   // 📱 Touch
+//   this.canvas.addEventListener("touchstart", (e) => {
+//     const rect = this.canvas.getBoundingClientRect();
+//     for (let touch of e.touches) {
+//       handleDown(touch.clientX - rect.left, touch.clientY - rect.top);
+//     }
+//     e.preventDefault();
+//   }, { passive: false });
+
+//   this.canvas.addEventListener("touchend", handleUp);
+//   this.canvas.addEventListener("touchcancel", handleUp);
+// }
+// In World-Klasse
+setupCanvasControls() {
+  const toCanvasXY = (e) => {
+    const rect = this.canvas.getBoundingClientRect();
+    // Skaliere von CSS-Pixeln in Canvas-Pixel
+    const scaleX = this.canvas.width / rect.width;
+    const scaleY = this.canvas.height / rect.height;
+
+    // PointerEvent (desktop & moderne mobile Browser)
+    if ('clientX' in e) {
+      return {
+        x: (e.clientX - rect.left) * scaleX,
+        y: (e.clientY - rect.top)  * scaleY
+      };
+    }
+    // Fallback: TouchEvent (ältere Safari)
+    const t = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
+    if (t) {
+      return {
+        x: (t.clientX - rect.left) * scaleX,
+        y: (t.clientY - rect.top)  * scaleY
+      };
+    }
+    return { x: 0, y: 0 };
+  };
+
+  const handleDown = (e) => {
+    if (e.cancelable) e.preventDefault(); // verhindert Scroll/Zoom
+    const { x, y } = toCanvasXY(e);
+
+    // prüfen gegen gespeicherte Areas (width/height!)
+    if (this.leftBtnArea && this.isInsideButton(x, y, this.leftBtnArea))  this.keyboard.LEFT  = true;
+    if (this.rightBtnArea && this.isInsideButton(x, y, this.rightBtnArea)) this.keyboard.RIGHT = true;
+    if (this.jumpBtnArea && this.isInsideButton(x, y, this.jumpBtnArea))  this.keyboard.UP    = true;
+    if (this.throwBtnArea && this.isInsideButton(x, y, this.throwBtnArea)) this.keyboard.D     = true;
+  };
+
+  const handleUpAll = () => {
+    this.keyboard.LEFT  = false;
+    this.keyboard.RIGHT = false;
+    this.keyboard.UP    = false;
+    this.keyboard.D     = false;
+  };
+
+  // Pointer (empfohlen, deckt Maus & Touch ab in modernen Browsern)
+  this.canvas.addEventListener('pointerdown', handleDown, { passive: false });
+  this.canvas.addEventListener('pointerup',   handleUpAll);
+  this.canvas.addEventListener('pointercancel', handleUpAll);
+  this.canvas.addEventListener('pointerleave',  handleUpAll);
+
+  // Fallback für ältere iOS/Safari
+  this.canvas.addEventListener('touchstart', handleDown, { passive: false });
+  this.canvas.addEventListener('touchend',   handleUpAll, { passive: false });
+  this.canvas.addEventListener('touchcancel',handleUpAll, { passive: false });
+
+  // Optional: Maus
+  this.canvas.addEventListener('mousedown', handleDown);
+  this.canvas.addEventListener('mouseup',   handleUpAll);
 }
+
+// Rechteck-Hit-Test (achte auf width/height, nicht w/h)
+isInsideButton(x, y, btn) {
+  return (
+    x >= btn.x && x <= btn.x + btn.width &&
+    y >= btn.y && y <= btn.y + btn.height
+  );
+}
+
+
+// // ✅ Hilfsfunktion: Prüfen, ob (x, y) in einem Button liegt
+// isInsideButton(x, y, btn) {
+//   return (
+//     x >= btn.x &&
+//     x <= btn.x + btn.width &&
+//     y >= btn.y &&
+//     y <= btn.y + btn.height
+//   );
+// }
+
 
 
 

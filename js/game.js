@@ -16,70 +16,7 @@ function init() {
   world = new World(canvas, keyboard);
 }
 
-// // Mobile
-// function setupMobileControls() {
-//   const controls = [
-//     { id: "left-btn", key: "LEFT" },
-//     { id: "right-btn", key: "RIGHT" },
-//     { id: "jump-btn", key: "UP" },
-//     { id: "throw-btn", key: "D" },
-//   ];
 
-//   controls.forEach((control) => {
-//     const btn = document.getElementById(control.id);
-//     btn.addEventListener("touchstart", (e) => {
-//       e.preventDefault();
-//       keyboard[control.key] = true;
-//     });
-//     btn.addEventListener("touchend", (e) => {
-//       e.preventDefault();
-//       keyboard[control.key] = false;
-//     });
-//   });
-// }
-// function setupMobileControls() {
-//   const controls = [
-//     { id: "left-btn", key: "LEFT" },
-//     { id: "right-btn", key: "RIGHT" },
-//     { id: "jump-btn", key: "UP" },
-//     { id: "throw-btn", key: "D" },
-//   ];
-
-//   const clearAllKeys = () => {
-//     controls.forEach((c) => (keyboard[c.key] = false));
-//   };
-
-//   window.addEventListener("pointerup", clearAllKeys);
-//   window.addEventListener("mouseup", clearAllKeys);
-//   window.addEventListener("touchend", clearAllKeys);
-
-//   controls.forEach((control) => {
-//     const btn = document.getElementById(control.id);
-//     if (!btn) {
-//       console.warn("setupMobileControls: Button nicht gefunden:", control.id);
-//       return;
-//     }
-
-//     const down = (e) => {
-//       if (e.cancelable) e.preventDefault();
-//       keyboard[control.key] = true;
-//     };
-//     const up = (e) => {
-//       if (e && e.cancelable) e.preventDefault();
-//       keyboard[control.key] = false;
-//     };
-
-//     btn.addEventListener("pointerdown", down);
-//     btn.addEventListener("pointerup", up);
-//     btn.addEventListener("pointercancel", up);
-
-//     btn.addEventListener("touchstart", down, { passive: false });
-//     btn.addEventListener("touchend", up);
-//     btn.addEventListener("mousedown", down);
-//     btn.addEventListener("mouseup", up);
-//     btn.addEventListener("mouseleave", up);
-//   });
-// }
 
 window.addEventListener("keydown", (e) => {
   if (e.keyCode == 37) keyboard.LEFT = true;
