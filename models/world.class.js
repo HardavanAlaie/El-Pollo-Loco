@@ -466,10 +466,191 @@ class World {
     };
   }
 
-  drawWinScreen(img) {
-    const ctx = this.ctx;
-    const canvas = this.canvas;
+  // drawWinScreen(img) {
+  //   const ctx = this.ctx;
+  //   const canvas = this.canvas;
 
+  //   const maxWidth = canvas.width * 0.6;
+  //   const maxHeight = canvas.height * 0.3;
+
+  //   let imgWidth = img.width;
+  //   let imgHeight = img.height;
+
+  //   const widthRatio = maxWidth / imgWidth;
+  //   const heightRatio = maxHeight / imgHeight;
+  //   const scale = Math.min(widthRatio, heightRatio);
+
+  //   imgWidth *= scale;
+  //   imgHeight *= scale;
+
+  //   const imgX = canvas.width / 2 - imgWidth / 2;
+  //   const imgY = canvas.height / 2 - imgHeight - 40;
+
+  //   ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+
+  //   const buttonWidth = 250;
+  //   const buttonHeight = 60;
+  //   const buttonX = canvas.width / 2 - buttonWidth / 2;
+  //   const buttonY = canvas.height / 2;
+
+  //   ctx.fillStyle = "#44cc44";
+  //   ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+  //   ctx.font = "24px Comic Sans MS";
+  //   ctx.fillStyle = "white";
+  //   ctx.textAlign = "center";
+  //   ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
+
+  //   this.restartButtonArea = {
+  //     x: buttonX,
+  //     y: buttonY,
+  //     width: buttonWidth,
+  //     height: buttonHeight,
+  //   };
+
+  //   if (!this.canvasClickListenerAdded) {
+  //     canvas.addEventListener("click", this.handleCanvasClick.bind(this));
+  //     this.canvasClickListenerAdded = true;
+  //   }
+  // }
+
+  // showGameOverScreen() {
+  //   const ctx = this.ctx;
+  //   const canvas = this.canvas;
+
+  //   if (!this.gameOverSound) {
+  //     this.gameOverSound = new Audio("audio/gameover.mp3");
+  //     this.gameOverSound.volume = 0.6;
+  //   }
+
+  //   if (soundEnabled) {
+  //     this.gameOverSound.currentTime = 0;
+  //     this.gameOverSound.play().catch(() => {});
+  //   }
+
+  //   ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+  //   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  //   const img = new Image();
+  //   img.src = "img/You won, you lost/Game Over.png";
+
+  //   img.onload = () => {
+  //     const maxWidth = canvas.width * 0.6;
+  //     const maxHeight = canvas.height * 0.3;
+
+  //     let imgWidth = img.width;
+  //     let imgHeight = img.height;
+
+  //     const widthRatio = maxWidth / imgWidth;
+  //     const heightRatio = maxHeight / imgHeight;
+  //     const scale = Math.min(widthRatio, heightRatio);
+
+  //     imgWidth *= scale;
+  //     imgHeight *= scale;
+
+  //     const imgX = canvas.width / 2 - imgWidth / 2;
+  //     const imgY = canvas.height / 2 - imgHeight - 40;
+
+  //     ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+
+  //     const buttonWidth = 250;
+  //     const buttonHeight = 60;
+  //     const buttonX = canvas.width / 2 - buttonWidth / 2;
+  //     const buttonY = canvas.height / 2;
+
+  //     ctx.fillStyle = "#fca534ff";
+  //     ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+  //     ctx.font = "24px Comic Sans MS";
+  //     ctx.fillStyle = "white";
+  //     ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
+
+  //     this.restartButtonArea = {
+  //       x: buttonX,
+  //       y: buttonY,
+  //       width: buttonWidth,
+  //       height: buttonHeight,
+  //     };
+
+  //     if (!this.canvasClickListenerAdded) {
+  //       canvas.addEventListener("click", this.handleCanvasClick.bind(this));
+  //       this.canvasClickListenerAdded = true;
+  //     }
+  //   };
+  // }
+  drawWinScreen(img) {
+  const ctx = this.ctx;
+  const canvas = this.canvas;
+
+  const maxWidth = canvas.width * 0.6;
+  const maxHeight = canvas.height * 0.3;
+
+  let imgWidth = img.width;
+  let imgHeight = img.height;
+
+  const widthRatio = maxWidth / imgWidth;
+  const heightRatio = maxHeight / imgHeight;
+  const scale = Math.min(widthRatio, heightRatio);
+
+  imgWidth *= scale;
+  imgHeight *= scale;
+
+  const imgX = canvas.width / 2 - imgWidth / 2;
+  const imgY = canvas.height / 2 - imgHeight - 40;
+
+  ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+
+  const buttonWidth = 250;
+  const buttonHeight = 60;
+  const buttonX = canvas.width / 2 - buttonWidth / 2;
+  const buttonY = canvas.height / 2;
+
+  ctx.fillStyle = "#44cc44";
+  ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+  ctx.font = "24px Comic Sans MS";
+  ctx.fillStyle = "white";
+  ctx.textAlign = "center";
+  ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
+
+  this.restartButtonArea = {
+    x: buttonX,
+    y: buttonY,
+    width: buttonWidth,
+    height: buttonHeight,
+  };
+
+  if (!this.canvasClickListenerAdded) {
+    const boundHandler = this.handleCanvasClick.bind(this);
+    canvas.addEventListener("click", boundHandler);
+    canvas.addEventListener("touchstart", boundHandler, { passive: false });
+    canvas.addEventListener("pointerdown", boundHandler);
+    this.canvasClickListenerAdded = true;
+  }
+}
+
+
+  showGameOverScreen() {
+  const ctx = this.ctx;
+  const canvas = this.canvas;
+
+  if (!this.gameOverSound) {
+    this.gameOverSound = new Audio("audio/gameover.mp3");
+    this.gameOverSound.volume = 0.6;
+  }
+
+  if (soundEnabled) {
+    this.gameOverSound.currentTime = 0;
+    this.gameOverSound.play().catch(() => {});
+  }
+
+  ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const img = new Image();
+  img.src = "img/You won, you lost/Game Over.png";
+
+  img.onload = () => {
     const maxWidth = canvas.width * 0.6;
     const maxHeight = canvas.height * 0.3;
 
@@ -493,7 +674,7 @@ class World {
     const buttonX = canvas.width / 2 - buttonWidth / 2;
     const buttonY = canvas.height / 2;
 
-    ctx.fillStyle = "#44cc44";
+    ctx.fillStyle = "#fca534ff";
     ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
 
     ctx.font = "24px Comic Sans MS";
@@ -509,94 +690,65 @@ class World {
     };
 
     if (!this.canvasClickListenerAdded) {
-      canvas.addEventListener("click", this.handleCanvasClick.bind(this));
+      const boundHandler = this.handleCanvasClick.bind(this);
+      canvas.addEventListener("click", boundHandler);
+      canvas.addEventListener("touchstart", boundHandler, { passive: false });
+      canvas.addEventListener("pointerdown", boundHandler);
       this.canvasClickListenerAdded = true;
     }
-  }
+  };
+}
 
-  showGameOverScreen() {
-    const ctx = this.ctx;
-    const canvas = this.canvas;
+  // handleCanvasClick(event) {
+  //   if (!this.restartButtonArea) return;
 
-    if (!this.gameOverSound) {
-      this.gameOverSound = new Audio("audio/gameover.mp3");
-      this.gameOverSound.volume = 0.6;
-    }
+  //   const rect = this.canvas.getBoundingClientRect();
+  //   const clickX = event.clientX - rect.left;
+  //   const clickY = event.clientY - rect.top;
 
-    if (soundEnabled) {
-      this.gameOverSound.currentTime = 0;
-      this.gameOverSound.play().catch(() => {});
-    }
+  //   const btn = this.restartButtonArea;
 
-    ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    const img = new Image();
-    img.src = "img/You won, you lost/Game Over.png";
-
-    img.onload = () => {
-      const maxWidth = canvas.width * 0.6;
-      const maxHeight = canvas.height * 0.3;
-
-      let imgWidth = img.width;
-      let imgHeight = img.height;
-
-      const widthRatio = maxWidth / imgWidth;
-      const heightRatio = maxHeight / imgHeight;
-      const scale = Math.min(widthRatio, heightRatio);
-
-      imgWidth *= scale;
-      imgHeight *= scale;
-
-      const imgX = canvas.width / 2 - imgWidth / 2;
-      const imgY = canvas.height / 2 - imgHeight - 40;
-
-      ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-
-      const buttonWidth = 250;
-      const buttonHeight = 60;
-      const buttonX = canvas.width / 2 - buttonWidth / 2;
-      const buttonY = canvas.height / 2;
-
-      ctx.fillStyle = "#fca534ff";
-      ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-      ctx.font = "24px Comic Sans MS";
-      ctx.fillStyle = "white";
-      ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
-
-      this.restartButtonArea = {
-        x: buttonX,
-        y: buttonY,
-        width: buttonWidth,
-        height: buttonHeight,
-      };
-
-      if (!this.canvasClickListenerAdded) {
-        canvas.addEventListener("click", this.handleCanvasClick.bind(this));
-        this.canvasClickListenerAdded = true;
-      }
-    };
-  }
-
+  //   if (
+  //     clickX >= btn.x &&
+  //     clickX <= btn.x + btn.width &&
+  //     clickY >= btn.y &&
+  //     clickY <= btn.y + btn.height
+  //   ) {
+  //     location.reload();
+  //   }
+  // }
   handleCanvasClick(event) {
-    if (!this.restartButtonArea) return;
+  if (!this.restartButtonArea) return;
 
-    const rect = this.canvas.getBoundingClientRect();
-    const clickX = event.clientX - rect.left;
-    const clickY = event.clientY - rect.top;
+  const rect = this.canvas.getBoundingClientRect();
+  const scaleX = this.canvas.width / rect.width;
+  const scaleY = this.canvas.height / rect.height;
 
-    const btn = this.restartButtonArea;
-
-    if (
-      clickX >= btn.x &&
-      clickX <= btn.x + btn.width &&
-      clickY >= btn.y &&
-      clickY <= btn.y + btn.height
-    ) {
-      location.reload();
-    }
+  let clientX, clientY;
+  if (event.touches && event.touches[0]) {
+    clientX = event.touches[0].clientX;
+    clientY = event.touches[0].clientY;
+  } else if (event.changedTouches && event.changedTouches[0]) {
+    clientX = event.changedTouches[0].clientX;
+    clientY = event.changedTouches[0].clientY;
+  } else {
+    clientX = event.clientX;
+    clientY = event.clientY;
   }
+
+  const clickX = (clientX - rect.left) * scaleX;
+  const clickY = (clientY - rect.top) * scaleY;
+
+  const btn = this.restartButtonArea;
+  if (
+    clickX >= btn.x &&
+    clickX <= btn.x + btn.width &&
+    clickY >= btn.y &&
+    clickY <= btn.y + btn.height
+  ) {
+    location.reload();
+  }
+}
 
   toggleSound(enabled) {
     if (this.character?.jumpSound) {
