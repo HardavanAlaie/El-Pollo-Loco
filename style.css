@@ -1,12 +1,13 @@
 /* Grundlayout */
 body {
   display: flex;
-  justify-content: center;   /* horizontal zentrieren */
-  align-items: center;       /* vertikal zentrieren */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   margin: 0;
   padding: 0;
   height: 100vh;
-  /* width: 100vw; */
+  width: 100vw;
   font-family: 'myFont', sans-serif;
   overflow: hidden;
 }
@@ -32,10 +33,10 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;  /* Inhalt zentrieren */
-  position: relative;
+  justify-content: flex-start;
+  height: 100%;
   width: 100%;
-  height: auto;
+  position: relative;
 }
 
 /* Titel */
@@ -51,15 +52,13 @@ body::before {
 /* Canvas */
 #canvas {
   max-width: 100%;
-  max-height: 80vh; /* Platz für Titel + Buttons */
+  max-height: 80vh; /* lässt Platz für Titel + Buttons */
   width: auto;
   height: auto;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   background-color: black;
-  display: block;
-  margin: auto;
 }
 
 /* Buttons oben rechts IM Canvas */
@@ -150,7 +149,7 @@ body::before {
   }
 }
 
-/* Landscape (quer Handy) → Canvas füllt Höhe */
+/* Landscape (z. B. Handy quer) → Canvas füllt Höhe */
 @media only screen and (max-height: 480px) {
   #canvas {
     height: 100vh;
@@ -159,11 +158,11 @@ body::before {
   }
 
   #game-wrapper h1 {
-    display: none; /* Titel ausblenden */
+    display: none; /* Titel ausblenden, damit mehr Platz */
   }
 }
 
-/* Overlay */
+/* Overlay (z. B. Anleitung) */
 .overlay {
   position: fixed;
   top: 0;

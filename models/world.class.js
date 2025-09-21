@@ -29,16 +29,59 @@ class World {
   collectableBottles = this.level.collectableObjects || [];
   collectableCoins = this.level.collectableCoins || [];
 
+  // constructor(canvas, keyboard) {
+  //   this.ctx = canvas.getContext("2d");
+  //   this.canvas = canvas;
+  //   this.keyboard = keyboard;
+
+  //   //this.mobileButtons = []; // 👉 Array vorbereiten
+
+  //   this.currentLevelIndex = 0;
+
+  //   this.level = level1(this);
+
+  //   this.character = new Character(this);
+  //   this.enemies = this.level.enemies;
+  //   this.clouds = this.level.clouds;
+  //   this.backgroundObjects = this.level.backgroundObjects;
+  //   this.collectableBottles = this.level.collectableObjects || [];
+  //   this.collectableCoins = this.level.collectableCoins || [];
+  //   this.levelEnded = false;
+
+  //   this.setWorld();
+  //   this.setupCanvasControls(); // 👉 erst Eventlistener
+  //   this.draw();
+  //   this.run();
+
+  //   //this.setupCanvasControls();
+  // }
+  //   constructor(canvas, keyboard) {
+  //   this.ctx = canvas.getContext("2d");
+  //   this.canvas = canvas;
+  //   this.keyboard = keyboard;
+
+  //   this.currentLevelIndex = 0;
+  //   this.level = level1(this);
+
+  //   this.character = new Character(this);
+  //   this.enemies = this.level.enemies;
+  //   this.clouds = this.level.clouds;
+  //   this.backgroundObjects = this.level.backgroundObjects;
+  //   this.collectableBottles = this.level.collectableObjects || [];
+  //   this.collectableCoins = this.level.collectableCoins || [];
+  //   this.levelEnded = false;
+
+  //   this.setWorld();
+  //   this.setupCanvasControls(); // ✅ einmal aufrufen
+  //   this.draw();
+  //   this.run();
+  // }
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
 
-    this.mobileButtons = []; // 👉 Array vorbereiten
-
-
     this.currentLevelIndex = 0;
-
     this.level = level1(this);
 
     this.character = new Character(this);
@@ -49,14 +92,13 @@ class World {
     this.collectableCoins = this.level.collectableCoins || [];
     this.levelEnded = false;
 
-    
     this.setWorld();
-    this.setupCanvasControls(); // 👉 erst Eventlistener
+
+    // 👇 GANZ WICHTIG: nur EINMAL registrieren!
+    this.setupCanvasControls();
+
     this.draw();
     this.run();
-
-    
-    this.setupCanvasControls();
   }
 
   setWorld() {
@@ -579,78 +621,9 @@ class World {
   //   };
   // }
   drawWinScreen(img) {
-  const ctx = this.ctx;
-  const canvas = this.canvas;
+    const ctx = this.ctx;
+    const canvas = this.canvas;
 
-  const maxWidth = canvas.width * 0.6;
-  const maxHeight = canvas.height * 0.3;
-
-  let imgWidth = img.width;
-  let imgHeight = img.height;
-
-  const widthRatio = maxWidth / imgWidth;
-  const heightRatio = maxHeight / imgHeight;
-  const scale = Math.min(widthRatio, heightRatio);
-
-  imgWidth *= scale;
-  imgHeight *= scale;
-
-  const imgX = canvas.width / 2 - imgWidth / 2;
-  const imgY = canvas.height / 2 - imgHeight - 40;
-
-  ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-
-  const buttonWidth = 250;
-  const buttonHeight = 60;
-  const buttonX = canvas.width / 2 - buttonWidth / 2;
-  const buttonY = canvas.height / 2;
-
-  ctx.fillStyle = "#44cc44";
-  ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-  ctx.font = "24px Comic Sans MS";
-  ctx.fillStyle = "white";
-  ctx.textAlign = "center";
-  ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
-
-  this.restartButtonArea = {
-    x: buttonX,
-    y: buttonY,
-    width: buttonWidth,
-    height: buttonHeight,
-  };
-
-  if (!this.canvasClickListenerAdded) {
-    const boundHandler = this.handleCanvasClick.bind(this);
-    canvas.addEventListener("click", boundHandler);
-    canvas.addEventListener("touchstart", boundHandler, { passive: false });
-    canvas.addEventListener("pointerdown", boundHandler);
-    this.canvasClickListenerAdded = true;
-  }
-}
-
-
-  showGameOverScreen() {
-  const ctx = this.ctx;
-  const canvas = this.canvas;
-
-  if (!this.gameOverSound) {
-    this.gameOverSound = new Audio("audio/gameover.mp3");
-    this.gameOverSound.volume = 0.6;
-  }
-
-  if (soundEnabled) {
-    this.gameOverSound.currentTime = 0;
-    this.gameOverSound.play().catch(() => {});
-  }
-
-  ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  const img = new Image();
-  img.src = "img/You won, you lost/Game Over.png";
-
-  img.onload = () => {
     const maxWidth = canvas.width * 0.6;
     const maxHeight = canvas.height * 0.3;
 
@@ -674,7 +647,7 @@ class World {
     const buttonX = canvas.width / 2 - buttonWidth / 2;
     const buttonY = canvas.height / 2;
 
-    ctx.fillStyle = "#fca534ff";
+    ctx.fillStyle = "#44cc44";
     ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
 
     ctx.font = "24px Comic Sans MS";
@@ -696,8 +669,76 @@ class World {
       canvas.addEventListener("pointerdown", boundHandler);
       this.canvasClickListenerAdded = true;
     }
-  };
-}
+  }
+
+  showGameOverScreen() {
+    const ctx = this.ctx;
+    const canvas = this.canvas;
+
+    if (!this.gameOverSound) {
+      this.gameOverSound = new Audio("audio/gameover.mp3");
+      this.gameOverSound.volume = 0.6;
+    }
+
+    if (soundEnabled) {
+      this.gameOverSound.currentTime = 0;
+      this.gameOverSound.play().catch(() => {});
+    }
+
+    ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const img = new Image();
+    img.src = "img/You won, you lost/Game Over.png";
+
+    img.onload = () => {
+      const maxWidth = canvas.width * 0.6;
+      const maxHeight = canvas.height * 0.3;
+
+      let imgWidth = img.width;
+      let imgHeight = img.height;
+
+      const widthRatio = maxWidth / imgWidth;
+      const heightRatio = maxHeight / imgHeight;
+      const scale = Math.min(widthRatio, heightRatio);
+
+      imgWidth *= scale;
+      imgHeight *= scale;
+
+      const imgX = canvas.width / 2 - imgWidth / 2;
+      const imgY = canvas.height / 2 - imgHeight - 40;
+
+      ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+
+      const buttonWidth = 250;
+      const buttonHeight = 60;
+      const buttonX = canvas.width / 2 - buttonWidth / 2;
+      const buttonY = canvas.height / 2;
+
+      ctx.fillStyle = "#fca534ff";
+      ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+      ctx.font = "24px Comic Sans MS";
+      ctx.fillStyle = "white";
+      ctx.textAlign = "center";
+      ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
+
+      this.restartButtonArea = {
+        x: buttonX,
+        y: buttonY,
+        width: buttonWidth,
+        height: buttonHeight,
+      };
+
+      if (!this.canvasClickListenerAdded) {
+        const boundHandler = this.handleCanvasClick.bind(this);
+        canvas.addEventListener("click", boundHandler);
+        canvas.addEventListener("touchstart", boundHandler, { passive: false });
+        canvas.addEventListener("pointerdown", boundHandler);
+        this.canvasClickListenerAdded = true;
+      }
+    };
+  }
 
   // handleCanvasClick(event) {
   //   if (!this.restartButtonArea) return;
@@ -718,37 +759,37 @@ class World {
   //   }
   // }
   handleCanvasClick(event) {
-  if (!this.restartButtonArea) return;
+    if (!this.restartButtonArea) return;
 
-  const rect = this.canvas.getBoundingClientRect();
-  const scaleX = this.canvas.width / rect.width;
-  const scaleY = this.canvas.height / rect.height;
+    const rect = this.canvas.getBoundingClientRect();
+    const scaleX = this.canvas.width / rect.width;
+    const scaleY = this.canvas.height / rect.height;
 
-  let clientX, clientY;
-  if (event.touches && event.touches[0]) {
-    clientX = event.touches[0].clientX;
-    clientY = event.touches[0].clientY;
-  } else if (event.changedTouches && event.changedTouches[0]) {
-    clientX = event.changedTouches[0].clientX;
-    clientY = event.changedTouches[0].clientY;
-  } else {
-    clientX = event.clientX;
-    clientY = event.clientY;
+    let clientX, clientY;
+    if (event.touches && event.touches[0]) {
+      clientX = event.touches[0].clientX;
+      clientY = event.touches[0].clientY;
+    } else if (event.changedTouches && event.changedTouches[0]) {
+      clientX = event.changedTouches[0].clientX;
+      clientY = event.changedTouches[0].clientY;
+    } else {
+      clientX = event.clientX;
+      clientY = event.clientY;
+    }
+
+    const clickX = (clientX - rect.left) * scaleX;
+    const clickY = (clientY - rect.top) * scaleY;
+
+    const btn = this.restartButtonArea;
+    if (
+      clickX >= btn.x &&
+      clickX <= btn.x + btn.width &&
+      clickY >= btn.y &&
+      clickY <= btn.y + btn.height
+    ) {
+      location.reload();
+    }
   }
-
-  const clickX = (clientX - rect.left) * scaleX;
-  const clickY = (clientY - rect.top) * scaleY;
-
-  const btn = this.restartButtonArea;
-  if (
-    clickX >= btn.x &&
-    clickX <= btn.x + btn.width &&
-    clickY >= btn.y &&
-    clickY <= btn.y + btn.height
-  ) {
-    location.reload();
-  }
-}
 
   toggleSound(enabled) {
     if (this.character?.jumpSound) {
@@ -824,16 +865,28 @@ class World {
 
     this.ctx.translate(-this.camera_x, 0);
 
-    // 👉 Mobile Controls ins Canvas zeichnen
-    this.drawMobileControls();
+    // ... dein draw(), ganz am Ende, NACH translate(-this.camera_x, 0)
+    this.drawMobileControls(); // deine Gamepad-Buttons unten
+    this.drawUIButtons(); // NEU: Fullscreen/Sound/Anleitung oben rechts
 
     if (!this.playerDied && !this.endbossDefeated) {
       this.animationFrame = requestAnimationFrame(() => this.draw());
     }
 
-    //   if (this.mobileButtons) {
-    // this.drawMobileControls();
-    //}
+    // // // 👉 Mobile Controls ins Canvas zeichnen
+    // // this.drawMobileControls();
+
+    // if (!this.playerDied && !this.endbossDefeated) {
+    //   this.animationFrame = requestAnimationFrame(() => this.draw());
+    // }
+
+    // // 👇 am Ende deiner draw()-Methode aufrufen:
+    // this.drawMobileControls(); // (deine vorhandenen Steuer-Buttons)
+    // this.drawUIButtons(); // NEU: UI-Buttons oben rechts
+
+    // //   if (this.mobileButtons) {
+    // // this.drawMobileControls();
+    // //}
   }
 
   // drawMobileControls() {
@@ -948,89 +1001,222 @@ class World {
   //     ctx.fillText(btn.label, btn.x + btn.w / 2, btn.y + btn.h / 2);
   //   });
   // }
-//   drawMobileControls() {
-//   const ctx = this.ctx;
-//   const canvas = this.canvas;
+  //   drawMobileControls() {
+  //   const ctx = this.ctx;
+  //   const canvas = this.canvas;
 
-//   const size = 60;      // Button-Größe
-//   const padding = 15;   // Abstand vom Rand
+  //   const size = 60;      // Button-Größe
+  //   const padding = 15;   // Abstand vom Rand
 
-//   // Links unten
-//   const leftBtn = { x: padding, y: canvas.height - size - padding, w: size, h: size, key: "LEFT", label: "⬅️" };
-//   const rightBtn = { x: padding + size + 10, y: canvas.height - size - padding, w: size, h: size, key: "RIGHT", label: "➡️" };
+  //   // Links unten
+  //   const leftBtn = { x: padding, y: canvas.height - size - padding, w: size, h: size, key: "LEFT", label: "⬅️" };
+  //   const rightBtn = { x: padding + size + 10, y: canvas.height - size - padding, w: size, h: size, key: "RIGHT", label: "➡️" };
 
-//   // Rechts unten
-//   const jumpBtn = { x: canvas.width - (size * 2 + padding + 10), y: canvas.height - size - padding, w: size, h: size, key: "UP", label: "⤴️" };
-//   const throwBtn = { x: canvas.width - (size + padding), y: canvas.height - size - padding, w: size, h: size, key: "D", label: "🧴" };
+  //   // Rechts unten
+  //   const jumpBtn = { x: canvas.width - (size * 2 + padding + 10), y: canvas.height - size - padding, w: size, h: size, key: "UP", label: "⤴️" };
+  //   const throwBtn = { x: canvas.width - (size + padding), y: canvas.height - size - padding, w: size, h: size, key: "D", label: "🧴" };
 
-//   // 👉 Buttons merken für Klicks
-//   this.mobileButtons = [leftBtn, rightBtn, jumpBtn, throwBtn];
+  //   // 👉 Buttons merken für Klicks
+  //   this.mobileButtons = [leftBtn, rightBtn, jumpBtn, throwBtn];
 
-//   this.mobileButtons.forEach(btn => {
-//     // Button-Hintergrund
-//     ctx.fillStyle = "rgba(0,0,0,0.5)";
-//     ctx.beginPath();
-//     ctx.arc(btn.x + btn.w / 2, btn.y + btn.h / 2, btn.w / 2, 0, Math.PI * 2);
-//     ctx.fill();
+  //   this.mobileButtons.forEach(btn => {
+  //     // Button-Hintergrund
+  //     ctx.fillStyle = "rgba(0,0,0,0.5)";
+  //     ctx.beginPath();
+  //     ctx.arc(btn.x + btn.w / 2, btn.y + btn.h / 2, btn.w / 2, 0, Math.PI * 2);
+  //     ctx.fill();
 
-//     // Symbol in der Mitte
-//     ctx.font = "28px Comic Sans MS";
-//     ctx.fillStyle = "white";
-//     ctx.textAlign = "center";
-//     ctx.textBaseline = "middle";
-//     ctx.fillText(btn.label, btn.x + btn.w / 2, btn.y + btn.h / 2);
-//   });
-// }
-// drawMobileControls() {
-//   const ctx = this.ctx;
-//   const h = this.canvas.height;
-//   const w = this.canvas.width;
+  //     // Symbol in der Mitte
+  //     ctx.font = "28px Comic Sans MS";
+  //     ctx.fillStyle = "white";
+  //     ctx.textAlign = "center";
+  //     ctx.textBaseline = "middle";
+  //     ctx.fillText(btn.label, btn.x + btn.w / 2, btn.y + btn.h / 2);
+  //   });
+  // }
+  // drawMobileControls() {
+  //   const ctx = this.ctx;
+  //   const h = this.canvas.height;
+  //   const w = this.canvas.width;
 
-//   ctx.font = "32px Comic Sans MS";
-//   ctx.textAlign = "center";
-//   ctx.textBaseline = "middle";
+  //   ctx.font = "32px Comic Sans MS";
+  //   ctx.textAlign = "center";
+  //   ctx.textBaseline = "middle";
 
-//   // 🎮 Links
-//   this.leftBtnArea = { x: 30, y: h - 80, width: 60, height: 60 };
-//   ctx.fillStyle = "rgba(0,0,0,0.5)";
-//   ctx.fillRect(this.leftBtnArea.x, this.leftBtnArea.y, this.leftBtnArea.width, this.leftBtnArea.height);
-//   ctx.fillStyle = "white";
-//   ctx.fillText("⬅️", this.leftBtnArea.x + this.leftBtnArea.width / 2, this.leftBtnArea.y + this.leftBtnArea.height / 2);
+  //   // 🎮 Links
+  //   this.leftBtnArea = { x: 30, y: h - 80, width: 60, height: 60 };
+  //   ctx.fillStyle = "rgba(0,0,0,0.5)";
+  //   ctx.fillRect(this.leftBtnArea.x, this.leftBtnArea.y, this.leftBtnArea.width, this.leftBtnArea.height);
+  //   ctx.fillStyle = "white";
+  //   ctx.fillText("⬅️", this.leftBtnArea.x + this.leftBtnArea.width / 2, this.leftBtnArea.y + this.leftBtnArea.height / 2);
 
-//   // 🎮 Rechts
-//   this.rightBtnArea = { x: 110, y: h - 80, width: 60, height: 60 };
-//   ctx.fillStyle = "rgba(0,0,0,0.5)";
-//   ctx.fillRect(this.rightBtnArea.x, this.rightBtnArea.y, this.rightBtnArea.width, this.rightBtnArea.height);
-//   ctx.fillStyle = "white";
-//   ctx.fillText("➡️", this.rightBtnArea.x + this.rightBtnArea.width / 2, this.rightBtnArea.y + this.rightBtnArea.height / 2);
+  //   // 🎮 Rechts
+  //   this.rightBtnArea = { x: 110, y: h - 80, width: 60, height: 60 };
+  //   ctx.fillStyle = "rgba(0,0,0,0.5)";
+  //   ctx.fillRect(this.rightBtnArea.x, this.rightBtnArea.y, this.rightBtnArea.width, this.rightBtnArea.height);
+  //   ctx.fillStyle = "white";
+  //   ctx.fillText("➡️", this.rightBtnArea.x + this.rightBtnArea.width / 2, this.rightBtnArea.y + this.rightBtnArea.height / 2);
 
-//   // 🟢 Springen
-//   this.jumpBtnArea = { x: w - 140, y: h - 80, width: 60, height: 60 };
-//   ctx.fillStyle = "rgba(0,0,0,0.5)";
-//   ctx.fillRect(this.jumpBtnArea.x, this.jumpBtnArea.y, this.jumpBtnArea.width, this.jumpBtnArea.height);
-//   ctx.fillStyle = "white";
-//   ctx.fillText("⤴️", this.jumpBtnArea.x + this.jumpBtnArea.width / 2, this.jumpBtnArea.y + this.jumpBtnArea.height / 2);
+  //   // 🟢 Springen
+  //   this.jumpBtnArea = { x: w - 140, y: h - 80, width: 60, height: 60 };
+  //   ctx.fillStyle = "rgba(0,0,0,0.5)";
+  //   ctx.fillRect(this.jumpBtnArea.x, this.jumpBtnArea.y, this.jumpBtnArea.width, this.jumpBtnArea.height);
+  //   ctx.fillStyle = "white";
+  //   ctx.fillText("⤴️", this.jumpBtnArea.x + this.jumpBtnArea.width / 2, this.jumpBtnArea.y + this.jumpBtnArea.height / 2);
 
-//   // 🧴 Werfen
-//   this.throwBtnArea = { x: w - 60, y: h - 80, width: 60, height: 60 };
-//   ctx.fillStyle = "rgba(0,0,0,0.5)";
-//   ctx.fillRect(this.throwBtnArea.x, this.throwBtnArea.y, this.throwBtnArea.width, this.throwBtnArea.height);
-//   ctx.fillStyle = "white";
-//   ctx.fillText("🧴", this.throwBtnArea.x + this.throwBtnArea.width / 2, this.throwBtnArea.y + this.throwBtnArea.height / 2);
-// }
-drawMobileControls() {
+  //   // 🧴 Werfen
+  //   this.throwBtnArea = { x: w - 60, y: h - 80, width: 60, height: 60 };
+  //   ctx.fillStyle = "rgba(0,0,0,0.5)";
+  //   ctx.fillRect(this.throwBtnArea.x, this.throwBtnArea.y, this.throwBtnArea.width, this.throwBtnArea.height);
+  //   ctx.fillStyle = "white";
+  //   ctx.fillText("🧴", this.throwBtnArea.x + this.throwBtnArea.width / 2, this.throwBtnArea.y + this.throwBtnArea.height / 2);
+  // }
+  // drawMobileControls() {
+  //   const ctx = this.ctx,
+  //     w = this.canvas.width,
+  //     h = this.canvas.height;
+  //   ctx.font = "32px Comic Sans MS";
+  //   ctx.textAlign = "center";
+  //   ctx.textBaseline = "middle";
+
+  //   this.leftBtnArea = { x: 30, y: h - 80, width: 60, height: 60, label: "⬅️" };
+  //   this.rightBtnArea = {
+  //     x: 100,
+  //     y: h - 80,
+  //     width: 60,
+  //     height: 60,
+  //     label: "➡️",
+  //   };
+  //   this.jumpBtnArea = {
+  //     x: w - 140,
+  //     y: h - 80,
+  //     width: 60,
+  //     height: 60,
+  //     label: "⤴️",
+  //   };
+  //   this.throwBtnArea = {
+  //     x: w - 60,
+  //     y: h - 80,
+  //     width: 60,
+  //     height: 60,
+  //     label: "🧴",
+  //   };
+
+  //   [
+  //     this.leftBtnArea,
+  //     this.rightBtnArea,
+  //     this.jumpBtnArea,
+  //     this.throwBtnArea,
+  //   ].forEach((btn) => {
+  //     ctx.fillStyle = "rgba(0,0,0,0.5)";
+  //     ctx.beginPath();
+  //     ctx.arc(
+  //       btn.x + btn.width / 2,
+  //       btn.y + btn.height / 2,
+  //       btn.width / 2,
+  //       0,
+  //       Math.PI * 2
+  //     );
+  //     ctx.fill();
+
+  //     ctx.fillStyle = "white";
+  //     ctx.fillText(btn.label, btn.x + btn.width / 2, btn.y + btn.height / 2);
+  //   });
+  // }
+
+  // // NEU
+  // drawUIButtons() {
+  //   const ctx = this.ctx;
+  //   const w = this.canvas.width;
+
+  //   ctx.font = "22px Comic Sans MS";
+  //   ctx.textAlign = "center";
+  //   ctx.textBaseline = "middle";
+
+  //   // Bereiche definieren (rund gezeichnet, rechteckig geklickt)
+  //   this.fullscreenBtnArea = {
+  //     x: w - 180,
+  //     y: 20,
+  //     width: 50,
+  //     height: 50,
+  //     label: "🖥️",
+  //   };
+  //   this.soundBtnArea = {
+  //     x: w - 120,
+  //     y: 20,
+  //     width: 50,
+  //     height: 50,
+  //     label: window.soundEnabled ? "🔊" : "🔇",
+  //   };
+  //   this.instrBtnArea = {
+  //     x: w - 60,
+  //     y: 20,
+  //     width: 50,
+  //     height: 50,
+  //     label: "📖",
+  //   };
+
+  //   [this.fullscreenBtnArea, this.soundBtnArea, this.instrBtnArea].forEach(
+  //     (btn) => {
+  //       // runder Button
+  //       ctx.fillStyle = "rgba(0,0,0,0.6)";
+  //       ctx.beginPath();
+  //       ctx.arc(
+  //         btn.x + btn.width / 2,
+  //         btn.y + btn.height / 2,
+  //         btn.width / 2,
+  //         0,
+  //         Math.PI * 2
+  //       );
+  //       ctx.fill();
+
+  //       // Icon
+  //       ctx.fillStyle = "white";
+  //       ctx.fillText(btn.label, btn.x + btn.width / 2, btn.y + btn.height / 2);
+  //     }
+  //   );
+  // }
+
+  drawMobileControls() {
   const ctx = this.ctx, w = this.canvas.width, h = this.canvas.height;
+
   ctx.font = "32px Comic Sans MS";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
-  this.leftBtnArea  = { x: 30,     y: h - 80, width: 60, height: 60, label: "⬅️" };
-  this.rightBtnArea = { x: 100,    y: h - 80, width: 60, height: 60, label: "➡️" };
-  this.jumpBtnArea  = { x: w - 140,y: h - 80, width: 60, height: 60, label: "⤴️" };
-  this.throwBtnArea = { x: w - 60, y: h - 80, width: 60, height: 60, label: "🧴" };
+  // Steuer-Buttons (Klickflächen merken)
+  this.leftBtnArea  = { x: 30,      y: h - 80, width: 60, height: 60, label: "⬅️" };
+  this.rightBtnArea = { x: 100,     y: h - 80, width: 60, height: 60, label: "➡️" };
+  this.jumpBtnArea  = { x: w - 140, y: h - 80, width: 60, height: 60, label: "⤴️" };
+  this.throwBtnArea = { x: w - 60,  y: h - 80, width: 60, height: 60, label: "🧴" };
 
   [this.leftBtnArea, this.rightBtnArea, this.jumpBtnArea, this.throwBtnArea].forEach(btn => {
+    // runder Button
     ctx.fillStyle = "rgba(0,0,0,0.5)";
+    ctx.beginPath();
+    ctx.arc(btn.x + btn.width/2, btn.y + btn.height/2, btn.width/2, 0, Math.PI*2);
+    ctx.fill();
+
+    // Icon
+    ctx.fillStyle = "white";
+    ctx.fillText(btn.label, btn.x + btn.width/2, btn.y + btn.height/2);
+  });
+}
+
+drawUIButtons() {
+  const ctx = this.ctx, w = this.canvas.width;
+
+  ctx.font = "22px Comic Sans MS";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  // UI Buttons oben rechts
+  this.fullscreenBtnArea = { x: w - 180, y: 20, width: 50, height: 50, label: "🖥️" };
+  this.soundBtnArea      = { x: w - 120, y: 20, width: 50, height: 50, label: (window.soundEnabled ? "🔊" : "🔇") };
+  this.instrBtnArea      = { x: w -  60, y: 20, width: 50, height: 50, label: "📖" };
+
+  [this.fullscreenBtnArea, this.soundBtnArea, this.instrBtnArea].forEach(btn => {
+    ctx.fillStyle = "rgba(0,0,0,0.6)";
     ctx.beginPath();
     ctx.arc(btn.x + btn.width/2, btn.y + btn.height/2, btn.width/2, 0, Math.PI*2);
     ctx.fill();
@@ -1041,115 +1227,304 @@ drawMobileControls() {
 }
 
 
+  //   setupCanvasControls() {
+  //     this.canvas.addEventListener("click", (e) => {
+  //       const rect = this.canvas.getBoundingClientRect();
+  //       const x = e.clientX - rect.left;
+  //       const y = e.clientY - rect.top;
 
+  //       this.mobileButtons.forEach(btn => {
+  //         if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
+  //           this.keyboard[btn.key] = true;
+  //           setTimeout(() => (this.keyboard[btn.key] = false), 200);
+  //         }
+  //       });
+  //     });
 
-//   setupCanvasControls() {
-//     this.canvas.addEventListener("click", (e) => {
-//       const rect = this.canvas.getBoundingClientRect();
-//       const x = e.clientX - rect.left;
-//       const y = e.clientY - rect.top;
+  // }
+  // setupCanvasControls() {
+  //   this.canvas.addEventListener("click", (e) => {
+  //     const rect = this.canvas.getBoundingClientRect();
+  //     const x = e.clientX - rect.left;
+  //     const y = e.clientY - rect.top;
 
-//       this.mobileButtons.forEach(btn => {
-//         if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
-//           this.keyboard[btn.key] = true;
-//           setTimeout(() => (this.keyboard[btn.key] = false), 200);
-//         }
-//       });
-//     });
-  
-// }
-// setupCanvasControls() {
-//   this.canvas.addEventListener("click", (e) => {
-//     const rect = this.canvas.getBoundingClientRect();
-//     const x = e.clientX - rect.left;
-//     const y = e.clientY - rect.top;
+  //     this.mobileButtons.forEach(btn => {
+  //       if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
+  //         this.keyboard[btn.key] = true;
+  //         setTimeout(() => (this.keyboard[btn.key] = false), 150); // kurze Eingabe
+  //       }
+  //     });
+  //   });
+  // }
+  // setupCanvasControls() {
+  //   const handleDown = (x, y) => {
+  //     if (this.leftBtnArea && this.isInsideButton(x, y, this.leftBtnArea)) {
+  //       this.keyboard.LEFT = true;
+  //     }
+  //     if (this.rightBtnArea && this.isInsideButton(x, y, this.rightBtnArea)) {
+  //       this.keyboard.RIGHT = true;
+  //     }
+  //     if (this.jumpBtnArea && this.isInsideButton(x, y, this.jumpBtnArea)) {
+  //       this.keyboard.UP = true;
+  //     }
+  //     if (this.throwBtnArea && this.isInsideButton(x, y, this.throwBtnArea)) {
+  //       this.keyboard.D = true;
+  //     }
+  //   };
 
-//     this.mobileButtons.forEach(btn => {
-//       if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
-//         this.keyboard[btn.key] = true;
-//         setTimeout(() => (this.keyboard[btn.key] = false), 150); // kurze Eingabe
-//       }
-//     });
-//   });
-// }
-// setupCanvasControls() {
-//   const handleDown = (x, y) => {
-//     if (this.leftBtnArea && this.isInsideButton(x, y, this.leftBtnArea)) {
-//       this.keyboard.LEFT = true;
-//     }
-//     if (this.rightBtnArea && this.isInsideButton(x, y, this.rightBtnArea)) {
-//       this.keyboard.RIGHT = true;
-//     }
-//     if (this.jumpBtnArea && this.isInsideButton(x, y, this.jumpBtnArea)) {
-//       this.keyboard.UP = true;
-//     }
-//     if (this.throwBtnArea && this.isInsideButton(x, y, this.throwBtnArea)) {
-//       this.keyboard.D = true;
-//     }
-//   };
+  //   const handleUp = () => {
+  //     this.keyboard.LEFT = false;
+  //     this.keyboard.RIGHT = false;
+  //     this.keyboard.UP = false;
+  //     this.keyboard.D = false;
+  //   };
 
-//   const handleUp = () => {
-//     this.keyboard.LEFT = false;
-//     this.keyboard.RIGHT = false;
-//     this.keyboard.UP = false;
-//     this.keyboard.D = false;
-//   };
+  //   // 🖱️ Klick mit Maus
+  //   this.canvas.addEventListener("mousedown", (e) => {
+  //     const rect = this.canvas.getBoundingClientRect();
+  //     handleDown(e.clientX - rect.left, e.clientY - rect.top);
+  //   });
 
-//   // 🖱️ Klick mit Maus
-//   this.canvas.addEventListener("mousedown", (e) => {
-//     const rect = this.canvas.getBoundingClientRect();
-//     handleDown(e.clientX - rect.left, e.clientY - rect.top);
-//   });
+  //   this.canvas.addEventListener("mouseup", handleUp);
 
-//   this.canvas.addEventListener("mouseup", handleUp);
+  //   // 📱 Touch
+  //   this.canvas.addEventListener("touchstart", (e) => {
+  //     const rect = this.canvas.getBoundingClientRect();
+  //     for (let touch of e.touches) {
+  //       handleDown(touch.clientX - rect.left, touch.clientY - rect.top);
+  //     }
+  //     e.preventDefault();
+  //   }, { passive: false });
 
-//   // 📱 Touch
-//   this.canvas.addEventListener("touchstart", (e) => {
-//     const rect = this.canvas.getBoundingClientRect();
-//     for (let touch of e.touches) {
-//       handleDown(touch.clientX - rect.left, touch.clientY - rect.top);
-//     }
-//     e.preventDefault();
-//   }, { passive: false });
+  //   this.canvas.addEventListener("touchend", handleUp);
+  //   this.canvas.addEventListener("touchcancel", handleUp);
+  // }
+  // In World-Klasse
+  // setupCanvasControls() {
+  //   const toCanvasXY = (e) => {
+  //     const rect = this.canvas.getBoundingClientRect();
+  //     // Skaliere von CSS-Pixeln in Canvas-Pixel
+  //     const scaleX = this.canvas.width / rect.width;
+  //     const scaleY = this.canvas.height / rect.height;
 
-//   this.canvas.addEventListener("touchend", handleUp);
-//   this.canvas.addEventListener("touchcancel", handleUp);
-// }
-// In World-Klasse
-setupCanvasControls() {
-  const toCanvasXY = (e) => {
-    const rect = this.canvas.getBoundingClientRect();
-    // Skaliere von CSS-Pixeln in Canvas-Pixel
-    const scaleX = this.canvas.width / rect.width;
-    const scaleY = this.canvas.height / rect.height;
+  //     // PointerEvent (desktop & moderne mobile Browser)
+  //     if ('clientX' in e) {
+  //       return {
+  //         x: (e.clientX - rect.left) * scaleX,
+  //         y: (e.clientY - rect.top)  * scaleY
+  //       };
+  //     }
+  //     // Fallback: TouchEvent (ältere Safari)
+  //     const t = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
+  //     if (t) {
+  //       return {
+  //         x: (t.clientX - rect.left) * scaleX,
+  //         y: (t.clientY - rect.top)  * scaleY
+  //       };
+  //     }
+  //     return { x: 0, y: 0 };
+  //   };
 
-    // PointerEvent (desktop & moderne mobile Browser)
-    if ('clientX' in e) {
-      return {
-        x: (e.clientX - rect.left) * scaleX,
-        y: (e.clientY - rect.top)  * scaleY
-      };
-    }
-    // Fallback: TouchEvent (ältere Safari)
-    const t = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
-    if (t) {
-      return {
-        x: (t.clientX - rect.left) * scaleX,
-        y: (t.clientY - rect.top)  * scaleY
-      };
-    }
-    return { x: 0, y: 0 };
+  //   const handleDown = (e) => {
+  //     if (e.cancelable) e.preventDefault(); // verhindert Scroll/Zoom
+  //     const { x, y } = toCanvasXY(e);
+
+  //     // prüfen gegen gespeicherte Areas (width/height!)
+  //     if (this.leftBtnArea && this.isInsideButton(x, y, this.leftBtnArea))  this.keyboard.LEFT  = true;
+  //     if (this.rightBtnArea && this.isInsideButton(x, y, this.rightBtnArea)) this.keyboard.RIGHT = true;
+  //     if (this.jumpBtnArea && this.isInsideButton(x, y, this.jumpBtnArea))  this.keyboard.UP    = true;
+  //     if (this.throwBtnArea && this.isInsideButton(x, y, this.throwBtnArea)) this.keyboard.D     = true;
+  //   };
+
+  //   const handleUpAll = () => {
+  //     this.keyboard.LEFT  = false;
+  //     this.keyboard.RIGHT = false;
+  //     this.keyboard.UP    = false;
+  //     this.keyboard.D     = false;
+  //   };
+
+  //   // Pointer (empfohlen, deckt Maus & Touch ab in modernen Browsern)
+  //   this.canvas.addEventListener('pointerdown', handleDown, { passive: false });
+  //   this.canvas.addEventListener('pointerup',   handleUpAll);
+  //   this.canvas.addEventListener('pointercancel', handleUpAll);
+  //   this.canvas.addEventListener('pointerleave',  handleUpAll);
+
+  //   // Fallback für ältere iOS/Safari
+  //   this.canvas.addEventListener('touchstart', handleDown, { passive: false });
+  //   this.canvas.addEventListener('touchend',   handleUpAll, { passive: false });
+  //   this.canvas.addEventListener('touchcancel',handleUpAll, { passive: false });
+
+  //   // Optional: Maus
+  //   this.canvas.addEventListener('mousedown', handleDown);
+  //   this.canvas.addEventListener('mouseup',   handleUpAll);
+  // }
+
+  // // Rechteck-Hit-Test (achte auf width/height, nicht w/h)
+  // isInsideButton(x, y, btn) {
+  //   return (
+  //     x >= btn.x && x <= btn.x + btn.width &&
+  //     y >= btn.y && y <= btn.y + btn.height
+  //   );
+  // }
+
+  // // ✅ Hilfsfunktion: Prüfen, ob (x, y) in einem Button liegt
+  // isInsideButton(x, y, btn) {
+  //   return (
+  //     x >= btn.x &&
+  //     x <= btn.x + btn.width &&
+  //     y >= btn.y &&
+  //     y <= btn.y + btn.height
+  //   );
+  // }
+
+  // // Hilfsfunktion: Canvas-Koordinaten mit CSS-Skalierung korrekt umrechnen
+  // toCanvasXY(e) {
+  //   const rect = this.canvas.getBoundingClientRect();
+  //   const scaleX = this.canvas.width / rect.width;
+  //   const scaleY = this.canvas.height / rect.height;
+
+  //   let clientX, clientY;
+  //   if (e.touches && e.touches[0]) {
+  //     clientX = e.touches[0].clientX;
+  //     clientY = e.touches[0].clientY;
+  //   } else if (e.changedTouches && e.changedTouches[0]) {
+  //     clientX = e.changedTouches[0].clientX;
+  //     clientY = e.changedTouches[0].clientY;
+  //   } else {
+  //     clientX = e.clientX;
+  //     clientY = e.clientY;
+  //   }
+
+  //   return {
+  //     x: (clientX - rect.left) * scaleX,
+  //     y: (clientY - rect.top) * scaleY,
+  //   };
+  // }
+  // Koordinaten von CSS-Pixeln → Canvas-Pixel umrechnen
+toCanvasXY(e) {
+  const rect = this.canvas.getBoundingClientRect();
+  const scaleX = this.canvas.width  / rect.width;
+  const scaleY = this.canvas.height / rect.height;
+
+  let clientX, clientY;
+  if (e.touches && e.touches[0]) {
+    clientX = e.touches[0].clientX;
+    clientY = e.touches[0].clientY;
+  } else if (e.changedTouches && e.changedTouches[0]) {
+    clientX = e.changedTouches[0].clientX;
+    clientY = e.changedTouches[0].clientY;
+  } else {
+    clientX = e.clientX;
+    clientY = e.clientY;
+  }
+
+  return {
+    x: (clientX - rect.left) * scaleX,
+    y: (clientY - rect.top)  * scaleY,
   };
+}
+
+  // // Rechteck-Hit-Test
+  // isInsideButton(x, y, btn) {
+  //   return (
+  //     btn &&
+  //     x >= btn.x &&
+  //     x <= btn.x + btn.width &&
+  //     y >= btn.y &&
+  //     y <= btn.y + btn.height
+  //   );
+  // }
+
+  // setupCanvasControls() {
+  //   if (this.uiClickListenerAdded) return;
+  //   this.uiClickListenerAdded = true;
+
+  //   const handleDown = (e) => {
+  //     if (e.cancelable) e.preventDefault();
+  //     const { x, y } = this.toCanvasXY(e);
+
+  //     // 🕹️ Mobile-Steuerung (links/rechts/sprung/werfen)
+  //     if (this.leftBtnArea && this.isInsideButton(x, y, this.leftBtnArea))
+  //       this.keyboard.LEFT = true;
+  //     if (this.rightBtnArea && this.isInsideButton(x, y, this.rightBtnArea))
+  //       this.keyboard.RIGHT = true;
+  //     if (this.jumpBtnArea && this.isInsideButton(x, y, this.jumpBtnArea))
+  //       this.keyboard.UP = true;
+  //     if (this.throwBtnArea && this.isInsideButton(x, y, this.throwBtnArea))
+  //       this.keyboard.D = true;
+
+  //     // 🎛️ UI-Buttons (oben rechts)
+  //     if (
+  //       this.fullscreenBtnArea &&
+  //       this.isInsideButton(x, y, this.fullscreenBtnArea)
+  //     ) {
+  //       // nutzt deine Funktion aus game.js
+  //       toggleFullscreen(this.canvas);
+  //     }
+  //     if (this.soundBtnArea && this.isInsideButton(x, y, this.soundBtnArea)) {
+  //       // toggelt globalen soundEnabled + leitet an world.toggleSound (falls vorhanden)
+  //       toggleSound();
+  //     }
+  //     if (this.instrBtnArea && this.isInsideButton(x, y, this.instrBtnArea)) {
+  //       showInstructions();
+  //     }
+  //   };
+
+  //   const handleUpAll = () => {
+  //     this.keyboard.LEFT = false;
+  //     this.keyboard.RIGHT = false;
+  //     this.keyboard.UP = false;
+  //     this.keyboard.D = false;
+  //   };
+
+  //   // Moderne Pointer-Events (decken Maus & Touch ab)
+  //   this.canvas.addEventListener("pointerdown", handleDown, { passive: false });
+  //   this.canvas.addEventListener("pointerup", handleUpAll);
+  //   this.canvas.addEventListener("pointercancel", handleUpAll);
+  //   this.canvas.addEventListener("pointerleave", handleUpAll);
+
+  //   // Fallback für ältere Safari/iOS
+  //   this.canvas.addEventListener("touchstart", handleDown, { passive: false });
+  //   this.canvas.addEventListener("touchend", handleUpAll, { passive: false });
+  //   this.canvas.addEventListener("touchcancel", handleUpAll, {
+  //     passive: false,
+  //   });
+
+  //   // Optional: klassische Maus
+  //   this.canvas.addEventListener("mousedown", handleDown);
+  //   this.canvas.addEventListener("mouseup", handleUpAll);
+  // }
+  // Rechteck-Hit-Test
+isInsideButton(x, y, btn) {
+  return btn && x >= btn.x && x <= btn.x + btn.width && y >= btn.y && y <= btn.y + btn.height;
+}
+
+// EINMAL registrieren!
+setupCanvasControls() {
+  if (this.uiClickListenerAdded) return;
+  this.uiClickListenerAdded = true;
 
   const handleDown = (e) => {
-    if (e.cancelable) e.preventDefault(); // verhindert Scroll/Zoom
-    const { x, y } = toCanvasXY(e);
+    if (e.cancelable) e.preventDefault();
+    const { x, y } = this.toCanvasXY(e);
 
-    // prüfen gegen gespeicherte Areas (width/height!)
-    if (this.leftBtnArea && this.isInsideButton(x, y, this.leftBtnArea))  this.keyboard.LEFT  = true;
+    // 🕹️ Steuer-Buttons
+    if (this.leftBtnArea  && this.isInsideButton(x, y, this.leftBtnArea))  this.keyboard.LEFT  = true;
     if (this.rightBtnArea && this.isInsideButton(x, y, this.rightBtnArea)) this.keyboard.RIGHT = true;
-    if (this.jumpBtnArea && this.isInsideButton(x, y, this.jumpBtnArea))  this.keyboard.UP    = true;
+    if (this.jumpBtnArea  && this.isInsideButton(x, y, this.jumpBtnArea))  this.keyboard.UP    = true;
     if (this.throwBtnArea && this.isInsideButton(x, y, this.throwBtnArea)) this.keyboard.D     = true;
+
+    // 🎛️ UI-Buttons
+    if (this.fullscreenBtnArea && this.isInsideButton(x, y, this.fullscreenBtnArea)) {
+      // nutzt deine Funktion aus game.js (nur 1x definiert!)
+      toggleFullscreen(this.canvas);
+    }
+    if (this.soundBtnArea && this.isInsideButton(x, y, this.soundBtnArea)) {
+      toggleSound(); // setzt global soundEnabled und ruft world.toggleSound(soundEnabled), wenn vorhanden
+    }
+    if (this.instrBtnArea && this.isInsideButton(x, y, this.instrBtnArea)) {
+      showInstructions();
+    }
   };
 
   const handleUpAll = () => {
@@ -1159,43 +1534,21 @@ setupCanvasControls() {
     this.keyboard.D     = false;
   };
 
-  // Pointer (empfohlen, deckt Maus & Touch ab in modernen Browsern)
-  this.canvas.addEventListener('pointerdown', handleDown, { passive: false });
-  this.canvas.addEventListener('pointerup',   handleUpAll);
-  this.canvas.addEventListener('pointercancel', handleUpAll);
-  this.canvas.addEventListener('pointerleave',  handleUpAll);
+  // Moderne Pointer-Events (decken Maus & Touch ab)
+  this.canvas.addEventListener("pointerdown", handleDown, { passive: false });
+  this.canvas.addEventListener("pointerup", handleUpAll);
+  this.canvas.addEventListener("pointercancel", handleUpAll);
+  this.canvas.addEventListener("pointerleave", handleUpAll);
 
-  // Fallback für ältere iOS/Safari
-  this.canvas.addEventListener('touchstart', handleDown, { passive: false });
-  this.canvas.addEventListener('touchend',   handleUpAll, { passive: false });
-  this.canvas.addEventListener('touchcancel',handleUpAll, { passive: false });
+  // Fallback für ältere Safari/iOS
+  this.canvas.addEventListener("touchstart", handleDown, { passive: false });
+  this.canvas.addEventListener("touchend", handleUpAll, { passive: false });
+  this.canvas.addEventListener("touchcancel", handleUpAll, { passive: false });
 
   // Optional: Maus
-  this.canvas.addEventListener('mousedown', handleDown);
-  this.canvas.addEventListener('mouseup',   handleUpAll);
+  this.canvas.addEventListener("mousedown", handleDown);
+  this.canvas.addEventListener("mouseup", handleUpAll);
 }
-
-// Rechteck-Hit-Test (achte auf width/height, nicht w/h)
-isInsideButton(x, y, btn) {
-  return (
-    x >= btn.x && x <= btn.x + btn.width &&
-    y >= btn.y && y <= btn.y + btn.height
-  );
-}
-
-
-// // ✅ Hilfsfunktion: Prüfen, ob (x, y) in einem Button liegt
-// isInsideButton(x, y, btn) {
-//   return (
-//     x >= btn.x &&
-//     x <= btn.x + btn.width &&
-//     y >= btn.y &&
-//     y <= btn.y + btn.height
-//   );
-// }
-
-
-
 
   addObjectsToMap(objects) {
     if (!Array.isArray(objects)) return;
