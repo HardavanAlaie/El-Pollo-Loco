@@ -48,25 +48,86 @@
   </head>
 
   <body>
-    <div id="start-screen">
+
+       <body>
+  <div id="start-screen"></div>
+
+  <div id="game-wrapper">
+    <canvas id="canvas" width="720" height="480"></canvas>
+
+    <!-- UI Buttons (außerhalb vom Canvas) -->
+    <div id="canvas-buttons">
+      <button id="instructions-btn" title="Anleitung">📖</button>
+      <button id="fullscreen-btn" title="Vollbild">🖥️</button>
+      <button id="sound-btn" title="Sound">🔊</button>
+    </div>
+  </div>
+
+  <!-- Anleitung Overlay -->
+  <div id="instructions-overlay" class="overlay hidden">
+    <div class="overlay-content">
+      <h2>📖 Anleitung</h2>
+      <p>⬅️ / ➡️ – Bewegung</p>
+      <p>⬆️ – Springen</p>
+      <p>D – Flasche werfen</p>
+      <p>🔊 – Sound ein/aus</p>
+      <p>🖥️ – Vollbild ein/aus</p>
+      <button onclick="hideInstructions()">Schließen</button>
+    </div>
+  </div>
+</body>
+
+    <!-- <div id="start-screen"> -->
       <!-- <h1>Willkommen zum Spiel!</h1> -->
       <!-- <button onclick="startGame()">Start</button>
       <button onclick="showInstructions()">📖 Anleitung</button> -->
-    </div>
+    <!-- </div> -->
 
+    <!-- Mobile Gamepad-Steuerung -->
+    <!-- <div id="mobile-controls">
+      <div class="left-controls">
+        <button id="left-btn">⬅️</button>
+        <button id="right-btn">➡️</button>
+      </div>
+      <div class="right-controls">
+        <button id="jump-btn">⤴️</button>
+        <button id="throw-btn">🧴</button>
+      </div>
+    </div> -->
 
+    <!-- <div id="mobile-controls">
+      <div class="left-controls">
+        <button id="left-btn">⬅️</button>
+        <button id="right-btn">➡️</button>
+      </div>
+      <div class="right-controls">
+        <button id="jump-btn">🟢</button>
+        <button id="throw-btn">🧪</button>
+      </div>
+    </div> -->
 
     <!-- <h1 class="h1">El Pollo Loco</h1>
     <canvas id="canvas"></canvas> -->
 
-    <div id="game-wrapper">
-      <!-- <h1 class="h1">El Pollo Loco</h1> -->
-      <canvas id="canvas" width="720" height="480"></canvas>
-      <div id="canvas-buttons">
-        <!-- <button id="fullscreen-btn" title="Vollbild">🖥️</button>
+    <!-- <div id="game-wrapper"> -->
+    <!-- <h1 class="h1">El Pollo Loco</h1> -->
+    <!-- <canvas id="canvas" width="720" height="480"></canvas>
+      <div id="canvas-buttons"> -->
+    <!-- <button id="fullscreen-btn" title="Vollbild">🖥️</button>
         <button id="sound-btn" title="Sound">🔊</button> -->
+    <!-- </div>
+    </div> -->
+
+    <!-- <div id="game-wrapper">
+      <canvas id="canvas" width="720" height="480"></canvas> -->
+
+      <!-- feste HTML-Buttons oben rechts -->
+      <!-- <div id="canvas-buttons">
+        <button id="instructions-btn" title="Anleitung">📖</button>
+        <button id="fullscreen-btn" title="Vollbild">🖥️</button>
+        <button id="sound-btn" title="Sound">🔊</button>
       </div>
-    </div>
+    </div> -->
 
     <!-- <canvas id="canvas" width="720" height="480"></canvas> -->
 

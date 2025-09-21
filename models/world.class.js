@@ -76,30 +76,55 @@ class World {
   //   this.draw();
   //   this.run();
   // }
+  // constructor(canvas, keyboard) {
+  //   this.ctx = canvas.getContext("2d");
+  //   this.canvas = canvas;
+  //   this.keyboard = keyboard;
+
+  //   this.currentLevelIndex = 0;
+  //   this.level = level1(this);
+
+  //   this.character = new Character(this);
+  //   this.enemies = this.level.enemies;
+  //   this.clouds = this.level.clouds;
+  //   this.backgroundObjects = this.level.backgroundObjects;
+  //   this.collectableBottles = this.level.collectableObjects || [];
+  //   this.collectableCoins = this.level.collectableCoins || [];
+  //   this.levelEnded = false;
+
+  //   this.setWorld();
+
+  //   // 👇 GANZ WICHTIG: nur EINMAL registrieren!
+  //   this.setupCanvasControls();
+
+  //   this.draw();
+  //   this.run();
+  // }
   constructor(canvas, keyboard) {
-    this.ctx = canvas.getContext("2d");
-    this.canvas = canvas;
-    this.keyboard = keyboard;
+  this.ctx = canvas.getContext("2d");
+  this.canvas = canvas;
+  this.keyboard = keyboard;
 
-    this.currentLevelIndex = 0;
-    this.level = level1(this);
+  this.currentLevelIndex = 0;
+  this.level = level1(this);
 
-    this.character = new Character(this);
-    this.enemies = this.level.enemies;
-    this.clouds = this.level.clouds;
-    this.backgroundObjects = this.level.backgroundObjects;
-    this.collectableBottles = this.level.collectableObjects || [];
-    this.collectableCoins = this.level.collectableCoins || [];
-    this.levelEnded = false;
+  this.character = new Character(this);
+  this.enemies = this.level.enemies;
+  this.clouds = this.level.clouds;
+  this.backgroundObjects = this.level.backgroundObjects;
+  this.collectableBottles = this.level.collectableObjects || [];
+  this.collectableCoins = this.level.collectableCoins || [];
+  this.levelEnded = false;
 
-    this.setWorld();
+  this.setWorld();
 
-    // 👇 GANZ WICHTIG: nur EINMAL registrieren!
-    this.setupCanvasControls();
+  // 👇 GANZ WICHTIG: nur 1x aufrufen
+  this.setupCanvasControls();
 
-    this.draw();
-    this.run();
-  }
+  this.draw();
+  this.run();
+}
+
 
   setWorld() {
     this.character.world = this;
@@ -867,7 +892,7 @@ class World {
 
     // ... dein draw(), ganz am Ende, NACH translate(-this.camera_x, 0)
     this.drawMobileControls(); // deine Gamepad-Buttons unten
-    this.drawUIButtons(); // NEU: Fullscreen/Sound/Anleitung oben rechts
+    //this.drawUIButtons(); // NEU: Fullscreen/Sound/Anleitung oben rechts
 
     if (!this.playerDied && !this.endbossDefeated) {
       this.animationFrame = requestAnimationFrame(() => this.draw());
@@ -1203,28 +1228,86 @@ class World {
   });
 }
 
-drawUIButtons() {
-  const ctx = this.ctx, w = this.canvas.width;
+// drawUIButtons() {
+//   const ctx = this.ctx, w = this.canvas.width;
 
-  ctx.font = "22px Comic Sans MS";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
+//   ctx.font = "22px Comic Sans MS";
+//   ctx.textAlign = "center";
+//   ctx.textBaseline = "middle";
 
-  // UI Buttons oben rechts
-  this.fullscreenBtnArea = { x: w - 180, y: 20, width: 50, height: 50, label: "🖥️" };
-  this.soundBtnArea      = { x: w - 120, y: 20, width: 50, height: 50, label: (window.soundEnabled ? "🔊" : "🔇") };
-  this.instrBtnArea      = { x: w -  60, y: 20, width: 50, height: 50, label: "📖" };
+//   // UI Buttons oben rechts
+//   this.fullscreenBtnArea = { x: w - 180, y: 20, width: 50, height: 50, label: "🖥️" };
+//   this.soundBtnArea      = { x: w - 120, y: 20, width: 50, height: 50, label: (window.soundEnabled ? "🔊" : "🔇") };
+//   this.instrBtnArea      = { x: w -  60, y: 20, width: 50, height: 50, label: "📖" };
 
-  [this.fullscreenBtnArea, this.soundBtnArea, this.instrBtnArea].forEach(btn => {
-    ctx.fillStyle = "rgba(0,0,0,0.6)";
-    ctx.beginPath();
-    ctx.arc(btn.x + btn.width/2, btn.y + btn.height/2, btn.width/2, 0, Math.PI*2);
-    ctx.fill();
+//   [this.fullscreenBtnArea, this.soundBtnArea, this.instrBtnArea].forEach(btn => {
+//     ctx.fillStyle = "rgba(0,0,0,0.6)";
+//     ctx.beginPath();
+//     ctx.arc(btn.x + btn.width/2, btn.y + btn.height/2, btn.width/2, 0, Math.PI*2);
+//     ctx.fill();
 
-    ctx.fillStyle = "white";
-    ctx.fillText(btn.label, btn.x + btn.width/2, btn.y + btn.height/2);
-  });
-}
+//     ctx.fillStyle = "white";
+//     ctx.fillText(btn.label, btn.x + btn.width/2, btn.y + btn.height/2);
+//   });
+// }
+// drawUIButtons() {
+//   const ctx = this.ctx;
+//   const w = this.canvas.width;
+//   const h = this.canvas.height;
+
+//   // Größe relativ zur Höhe (z. B. 10% der Höhe → passt bei Rotation)
+//   const btnSize = h * 0.1; // 10% von Canvas-Höhe
+//   const margin = 20;
+
+//   ctx.font = `${btnSize * 0.5}px Comic Sans MS`; // Schriftgröße relativ
+//   ctx.textAlign = "center";
+//   ctx.textBaseline = "middle";
+
+//   // Positionen (rechts oben nebeneinander)
+//   this.fullscreenBtnArea = {
+//     x: w - (btnSize * 3) - margin,
+//     y: margin,
+//     width: btnSize,
+//     height: btnSize,
+//     label: "🖥️"
+//   };
+
+//   this.soundBtnArea = {
+//     x: w - (btnSize * 2) - margin,
+//     y: margin,
+//     width: btnSize,
+//     height: btnSize,
+//     label: (window.soundEnabled ? "🔊" : "🔇")
+//   };
+
+//   this.instrBtnArea = {
+//     x: w - btnSize - margin,
+//     y: margin,
+//     width: btnSize,
+//     height: btnSize,
+//     label: "📖"
+//   };
+
+//   // Zeichnen aller Buttons
+//   [this.fullscreenBtnArea, this.soundBtnArea, this.instrBtnArea].forEach(btn => {
+//     // runder Hintergrund
+//     ctx.fillStyle = "rgba(0,0,0,0.6)";
+//     ctx.beginPath();
+//     ctx.arc(
+//       btn.x + btn.width / 2,
+//       btn.y + btn.height / 2,
+//       btn.width / 2,
+//       0,
+//       Math.PI * 2
+//     );
+//     ctx.fill();
+
+//     // Symbol
+//     ctx.fillStyle = "white";
+//     ctx.fillText(btn.label, btn.x + btn.width / 2, btn.y + btn.height / 2);
+//   });
+// }
+
 
 
   //   setupCanvasControls() {
@@ -1514,17 +1597,17 @@ setupCanvasControls() {
     if (this.jumpBtnArea  && this.isInsideButton(x, y, this.jumpBtnArea))  this.keyboard.UP    = true;
     if (this.throwBtnArea && this.isInsideButton(x, y, this.throwBtnArea)) this.keyboard.D     = true;
 
-    // 🎛️ UI-Buttons
-    if (this.fullscreenBtnArea && this.isInsideButton(x, y, this.fullscreenBtnArea)) {
-      // nutzt deine Funktion aus game.js (nur 1x definiert!)
-      toggleFullscreen(this.canvas);
-    }
-    if (this.soundBtnArea && this.isInsideButton(x, y, this.soundBtnArea)) {
-      toggleSound(); // setzt global soundEnabled und ruft world.toggleSound(soundEnabled), wenn vorhanden
-    }
-    if (this.instrBtnArea && this.isInsideButton(x, y, this.instrBtnArea)) {
-      showInstructions();
-    }
+    // // 🎛️ UI-Buttons
+    // if (this.fullscreenBtnArea && this.isInsideButton(x, y, this.fullscreenBtnArea)) {
+    //   // nutzt deine Funktion aus game.js (nur 1x definiert!)
+    //   toggleFullscreen(this.canvas);
+    // }
+    // if (this.soundBtnArea && this.isInsideButton(x, y, this.soundBtnArea)) {
+    //   toggleSound(); // setzt global soundEnabled und ruft world.toggleSound(soundEnabled), wenn vorhanden
+    // }
+    // if (this.instrBtnArea && this.isInsideButton(x, y, this.instrBtnArea)) {
+    //   showInstructions();
+    // }
   };
 
   const handleUpAll = () => {
