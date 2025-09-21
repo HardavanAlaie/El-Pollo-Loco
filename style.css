@@ -1,24 +1,17 @@
-/* body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  background-image: url('img/5_background/cactus-9085905_1280.jpg');
-  background-position: center;
-  background-size: cover;
-  /* filter: blur(5px); */
-/* font-family: 'myFont', sans-serif;
-} */
+/* Grundlayout */
 body {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
+  justify-content: center;   /* horizontal zentrieren */
+  align-items: center;       /* vertikal zentrieren */
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
   font-family: 'myFont', sans-serif;
   overflow: hidden;
 }
 
-/* Extra Ebene für das Hintergrundbild */
+/* Hintergrundbild mit Blur */
 body::before {
   content: "";
   position: fixed;
@@ -30,63 +23,74 @@ body::before {
   background-position: center;
   background-size: cover;
   filter: blur(3px);
-  /* 👈 Weichzeichnen */
   transform: scale(1.1);
-  /* Rand gegen Blur-Ränder absichern */
   z-index: -1;
-  /* Hinter dem Canvas */
 }
 
-#canvas {
-  border-radius: 20px;
-  /* 👈 Rundung */
-  overflow: hidden;
-  /* Damit nichts aus den Ecken rausragt */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  /* optional: schöner Schatten */
-}
-
-
-@font-face {
-  font-family: 'myFont';
-  src: url('fonts/fascinateInline-regular.ttf') format('truetype');
-}
-
-h1 {
-  font-size: 48px;
-  text-shadow: 4px 2px 4px rgba(0, 0, 0, 0.5);
-  letter-spacing: 3px;
-
-}
-
-canvas {
-  background-color: black;
+/* Wrapper für Canvas + Titel */
+#game-wrapper {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;  /* Inhalt zentrieren */
+  position: relative;
+  width: 100%;
+  height: auto;
 }
 
-
-#start-screen {
+/* Titel */
+#game-wrapper h1 {
+  margin: 10px 0;
+  font-size: 32px;
   text-align: center;
-  margin-top: 100px;
-}
-
-#start-screen button {
-  padding: 15px 30px;
-  font-size: 24px;
-  cursor: pointer;
-  background-color: #fca534ff;
   color: white;
+  text-shadow: 2px 2px 4px black;
+  letter-spacing: 3px;
+}
+
+/* Canvas */
+#canvas {
+  max-width: 100%;
+  max-height: 80vh; /* Platz für Titel + Buttons */
+  width: auto;
+  height: auto;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  background-color: black;
+  display: block;
+  margin: auto;
+}
+
+/* Buttons oben rechts IM Canvas */
+#canvas-buttons {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 1000;
+}
+
+#canvas-buttons button {
+  width: 50px;
+  height: 50px;
+  font-size: 22px;
+  border-radius: 50%;
   border: none;
-  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 0 10px black;
+  transition: background-color 0.2s ease;
 }
 
-#start-screen button:hover {
-  background-color: rgb(175, 103, 8);
+#canvas-buttons button:hover {
+  color: black;
+  background: rgba(255, 255, 255, 0.7);
 }
 
-
+/* Mobile Steuerung */
 #mobile-controls {
   position: absolute;
   bottom: 20px;
@@ -111,7 +115,6 @@ canvas {
   font-size: 28px;
   border-radius: 50%;
   border: 3px solid #fff;
-  /* weißer Rand wie Comic-Stil */
   background: radial-gradient(circle, #fca534 0%, #e88b1b 100%);
   color: #fff;
   font-weight: bold;
@@ -127,70 +130,46 @@ canvas {
   color: #000;
 }
 
-/* Nur Mobile */
+/* Nur Mobile → ab Tablet ausblenden */
 @media (min-width: 768px) {
   #mobile-controls {
     display: none;
   }
 }
 
-
-/* Smartphones */
+/* Portrait → Canvas füllt Breite */
 @media only screen and (max-width: 720px) {
-  canvas {
+  #canvas {
     width: 100%;
+    height: auto;
+    max-height: 70vh;
   }
 
-  h1 {
-    display: none;
+  #game-wrapper h1 {
+    display: none; /* Platz sparen */
   }
 }
 
+/* Landscape (quer Handy) → Canvas füllt Höhe */
 @media only screen and (max-height: 480px) {
-  canvas {
+  #canvas {
     height: 100vh;
+    width: auto;
+    max-width: 100%;
   }
 
-  h1 {
-    display: none;
+  #game-wrapper h1 {
+    display: none; /* Titel ausblenden */
   }
 }
 
-#canvas-buttons {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  gap: 10px;
-  z-index: 1000;
-}
-
-#canvas-buttons button {
-  width: 50px;
-  height: 50px;
-  font-size: 22px;
-  border-radius: 50%;
-  border: none;
-  /* background-color: rgba(0, 0, 0, 0.6); */
-  color: white;
-  cursor: pointer;
-  box-shadow: 0 0 10px black;
-  transition: background-color 0.2s ease;
-}
-
-#canvas-buttons button:hover {
-  /* background-color: rgba(255, 255, 255, 0.7); */
-  color: black;
-}
-
-/* Button for manual with overlay */
+/* Overlay */
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  /* background-color: rgba(0, 0, 0, 0.8); */
   z-index: 1000;
   display: flex;
   justify-content: center;
@@ -221,22 +200,3 @@ canvas {
 .hidden {
   display: none;
 }
-
-/* #instructions-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 50;
-  background-color: rgba(255, 255, 255, 0.8);
-  border: 2px solid #444;
-  border-radius: 10px;
-  padding: 10px 15px;
-  font-size: 16px;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background-color 0.2s ease;
-}
-
-#instructions-btn:hover {
-  background-color: rgba(255, 255, 255, 1);
-} */
