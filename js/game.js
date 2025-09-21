@@ -4,16 +4,35 @@ let keyboard = new Keyboard();
 
 let soundEnabled = true;
 
+// function startGame() {
+//   document.getElementById("start-screen").style.display = "none";
+//   //document.getElementById("mobile-controls").style.display = "flex";
+//   init();
+//   //setupMobileControls();
+// }
+
+// function init() {
+//   canvas = document.getElementById("canvas");
+//   world = new World(canvas, keyboard);
+// }
+
 function startGame() {
   document.getElementById("start-screen").style.display = "none";
   //document.getElementById("mobile-controls").style.display = "flex";
   init();
-  //setupMobileControls();
 }
 
 function init() {
   canvas = document.getElementById("canvas");
+
+  // 🎯 interne Auflösung fix für die Logik
+  canvas.width = 720;
+  canvas.height = 480;
+
   world = new World(canvas, keyboard);
+
+  // direkt beim Start Canvas skalieren
+  resizeCanvas();
 }
 
 
@@ -114,6 +133,44 @@ function toggleFullscreen(canvas) {
 //     mobileControls.style.bottom = "20px";
 //   }
 // }
+// function resizeCanvas() {
+//   const canvas = document.getElementById("canvas");
+//   if (!canvas) return;
+
+//   const aspectRatio = 720 / 480;
+//   const windowRatio = window.innerWidth / window.innerHeight;
+
+//   let newWidth, newHeight;
+
+//   if (windowRatio > aspectRatio) {
+//     // Bildschirm breiter → Höhe begrenzt
+//     newHeight = window.innerHeight;
+//     newWidth = newHeight * aspectRatio;
+//   } else {
+//     // Bildschirm höher → Breite begrenzt
+//     newWidth = window.innerWidth;
+//     newHeight = newWidth / aspectRatio;
+//   }
+
+//   // WICHTIG → Zeichenbereich anpassen
+//   canvas.width = 720;   // interne Logik bleibt fix
+//   canvas.height = 480;
+
+//   // Skalierung über CSS
+//   canvas.style.width = newWidth + "px";
+//   canvas.style.height = newHeight + "px";
+
+//   // Mobile Controls an Canvas ausrichten
+//   const mobileControls = document.getElementById("mobile-controls");
+//   if (mobileControls) {
+//     mobileControls.style.width = newWidth + "px";
+//     mobileControls.style.left = canvas.offsetLeft + "px";
+//     mobileControls.style.bottom = "20px";
+//   }
+// }
+// -------------------------
+// 🎯 Responsive Canvas
+// -------------------------
 function resizeCanvas() {
   const canvas = document.getElementById("canvas");
   if (!canvas) return;
@@ -133,11 +190,8 @@ function resizeCanvas() {
     newHeight = newWidth / aspectRatio;
   }
 
-  // WICHTIG → Zeichenbereich anpassen
-  canvas.width = 720;   // interne Logik bleibt fix
-  canvas.height = 480;
-
-  // Skalierung über CSS
+  // ❌ Interne Größe bleibt fix (720x480)
+  // ✅ Nur die Darstellung per CSS skalieren
   canvas.style.width = newWidth + "px";
   canvas.style.height = newHeight + "px";
 
@@ -151,8 +205,19 @@ function resizeCanvas() {
 }
 
 
-// Sofort ausführen & bei Resize
+// // Sofort ausführen & bei Resize
+// window.addEventListener("resize", resizeCanvas);
+// window.addEventListener("orientationchange", resizeCanvas);
+// window.addEventListener("load", resizeCanvas);
+
+// -------------------------
+// Events
+// -------------------------
 window.addEventListener("resize", resizeCanvas);
 window.addEventListener("orientationchange", resizeCanvas);
-window.addEventListener("load", resizeCanvas);
-
+window.addEventListener("load", () => {
+  resizeCanvas();
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+  const menu = new Menu(canvas, ctx);
+});
