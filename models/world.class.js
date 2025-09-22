@@ -1217,7 +1217,7 @@ class World {
 
   [this.leftBtnArea, this.rightBtnArea, this.jumpBtnArea, this.throwBtnArea].forEach(btn => {
     // runder Button
-    ctx.fillStyle = "rgba(0,0,0,0.5)";
+    ctx.fillStyle = "#fca534ff";
     ctx.beginPath();
     ctx.arc(btn.x + btn.width/2, btn.y + btn.height/2, btn.width/2, 0, Math.PI*2);
     ctx.fill();
