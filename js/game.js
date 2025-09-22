@@ -315,7 +315,19 @@ window.addEventListener("load", () => {
 /**
  * Vollbildmodus ein/aus
  */
-function toggleFullscreen(canvas) {
+// function toggleFullscreen(canvas) {
+//   if (!document.fullscreenElement) {
+//     canvas.requestFullscreen().catch((err) => {
+//       console.error(`Vollbild-Fehler: ${err.message}`);
+//     });
+//   } else {
+//     document.exitFullscreen();
+//   }
+// }
+function toggleFullscreen() {
+  const canvas = document.getElementById("canvas");
+  if (!canvas) return; // Sicherheit
+
   if (!document.fullscreenElement) {
     canvas.requestFullscreen().catch((err) => {
       console.error(`Vollbild-Fehler: ${err.message}`);
@@ -324,6 +336,7 @@ function toggleFullscreen(canvas) {
     document.exitFullscreen();
   }
 }
+
 
 /**
  * Sound ein/aus
