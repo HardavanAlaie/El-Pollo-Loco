@@ -700,29 +700,16 @@ class World {
     const ctx = this.ctx;
     const canvas = this.canvas;
 
-    // if (!this.gameOverSound) {
-    //   this.gameOverSound = new Audio("audio/gameover.mp3");
-    //   this.gameOverSound.volume = 0.6;
-    // }
-
-    // if (soundEnabled) {
-    //   this.gameOverSound.currentTime = 0;
-    //   this.gameOverSound.play().catch(() => {});
-    // }
-
-      // 👉 Nur abspielen, wenn der Charakter wirklich tot ist
-  if (this.character && this.character.isDead && this.character.isDead()) {
     if (!this.gameOverSound) {
       this.gameOverSound = new Audio("audio/gameover.mp3");
       this.gameOverSound.volume = 0.6;
     }
 
-    if (soundEnabled && !this.gameOverSoundPlayed) {
+    if (soundEnabled) {
       this.gameOverSound.currentTime = 0;
       this.gameOverSound.play().catch(() => {});
-      this.gameOverSoundPlayed = true; // nur einmal abspielen
     }
-  }
+
     ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
