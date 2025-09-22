@@ -150,7 +150,9 @@ h1 {
 }
 
 .overlay-content {
-  background-color: #fff;
+  background-color: #fca534ff;
+  color: white;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   padding: 30px;
   border-radius: 15px;
   max-width: 400px;
@@ -163,7 +165,7 @@ h1 {
   margin-top: 20px;
   padding: 10px 20px;
   font-size: 16px;
-  background-color: #ff4444;
+  background-color: #fca534ff;
   color: white;
   border: none;
   border-radius: 10px;
