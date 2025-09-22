@@ -687,8 +687,8 @@ class Menu {
       // 👉 EINZIGER Button im Canvas: Start
       const startBtn = this.drawButton(
         "Start",
-        this.canvas.width / 6, 
-        50,            // Position: links oben
+        this.canvas.width / 13, 
+        40,            // Position: links oben
         "#fca534ff",
         "start"
       );
