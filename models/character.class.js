@@ -131,12 +131,20 @@ class Character extends MovableObject {
     }
   }
 
+  // playSound(path) {
+  //   if (!path) return;
+  //   const sound = new Audio(path);
+  //   sound.volume = 0.5;
+  //   sound.play().catch((e) => {
+  //     console.warn("Sound konnte nicht abgespielt werden:", e);
+  //   });
+  // }
   playSound(path) {
-    if (!path) return;
-    const sound = new Audio(path);
-    sound.volume = 0.5;
-    sound.play().catch((e) => {
-      console.warn("Sound konnte nicht abgespielt werden:", e);
-    });
-  }
+  if (!path || !soundEnabled) return; // ✅ globaler Check
+  const sound = new Audio(path);
+  sound.volume = 0.5;
+  sound.play().catch((e) => {
+    console.warn("Sound konnte nicht abgespielt werden:", e);
+  });
+}
 }
