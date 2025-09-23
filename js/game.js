@@ -341,6 +341,14 @@ function toggleFullscreen() {
 /**
  * Sound ein/aus
  */
+// function toggleSound() {
+//   soundEnabled = !soundEnabled;
+//   console.log("Sound:", soundEnabled ? "🔊 an" : "🔇 aus");
+
+//   if (world && world.toggleSound) {
+//     world.toggleSound(soundEnabled);
+//   }
+// }
 function toggleSound() {
   soundEnabled = !soundEnabled;
   console.log("Sound:", soundEnabled ? "🔊 an" : "🔇 aus");
@@ -348,7 +356,16 @@ function toggleSound() {
   if (world && world.toggleSound) {
     world.toggleSound(soundEnabled);
   }
+
+  // Icon sofort anpassen
+  const soundBtn = document.getElementById("sound-btn");
+  if (soundBtn) {
+    soundBtn.textContent = soundEnabled ? "🔊" : "🔇";
+  }
 }
+
+
+
 
 // window.addEventListener("load", () => {
 //   resizeCanvas();
@@ -386,6 +403,29 @@ function toggleSound() {
 //     });
 //   }
 // });
+// window.addEventListener("load", () => {
+//   resizeCanvas();
+
+//   const canvas = document.getElementById("canvas");
+//   const ctx = canvas.getContext("2d");
+//   new Menu(canvas, ctx);
+
+//   // HTML-Buttons
+//   const instrBtn = document.getElementById("instructions-btn");
+//   const fullBtn  = document.getElementById("fullscreen-btn");
+//   const soundBtn = document.getElementById("sound-btn");
+
+//   if (instrBtn) instrBtn.addEventListener("click", () => showInstructions());
+//   if (fullBtn)  fullBtn.addEventListener("click", () => toggleFullscreen(canvas));
+//   if (soundBtn) {
+//     const updateIcon = () => soundBtn.textContent = soundEnabled ? "🔊" : "🔇";
+//     updateIcon();
+//     soundBtn.addEventListener("click", () => {
+//       toggleSound();
+//       updateIcon();
+//     });
+//   }
+// });
 window.addEventListener("load", () => {
   resizeCanvas();
 
@@ -400,13 +440,11 @@ window.addEventListener("load", () => {
 
   if (instrBtn) instrBtn.addEventListener("click", () => showInstructions());
   if (fullBtn)  fullBtn.addEventListener("click", () => toggleFullscreen(canvas));
+  if (soundBtn) soundBtn.addEventListener("click", toggleSound);
+
+  // Initiales Icon setzen
   if (soundBtn) {
-    const updateIcon = () => soundBtn.textContent = soundEnabled ? "🔊" : "🔇";
-    updateIcon();
-    soundBtn.addEventListener("click", () => {
-      toggleSound();
-      updateIcon();
-    });
+    soundBtn.textContent = soundEnabled ? "🔊" : "🔇";
   }
 });
 
