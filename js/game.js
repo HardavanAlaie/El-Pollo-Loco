@@ -89,13 +89,13 @@
 //   }
 // }
 
-function showInstructions() {
-  document.getElementById("instructions-overlay").classList.remove("hidden");
-}
+// function showInstructions() {
+//   document.getElementById("instructions-overlay").classList.remove("hidden");
+// }
 
-function hideInstructions() {
-  document.getElementById("instructions-overlay").classList.add("hidden");
-}
+// function hideInstructions() {
+//   document.getElementById("instructions-overlay").classList.add("hidden");
+// }
 
 // function toggleFullscreen(canvas) {
 //   if (!document.fullscreenElement) {
