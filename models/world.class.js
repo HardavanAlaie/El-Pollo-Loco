@@ -798,28 +798,46 @@ class World {
     }
   }
 
+  // toggleSound(enabled) {
+  //   if (this.character?.jumpSound) {
+  //     this.character.jumpSound.muted = !enabled;
+  //   }
+  //   if (this.character?.coinSound) {
+  //     this.character.coinSound.muted = !enabled;
+  //   }
+
+  //   this.enemies.forEach((enemy) => {
+  //     if (enemy instanceof EndbossLevel1 && enemy.screamSound) {
+  //       enemy.screamSound.muted = !enabled;
+  //     }
+  //   });
+
+  //   if (this.gameOverSound) {
+  //     this.gameOverSound.muted = !enabled;
+  //   }
+
+  //   if (this.winSound) {
+  //     this.winSound.muted = !enabled;
+  //   }
+  // }
   toggleSound(enabled) {
-    if (this.character?.jumpSound) {
-      this.character.jumpSound.muted = !enabled;
-    }
-    if (this.character?.coinSound) {
-      this.character.coinSound.muted = !enabled;
-    }
+  // Character
+  if (this.character?.jumpSound)   this.character.jumpSound.muted   = !enabled;
+  if (this.character?.coinSound)   this.character.coinSound.muted   = !enabled;
+  if (this.character?.walkSound)   this.character.walkSound.muted   = !enabled;
+  if (this.character?.hurtSound)   this.character.hurtSound.muted   = !enabled;
 
-    this.enemies.forEach((enemy) => {
-      if (enemy instanceof EndbossLevel1 && enemy.screamSound) {
-        enemy.screamSound.muted = !enabled;
-      }
-    });
+  // Enemies (inkl. Endboss)
+  this.enemies.forEach((enemy) => {
+    if (enemy.screamSound) enemy.screamSound.muted = !enabled;
+    if (enemy.hitSound)    enemy.hitSound.muted    = !enabled;
+  });
 
-    if (this.gameOverSound) {
-      this.gameOverSound.muted = !enabled;
-    }
+  // World-Sounds (GameOver, Win etc.)
+  if (this.gameOverSound) this.gameOverSound.muted = !enabled;
+  if (this.winSound)      this.winSound.muted      = !enabled;
+}
 
-    if (this.winSound) {
-      this.winSound.muted = !enabled;
-    }
-  }
 
   draw() {
     if (this.playerDied) {
