@@ -233,9 +233,15 @@ class World {
           this.statusBarCoin.update();
         }
 
-        const coinSound = new Audio("audio/coins.mp3");
-        coinSound.volume = 0.5;
-        coinSound.play().catch(() => {});
+        // const coinSound = new Audio("audio/coins.mp3");
+        // coinSound.volume = 0.5;
+        // coinSound.play().catch(() => {});
+        if (soundEnabled) {
+  const coinSound = new Audio("audio/coins.mp3");
+  coinSound.volume = 0.5;
+  coinSound.play().catch(() => {});
+}
+
 
         this.collectableCoins.splice(this.collectableCoins.indexOf(coin), 1);
       }
@@ -505,16 +511,26 @@ class World {
 
     this.stopEnemySounds();
 
-    if (!this.winSound) {
-      this.winSound = new Audio("audio/win.mp3");
-      this.winSound.volume = 0.7;
-      this.winSound.loop = true;
-    }
+    // if (!this.winSound) {
+    //   this.winSound = new Audio("audio/win.mp3");
+    //   this.winSound.volume = 0.7;
+    //   this.winSound.loop = true;
+    // }
 
-    if (soundEnabled) {
-      this.winSound.currentTime = 0;
-      this.winSound.play().catch(() => {});
-    }
+    // if (soundEnabled) {
+    //   this.winSound.currentTime = 0;
+    //   this.winSound.play().catch(() => {});
+    // }
+    if (!this.winSound) {
+  this.winSound = new Audio("audio/win.mp3");
+  this.winSound.volume = 0.7;
+  this.winSound.loop = true;
+}
+
+if (soundEnabled) { // ✅ Nur wenn Sound erlaubt
+  this.winSound.currentTime = 0;
+  this.winSound.play().catch(() => {});
+}
 
     const img = new Image();
     img.src = "img/You won, you lost/You win B.png";
@@ -699,15 +715,24 @@ class World {
     const ctx = this.ctx;
     const canvas = this.canvas;
 
-    if (!this.gameOverSound) {
-      this.gameOverSound = new Audio("audio/gameover.mp3");
-      this.gameOverSound.volume = 0.6;
-    }
+    // if (!this.gameOverSound) {
+    //   this.gameOverSound = new Audio("audio/gameover.mp3");
+    //   this.gameOverSound.volume = 0.6;
+    // }
 
-    if (soundEnabled) {
-      this.gameOverSound.currentTime = 0;
-      this.gameOverSound.play().catch(() => {});
-    }
+    // if (soundEnabled) {
+    //   this.gameOverSound.currentTime = 0;
+    //   this.gameOverSound.play().catch(() => {});
+    // }
+    if (!this.gameOverSound) {
+  this.gameOverSound = new Audio("audio/gameover.mp3");
+  this.gameOverSound.volume = 0.6;
+}
+
+if (soundEnabled) { // ✅ Nur wenn Sound erlaubt
+  this.gameOverSound.currentTime = 0;
+  this.gameOverSound.play().catch(() => {});
+}
 
     ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
