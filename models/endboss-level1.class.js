@@ -66,9 +66,6 @@ class EndbossLevel1 extends MovableObject {
   scream() {
     if (this.isDead() || !this.screamSound) return;
 
-      // ✅ Nur abspielen wenn Sound aktiviert
-  if (!soundEnabled) return;
-
     if (!this.screamSound.paused) return;
 
     this.isScreaming = true;
