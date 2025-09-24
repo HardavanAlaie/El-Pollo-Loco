@@ -63,19 +63,36 @@ class EndbossLevel1 extends MovableObject {
     this.moveLogic();
   }
 
+  // scream() {
+  //   if (this.isDead() || !this.screamSound) return;
+
+  //   if (!this.screamSound.paused) return;
+
+  //   this.isScreaming = true;
+  //   this.screamSound.currentTime = 0;
+  //   this.screamSound.play().catch((e) => {
+  //     console.warn("Konnte Schrei nicht abspielen:", e);
+  //   });
+
+  //   setTimeout(() => (this.isScreaming = false), 1500);
+  // }
   scream() {
-    if (this.isDead() || !this.screamSound) return;
+  if (this.isDead() || !this.screamSound) return;
 
-    if (!this.screamSound.paused) return;
+  // 🔇 Sound global deaktiviert → kein Schrei
+  if (!soundEnabled) return;
 
-    this.isScreaming = true;
-    this.screamSound.currentTime = 0;
-    this.screamSound.play().catch((e) => {
-      console.warn("Konnte Schrei nicht abspielen:", e);
-    });
+  if (!this.screamSound.paused) return;
 
-    setTimeout(() => (this.isScreaming = false), 1500);
-  }
+  this.isScreaming = true;
+  this.screamSound.currentTime = 0;
+  this.screamSound.play().catch((e) => {
+    console.warn("Konnte Schrei nicht abspielen:", e);
+  });
+
+  setTimeout(() => (this.isScreaming = false), 1500);
+}
+
 
   hit() {
     if (this.isDead()) return;
