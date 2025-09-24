@@ -237,10 +237,11 @@ class World {
         // coinSound.volume = 0.5;
         // coinSound.play().catch(() => {});
         if (soundEnabled) {
-          const coinSound = new Audio("audio/coins.mp3");
-          coinSound.volume = 0.5;
-          coinSound.play().catch(() => {});
-        }
+  const coinSound = new Audio("audio/coins.mp3");
+  coinSound.volume = 0.5;
+  coinSound.play().catch(() => {});
+}
+
 
         this.collectableCoins.splice(this.collectableCoins.indexOf(coin), 1);
       }
@@ -521,21 +522,15 @@ class World {
     //   this.winSound.play().catch(() => {});
     // }
     if (!this.winSound) {
-      this.winSound = new Audio("audio/win.mp3");
-      this.winSound.volume = 0.7;
-      this.winSound.loop = true;
-    }
+  this.winSound = new Audio("audio/win.mp3");
+  this.winSound.volume = 0.7;
+  this.winSound.loop = true;
+}
 
-    // if (soundEnabled) {
-    //   // ✅ Nur wenn Sound erlaubt
-    //   this.winSound.currentTime = 0;
-    //   this.winSound.play().catch(() => {});
-    // }
-    // ⚡ Nur starten, wenn noch nicht läuft
-    if (soundEnabled && this.winSound.paused) {
-      this.winSound.currentTime = 0;
-      this.winSound.play().catch(() => {});
-    }
+if (soundEnabled) { // ✅ Nur wenn Sound erlaubt
+  this.winSound.currentTime = 0;
+  this.winSound.play().catch(() => {});
+}
 
     const img = new Image();
     img.src = "img/You won, you lost/You win B.png";
@@ -716,162 +711,83 @@ class World {
     }
   }
 
-  // showGameOverScreen() {
-  //   const ctx = this.ctx;
-  //   const canvas = this.canvas;
-
-  //   // if (!this.gameOverSound) {
-  //   //   this.gameOverSound = new Audio("audio/gameover.mp3");
-  //   //   this.gameOverSound.volume = 0.6;
-  //   // }
-
-  //   // if (soundEnabled) {
-  //   //   this.gameOverSound.currentTime = 0;
-  //   //   this.gameOverSound.play().catch(() => {});
-  //   // }
-  //   if (!this.gameOverSound) {
-  //     this.gameOverSound = new Audio("audio/gameover.mp3");
-  //     this.gameOverSound.volume = 0.6;
-  //   }
-
-  //   // if (soundEnabled) { // ✅ Nur wenn Sound erlaubt
-  //   //   this.gameOverSound.currentTime = 0;
-  //   //   this.gameOverSound.play().catch(() => {});
-  //   // }
-  //   // ⚡ Nur einmal abspielen
-  //   if (soundEnabled && !this.gameOverPlayed) {
-  //     this.gameOverPlayed = true; // merken, dass schon gespielt
-  //     this.gameOverSound.currentTime = 0;
-  //     this.gameOverSound.play().catch(() => {});
-  //   }
-
-  //   ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-  //   ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  //   const img = new Image();
-  //   img.src = "img/You won, you lost/Game Over.png";
-
-  //   img.onload = () => {
-  //     const maxWidth = canvas.width * 0.6;
-  //     const maxHeight = canvas.height * 0.3;
-
-  //     let imgWidth = img.width;
-  //     let imgHeight = img.height;
-
-  //     const widthRatio = maxWidth / imgWidth;
-  //     const heightRatio = maxHeight / imgHeight;
-  //     const scale = Math.min(widthRatio, heightRatio);
-
-  //     imgWidth *= scale;
-  //     imgHeight *= scale;
-
-  //     const imgX = canvas.width / 2 - imgWidth / 2;
-  //     const imgY = canvas.height / 2 - imgHeight - 40;
-
-  //     ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-
-  //     const buttonWidth = 250;
-  //     const buttonHeight = 60;
-  //     const buttonX = canvas.width / 2 - buttonWidth / 2;
-  //     const buttonY = canvas.height / 2;
-
-  //     ctx.fillStyle = "#fca534ff";
-  //     ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-  //     ctx.font = "24px Comic Sans MS";
-  //     ctx.fillStyle = "white";
-  //     ctx.textAlign = "center";
-  //     ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
-
-  //     this.restartButtonArea = {
-  //       x: buttonX,
-  //       y: buttonY,
-  //       width: buttonWidth,
-  //       height: buttonHeight,
-  //     };
-
-  //     if (!this.canvasClickListenerAdded) {
-  //       const boundHandler = this.handleCanvasClick.bind(this);
-  //       canvas.addEventListener("click", boundHandler);
-  //       canvas.addEventListener("touchstart", boundHandler, { passive: false });
-  //       canvas.addEventListener("pointerdown", boundHandler);
-  //       this.canvasClickListenerAdded = true;
-  //     }
-  //   };
-  // }
   showGameOverScreen() {
-  const ctx = this.ctx;
-  const canvas = this.canvas;
+    const ctx = this.ctx;
+    const canvas = this.canvas;
 
-  if (!this.gameOverSound) {
-    this.gameOverSound = new Audio("audio/gameover.mp3");
-    this.gameOverSound.volume = 0.6;
-  }
+    // if (!this.gameOverSound) {
+    //   this.gameOverSound = new Audio("audio/gameover.mp3");
+    //   this.gameOverSound.volume = 0.6;
+    // }
 
-  // ⚡ Nur beim ersten Mal abspielen
-  if (soundEnabled && !this.gameOverPlayed) {
-    this.gameOverPlayed = true; // merken!
-    this.gameOverSound.currentTime = 0;
-    this.gameOverSound.play().catch(() => {});
-  }
-
-  // Hintergrund abdunkeln
-  ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // GameOver-Bild
-  const img = new Image();
-  img.src = "img/You won, you lost/Game Over.png";
-
-  img.onload = () => {
-    const maxWidth = canvas.width * 0.6;
-    const maxHeight = canvas.height * 0.3;
-
-    let imgWidth = img.width;
-    let imgHeight = img.height;
-
-    const widthRatio = maxWidth / imgWidth;
-    const heightRatio = maxHeight / imgHeight;
-    const scale = Math.min(widthRatio, heightRatio);
-
-    imgWidth *= scale;
-    imgHeight *= scale;
-
-    const imgX = canvas.width / 2 - imgWidth / 2;
-    const imgY = canvas.height / 2 - imgHeight - 40;
-
-    ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-
-    // Restart-Button
-    const buttonWidth = 250;
-    const buttonHeight = 60;
-    const buttonX = canvas.width / 2 - buttonWidth / 2;
-    const buttonY = canvas.height / 2;
-
-    ctx.fillStyle = "#fca534ff";
-    ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-    ctx.font = "24px Comic Sans MS";
-    ctx.fillStyle = "white";
-    ctx.textAlign = "center";
-    ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
-
-    this.restartButtonArea = {
-      x: buttonX,
-      y: buttonY,
-      width: buttonWidth,
-      height: buttonHeight,
-    };
-
-    if (!this.canvasClickListenerAdded) {
-      const boundHandler = this.handleCanvasClick.bind(this);
-      canvas.addEventListener("click", boundHandler);
-      canvas.addEventListener("touchstart", boundHandler, { passive: false });
-      canvas.addEventListener("pointerdown", boundHandler);
-      this.canvasClickListenerAdded = true;
-    }
-  };
+    // if (soundEnabled) {
+    //   this.gameOverSound.currentTime = 0;
+    //   this.gameOverSound.play().catch(() => {});
+    // }
+    if (!this.gameOverSound) {
+  this.gameOverSound = new Audio("audio/gameover.mp3");
+  this.gameOverSound.volume = 0.6;
 }
+
+if (soundEnabled) { // ✅ Nur wenn Sound erlaubt
+  this.gameOverSound.currentTime = 0;
+  this.gameOverSound.play().catch(() => {});
+}
+
+    ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const img = new Image();
+    img.src = "img/You won, you lost/Game Over.png";
+
+    img.onload = () => {
+      const maxWidth = canvas.width * 0.6;
+      const maxHeight = canvas.height * 0.3;
+
+      let imgWidth = img.width;
+      let imgHeight = img.height;
+
+      const widthRatio = maxWidth / imgWidth;
+      const heightRatio = maxHeight / imgHeight;
+      const scale = Math.min(widthRatio, heightRatio);
+
+      imgWidth *= scale;
+      imgHeight *= scale;
+
+      const imgX = canvas.width / 2 - imgWidth / 2;
+      const imgY = canvas.height / 2 - imgHeight - 40;
+
+      ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+
+      const buttonWidth = 250;
+      const buttonHeight = 60;
+      const buttonX = canvas.width / 2 - buttonWidth / 2;
+      const buttonY = canvas.height / 2;
+
+      ctx.fillStyle = "#fca534ff";
+      ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+      ctx.font = "24px Comic Sans MS";
+      ctx.fillStyle = "white";
+      ctx.textAlign = "center";
+      ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
+
+      this.restartButtonArea = {
+        x: buttonX,
+        y: buttonY,
+        width: buttonWidth,
+        height: buttonHeight,
+      };
+
+      if (!this.canvasClickListenerAdded) {
+        const boundHandler = this.handleCanvasClick.bind(this);
+        canvas.addEventListener("click", boundHandler);
+        canvas.addEventListener("touchstart", boundHandler, { passive: false });
+        canvas.addEventListener("pointerdown", boundHandler);
+        this.canvasClickListenerAdded = true;
+      }
+    };
+  }
 
 
   handleCanvasClick(event) {
@@ -930,165 +846,37 @@ class World {
   //   }
   // }
   toggleSound(enabled) {
-    // Character
-    if (this.character?.jumpSound) this.character.jumpSound.muted = !enabled;
-    if (this.character?.coinSound) this.character.coinSound.muted = !enabled;
-    if (this.character?.walkSound) this.character.walkSound.muted = !enabled;
-    if (this.character?.hurtSound) this.character.hurtSound.muted = !enabled;
+  // Character
+  if (this.character?.jumpSound)   this.character.jumpSound.muted   = !enabled;
+  if (this.character?.coinSound)   this.character.coinSound.muted   = !enabled;
+  if (this.character?.walkSound)   this.character.walkSound.muted   = !enabled;
+  if (this.character?.hurtSound)   this.character.hurtSound.muted   = !enabled;
 
-    // Enemies (inkl. Endboss)
-    this.enemies.forEach((enemy) => {
-      if (enemy.screamSound) enemy.screamSound.muted = !enabled;
-      if (enemy.hitSound) enemy.hitSound.muted = !enabled;
-    });
+  // Enemies (inkl. Endboss)
+  this.enemies.forEach((enemy) => {
+    if (enemy.screamSound) enemy.screamSound.muted = !enabled;
+    if (enemy.hitSound)    enemy.hitSound.muted    = !enabled;
+  });
 
-    // World-Sounds (GameOver, Win etc.)
-    if (this.gameOverSound) this.gameOverSound.muted = !enabled;
-    if (this.winSound) this.winSound.muted = !enabled;
-  }
+  // World-Sounds (GameOver, Win etc.)
+  if (this.gameOverSound) this.gameOverSound.muted = !enabled;
+  if (this.winSound)      this.winSound.muted      = !enabled;
+}
 
-  // draw() {
-  //   if (this.playerDied) {
-  //     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  //     this.showGameOverScreen();
-  //     return;
-  //   }
 
-  //   console.log("characterDead:", this.characterDead);
-  //   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  //   this.ctx.translate(this.camera_x, 0);
-
-  //   this.addObjectsToMap(this.level.backgroundObjects || []);
-
-  //   this.ctx.translate(-this.camera_x, 0);
-
-  //   if (this.bottleLimitMessage) {
-  //     this.ctx.font = "15px Comic Sans MS";
-  //     this.ctx.fillStyle = "red";
-  //     this.ctx.fillText(this.bottleLimitMessage, 180, 95);
-  //   }
-  //   if (this.levelMessage) {
-  //     this.ctx.font = "32px Comic Sans MS";
-  //     this.ctx.fillStyle = "#28a745";
-  //     this.ctx.textAlign = "center";
-  //     this.ctx.fillText(this.levelMessage, this.canvas.width / 2, 150);
-  //   }
-
-  //   this.addToMap(this.statusBar);
-  //   this.addToMap(this.statusBarBottle);
-  //   this.addToMap(this.statusBarCoin);
-  //   this.addObjectsToMap(this.clouds || []);
-
-  //   this.ctx.translate(this.camera_x, 0);
-
-  //   this.addToMap(this.character);
-
-  //   this.addObjectsToMap(this.level.enemies || []);
-
-  //   (this.level.enemies || []).forEach((enemy) => {
-  //     if (enemy.statusBar) {
-  //       enemy.statusBar.updatePosition();
-  //       this.addToMap(enemy.statusBar);
-  //     }
-  //   });
-
-  //   this.addObjectsToMap(this.collectableBottles || []);
-  //   this.addObjectsToMap(this.collectableCoins || []);
-  //   this.addObjectsToMap(this.throwableObjects || []);
-
-  //   this.ctx.translate(-this.camera_x, 0);
-
-  //   // ... dein draw(), ganz am Ende, NACH translate(-this.camera_x, 0)
-  //   this.drawMobileControls(); // deine Gamepad-Buttons unten
-  //   //this.drawUIButtons(); // NEU: Fullscreen/Sound/Anleitung oben rechts
-
-  //   if (!this.playerDied && !this.endbossDefeated) {
-  //     this.animationFrame = requestAnimationFrame(() => this.draw());
-  //   }
-  // }
-  //   draw() {
-  //   // 1️⃣ Game Over Screen
-  //   if (this.playerDied) {
-  //     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  //     this.showGameOverScreen();
-  //     return;
-  //   }
-
-  //   // 2️⃣ Win Screen
-  //   if (this.endbossDefeated) {
-  //     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  //     this.showWinScreen();
-  //     return;
-  //   }
-
-  //   // 3️⃣ Normales Spiel
-  //   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  //   this.ctx.translate(this.camera_x, 0);
-
-  //   this.addObjectsToMap(this.level.backgroundObjects || []);
-  //   this.ctx.translate(-this.camera_x, 0);
-
-  //   if (this.bottleLimitMessage) {
-  //     this.ctx.font = "15px Comic Sans MS";
-  //     this.ctx.fillStyle = "red";
-  //     this.ctx.fillText(this.bottleLimitMessage, 180, 95);
-  //   }
-  //   if (this.levelMessage) {
-  //     this.ctx.font = "32px Comic Sans MS";
-  //     this.ctx.fillStyle = "#28a745";
-  //     this.ctx.textAlign = "center";
-  //     this.ctx.fillText(this.levelMessage, this.canvas.width / 2, 150);
-  //   }
-
-  //   this.addToMap(this.statusBar);
-  //   this.addToMap(this.statusBarBottle);
-  //   this.addToMap(this.statusBarCoin);
-  //   this.addObjectsToMap(this.clouds || []);
-
-  //   this.ctx.translate(this.camera_x, 0);
-  //   this.addToMap(this.character);
-  //   this.addObjectsToMap(this.level.enemies || []);
-
-  //   (this.level.enemies || []).forEach((enemy) => {
-  //     if (enemy.statusBar) {
-  //       enemy.statusBar.updatePosition();
-  //       this.addToMap(enemy.statusBar);
-  //     }
-  //   });
-
-  //   this.addObjectsToMap(this.collectableBottles || []);
-  //   this.addObjectsToMap(this.collectableCoins || []);
-  //   this.addObjectsToMap(this.throwableObjects || []);
-  //   this.ctx.translate(-this.camera_x, 0);
-
-  //   this.drawMobileControls();
-
-  //   // 4️⃣ Loop nur solange kein Tod und kein Sieg
-  //   if (!this.playerDied && !this.endbossDefeated) {
-  //     this.animationFrame = requestAnimationFrame(() => this.draw());
-  //   }
-  // }
   draw() {
-    // // 1️⃣ Game Over Screen
-    // if (this.playerDied || this.characterDead) {
-    //   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    //   this.showGameOverScreen();
-    //   return;
-    // }
-    
-
-    // 2️⃣ Win Screen
-    if (this.endbossDefeated) {
+    if (this.playerDied) {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.showWinScreen();
+      this.showGameOverScreen();
       return;
     }
 
-    // 3️⃣ Normales Spiel
+    console.log("characterDead:", this.characterDead);
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.translate(this.camera_x, 0);
 
     this.addObjectsToMap(this.level.backgroundObjects || []);
+
     this.ctx.translate(-this.camera_x, 0);
 
     if (this.bottleLimitMessage) {
@@ -1109,7 +897,9 @@ class World {
     this.addObjectsToMap(this.clouds || []);
 
     this.ctx.translate(this.camera_x, 0);
+
     this.addToMap(this.character);
+
     this.addObjectsToMap(this.level.enemies || []);
 
     (this.level.enemies || []).forEach((enemy) => {
@@ -1122,12 +912,14 @@ class World {
     this.addObjectsToMap(this.collectableBottles || []);
     this.addObjectsToMap(this.collectableCoins || []);
     this.addObjectsToMap(this.throwableObjects || []);
+
     this.ctx.translate(-this.camera_x, 0);
 
-    this.drawMobileControls();
+    // ... dein draw(), ganz am Ende, NACH translate(-this.camera_x, 0)
+    this.drawMobileControls(); // deine Gamepad-Buttons unten
+    //this.drawUIButtons(); // NEU: Fullscreen/Sound/Anleitung oben rechts
 
-    // 4️⃣ Loop nur solange kein Tod und kein Sieg
-    if (!this.playerDied && !this.characterDead && !this.endbossDefeated) {
+    if (!this.playerDied && !this.endbossDefeated) {
       this.animationFrame = requestAnimationFrame(() => this.draw());
     }
   }
