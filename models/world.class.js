@@ -716,89 +716,163 @@ class World {
     }
   }
 
+  // showGameOverScreen() {
+  //   const ctx = this.ctx;
+  //   const canvas = this.canvas;
+
+  //   // if (!this.gameOverSound) {
+  //   //   this.gameOverSound = new Audio("audio/gameover.mp3");
+  //   //   this.gameOverSound.volume = 0.6;
+  //   // }
+
+  //   // if (soundEnabled) {
+  //   //   this.gameOverSound.currentTime = 0;
+  //   //   this.gameOverSound.play().catch(() => {});
+  //   // }
+  //   if (!this.gameOverSound) {
+  //     this.gameOverSound = new Audio("audio/gameover.mp3");
+  //     this.gameOverSound.volume = 0.6;
+  //   }
+
+  //   // if (soundEnabled) { // ✅ Nur wenn Sound erlaubt
+  //   //   this.gameOverSound.currentTime = 0;
+  //   //   this.gameOverSound.play().catch(() => {});
+  //   // }
+  //   // ⚡ Nur einmal abspielen
+  //   if (soundEnabled && !this.gameOverPlayed) {
+  //     this.gameOverPlayed = true; // merken, dass schon gespielt
+  //     this.gameOverSound.currentTime = 0;
+  //     this.gameOverSound.play().catch(() => {});
+  //   }
+
+  //   ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+  //   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  //   const img = new Image();
+  //   img.src = "img/You won, you lost/Game Over.png";
+
+  //   img.onload = () => {
+  //     const maxWidth = canvas.width * 0.6;
+  //     const maxHeight = canvas.height * 0.3;
+
+  //     let imgWidth = img.width;
+  //     let imgHeight = img.height;
+
+  //     const widthRatio = maxWidth / imgWidth;
+  //     const heightRatio = maxHeight / imgHeight;
+  //     const scale = Math.min(widthRatio, heightRatio);
+
+  //     imgWidth *= scale;
+  //     imgHeight *= scale;
+
+  //     const imgX = canvas.width / 2 - imgWidth / 2;
+  //     const imgY = canvas.height / 2 - imgHeight - 40;
+
+  //     ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+
+  //     const buttonWidth = 250;
+  //     const buttonHeight = 60;
+  //     const buttonX = canvas.width / 2 - buttonWidth / 2;
+  //     const buttonY = canvas.height / 2;
+
+  //     ctx.fillStyle = "#fca534ff";
+  //     ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+  //     ctx.font = "24px Comic Sans MS";
+  //     ctx.fillStyle = "white";
+  //     ctx.textAlign = "center";
+  //     ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
+
+  //     this.restartButtonArea = {
+  //       x: buttonX,
+  //       y: buttonY,
+  //       width: buttonWidth,
+  //       height: buttonHeight,
+  //     };
+
+  //     if (!this.canvasClickListenerAdded) {
+  //       const boundHandler = this.handleCanvasClick.bind(this);
+  //       canvas.addEventListener("click", boundHandler);
+  //       canvas.addEventListener("touchstart", boundHandler, { passive: false });
+  //       canvas.addEventListener("pointerdown", boundHandler);
+  //       this.canvasClickListenerAdded = true;
+  //     }
+  //   };
+  // }
   showGameOverScreen() {
-    const ctx = this.ctx;
-    const canvas = this.canvas;
+  const ctx = this.ctx;
+  const canvas = this.canvas;
 
-    // if (!this.gameOverSound) {
-    //   this.gameOverSound = new Audio("audio/gameover.mp3");
-    //   this.gameOverSound.volume = 0.6;
-    // }
-
-    // if (soundEnabled) {
-    //   this.gameOverSound.currentTime = 0;
-    //   this.gameOverSound.play().catch(() => {});
-    // }
-    if (!this.gameOverSound) {
-      this.gameOverSound = new Audio("audio/gameover.mp3");
-      this.gameOverSound.volume = 0.6;
-    }
-
-    // if (soundEnabled) { // ✅ Nur wenn Sound erlaubt
-    //   this.gameOverSound.currentTime = 0;
-    //   this.gameOverSound.play().catch(() => {});
-    // }
-    // ⚡ Nur einmal abspielen
-    if (soundEnabled && !this.gameOverPlayed) {
-      this.gameOverPlayed = true; // merken, dass schon gespielt
-      this.gameOverSound.currentTime = 0;
-      this.gameOverSound.play().catch(() => {});
-    }
-
-    ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    const img = new Image();
-    img.src = "img/You won, you lost/Game Over.png";
-
-    img.onload = () => {
-      const maxWidth = canvas.width * 0.6;
-      const maxHeight = canvas.height * 0.3;
-
-      let imgWidth = img.width;
-      let imgHeight = img.height;
-
-      const widthRatio = maxWidth / imgWidth;
-      const heightRatio = maxHeight / imgHeight;
-      const scale = Math.min(widthRatio, heightRatio);
-
-      imgWidth *= scale;
-      imgHeight *= scale;
-
-      const imgX = canvas.width / 2 - imgWidth / 2;
-      const imgY = canvas.height / 2 - imgHeight - 40;
-
-      ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-
-      const buttonWidth = 250;
-      const buttonHeight = 60;
-      const buttonX = canvas.width / 2 - buttonWidth / 2;
-      const buttonY = canvas.height / 2;
-
-      ctx.fillStyle = "#fca534ff";
-      ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-      ctx.font = "24px Comic Sans MS";
-      ctx.fillStyle = "white";
-      ctx.textAlign = "center";
-      ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
-
-      this.restartButtonArea = {
-        x: buttonX,
-        y: buttonY,
-        width: buttonWidth,
-        height: buttonHeight,
-      };
-
-      if (!this.canvasClickListenerAdded) {
-        const boundHandler = this.handleCanvasClick.bind(this);
-        canvas.addEventListener("click", boundHandler);
-        canvas.addEventListener("touchstart", boundHandler, { passive: false });
-        canvas.addEventListener("pointerdown", boundHandler);
-        this.canvasClickListenerAdded = true;
-      }
-    };
+  if (!this.gameOverSound) {
+    this.gameOverSound = new Audio("audio/gameover.mp3");
+    this.gameOverSound.volume = 0.6;
   }
+
+  // ⚡ Nur beim ersten Mal abspielen
+  if (soundEnabled && !this.gameOverPlayed) {
+    this.gameOverPlayed = true; // merken!
+    this.gameOverSound.currentTime = 0;
+    this.gameOverSound.play().catch(() => {});
+  }
+
+  // Hintergrund abdunkeln
+  ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // GameOver-Bild
+  const img = new Image();
+  img.src = "img/You won, you lost/Game Over.png";
+
+  img.onload = () => {
+    const maxWidth = canvas.width * 0.6;
+    const maxHeight = canvas.height * 0.3;
+
+    let imgWidth = img.width;
+    let imgHeight = img.height;
+
+    const widthRatio = maxWidth / imgWidth;
+    const heightRatio = maxHeight / imgHeight;
+    const scale = Math.min(widthRatio, heightRatio);
+
+    imgWidth *= scale;
+    imgHeight *= scale;
+
+    const imgX = canvas.width / 2 - imgWidth / 2;
+    const imgY = canvas.height / 2 - imgHeight - 40;
+
+    ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+
+    // Restart-Button
+    const buttonWidth = 250;
+    const buttonHeight = 60;
+    const buttonX = canvas.width / 2 - buttonWidth / 2;
+    const buttonY = canvas.height / 2;
+
+    ctx.fillStyle = "#fca534ff";
+    ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+    ctx.font = "24px Comic Sans MS";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
+
+    this.restartButtonArea = {
+      x: buttonX,
+      y: buttonY,
+      width: buttonWidth,
+      height: buttonHeight,
+    };
+
+    if (!this.canvasClickListenerAdded) {
+      const boundHandler = this.handleCanvasClick.bind(this);
+      canvas.addEventListener("click", boundHandler);
+      canvas.addEventListener("touchstart", boundHandler, { passive: false });
+      canvas.addEventListener("pointerdown", boundHandler);
+      this.canvasClickListenerAdded = true;
+    }
+  };
+}
+
 
   handleCanvasClick(event) {
     if (!this.restartButtonArea) return;
@@ -995,12 +1069,13 @@ class World {
   //   }
   // }
   draw() {
-    // 1️⃣ Game Over Screen
-    if (this.playerDied || this.characterDead) {
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.showGameOverScreen();
-      return;
-    }
+    // // 1️⃣ Game Over Screen
+    // if (this.playerDied || this.characterDead) {
+    //   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    //   this.showGameOverScreen();
+    //   return;
+    // }
+    
 
     // 2️⃣ Win Screen
     if (this.endbossDefeated) {
