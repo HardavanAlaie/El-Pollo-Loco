@@ -506,7 +506,7 @@ class World {
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-    ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+    ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     this.stopEnemySounds();
@@ -864,65 +864,128 @@ if (soundEnabled) { // ✅ Nur wenn Sound erlaubt
 }
 
 
+  // draw() {
+  //   if (this.playerDied) {
+  //     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  //     this.showGameOverScreen();
+  //     return;
+  //   }
+
+  //   console.log("characterDead:", this.characterDead);
+  //   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  //   this.ctx.translate(this.camera_x, 0);
+
+  //   this.addObjectsToMap(this.level.backgroundObjects || []);
+
+  //   this.ctx.translate(-this.camera_x, 0);
+
+  //   if (this.bottleLimitMessage) {
+  //     this.ctx.font = "15px Comic Sans MS";
+  //     this.ctx.fillStyle = "red";
+  //     this.ctx.fillText(this.bottleLimitMessage, 180, 95);
+  //   }
+  //   if (this.levelMessage) {
+  //     this.ctx.font = "32px Comic Sans MS";
+  //     this.ctx.fillStyle = "#28a745";
+  //     this.ctx.textAlign = "center";
+  //     this.ctx.fillText(this.levelMessage, this.canvas.width / 2, 150);
+  //   }
+
+  //   this.addToMap(this.statusBar);
+  //   this.addToMap(this.statusBarBottle);
+  //   this.addToMap(this.statusBarCoin);
+  //   this.addObjectsToMap(this.clouds || []);
+
+  //   this.ctx.translate(this.camera_x, 0);
+
+  //   this.addToMap(this.character);
+
+  //   this.addObjectsToMap(this.level.enemies || []);
+
+  //   (this.level.enemies || []).forEach((enemy) => {
+  //     if (enemy.statusBar) {
+  //       enemy.statusBar.updatePosition();
+  //       this.addToMap(enemy.statusBar);
+  //     }
+  //   });
+
+  //   this.addObjectsToMap(this.collectableBottles || []);
+  //   this.addObjectsToMap(this.collectableCoins || []);
+  //   this.addObjectsToMap(this.throwableObjects || []);
+
+  //   this.ctx.translate(-this.camera_x, 0);
+
+  //   // ... dein draw(), ganz am Ende, NACH translate(-this.camera_x, 0)
+  //   this.drawMobileControls(); // deine Gamepad-Buttons unten
+  //   //this.drawUIButtons(); // NEU: Fullscreen/Sound/Anleitung oben rechts
+
+  //   if (!this.playerDied && !this.endbossDefeated) {
+  //     this.animationFrame = requestAnimationFrame(() => this.draw());
+  //   }
+  // }
   draw() {
-    if (this.playerDied) {
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.showGameOverScreen();
-      return;
-    }
-
-    console.log("characterDead:", this.characterDead);
+  // 1️⃣ Game Over Screen
+  if (this.playerDied) {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.translate(this.camera_x, 0);
-
-    this.addObjectsToMap(this.level.backgroundObjects || []);
-
-    this.ctx.translate(-this.camera_x, 0);
-
-    if (this.bottleLimitMessage) {
-      this.ctx.font = "15px Comic Sans MS";
-      this.ctx.fillStyle = "red";
-      this.ctx.fillText(this.bottleLimitMessage, 180, 95);
-    }
-    if (this.levelMessage) {
-      this.ctx.font = "32px Comic Sans MS";
-      this.ctx.fillStyle = "#28a745";
-      this.ctx.textAlign = "center";
-      this.ctx.fillText(this.levelMessage, this.canvas.width / 2, 150);
-    }
-
-    this.addToMap(this.statusBar);
-    this.addToMap(this.statusBarBottle);
-    this.addToMap(this.statusBarCoin);
-    this.addObjectsToMap(this.clouds || []);
-
-    this.ctx.translate(this.camera_x, 0);
-
-    this.addToMap(this.character);
-
-    this.addObjectsToMap(this.level.enemies || []);
-
-    (this.level.enemies || []).forEach((enemy) => {
-      if (enemy.statusBar) {
-        enemy.statusBar.updatePosition();
-        this.addToMap(enemy.statusBar);
-      }
-    });
-
-    this.addObjectsToMap(this.collectableBottles || []);
-    this.addObjectsToMap(this.collectableCoins || []);
-    this.addObjectsToMap(this.throwableObjects || []);
-
-    this.ctx.translate(-this.camera_x, 0);
-
-    // ... dein draw(), ganz am Ende, NACH translate(-this.camera_x, 0)
-    this.drawMobileControls(); // deine Gamepad-Buttons unten
-    //this.drawUIButtons(); // NEU: Fullscreen/Sound/Anleitung oben rechts
-
-    if (!this.playerDied && !this.endbossDefeated) {
-      this.animationFrame = requestAnimationFrame(() => this.draw());
-    }
+    this.showGameOverScreen();
+    return;
   }
+
+  // 2️⃣ Win Screen
+  if (this.endbossDefeated) {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.showWinScreen();
+    return;
+  }
+
+  // 3️⃣ Normales Spiel
+  this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  this.ctx.translate(this.camera_x, 0);
+
+  this.addObjectsToMap(this.level.backgroundObjects || []);
+  this.ctx.translate(-this.camera_x, 0);
+
+  if (this.bottleLimitMessage) {
+    this.ctx.font = "15px Comic Sans MS";
+    this.ctx.fillStyle = "red";
+    this.ctx.fillText(this.bottleLimitMessage, 180, 95);
+  }
+  if (this.levelMessage) {
+    this.ctx.font = "32px Comic Sans MS";
+    this.ctx.fillStyle = "#28a745";
+    this.ctx.textAlign = "center";
+    this.ctx.fillText(this.levelMessage, this.canvas.width / 2, 150);
+  }
+
+  this.addToMap(this.statusBar);
+  this.addToMap(this.statusBarBottle);
+  this.addToMap(this.statusBarCoin);
+  this.addObjectsToMap(this.clouds || []);
+
+  this.ctx.translate(this.camera_x, 0);
+  this.addToMap(this.character);
+  this.addObjectsToMap(this.level.enemies || []);
+
+  (this.level.enemies || []).forEach((enemy) => {
+    if (enemy.statusBar) {
+      enemy.statusBar.updatePosition();
+      this.addToMap(enemy.statusBar);
+    }
+  });
+
+  this.addObjectsToMap(this.collectableBottles || []);
+  this.addObjectsToMap(this.collectableCoins || []);
+  this.addObjectsToMap(this.throwableObjects || []);
+  this.ctx.translate(-this.camera_x, 0);
+
+  this.drawMobileControls();
+
+  // 4️⃣ Loop nur solange kein Tod und kein Sieg
+  if (!this.playerDied && !this.endbossDefeated) {
+    this.animationFrame = requestAnimationFrame(() => this.draw());
+  }
+}
+
 
   // drawMobileControls() {
   //   const ctx = this.ctx;
