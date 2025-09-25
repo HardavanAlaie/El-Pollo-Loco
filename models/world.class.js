@@ -1785,6 +1785,14 @@ class World {
   document.addEventListener("fullscreenchange", () => this.updateButtonAreas());
 }
 
+updateButtonAreas() {
+  // Bei Bedarf die Button-Positionen neu berechnen
+  // (z. B. wenn du sie dynamisch zur Canvasgröße skalieren willst)
+  // Momentan reicht es, draw() aufzurufen, da dort drawMobileControls() läuft
+  this.drawMobileControls();
+}
+
+
 
   addObjectsToMap(objects) {
     if (!Array.isArray(objects)) return;
