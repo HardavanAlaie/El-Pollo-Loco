@@ -35,8 +35,6 @@
 //   resizeCanvas();
 // }
 
-
-
 // window.addEventListener("keydown", (e) => {
 //   if (e.keyCode == 37) keyboard.LEFT = true;
 //   if (e.keyCode == 38) keyboard.UP = true;
@@ -231,8 +229,6 @@
 //   canvas.style.height = newHeight + "px";
 // }
 
-
-
 // // // Sofort ausführen & bei Resize
 // // window.addEventListener("resize", resizeCanvas);
 // // window.addEventListener("orientationchange", resizeCanvas);
@@ -249,9 +245,6 @@
 //   const ctx = canvas.getContext("2d");
 //   const menu = new Menu(canvas, ctx);
 // });
-
-
-
 
 let canvas;
 let world;
@@ -337,7 +330,6 @@ function toggleFullscreen() {
   }
 }
 
-
 /**
  * Sound ein/aus
  */
@@ -363,9 +355,6 @@ function toggleSound() {
     soundBtn.textContent = soundEnabled ? "🔊" : "🔇";
   }
 }
-
-
-
 
 // window.addEventListener("load", () => {
 //   resizeCanvas();
@@ -435,11 +424,12 @@ window.addEventListener("load", () => {
 
   // HTML-Buttons
   const instrBtn = document.getElementById("instructions-btn");
-  const fullBtn  = document.getElementById("fullscreen-btn");
+  const fullBtn = document.getElementById("fullscreen-btn");
   const soundBtn = document.getElementById("sound-btn");
 
   if (instrBtn) instrBtn.addEventListener("click", () => showInstructions());
-  if (fullBtn)  fullBtn.addEventListener("click", () => toggleFullscreen(canvas));
+  if (fullBtn)
+    fullBtn.addEventListener("click", () => toggleFullscreen(canvas));
   if (soundBtn) soundBtn.addEventListener("click", toggleSound);
 
   // Initiales Icon setzen
@@ -455,8 +445,6 @@ function showInstructions() {
 function hideInstructions() {
   document.getElementById("instructions-overlay")?.classList.add("hidden");
 }
-
-
 
 /**
  * Responsive Canvas: bleibt immer im Seitenverhältnis 720x480
@@ -491,7 +479,10 @@ function resizeCanvas() {
 window.addEventListener("resize", resizeCanvas);
 window.addEventListener("orientationchange", resizeCanvas);
 
-document.getElementById("instructions-btn").addEventListener("click", showInstructions);
-document.getElementById("fullscreen-btn").addEventListener("click", () => toggleFullscreen(canvas));
+document
+  .getElementById("instructions-btn")
+  .addEventListener("click", showInstructions);
+document
+  .getElementById("fullscreen-btn")
+  .addEventListener("click", () => toggleFullscreen(canvas));
 document.getElementById("sound-btn").addEventListener("click", toggleSound);
-
