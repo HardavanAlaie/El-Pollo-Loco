@@ -1689,61 +1689,102 @@ class World {
   }
 
   // EINMAL registrieren!
+  // setupCanvasControls() {
+  //   if (this.uiClickListenerAdded) return;
+  //   this.uiClickListenerAdded = true;
+
+  //   const handleDown = (e) => {
+  //     if (e.cancelable) e.preventDefault();
+  //     const { x, y } = this.toCanvasXY(e);
+
+  //     // 🕹️ Steuer-Buttons
+  //     if (this.leftBtnArea && this.isInsideButton(x, y, this.leftBtnArea))
+  //       this.keyboard.LEFT = true;
+  //     if (this.rightBtnArea && this.isInsideButton(x, y, this.rightBtnArea))
+  //       this.keyboard.RIGHT = true;
+  //     if (this.jumpBtnArea && this.isInsideButton(x, y, this.jumpBtnArea))
+  //       this.keyboard.UP = true;
+  //     if (this.throwBtnArea && this.isInsideButton(x, y, this.throwBtnArea))
+  //       this.keyboard.D = true;
+
+  //     // // 🎛️ UI-Buttons
+  //     // if (this.fullscreenBtnArea && this.isInsideButton(x, y, this.fullscreenBtnArea)) {
+  //     //   // nutzt deine Funktion aus game.js (nur 1x definiert!)
+  //     //   toggleFullscreen(this.canvas);
+  //     // }
+  //     // if (this.soundBtnArea && this.isInsideButton(x, y, this.soundBtnArea)) {
+  //     //   toggleSound(); // setzt global soundEnabled und ruft world.toggleSound(soundEnabled), wenn vorhanden
+  //     // }
+  //     // if (this.instrBtnArea && this.isInsideButton(x, y, this.instrBtnArea)) {
+  //     //   showInstructions();
+  //     // }
+  //   };
+
+  //   const handleUpAll = () => {
+  //     this.keyboard.LEFT = false;
+  //     this.keyboard.RIGHT = false;
+  //     this.keyboard.UP = false;
+  //     this.keyboard.D = false;
+  //   };
+
+  //   // Moderne Pointer-Events (decken Maus & Touch ab)
+  //   this.canvas.addEventListener("pointerdown", handleDown, { passive: false });
+  //   this.canvas.addEventListener("pointerup", handleUpAll);
+  //   this.canvas.addEventListener("pointercancel", handleUpAll);
+  //   this.canvas.addEventListener("pointerleave", handleUpAll);
+
+  //   // Fallback für ältere Safari/iOS
+  //   this.canvas.addEventListener("touchstart", handleDown, { passive: false });
+  //   this.canvas.addEventListener("touchend", handleUpAll, { passive: false });
+  //   this.canvas.addEventListener("touchcancel", handleUpAll, {
+  //     passive: false,
+  //   });
+
+  //   // Optional: Maus
+  //   this.canvas.addEventListener("mousedown", handleDown);
+  //   this.canvas.addEventListener("mouseup", handleUpAll);
+  // }
   setupCanvasControls() {
-    if (this.uiClickListenerAdded) return;
-    this.uiClickListenerAdded = true;
+  if (this.uiClickListenerAdded) return;
+  this.uiClickListenerAdded = true;
 
-    const handleDown = (e) => {
-      if (e.cancelable) e.preventDefault();
-      const { x, y } = this.toCanvasXY(e);
+  const handleDown = (e) => {
+    if (e.cancelable) e.preventDefault();
+    const { x, y } = this.toCanvasXY(e);
 
-      // 🕹️ Steuer-Buttons
-      if (this.leftBtnArea && this.isInsideButton(x, y, this.leftBtnArea))
-        this.keyboard.LEFT = true;
-      if (this.rightBtnArea && this.isInsideButton(x, y, this.rightBtnArea))
-        this.keyboard.RIGHT = true;
-      if (this.jumpBtnArea && this.isInsideButton(x, y, this.jumpBtnArea))
-        this.keyboard.UP = true;
-      if (this.throwBtnArea && this.isInsideButton(x, y, this.throwBtnArea))
-        this.keyboard.D = true;
+    // 🕹️ Steuer-Buttons
+    if (this.leftBtnArea  && this.isInsideButton(x, y, this.leftBtnArea))  this.keyboard.LEFT  = true;
+    if (this.rightBtnArea && this.isInsideButton(x, y, this.rightBtnArea)) this.keyboard.RIGHT = true;
+    if (this.jumpBtnArea  && this.isInsideButton(x, y, this.jumpBtnArea))  this.keyboard.UP    = true;
+    if (this.throwBtnArea && this.isInsideButton(x, y, this.throwBtnArea)) this.keyboard.D     = true;
+  };
 
-      // // 🎛️ UI-Buttons
-      // if (this.fullscreenBtnArea && this.isInsideButton(x, y, this.fullscreenBtnArea)) {
-      //   // nutzt deine Funktion aus game.js (nur 1x definiert!)
-      //   toggleFullscreen(this.canvas);
-      // }
-      // if (this.soundBtnArea && this.isInsideButton(x, y, this.soundBtnArea)) {
-      //   toggleSound(); // setzt global soundEnabled und ruft world.toggleSound(soundEnabled), wenn vorhanden
-      // }
-      // if (this.instrBtnArea && this.isInsideButton(x, y, this.instrBtnArea)) {
-      //   showInstructions();
-      // }
-    };
+  const handleUpAll = () => {
+    this.keyboard.LEFT  = false;
+    this.keyboard.RIGHT = false;
+    this.keyboard.UP    = false;
+    this.keyboard.D     = false;
+  };
 
-    const handleUpAll = () => {
-      this.keyboard.LEFT = false;
-      this.keyboard.RIGHT = false;
-      this.keyboard.UP = false;
-      this.keyboard.D = false;
-    };
+  // 👉 Wichtig: Auch bei Fullscreen funktioniert das, weil toCanvasXY mit getBoundingClientRect() rechnet
+  this.canvas.addEventListener("pointerdown", handleDown, { passive: false });
+  this.canvas.addEventListener("pointerup", handleUpAll);
+  this.canvas.addEventListener("pointercancel", handleUpAll);
+  this.canvas.addEventListener("pointerleave", handleUpAll);
 
-    // Moderne Pointer-Events (decken Maus & Touch ab)
-    this.canvas.addEventListener("pointerdown", handleDown, { passive: false });
-    this.canvas.addEventListener("pointerup", handleUpAll);
-    this.canvas.addEventListener("pointercancel", handleUpAll);
-    this.canvas.addEventListener("pointerleave", handleUpAll);
+  this.canvas.addEventListener("touchstart", handleDown, { passive: false });
+  this.canvas.addEventListener("touchend", handleUpAll, { passive: false });
+  this.canvas.addEventListener("touchcancel", handleUpAll, { passive: false });
 
-    // Fallback für ältere Safari/iOS
-    this.canvas.addEventListener("touchstart", handleDown, { passive: false });
-    this.canvas.addEventListener("touchend", handleUpAll, { passive: false });
-    this.canvas.addEventListener("touchcancel", handleUpAll, {
-      passive: false,
-    });
+  this.canvas.addEventListener("mousedown", handleDown);
+  this.canvas.addEventListener("mouseup", handleUpAll);
 
-    // Optional: Maus
-    this.canvas.addEventListener("mousedown", handleDown);
-    this.canvas.addEventListener("mouseup", handleUpAll);
-  }
+  // 👉 Bei jedem Resize oder Fullscreen neu berechnen
+  window.addEventListener("resize", () => this.updateButtonAreas());
+  window.addEventListener("orientationchange", () => this.updateButtonAreas());
+  document.addEventListener("fullscreenchange", () => this.updateButtonAreas());
+}
+
 
   addObjectsToMap(objects) {
     if (!Array.isArray(objects)) return;

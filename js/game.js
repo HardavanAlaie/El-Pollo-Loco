@@ -508,3 +508,6 @@ document
   .getElementById("fullscreen-btn")
   .addEventListener("click", () => toggleFullscreen(canvas));
 document.getElementById("sound-btn").addEventListener("click", toggleSound);
+
+
+
