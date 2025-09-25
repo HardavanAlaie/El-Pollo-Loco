@@ -317,9 +317,21 @@ window.addEventListener("load", () => {
 //     document.exitFullscreen();
 //   }
 // }
+// function toggleFullscreen() {
+//   const canvas = document.getElementById("canvas");
+//   if (!canvas) return; // Sicherheit
+
+//   if (!document.fullscreenElement) {
+//     canvas.requestFullscreen().catch((err) => {
+//       console.error(`Vollbild-Fehler: ${err.message}`);
+//     });
+//   } else {
+//     document.exitFullscreen();
+//   }
+// }
 function toggleFullscreen() {
   const canvas = document.getElementById("canvas");
-  if (!canvas) return; // Sicherheit
+  if (!canvas) return;
 
   if (!document.fullscreenElement) {
     canvas.requestFullscreen().catch((err) => {
@@ -329,6 +341,16 @@ function toggleFullscreen() {
     document.exitFullscreen();
   }
 }
+
+// Wichtig: Wenn Fullscreen startet/endet → Canvas neu skalieren
+document.addEventListener("fullscreenchange", () => {
+  resizeCanvas();
+
+  // Debug-Ausgabe, ob Koordinaten passen
+  const rect = document.getElementById("canvas").getBoundingClientRect();
+  console.log("Fullscreen rect:", rect.width, rect.height);
+});
+
 
 /**
  * Sound ein/aus
