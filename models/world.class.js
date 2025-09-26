@@ -404,15 +404,25 @@ class World {
     }
   }
 
-  stopGameLoopHard() {
-    console.log("⏹️ Stoppe komplettes Spiel");
+  // stopGameLoopHard() {
+  //   console.log("⏹️ Stoppe komplettes Spiel");
 
-    clearInterval(this.gameInterval);
-    clearInterval(this.enemySpawnInterval);
+  //   clearInterval(this.gameInterval);
+  //   clearInterval(this.enemySpawnInterval);
 
-    this.levelEnded = true;
-    this.gameOver = true;
-  }
+  //   this.levelEnded = true;
+  //   this.gameOver = true;
+  // }
+  stopGameLoopHard(isWin = false) {
+  console.log("⏹️ Stoppe komplettes Spiel");
+
+  clearInterval(this.gameInterval);
+  clearInterval(this.enemySpawnInterval);
+
+  this.levelEnded = true;
+  this.gameOver = !isWin;  // ✅ Nur true, wenn es KEIN Sieg war
+}
+
 
   spawnEnemyLoop() {
     const spawnConfigs = this.level.config?.spawnConfig || [];
