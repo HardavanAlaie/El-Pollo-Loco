@@ -706,65 +706,10 @@ class World {
   //     }
   //   };
   // }
-  // drawWinScreen(img) {
-  //   const ctx = this.ctx;
-  //   const canvas = this.canvas;
-
-  //   const maxWidth = canvas.width * 0.6;
-  //   const maxHeight = canvas.height * 0.3;
-
-  //   let imgWidth = img.width;
-  //   let imgHeight = img.height;
-
-  //   const widthRatio = maxWidth / imgWidth;
-  //   const heightRatio = maxHeight / imgHeight;
-  //   const scale = Math.min(widthRatio, heightRatio);
-
-  //   imgWidth *= scale;
-  //   imgHeight *= scale;
-
-  //   const imgX = canvas.width / 2 - imgWidth / 2;
-  //   const imgY = canvas.height / 2 - imgHeight - 40;
-
-  //   ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-
-  //   const buttonWidth = 250;
-  //   const buttonHeight = 60;
-  //   const buttonX = canvas.width / 2 - buttonWidth / 2;
-  //   const buttonY = canvas.height / 2;
-
-  //   ctx.fillStyle = "#44cc44";
-  //   ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-  //   ctx.font = "24px Comic Sans MS";
-  //   ctx.fillStyle = "white";
-  //   ctx.textAlign = "center";
-  //   ctx.fillText("Spiel neu starten", canvas.width / 2, buttonY + 38);
-
-  //   this.restartButtonArea = {
-  //     x: buttonX,
-  //     y: buttonY,
-  //     width: buttonWidth,
-  //     height: buttonHeight,
-  //   };
-
-  //   if (!this.canvasClickListenerAdded) {
-  //     const boundHandler = this.handleCanvasClick.bind(this);
-  //     canvas.addEventListener("click", boundHandler);
-  //     canvas.addEventListener("touchstart", boundHandler, { passive: false });
-  //     canvas.addEventListener("pointerdown", boundHandler);
-  //     this.canvasClickListenerAdded = true;
-  //   }
-  // }
   drawWinScreen(img) {
     const ctx = this.ctx;
     const canvas = this.canvas;
 
-    // ✅ nur Overlay – Spiel bleibt darunter sichtbar
-    ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Win-Bild
     const maxWidth = canvas.width * 0.6;
     const maxHeight = canvas.height * 0.3;
 
@@ -783,7 +728,6 @@ class World {
 
     ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
 
-    // Restart-Button
     const buttonWidth = 250;
     const buttonHeight = 60;
     const buttonX = canvas.width / 2 - buttonWidth / 2;
