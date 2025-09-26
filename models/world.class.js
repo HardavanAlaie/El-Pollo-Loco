@@ -390,16 +390,25 @@ class World {
     )
       return;
 
+    // if (endboss.isDead?.()) {
+    //   console.log("✅ Endboss besiegt!");
+    //   this._handlingBossDefeat = true;
+    //   this.endbossDefeated = true;
+    //   this.levelEnded = true;
+
+    //   this.stopGameLoopHard();
+
+    //   this.uiScreen = "win";
+
+    //   this.showWinScreen();
+    // }
     if (endboss.isDead?.()) {
       console.log("✅ Endboss besiegt!");
       this._handlingBossDefeat = true;
       this.endbossDefeated = true;
-      this.levelEnded = true;
 
-      this.stopGameLoopHard();
-
+      this.stopGameLoopHard(true); // ✅ Sieg
       this.uiScreen = "win";
-
       this.showWinScreen();
     }
   }
@@ -414,15 +423,14 @@ class World {
   //   this.gameOver = true;
   // }
   stopGameLoopHard(isWin = false) {
-  console.log("⏹️ Stoppe komplettes Spiel");
+    console.log("⏹️ Stoppe komplettes Spiel");
 
-  clearInterval(this.gameInterval);
-  clearInterval(this.enemySpawnInterval);
+    clearInterval(this.gameInterval);
+    clearInterval(this.enemySpawnInterval);
 
-  this.levelEnded = true;
-  this.gameOver = !isWin;  // ✅ Nur true, wenn es KEIN Sieg war
-}
-
+    this.levelEnded = true;
+    this.gameOver = !isWin; // ✅ Nur true, wenn es KEIN Sieg war
+  }
 
   spawnEnemyLoop() {
     const spawnConfigs = this.level.config?.spawnConfig || [];
