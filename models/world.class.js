@@ -549,7 +549,7 @@ class World {
 
     console.log("🎉 showWinScreen läuft!");
 
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    //ctx.setTransform(1, 0, 0, 1, 0, 0);
 
     ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
