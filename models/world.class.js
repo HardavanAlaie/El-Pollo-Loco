@@ -781,22 +781,16 @@ class World {
     //   this.gameOverSound.currentTime = 0;
     //   this.gameOverSound.play().catch(() => {});
     // }
-    // if (!this.gameOverSound) {
-    //   this.gameOverSound = new Audio("audio/gameover.mp3");
-    //   this.gameOverSound.volume = 0.6;
-    // }
+    if (!this.gameOverSound) {
+      this.gameOverSound = new Audio("audio/gameover.mp3");
+      this.gameOverSound.volume = 0.6;
+    }
 
-    // if (soundEnabled) {
-    //   // ✅ Nur wenn Sound erlaubt
-    //   this.gameOverSound.currentTime = 0;
-    //   this.gameOverSound.play().catch(() => {});
-    // }
-    if (!this._gameOverSoundPlayed && soundEnabled) {
-  this.gameOverSound.currentTime = 0;
-  this.gameOverSound.play().catch(() => {});
-  this._gameOverSoundPlayed = true; // 🔒 blockt mehrfaches Abspielen
-}
-
+    if (soundEnabled) {
+      // ✅ Nur wenn Sound erlaubt
+      this.gameOverSound.currentTime = 0;
+      this.gameOverSound.play().catch(() => {});
+    }
 
     ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
