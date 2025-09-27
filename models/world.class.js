@@ -160,18 +160,7 @@ class World {
       this.checkEndboss1Hit();
 
       // ❌ Nur prüfen, wenn KEIN Sieg bereits erreicht wurde
-      // if (!this.endbossDefeated && this.playerDied && !this.gameOver) {
-      //   this.gameOver = true;
-      //   this.stopGameLoopHard();
-      //   this.showGameOverScreen();
-      // }
-      if (
-        !this.gameOver &&
-        this.character &&
-        this.character.isDead &&
-        this.character.isDead()
-      ) {
-        this.playerDied = true;
+      if (!this.endbossDefeated && this.playerDied && !this.gameOver) {
         this.gameOver = true;
         this.stopGameLoopHard();
         this.showGameOverScreen();
