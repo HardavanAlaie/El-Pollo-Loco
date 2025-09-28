@@ -159,9 +159,16 @@ class World {
       this.removeOffscreenEnemies();
       this.checkEndboss1Hit();
 
-      // ❌ Nur prüfen, wenn KEIN Sieg bereits erreicht wurde
-      if (!this.endbossDefeated && this.playerDied && !this.gameOver) {
+      // // ❌ Nur prüfen, wenn KEIN Sieg bereits erreicht wurde
+      // if (!this.endbossDefeated && this.playerDied && !this.gameOver) {
+      //   this.gameOver = true;
+      //   this.stopGameLoopHard();
+      //   this.showGameOverScreen();
+      // }
+      if (this.character.isDead() && !this.gameOver) {
+        this.playerDied = true;
         this.gameOver = true;
+
         this.stopGameLoopHard();
         this.showGameOverScreen();
       }
