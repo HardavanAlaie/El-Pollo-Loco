@@ -97,35 +97,8 @@ class EndbossLevel1 extends MovableObject {
     setTimeout(() => (this.isScreaming = false), 1500);
   }
 
-  // hit() {
-  //   if (this.isDead()) return;
-
-  //   this.energy -= 20;
-  //   this.energy = Math.max(this.energy, 0);
-  //   this.statusBar.setPercentage(this.energy);
-
-  //   if (!this.isAggressive) {
-  //     this.isAggressive = true;
-  //     this.attackMode = true;
-  //   }
-
-  //   this.scream();
-
-  //   if (this.isDead()) this.die();
-  // }
-
-  // die() {
-  //   this.playAnimation(this.IMAGES_DEAD);
-  //   clearInterval(this.bossAnimationInterval);
-  //   clearInterval(this.bossMoveInterval);
-
-  //   if (this.screamSound) {
-  //     this.screamSound.pause();
-  //     this.screamSound.currentTime = 0;
-  //   }
-  // }
   hit() {
-    if (this.isDead()) return; // ✅ schon tot? Dann nix tun
+    if (this.isDead()) return;
 
     this.energy -= 20;
     this.energy = Math.max(this.energy, 0);
@@ -136,21 +109,12 @@ class EndbossLevel1 extends MovableObject {
       this.attackMode = true;
     }
 
-    // ✅ Nur schreien, wenn er noch lebt
-    if (this.energy > 0) {
-      this.scream();
-    }
+    this.scream();
 
-    // ✅ Falls Energie leer → sterben
-    if (this.energy <= 0) {
-      this.die();
-    }
+    if (this.isDead()) this.die();
   }
 
   die() {
-    if (this._isReallyDead) return; // ✅ Mehrfach-Tod verhindern
-    this._isReallyDead = true;
-
     this.playAnimation(this.IMAGES_DEAD);
     clearInterval(this.bossAnimationInterval);
     clearInterval(this.bossMoveInterval);
@@ -159,15 +123,6 @@ class EndbossLevel1 extends MovableObject {
       this.screamSound.pause();
       this.screamSound.currentTime = 0;
     }
-
-    // ✅ Wichtig: Boss der Welt mitteilen, dass er wirklich tot ist
-    if (this.world) {
-      this.world.endbossDefeated = true;
-    }
-  }
-
-  isDead() {
-    return this.energy <= 0 || this._isReallyDead === true;
   }
 
   stopScreamSound() {
