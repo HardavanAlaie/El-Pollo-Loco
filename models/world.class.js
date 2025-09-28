@@ -159,16 +159,9 @@ class World {
       this.removeOffscreenEnemies();
       this.checkEndboss1Hit();
 
-      // // ❌ Nur prüfen, wenn KEIN Sieg bereits erreicht wurde
-      // if (!this.endbossDefeated && this.playerDied && !this.gameOver) {
-      //   this.gameOver = true;
-      //   this.stopGameLoopHard();
-      //   this.showGameOverScreen();
-      // }
-      if (this.character.isDead() && !this.gameOver) {
-        this.playerDied = true;
+      // ❌ Nur prüfen, wenn KEIN Sieg bereits erreicht wurde
+      if (!this.endbossDefeated && this.playerDied && !this.gameOver) {
         this.gameOver = true;
-
         this.stopGameLoopHard();
         this.showGameOverScreen();
       }
@@ -765,9 +758,6 @@ class World {
   }
 
   showGameOverScreen() {
-    if (this._gameOverShown) return; // ✅ Schon gezeigt → nix tun
-    this._gameOverShown = true;
-
     const ctx = this.ctx;
     const canvas = this.canvas;
 
