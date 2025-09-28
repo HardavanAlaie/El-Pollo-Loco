@@ -765,6 +765,9 @@ class World {
   }
 
   showGameOverScreen() {
+    if (this._gameOverShown) return; // ✅ Schon gezeigt → nix tun
+    this._gameOverShown = true;
+
     const ctx = this.ctx;
     const canvas = this.canvas;
 
