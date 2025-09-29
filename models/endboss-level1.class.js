@@ -55,9 +55,6 @@ class EndbossLevel1 extends MovableObject {
     this.energy = 100;
     this.statusBar = new StatusBarEnemy(this);
 
-    // this.screamSound = new Audio("audio/chicken.mp3");
-    // this.screamSound.loop = false;
-    // this.screamSound.volume = 0.6;
     this.screamSound = new Audio("audio/chicken.mp3");
     this.screamSound.volume = 0.6;
     this.screamSound.loop = false;
@@ -67,23 +64,9 @@ class EndbossLevel1 extends MovableObject {
     this.moveLogic();
   }
 
-  // scream() {
-  //   if (this.isDead() || !this.screamSound) return;
-
-  //   if (!this.screamSound.paused) return;
-
-  //   this.isScreaming = true;
-  //   this.screamSound.currentTime = 0;
-  //   this.screamSound.play().catch((e) => {
-  //     console.warn("Konnte Schrei nicht abspielen:", e);
-  //   });
-
-  //   setTimeout(() => (this.isScreaming = false), 1500);
-  // }
   scream() {
     if (this.isDead() || !this.screamSound) return;
 
-    // 🔇 Sound global deaktiviert → kein Schrei
     if (!soundEnabled) return;
 
     if (!this.screamSound.paused) return;
