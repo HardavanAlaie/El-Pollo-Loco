@@ -199,29 +199,33 @@ class World {
       console.log("enemyTop:", enemyTop, "extraOffset:", extraOffset);
 
       const ctx = this.world?.ctx;
-      if (ctx) {
-        ctx.strokeStyle = "blue";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(
-          this.character.x,
-          this.character.y,
-          this.character.width,
-          this.character.height
-        );
-
-        ctx.strokeStyle = "red";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(enemy.x, enemy.y, enemy.width, enemy.height);
-
-        ctx.strokeStyle = "green";
-        ctx.lineWidth = 1;
-        ctx.strokeRect(enemy.x - 5, enemyTop, enemy.width + 15, extraOffset);
-      }
+      this.lineColliding(ctx, enemy, enemyTop, extraOffset);
 
       const isAboveEnemy =
         characterBottom <= enemyTop + extraOffset && characterVerticalSpeed > 0;
 
       this.ifIsAboveEnemy(isAboveEnemy, enemy);
+    }
+  }
+
+  lineColliding(ctx, enemy, enemyTop, extraOffset) {
+    if (ctx) {
+      ctx.strokeStyle = "blue";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(
+        this.character.x,
+        this.character.y,
+        this.character.width,
+        this.character.height
+      );
+
+      ctx.strokeStyle = "red";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(enemy.x, enemy.y, enemy.width, enemy.height);
+
+      ctx.strokeStyle = "green";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(enemy.x - 5, enemyTop, enemy.width + 15, extraOffset);
     }
   }
 
