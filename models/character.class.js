@@ -39,14 +39,9 @@ class Character extends MovableObject {
     this.applyGravity();
     this.start();
 
-    // this.jumpSound = new Audio("audio/jump.mp3");
-    // this.jumpSound.volume = 0.5;
-
-    // this.coinSound = new Audio("audio/coins.mp3");
-    // this.coinSound.volume = 0.5;
     this.jumpSound = new Audio("audio/jump.mp3");
     this.jumpSound.volume = 0.5;
-    this.jumpSound.muted = !soundEnabled; // direkt mit globalem Flag verknüpfen
+    this.jumpSound.muted = !soundEnabled;
 
     this.coinSound = new Audio("audio/coins.mp3");
     this.coinSound.volume = 0.5;
@@ -138,16 +133,8 @@ class Character extends MovableObject {
     }
   }
 
-  // playSound(path) {
-  //   if (!path) return;
-  //   const sound = new Audio(path);
-  //   sound.volume = 0.5;
-  //   sound.play().catch((e) => {
-  //     console.warn("Sound konnte nicht abgespielt werden:", e);
-  //   });
-  // }
   playSound(path) {
-    if (!path || !soundEnabled) return; // ✅ globaler Check
+    if (!path || !soundEnabled) return;
     const sound = new Audio(path);
     sound.volume = 0.5;
     sound.play().catch((e) => {
