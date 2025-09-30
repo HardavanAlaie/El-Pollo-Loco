@@ -153,6 +153,14 @@ class EndbossLevel1 extends MovableObject {
     return this.energy <= 0 || this._isReallyDead === true;
   }
 
+  // Kollisionshitbox deaktivieren, wenn tot:
+getBounds() {
+  if (this.isDead()) {
+    return { x: -9999, y: -9999, width: 0, height: 0 }; // unsichtbar machen
+  }
+  return super.getBounds();
+}
+
   stopScreamSound() {
     try {
       if (this.screamSound) {
