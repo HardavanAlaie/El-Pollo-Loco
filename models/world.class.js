@@ -68,11 +68,11 @@ class World {
       this.removeOffscreenEnemies();
       this.checkEndboss1Hit();
 
-      if (!this.endbossDefeated && this.playerDied && !this.gameOver) {
-        this.gameOver = true;
-        this.stopGameLoopHard();
-        this.showGameOverScreen();
-      }
+      // if (!this.endbossDefeated && this.playerDied && !this.gameOver) {
+      //   this.gameOver = true;
+      //   this.stopGameLoopHard();
+      //   this.showGameOverScreen();
+      // }
     }, 200);
   }
 
