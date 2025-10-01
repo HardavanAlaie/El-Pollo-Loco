@@ -95,37 +95,50 @@ class Character extends MovableObject {
     }, 80);
   }
 
-  hit() {
-    // schon tot? → kein weiterer Schaden
-    if (this.energy <= 0 || this.isDead) return;
+  // hit() {
+  //   // schon tot? → kein weiterer Schaden
+  //   if (this.energy <= 0 || this.isDead) return;
 
-    // Energie abziehen
-    this.energy -= 10; // oder dein Wert
+  //   // Energie abziehen
+  //   this.energy -= 10; // oder dein Wert
+  //   this.energy = Math.max(this.energy, 0);
+
+  //   // StatusBar updaten
+  //   if (this.world?.statusBar) {
+  //     this.world.statusBar.setPercentage(this.energy);
+  //   }
+
+  //   // Hurt-Animation / Sound
+  //   this.playAnimation(this.IMAGES_HURT);
+  //   if (soundEnabled && this.hurtSound) {
+  //     this.hurtSound.currentTime = 0;
+  //     this.hurtSound.play().catch(() => {});
+  //   }
+
+  //   // Prüfen ob Spieler gestorben ist
+  //   if (this.energy <= 0) {
+  //     this.energy = 0;
+  //     this.isDead = true;
+
+  //     // ✅ Nur hier GameOver auslösen
+  //     if (this.world && !this.world.playerDied) {
+  //       this.world.playerDied = true;
+  //       this.world.stopGameLoopHard();
+  //       this.world.showGameOverScreen();
+  //     }
+  //   }
+  // }
+    hit(damage = 20) {
+    if (this.isDead()) return; // schon tot → kein weiterer Schaden
+
+    this.energy -= damage;
     this.energy = Math.max(this.energy, 0);
 
-    // StatusBar updaten
-    if (this.world?.statusBar) {
-      this.world.statusBar.setPercentage(this.energy);
-    }
-
-    // Hurt-Animation / Sound
+    // evtl. Hurt-Animation
     this.playAnimation(this.IMAGES_HURT);
-    if (soundEnabled && this.hurtSound) {
-      this.hurtSound.currentTime = 0;
-      this.hurtSound.play().catch(() => {});
-    }
 
-    // Prüfen ob Spieler gestorben ist
     if (this.energy <= 0) {
-      this.energy = 0;
-      this.isDead = true;
-
-      // ✅ Nur hier GameOver auslösen
-      if (this.world && !this.world.playerDied) {
-        this.world.playerDied = true;
-        this.world.stopGameLoopHard();
-        this.world.showGameOverScreen();
-      }
+      this.die();
     }
   }
 
