@@ -128,7 +128,7 @@ class Character extends MovableObject {
   //     }
   //   }
   // }
-  hit(damage = 20) {
+    hit(damage = 20) {
     if (this.isDead()) return; // schon tot → kein weiterer Schaden
 
     this.energy -= damage;
@@ -141,31 +141,7 @@ class Character extends MovableObject {
       this.die();
     }
   }
-
-  /**
-   * Tod auslösen
-   */
-  die() {
-    if (this.isDeadFlag) return; // doppelt verhindern
-    this.isDeadFlag = true;
-    this.energy = 0;
-
-    this.playAnimation(this.IMAGES_DEAD);
-
-    // Welt informieren → hier kommt GameOver
-    if (this.world) {
-      this.world.playerDied = true;
-      this.world.stopGameLoopHard();
-      this.world.showGameOverScreen();
-    }
-  }
-
-  /**
-   * Ist der Character tot?
-   */
-  isDead() {
-    return this.isDeadFlag;
-  }
+  
 
   stop() {
     clearInterval(this.moveInterval);
