@@ -80,33 +80,33 @@ class EndbossLevel1 extends MovableObject {
     setTimeout(() => (this.isScreaming = false), 1500);
   }
 
-  // hit() {
-  //   if (this.isDead()) return;
+  hit() {
+    if (this.isDead()) return;
 
-  //   this.energy -= 20;
-  //   this.energy = Math.max(this.energy, 0);
-  //   this.statusBar.setPercentage(this.energy);
+    this.energy -= 20;
+    this.energy = Math.max(this.energy, 0);
+    this.statusBar.setPercentage(this.energy);
 
-  //   if (!this.isAggressive) {
-  //     this.isAggressive = true;
-  //     this.attackMode = true;
-  //   }
+    if (!this.isAggressive) {
+      this.isAggressive = true;
+      this.attackMode = true;
+    }
 
-  //   this.scream();
+    this.scream();
 
-  //   if (this.isDead()) this.die();
-  // }
+    if (this.isDead()) this.die();
+  }
 
-  // die() {
-  //   this.playAnimation(this.IMAGES_DEAD);
-  //   clearInterval(this.bossAnimationInterval);
-  //   clearInterval(this.bossMoveInterval);
+  die() {
+    this.playAnimation(this.IMAGES_DEAD);
+    clearInterval(this.bossAnimationInterval);
+    clearInterval(this.bossMoveInterval);
 
-  //   if (this.screamSound) {
-  //     this.screamSound.pause();
-  //     this.screamSound.currentTime = 0;
-  //   }
-  // }
+    if (this.screamSound) {
+      this.screamSound.pause();
+      this.screamSound.currentTime = 0;
+    }
+  }
   hit() {
     if (this.isDead()) return; // ✅ schon tot? Dann nix tun
 
@@ -130,36 +130,36 @@ class EndbossLevel1 extends MovableObject {
     }
   }
 
-  die() {
-    if (this._isReallyDead) return; // ✅ Mehrfach-Tod verhindern
-    this._isReallyDead = true;
+//   die() {
+//     if (this._isReallyDead) return; // ✅ Mehrfach-Tod verhindern
+//     this._isReallyDead = true;
 
-    this.playAnimation(this.IMAGES_DEAD);
-    clearInterval(this.bossAnimationInterval);
-    clearInterval(this.bossMoveInterval);
+//     this.playAnimation(this.IMAGES_DEAD);
+//     clearInterval(this.bossAnimationInterval);
+//     clearInterval(this.bossMoveInterval);
 
-    if (this.screamSound) {
-      this.screamSound.pause();
-      this.screamSound.currentTime = 0;
-    }
+//     if (this.screamSound) {
+//       this.screamSound.pause();
+//       this.screamSound.currentTime = 0;
+//     }
 
-    // ✅ Wichtig: Boss der Welt mitteilen, dass er wirklich tot ist
-    if (this.world) {
-      this.world.endbossDefeated = true;
-    }
-  }
+//     // ✅ Wichtig: Boss der Welt mitteilen, dass er wirklich tot ist
+//     if (this.world) {
+//       this.world.endbossDefeated = true;
+//     }
+//   }
 
-  isDead() {
-    return this.energy <= 0 || this._isReallyDead === true;
-  }
+//   isDead() {
+//     return this.energy <= 0 || this._isReallyDead === true;
+//   }
 
-  // Kollisionshitbox deaktivieren, wenn tot:
-getBounds() {
-  if (this.isDead()) {
-    return { x: -9999, y: -9999, width: 0, height: 0 }; // unsichtbar machen
-  }
-  return super.getBounds();
-}
+//   // Kollisionshitbox deaktivieren, wenn tot:
+// getBounds() {
+//   if (this.isDead()) {
+//     return { x: -9999, y: -9999, width: 0, height: 0 }; // unsichtbar machen
+//   }
+//   return super.getBounds();
+// }
 
   stopScreamSound() {
     try {
@@ -172,9 +172,9 @@ getBounds() {
     }
   }
 
-  // isDead() {
-  //   return this.energy <= 0;
-  // }
+  isDead() {
+    return this.energy <= 0;
+  }
 
   animate() {
     this.bossAnimationInterval = setInterval(() => {
