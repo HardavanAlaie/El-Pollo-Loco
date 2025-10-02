@@ -76,29 +76,29 @@ class World {
     }, 200);
   }
 
-  // checkEndboss1Hit() {
-  //   if (
-  //     !this.character.isHurt() &&
-  //     this.character.isColliding(
-  //       this.level.enemies.find(
-  //         (e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2
-  //       )
-  //     )
-  //   ) {
-  //     this.character.hit();
-  //   }
-  // }
   checkEndboss1Hit() {
-    const boss = this.level.enemies.find(
-      (e) =>
-        (e instanceof EndbossLevel1 || e instanceof EndbossLevel2) &&
-        !e.isDead()
-    );
-
-    if (boss && !this.character.isHurt() && this.character.isColliding(boss)) {
+    if (
+      !this.character.isHurt() &&
+      this.character.isColliding(
+        this.level.enemies.find(
+          (e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2
+        )
+      )
+    ) {
       this.character.hit();
     }
   }
+  // checkEndboss1Hit() {
+  //   const boss = this.level.enemies.find(
+  //     (e) =>
+  //       (e instanceof EndbossLevel1 || e instanceof EndbossLevel2) &&
+  //       !e.isDead()
+  //   );
+
+  //   if (boss && !this.character.isHurt() && this.character.isColliding(boss)) {
+  //     this.character.hit();
+  //   }
+  // }
 
   checkThrowableObjects() {
     this.throwableObjects = this.throwableObjects.filter(
