@@ -88,17 +88,6 @@ class World {
       this.character.hit();
     }
   }
-  // checkEndboss1Hit() {
-  //   const boss = this.level.enemies.find(
-  //     (e) =>
-  //       (e instanceof EndbossLevel1 || e instanceof EndbossLevel2) &&
-  //       !e.isDead()
-  //   );
-
-  //   if (boss && !this.character.isHurt() && this.character.isColliding(boss)) {
-  //     this.character.hit();
-  //   }
-  // }
 
   checkThrowableObjects() {
     this.throwableObjects = this.throwableObjects.filter(
