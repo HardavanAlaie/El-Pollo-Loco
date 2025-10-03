@@ -55,9 +55,6 @@ class EndbossLevel1 extends MovableObject {
     this.energy = 100;
     this.statusBar = new StatusBarEnemy(this);
 
-    // this.screamSound = new Audio("audio/chicken.mp3");
-    // this.screamSound.loop = false;
-    // this.screamSound.volume = 0.6;
     this.screamSound = new Audio("audio/chicken.mp3");
     this.screamSound.volume = 0.6;
     this.screamSound.loop = false;
@@ -67,23 +64,9 @@ class EndbossLevel1 extends MovableObject {
     this.moveLogic();
   }
 
-  // scream() {
-  //   if (this.isDead() || !this.screamSound) return;
-
-  //   if (!this.screamSound.paused) return;
-
-  //   this.isScreaming = true;
-  //   this.screamSound.currentTime = 0;
-  //   this.screamSound.play().catch((e) => {
-  //     console.warn("Konnte Schrei nicht abspielen:", e);
-  //   });
-
-  //   setTimeout(() => (this.isScreaming = false), 1500);
-  // }
   scream() {
     if (this.isDead() || !this.screamSound) return;
 
-    // 🔇 Sound global deaktiviert → kein Schrei
     if (!soundEnabled) return;
 
     if (!this.screamSound.paused) return;
@@ -124,6 +107,59 @@ class EndbossLevel1 extends MovableObject {
       this.screamSound.currentTime = 0;
     }
   }
+  hit() {
+    if (this.isDead()) return; // ✅ schon tot? Dann nix tun
+
+    this.energy -= 20;
+    this.energy = Math.max(this.energy, 0);
+    this.statusBar.setPercentage(this.energy);
+
+    if (!this.isAggressive) {
+      this.isAggressive = true;
+      this.attackMode = true;
+    }
+
+    // ✅ Nur schreien, wenn er noch lebt
+    if (this.energy > 0) {
+      this.scream();
+    }
+
+    // ✅ Falls Energie leer → sterben
+    if (this.energy <= 0) {
+      this.die();
+    }
+  }
+
+//   die() {
+//     if (this._isReallyDead) return; // ✅ Mehrfach-Tod verhindern
+//     this._isReallyDead = true;
+
+//     this.playAnimation(this.IMAGES_DEAD);
+//     clearInterval(this.bossAnimationInterval);
+//     clearInterval(this.bossMoveInterval);
+
+//     if (this.screamSound) {
+//       this.screamSound.pause();
+//       this.screamSound.currentTime = 0;
+//     }
+
+//     // ✅ Wichtig: Boss der Welt mitteilen, dass er wirklich tot ist
+//     if (this.world) {
+//       this.world.endbossDefeated = true;
+//     }
+//   }
+
+//   isDead() {
+//     return this.energy <= 0 || this._isReallyDead === true;
+//   }
+
+//   // Kollisionshitbox deaktivieren, wenn tot:
+// getBounds() {
+//   if (this.isDead()) {
+//     return { x: -9999, y: -9999, width: 0, height: 0 }; // unsichtbar machen
+//   }
+//   return super.getBounds();
+// }
 
   stopScreamSound() {
     try {

@@ -38,15 +38,12 @@ class Character extends MovableObject {
     this.loadImages(this.IMAGES_DEAD);
     this.applyGravity();
     this.start();
+    this.isDead = false;
 
-    // this.jumpSound = new Audio("audio/jump.mp3");
-    // this.jumpSound.volume = 0.5;
 
-    // this.coinSound = new Audio("audio/coins.mp3");
-    // this.coinSound.volume = 0.5;
     this.jumpSound = new Audio("audio/jump.mp3");
     this.jumpSound.volume = 0.5;
-    this.jumpSound.muted = !soundEnabled; // direkt mit globalem Flag verknüpfen
+    this.jumpSound.muted = !soundEnabled;
 
     this.coinSound = new Audio("audio/coins.mp3");
     this.coinSound.volume = 0.5;
@@ -100,6 +97,74 @@ class Character extends MovableObject {
     }, 80);
   }
 
+  // hit() {
+  //   // schon tot? → kein weiterer Schaden
+  //   if (this.energy <= 0 || this.isDead) return;
+
+  //   // Energie abziehen
+  //   this.energy -= 10; // oder dein Wert
+  //   this.energy = Math.max(this.energy, 0);
+
+  //   // StatusBar updaten
+  //   if (this.world?.statusBar) {
+  //     this.world.statusBar.setPercentage(this.energy);
+  //   }
+
+  //   // Hurt-Animation / Sound
+  //   this.playAnimation(this.IMAGES_HURT);
+  //   if (soundEnabled && this.hurtSound) {
+  //     this.hurtSound.currentTime = 0;
+  //     this.hurtSound.play().catch(() => {});
+  //   }
+
+  //   // Prüfen ob Spieler gestorben ist
+  //   if (this.energy <= 0) {
+  //     this.energy = 0;
+  //     this.isDead = true;
+
+  //     // ✅ Nur hier GameOver auslösen
+  //     if (this.world && !this.world.playerDied) {
+  //       this.world.playerDied = true;
+  //       this.world.stopGameLoopHard();
+  //       this.world.showGameOverScreen();
+  //     }
+  //   }
+  // }
+  hit() {
+  // schon tot? → kein weiterer Schaden
+  if (this.energy <= 0 || this.isDead) return;
+
+  // Energie abziehen
+  this.energy -= 10; // oder dein Wert
+  this.energy = Math.max(this.energy, 0);
+
+  // StatusBar updaten
+  if (this.world?.statusBar) {
+    this.world.statusBar.setPercentage(this.energy);
+  }
+
+  // Hurt-Animation / Sound
+  this.playAnimation(this.IMAGES_HURT);
+  if (soundEnabled && this.hurtSound) {
+    this.hurtSound.currentTime = 0;
+    this.hurtSound.play().catch(() => {});
+  }
+
+  // Prüfen ob Spieler gestorben ist
+  if (this.energy <= 0) {
+    this.energy = 0;
+    this.isDead = true;
+
+    // ✅ Nur hier GameOver triggern, wenn noch nicht ausgelöst
+    if (this.world && !this.world.playerDied) {
+      this.world.playerDied = true;
+      this.world.stopGameLoopHard();
+      this.world.showGameOverScreen();
+    }
+  }
+}
+
+
   stop() {
     clearInterval(this.moveInterval);
     clearInterval(this.animationInterval);
@@ -138,16 +203,8 @@ class Character extends MovableObject {
     }
   }
 
-  // playSound(path) {
-  //   if (!path) return;
-  //   const sound = new Audio(path);
-  //   sound.volume = 0.5;
-  //   sound.play().catch((e) => {
-  //     console.warn("Sound konnte nicht abgespielt werden:", e);
-  //   });
-  // }
   playSound(path) {
-    if (!path || !soundEnabled) return; // ✅ globaler Check
+    if (!path || !soundEnabled) return;
     const sound = new Audio(path);
     sound.volume = 0.5;
     sound.play().catch((e) => {
