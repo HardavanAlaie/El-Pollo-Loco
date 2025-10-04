@@ -11,12 +11,9 @@ function startGame() {
 
 function init() {
   canvas = document.getElementById("canvas");
-
   canvas.width = 720;
   canvas.height = 480;
-
   world = new World(canvas, keyboard);
-
   resizeCanvas();
 }
 
@@ -46,7 +43,6 @@ window.addEventListener("load", () => {
 function toggleFullscreen() {
   const canvas = document.getElementById("canvas");
   if (!canvas) return;
-
   if (!document.fullscreenElement) {
     canvas.requestFullscreen().catch((err) => {
       console.error(`Vollbild-Fehler: ${err.message}`);
@@ -65,12 +61,11 @@ document.addEventListener("fullscreenchange", () => {
 
 function toggleSound() {
   soundEnabled = !soundEnabled;
-  console.log("Sound:", soundEnabled ? "🔊 an" : "🔇 aus");
+  //console.log("Sound:", soundEnabled ? "🔊 an" : "🔇 aus");
 
   if (world && world.toggleSound) {
     world.toggleSound(soundEnabled);
   }
-
   const soundBtn = document.getElementById("sound-btn");
   if (soundBtn) {
     soundBtn.textContent = soundEnabled ? "🔊" : "🔇";
@@ -83,7 +78,6 @@ window.addEventListener("load", () => {
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
   new Menu(canvas, ctx);
-
   const instrBtn = document.getElementById("instructions-btn");
   const fullBtn = document.getElementById("fullscreen-btn");
   const soundBtn = document.getElementById("sound-btn");
@@ -92,7 +86,6 @@ window.addEventListener("load", () => {
   if (fullBtn)
     fullBtn.addEventListener("click", () => toggleFullscreen(canvas));
   if (soundBtn) soundBtn.addEventListener("click", toggleSound);
-
   if (soundBtn) {
     soundBtn.textContent = soundEnabled ? "🔊" : "🔇";
   }
@@ -108,12 +101,9 @@ function hideInstructions() {
 function resizeCanvas() {
   const canvas = document.getElementById("canvas");
   if (!canvas) return;
-
   const aspectRatio = 720 / 480;
   const windowRatio = window.innerWidth / window.innerHeight;
-
   let newWidth, newHeight;
-
   if (windowRatio > aspectRatio) {
     newHeight = window.innerHeight;
     newWidth = newHeight * aspectRatio;
@@ -121,7 +111,6 @@ function resizeCanvas() {
     newWidth = window.innerWidth;
     newHeight = newWidth / aspectRatio;
   }
-
   canvas.style.width = newWidth + "px";
   canvas.style.height = newHeight + "px";
 }

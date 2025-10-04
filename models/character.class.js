@@ -51,12 +51,31 @@ class Character extends MovableObject {
 
   start() {
     this.stop();
+    this.moveIntervalMethod();
+    this.animationIntervalMethod();
+  }
 
+  animationIntervalMethod() {
+    this.animationInterval = setInterval(() => {
+      if (this.energy <= 0) {
+        this.playAnimation(this.IMAGES_DEAD);
+      } else if (this.isHurt()) {
+        this.playAnimation(this.IMAGES_HURT);
+      } else if (this.isAboveGround()) {
+        this.playAnimation(this.IMAGES_JUMPING);
+      } else {
+        if ((this.world && this.world.keyboard.RIGHT) || this.world.keyboard.LEFT) {
+          this.playAnimation(this.IMAGES_WALKING);
+        } else {
+          this.playAnimation(this.IMAGES_IDLE);
+        }
+      }
+    }, 80);
+  }
+
+  moveIntervalMethod() {
     this.moveInterval = setInterval(() => {
-      if (
-        this.world?.keyboard?.RIGHT &&
-        this.x < this.world.level.level_end_x
-      ) {
+      if (this.world?.keyboard?.RIGHT && this.x < this.world.level.level_end_x) {
         this.moveRight();
         this.otherDirection = false;
       }
@@ -70,30 +89,10 @@ class Character extends MovableObject {
       if (this.world?.keyboard?.D) {
         this.world.throwableBottles();
       }
-
       if (this.world) {
         this.world.camera_x = -this.x + 100;
       }
     }, 1000 / 60);
-
-    this.animationInterval = setInterval(() => {
-      if (this.energy <= 0) {
-        this.playAnimation(this.IMAGES_DEAD);
-      } else if (this.isHurt()) {
-        this.playAnimation(this.IMAGES_HURT);
-      } else if (this.isAboveGround()) {
-        this.playAnimation(this.IMAGES_JUMPING);
-      } else {
-        if (
-          (this.world && this.world.keyboard.RIGHT) ||
-          this.world.keyboard.LEFT
-        ) {
-          this.playAnimation(this.IMAGES_WALKING);
-        } else {
-          this.playAnimation(this.IMAGES_IDLE);
-        }
-      }
-    }, 80);
   }
 
   hit() {
@@ -105,22 +104,27 @@ class Character extends MovableObject {
     if (this.world?.statusBar) {
       this.world.statusBar.setPercentage(this.energy);
     }
-
     this.playAnimation(this.IMAGES_HURT);
-    if (soundEnabled && this.hurtSound) {
-      this.hurtSound.currentTime = 0;
-      this.hurtSound.play().catch(() => {});
-    }
+    this.soundEnabledMethod();
+    this.energyMethod();
+  }
 
+  energyMethod() {
     if (this.energy <= 0) {
       this.energy = 0;
       this.isDead = true;
-
       if (this.world && !this.world.playerDied) {
         this.world.playerDied = true;
         this.world.stopGameLoopHard();
         this.world.showGameOverScreen();
       }
+    }
+  }
+
+  soundEnabledMethod() {
+    if (soundEnabled && this.hurtSound) {
+      this.hurtSound.currentTime = 0;
+      this.hurtSound.play().catch(() => { });
     }
   }
 
@@ -153,11 +157,9 @@ class Character extends MovableObject {
     if (this.world.statusBarBottle.availableBottles < 5) {
       this.world.statusBarBottle.availableBottles++;
       this.world.statusBarBottle.update();
-
       this.world.collectableBottles = this.world.collectableBottles.filter(
         (bottle) => !this.isColliding(bottle)
       );
-
       this.world.spawnNewBottle();
     }
   }

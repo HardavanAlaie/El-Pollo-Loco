@@ -98,22 +98,13 @@ class World {
   }
 
   throwableBottles() {
-    if (
-      this.keyboard.D &&
-      this.canThrow &&
-      this.statusBarBottle.availableBottles > 0
-    ) {
+    if ( this.keyboard.D && this.canThrow && this.statusBarBottle.availableBottles > 0 ) {
       this.canThrow = false;
       this.statusBarBottle.availableBottles--;
       this.statusBarBottle.update?.();
 
-      const bottle = new ThrowableObject(
-        this.character.x + 30,
-        this.character.y + 100,
-        this.character.otherDirection
-      );
+      const bottle = new ThrowableObject( this.character.x + 30, this.character.y + 100, this.character.otherDirection );
       this.throwableObjects.push(bottle);
-
       setTimeout(() => {
         this.canThrow = true;
       }, 300);
@@ -124,13 +115,38 @@ class World {
     (this.level.enemies || []).forEach((enemy) => {
       this.characterColliding(enemy);
     });
+    this.throwableObjectsMethod();
+    this.throwableObjects = this.throwableObjects.filter(
+      (bottle) => !bottle.isDead()
+    );
+    this.characterCollidingBottle();
+    this.collectableCoinsMethod();
+  }
 
+  collectableCoinsMethod() {
+    (this.collectableCoins || []).forEach((coin) => {
+      if (this.character.isColliding(coin)) {
+        if (this.statusBarCoin) {
+          this.statusBarCoin.availableCoins++;
+          this.statusBarCoin.update();
+        }
+        if (soundEnabled) {
+          const coinSound = new Audio("audio/coins.mp3");
+          coinSound.volume = 0.5;
+          coinSound.play().catch(() => { });
+        }
+
+        this.collectableCoins.splice(this.collectableCoins.indexOf(coin), 1);
+      }
+    });
+  }
+
+  throwableObjectsMethod() {
     this.throwableObjects.forEach((bottle) => {
       (this.level.enemies || []).forEach((enemy) => {
         if (!bottle.isBroken && bottle.isColliding(enemy)) {
           bottle.break();
           enemy.hit();
-
           if (enemy.isDead?.()) {
             if (enemy instanceof EndbossLevel1) {
               enemy.isMarkedDead = true;
@@ -141,32 +157,8 @@ class World {
           }
         }
       });
-
       if (!bottle.isBroken && bottle.y > 420) {
         bottle.break();
-      }
-    });
-
-    this.throwableObjects = this.throwableObjects.filter(
-      (bottle) => !bottle.isDead()
-    );
-
-    this.characterCollidingBottle();
-
-    (this.collectableCoins || []).forEach((coin) => {
-      if (this.character.isColliding(coin)) {
-        if (this.statusBarCoin) {
-          this.statusBarCoin.availableCoins++;
-          this.statusBarCoin.update();
-        }
-
-        if (soundEnabled) {
-          const coinSound = new Audio("audio/coins.mp3");
-          coinSound.volume = 0.5;
-          coinSound.play().catch(() => {});
-        }
-
-        this.collectableCoins.splice(this.collectableCoins.indexOf(coin), 1);
       }
     });
   }
@@ -192,18 +184,12 @@ class World {
     if (this.character.isColliding(enemy)) {
       const characterBottom = this.character.y + this.character.height;
       const characterVerticalSpeed = this.character.speedY;
-
       let enemyTop = enemy.y + enemy.height * (enemy.height < 100 ? 0.7 : 0.25);
       let extraOffset = enemy.height < 100 ? 25 : 15;
-
-      console.log("enemyTop:", enemyTop, "extraOffset:", extraOffset);
-
       const ctx = this.world?.ctx;
       this.lineColliding(ctx, enemy, enemyTop, extraOffset);
-
       const isAboveEnemy =
         characterBottom <= enemyTop + extraOffset && characterVerticalSpeed > 0;
-
       this.ifIsAboveEnemy(isAboveEnemy, enemy);
     }
   }
@@ -239,13 +225,17 @@ class World {
       this.character.hit();
       this.statusBar.setPercentage(this.character.energy);
       this.character.isHurt();
-      if (this.character.energy <= 0 && !this.characterDead) {
-        this.characterDead = true;
-        this.showLevelMessage("💀 Du bist gestorben!");
-        setTimeout(() => {
-          this.endGame();
-        }, 3000);
-      }
+      this.characterEnergyMethod();
+    }
+  }
+
+  characterEnergyMethod() {
+    if (this.character.energy <= 0 && !this.characterDead) {
+      this.characterDead = true;
+      this.showLevelMessage("💀 Du bist gestorben!");
+      setTimeout(() => {
+        this.endGame();
+      }, 3000);
     }
   }
 
@@ -266,13 +256,13 @@ class World {
       cancelAnimationFrame(this.animationFrame);
     }
 
-    this.levelEnded = true;
-    this.gameOver = true;
-    this.playerDied = true;
-    this.uiScreen = "gameover";
-
+    this.gameOverVars();
     this.stopEnemySounds();
+    this.gameOverSoundMethod();
+    this.showGameOverScreen();
+  }
 
+  gameOverSoundMethod() {
     if (!this.gameOverSound) {
       this.gameOverSound = new Audio("audio/gameover.mp3");
       this.gameOverSound.volume = 0.7;
@@ -281,43 +271,44 @@ class World {
     this.gameOverSound.play().catch((e) => {
       console.warn("Konnte GameOver-Sound nicht abspielen:", e);
     });
+  }
 
-    this.showGameOverScreen();
+  gameOverVars() {
+    this.levelEnded = true;
+    this.gameOver = true;
+    this.playerDied = true;
+    this.uiScreen = "gameover";
   }
 
   checkEndbossDefeated() {
-    console.log("🔍 checkEndbossDefeated läuft");
+    //console.log("checkEndbossDefeated läuft");
 
     const endboss = (this.level.enemies || []).find(
       (e) => e instanceof EndbossLevel1
     );
-    if (
-      !endboss ||
-      this.endbossDefeated ||
-      this.playerDied ||
-      this._handlingBossDefeat
-    )
+    if (!endboss || this.endbossDefeated || this.playerDied || this._handlingBossDefeat)
       return;
 
+    this.endBossDeadMethod(endboss);
+  }
+
+  endBossDeadMethod(endboss) {
     if (endboss.isDead?.()) {
-      console.log("✅ Endboss besiegt!");
+      //console.log("Endboss besiegt!");
       this._handlingBossDefeat = true;
       this.endbossDefeated = true;
-
-      this.stopGameLoopHard(true); // ✅ Sieg
+      this.stopGameLoopHard(true); 
       this.uiScreen = "win";
       this.showWinScreen();
     }
   }
 
   stopGameLoopHard(isWin = false) {
-    console.log("⏹️ Stoppe komplettes Spiel");
-
+    //console.log("Stoppe komplettes Spiel");
     clearInterval(this.gameInterval);
     clearInterval(this.enemySpawnInterval);
-
     this.levelEnded = true;
-    this.gameOver = !isWin; // ✅ Nur true, wenn es KEIN Sieg war
+    this.gameOver = !isWin; 
   }
 
   spawnEnemyLoop() {
@@ -325,29 +316,27 @@ class World {
     this.spawnIntervals = [];
 
     spawnConfigs.forEach((config) => {
-      const intervalId = setInterval(() => {
-        const allowed =
-          typeof config.condition === "function"
-            ? config.condition(this.level)
-            : true;
-
-        if (!allowed) {
-          return;
-        }
-
-        const current = this.level.enemies.filter(
-          (e) => e instanceof config.type
-        );
-
-        if (current.length < config.maxCount) {
-          const newEnemy = new config.type();
-          newEnemy.x = 900 + Math.random() * 400;
-          this.level.enemies.push(newEnemy);
-        }
-      }, config.interval);
+      const intervalId = this.setIntervalMethod(config);
 
       this.spawnIntervals.push(intervalId);
     });
+  }
+
+  setIntervalMethod(config) {
+    return setInterval(() => {
+      const allowed = typeof config.condition === "function" ? config.condition(this.level) : true;
+      if (!allowed) {
+        return;
+      }
+      const current = this.level.enemies.filter(
+        (e) => e instanceof config.type
+      );
+      if (current.length < config.maxCount) {
+        const newEnemy = new config.type();
+        newEnemy.x = 900 + Math.random() * 400;
+        this.level.enemies.push(newEnemy);
+      }
+    }, config.interval);
   }
 
   removeOffscreenEnemies() {
@@ -425,35 +414,20 @@ class World {
   showWinScreen() {
     const ctx = this.ctx;
     const canvas = this.canvas;
-
-    console.log("🎉 showWinScreen läuft!");
-
+    //console.log("showWinScreen läuft!");
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-
     ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     this.stopEnemySounds();
-
-    if (!this.winSound) {
-      this.winSound = new Audio("audio/win.mp3");
-      this.winSound.volume = 0.7;
-      this.winSound.loop = true;
-    }
-
-    if (soundEnabled) {
-      // ✅ Nur wenn Sound erlaubt
-      this.winSound.currentTime = 0;
-      this.winSound.play().catch(() => {});
-    }
-
+    this.winSoundIfMethod();
+    this.soundEnabledMethod();
     const img = new Image();
     img.src = "img/You won, you lost/You win B.png";
+    img.onload = () => { this.drawWinScreen(img); };
+    this.onerrorMethod(img, ctx, canvas);
+  }
 
-    img.onload = () => {
-      this.drawWinScreen(img);
-    };
-
+  onerrorMethod(img, ctx, canvas) {
     img.onerror = () => {
       console.warn("⚠️ Win-Bild konnte nicht geladen werden!");
       ctx.font = "bold 64px Comic Sans MS";
@@ -461,6 +435,21 @@ class World {
       ctx.textAlign = "center";
       ctx.fillText("YOU WIN!", canvas.width / 2, canvas.height / 2 - 40);
     };
+  }
+
+  soundEnabledMethod() {
+    if (soundEnabled) {
+      this.winSound.currentTime = 0;
+      this.winSound.play().catch(() => { });
+    }
+  }
+
+  winSoundIfMethod() {
+    if (!this.winSound) {
+      this.winSound = new Audio("audio/win.mp3");
+      this.winSound.volume = 0.7;
+      this.winSound.loop = true;
+    }
   }
 
   drawWinScreen(img) {
@@ -518,15 +507,7 @@ class World {
     const ctx = this.ctx;
     const canvas = this.canvas;
 
-    if (!this.gameOverSound) {
-      this.gameOverSound = new Audio("audio/gameover.mp3");
-      this.gameOverSound.volume = 0.6;
-    }
-
-    if (soundEnabled) {
-      this.gameOverSound.currentTime = 0;
-      this.gameOverSound.play().catch(() => {});
-    }
+    this.soundMethod();
 
     ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -583,13 +564,32 @@ class World {
     };
   }
 
+  soundMethod() {
+    if (!this.gameOverSound) {
+      this.gameOverSound = new Audio("audio/gameover.mp3");
+      this.gameOverSound.volume = 0.6;
+    }
+    if (soundEnabled) {
+      this.gameOverSound.currentTime = 0;
+      this.gameOverSound.play().catch(() => { });
+    }
+  }
+
   handleCanvasClick(event) {
     if (!this.restartButtonArea) return;
-
     const rect = this.canvas.getBoundingClientRect();
     const scaleX = this.canvas.width / rect.width;
     const scaleY = this.canvas.height / rect.height;
+    let { clientX, clientY } = this.touchesMethod(event);
+    const clickX = (clientX - rect.left) * scaleX;
+    const clickY = (clientY - rect.top) * scaleY;
+    const btn = this.restartButtonArea;
+    if ( clickX >= btn.x && clickX <= btn.x + btn.width && clickY >= btn.y && clickY <= btn.y + btn.height ) {
+      location.reload();
+    }
+  }
 
+  touchesMethod(event) {
     let clientX, clientY;
     if (event.touches && event.touches[0]) {
       clientX = event.touches[0].clientX;
@@ -601,19 +601,7 @@ class World {
       clientX = event.clientX;
       clientY = event.clientY;
     }
-
-    const clickX = (clientX - rect.left) * scaleX;
-    const clickY = (clientY - rect.top) * scaleY;
-
-    const btn = this.restartButtonArea;
-    if (
-      clickX >= btn.x &&
-      clickX <= btn.x + btn.width &&
-      clickY >= btn.y &&
-      clickY <= btn.y + btn.height
-    ) {
-      location.reload();
-    }
+    return { clientX, clientY };
   }
 
   toggleSound(enabled) {
@@ -809,9 +797,7 @@ class World {
 
     this.canvas.addEventListener("touchstart", handleDown, { passive: false });
     this.canvas.addEventListener("touchend", handleUpAll, { passive: false });
-    this.canvas.addEventListener("touchcancel", handleUpAll, {
-      passive: false,
-    });
+    this.canvas.addEventListener("touchcancel", handleUpAll, { passive: false });
 
     this.canvas.addEventListener("mousedown", handleDown);
     this.canvas.addEventListener("mouseup", handleUpAll);
@@ -826,12 +812,9 @@ class World {
 
   addToMap(mo) {
     if (!mo) return;
-
     if (mo.otherDirection) this.flipImage(mo);
-
     mo.draw(this.ctx);
     mo.drawFrame?.(this.ctx);
-
     if (mo.otherDirection) this.flipImageBack(mo);
   }
 

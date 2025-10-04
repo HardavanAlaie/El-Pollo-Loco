@@ -11,12 +11,10 @@ class Menu {
 
   drawStartScreen() {
     this.clear();
-
     const img = new Image();
     img.src = "img/9_intro_outro_screens/start/startscreen_1.png";
     img.onload = () => {
       this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
-
       const startBtn = this.drawButton(
         "Start",
         this.canvas.width / 13,
@@ -24,7 +22,6 @@ class Menu {
         "#fca534ff",
         "start"
       );
-
       this.buttons = { startBtn };
     };
   }
@@ -42,6 +39,10 @@ class Menu {
     const textMetrics = ctx.measureText(text);
     const width = textMetrics.width + paddingX;
 
+    return this.returnMethod(x, width, y, height, action);
+  }
+
+  returnMethod(x, width, y, height, action) {
     return {
       x: x - width / 2,
       y: y - height / 2,
@@ -53,11 +54,9 @@ class Menu {
 
   handleClick(event) {
     if (!this.buttons) return;
-
     const rect = this.canvas.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
-
     Object.values(this.buttons).forEach((btn) => {
       if (
         mouseX >= btn.x &&
