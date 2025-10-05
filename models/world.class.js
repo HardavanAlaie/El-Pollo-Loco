@@ -904,14 +904,34 @@ class World {
     this.checkCoins();
   }
 
+  // checkEndboss1Hit() {
+  //   const boss = this.level.enemies.find(
+  //     (e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2
+  //   );
+  //   if (boss && this.character.isColliding(boss) && !this.character.isHurtTimer) {
+  //     this.character.hit();
+  //   }
+  // }
   checkEndboss1Hit() {
-    const boss = this.level.enemies.find(
-      (e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2
-    );
-    if (boss && this.character.isColliding(boss) && !this.character.isHurtTimer) {
-      this.character.hit();
-    }
+  const boss = this.level.enemies.find(
+    (e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2
+  );
+
+  // Wenn kein Boss oder Spieler schon tot → raus
+  if (!boss || this.character.energy <= 0) return;
+
+  // Nur Schaden, wenn keine aktuelle Verwundung aktiv ist
+  if (this.character.isColliding(boss) && !this.character.isHurtTimer) {
+    this.character.hit();
+    this.character.isHurtTimer = true;
+
+    // Nach 1 Sekunde wieder verwundbar
+    setTimeout(() => {
+      this.character.isHurtTimer = false;
+    }, 1000);
   }
+}
+
 
   checkThrowableObjects() {
     this.throwableObjects = this.throwableObjects.filter((b) => !b.isDead());
