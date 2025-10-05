@@ -261,21 +261,55 @@ class Character extends MovableObject {
     clearInterval(this.animationInterval);
   }
 
+  // hit() {
+  //   if (this.energy <= 0 || this.isDead) return;
+
+  //   this.energy = Math.max(this.energy - 10, 0);
+  //   this.world?.statusBar?.setPercentage(this.energy);
+
+  //   this.playAnimation(this.IMAGES_HURT);
+  //   this.playIfEnabled(this.hurtSound);
+
+  //   if (this.energy <= 0) this.die();
+  // }
   hit() {
-    if (this.energy <= 0 || this.isDead) return;
+    // Wenn Charakter schon tot oder gerade unverwundbar ist → nichts tun
+    if (this.energy <= 0 || this.isDead || this.isHurtTimer) return;
 
     this.energy = Math.max(this.energy - 10, 0);
     this.world?.statusBar?.setPercentage(this.energy);
 
+    // Hurt-Sound & Animation
     this.playAnimation(this.IMAGES_HURT);
     this.playIfEnabled(this.hurtSound);
 
-    if (this.energy <= 0) this.die();
+    // Kurze Unverwundbarkeitsphase (z. B. 1 Sekunde)
+    this.isHurtTimer = true;
+    setTimeout(() => (this.isHurtTimer = false), 1000);
+
+    // Prüfen, ob er wirklich tot ist (nach Animation etc.)
+    if (this.energy <= 0) {
+      this.die();
+    }
   }
 
+  // die() {
+  //   this.energy = 0;
+  //   this.isDead = true;
+  //   if (this.world && !this.world.playerDied) {
+  //     this.world.playerDied = true;
+  //     this.world.stopGameLoopHard();
+  //     this.world.showGameOverScreen();
+  //   }
+  // }
   die() {
-    this.energy = 0;
+    if (this.isDead) return; // Schon tot? → Nichts tun
+
     this.isDead = true;
+    this.energy = 0;
+    this.playAnimation(this.IMAGES_DEAD);
+
+    // GameOver nur 1× auslösen
     if (this.world && !this.world.playerDied) {
       this.world.playerDied = true;
       this.world.stopGameLoopHard();
