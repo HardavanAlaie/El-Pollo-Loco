@@ -511,24 +511,50 @@ class Character extends MovableObject {
   }
 
   // --- Treffer / Schaden ---
-  hit() {
-    if (this.energy <= 0 || this.isDead || this.isHurtTimer) return;
+  // hit() {
+  //   if (this.energy <= 0 || this.isDead || this.isHurtTimer) return;
 
-    this.energy = Math.max(this.energy - 10, 0);
+  //   this.energy = Math.max(this.energy - 10, 0);
+  //   this.world?.statusBar?.setPercentage(this.energy);
+
+  //   // Hurt aktivieren
+  //   this.isHurtTimer = true;
+  //   setTimeout(() => (this.isHurtTimer = false), 800);
+
+  //   // Sound abspielen
+  //   if (soundEnabled && this.hurtSound) {
+  //     this.hurtSound.currentTime = 0;
+  //     this.hurtSound.play().catch(() => {});
+  //   }
+
+  //   // Prüfen ob tot
+  //   if (this.energy <= 0) this.die();
+  // }
+  hit() {
+    if (this.energy <= 0 || this.isDead) return;
+
+    this.energy -= 10;
+    this.energy = Math.max(this.energy, 0);
     this.world?.statusBar?.setPercentage(this.energy);
 
-    // Hurt aktivieren
-    this.isHurtTimer = true;
-    setTimeout(() => (this.isHurtTimer = false), 800);
-
-    // Sound abspielen
+    // 🔊 Hurt-Animation & Sound
+    this.playAnimation(this.IMAGES_HURT);
     if (soundEnabled && this.hurtSound) {
       this.hurtSound.currentTime = 0;
       this.hurtSound.play().catch(() => {});
     }
 
-    // Prüfen ob tot
-    if (this.energy <= 0) this.die();
+    // 🔁 Kleine Hurt-Animation-Zeit (optisch besser sichtbar)
+    this.isHurtTimer = true;
+    setTimeout(() => (this.isHurtTimer = false), 700);
+
+    // 💀 Wenn Energie leer → Game Over
+    if (this.energy <= 0 && !this.world.playerDied) {
+      this.isDead = true;
+      this.world.playerDied = true;
+      this.world.stopGameLoopHard();
+      this.world.showGameOverScreen();
+    }
   }
 
   die() {

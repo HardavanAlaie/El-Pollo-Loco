@@ -933,29 +933,70 @@ class World {
 }
 
 
-  checkThrowableObjects() {
-    this.throwableObjects = this.throwableObjects.filter((b) => !b.isDead());
-  }
+  // checkThrowableObjects() {
+  //   this.throwableObjects = this.throwableObjects.filter((b) => !b.isDead());
+  // }
 
-  throwableBottles() {
-    if (
-      this.keyboard.D &&
-      this.canThrow &&
-      this.statusBarBottle.availableBottles > 0
-    ) {
-      this.canThrow = false;
-      this.statusBarBottle.availableBottles--;
-      this.statusBarBottle.update();
-      this.throwableObjects.push(
-        new ThrowableObject(
-          this.character.x + 30,
-          this.character.y + 100,
-          this.character.otherDirection
-        )
-      );
-      setTimeout(() => (this.canThrow = true), 300);
-    }
+  // throwableBottles() {
+  //   if (
+  //     this.keyboard.D &&
+  //     this.canThrow &&
+  //     this.statusBarBottle.availableBottles > 0
+  //   ) {
+  //     this.canThrow = false;
+  //     this.statusBarBottle.availableBottles--;
+  //     this.statusBarBottle.update();
+  //     this.throwableObjects.push(
+  //       new ThrowableObject(
+  //         this.character.x + 30,
+  //         this.character.y + 100,
+  //         this.character.otherDirection
+  //       )
+  //     );
+  //     setTimeout(() => (this.canThrow = true), 300);
+  //   }
+  // }
+  checkThrowableObjects() {
+  // Entferne kaputte oder tote Flaschen
+  this.throwableObjects = this.throwableObjects.filter(
+    (bottle) => !bottle.isDead?.()
+  );
+
+  // Prüfe, ob eine neue Flasche geworfen werden soll
+  this.throwableBottles();
+}
+
+throwableBottles() {
+  // Wenn D gedrückt wird, Spieler werfen darf und noch Flaschen verfügbar sind
+  if (
+    this.keyboard.D &&
+    this.canThrow &&
+    this.statusBarBottle.availableBottles > 0
+  ) {
+    this.canThrow = false; // Cooldown aktivieren
+    this.statusBarBottle.availableBottles--;
+    this.statusBarBottle.update?.();
+
+    // 🔹 Erzeuge eine neue Flasche
+    const bottle = new ThrowableObject(
+      this.character.x + (this.character.otherDirection ? -30 : 30),
+      this.character.y + 100,
+      this.character.otherDirection
+    );
+
+    // 🔹 Weise der Flasche Zugriff auf die Welt zu (wichtig für remove())
+    bottle.world = this;
+
+    // 🔹 Füge sie der Liste hinzu
+    this.throwableObjects.push(bottle);
+
+    // 🔹 Cooldown für nächsten Wurf
+    setTimeout(() => {
+      this.canThrow = true;
+    }, 300);
   }
+}
+
 
   checkCoins() {
     this.collectableCoins = this.collectableCoins.filter((coin) => {
