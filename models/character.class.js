@@ -468,11 +468,57 @@ class Character extends MovableObject {
   }
 
   // --- Bewegung & Animation ---
+  // start() {
+  //   this.stop();
+  //   this.moveInterval = setInterval(() => this.moveLogic(), 1000 / 60);
+  //   this.animationInterval = setInterval(() => this.animationLogic(), 100);
+  // }
   start() {
-    this.stop();
-    this.moveInterval = setInterval(() => this.moveLogic(), 1000 / 60);
-    this.animationInterval = setInterval(() => this.animationLogic(), 100);
-  }
+  this.stop();
+
+  this.moveInterval = setInterval(() => {
+    if (this.world?.keyboard?.RIGHT && this.x < this.world.level.level_end_x) {
+      this.moveRight();
+      this.otherDirection = false;
+    }
+    if (this.world?.keyboard?.LEFT && this.x > 0) {
+      this.moveLeft();
+      this.otherDirection = true;
+    }
+    if (this.world?.keyboard?.UP && !this.isAboveGround()) {
+      this.jump();
+    }
+
+    // ✅ DIREKTER WURF — ohne Delay über World.run()
+    if (this.world?.keyboard?.D) {
+      this.world.throwableBottles();
+    }
+
+    if (this.world) {
+      this.world.camera_x = -this.x + 100;
+    }
+  }, 1000 / 60);
+
+  this.animationInterval = setInterval(() => {
+    if (this.energy <= 0) {
+      this.playAnimation(this.IMAGES_DEAD);
+    } else if (this.isHurt()) {
+      this.playAnimation(this.IMAGES_HURT);
+    } else if (this.isAboveGround()) {
+      this.playAnimation(this.IMAGES_JUMPING);
+    } else {
+      if (
+        (this.world && this.world.keyboard.RIGHT) ||
+        this.world.keyboard.LEFT
+      ) {
+        this.playAnimation(this.IMAGES_WALKING);
+      } else {
+        this.playAnimation(this.IMAGES_IDLE);
+      }
+    }
+  }, 80);
+}
+
 
   moveLogic() {
     if (this.world?.keyboard?.RIGHT && this.x < this.world.level.level_end_x) {

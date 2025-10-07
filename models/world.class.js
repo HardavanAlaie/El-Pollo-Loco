@@ -966,36 +966,63 @@ class World {
   this.throwableBottles();
 }
 
+// throwableBottles() {
+//   // Wenn D gedrückt wird, Spieler werfen darf und noch Flaschen verfügbar sind
+//   if (
+//     this.keyboard.D &&
+//     this.canThrow &&
+//     this.statusBarBottle.availableBottles > 0
+//   ) {
+//     this.canThrow = false; // Cooldown aktivieren
+//     this.statusBarBottle.availableBottles--;
+//     this.statusBarBottle.update?.();
+
+//     // 🔹 Erzeuge eine neue Flasche
+//     const bottle = new ThrowableObject(
+//       this.character.x + (this.character.otherDirection ? -30 : 30),
+//       this.character.y + 100,
+//       this.character.otherDirection
+//     );
+
+//     // 🔹 Weise der Flasche Zugriff auf die Welt zu (wichtig für remove())
+//     bottle.world = this;
+
+//     // 🔹 Füge sie der Liste hinzu
+//     this.throwableObjects.push(bottle);
+
+//     // 🔹 Cooldown für nächsten Wurf
+//     setTimeout(() => {
+//       this.canThrow = true;
+//     }, 300);
+//   }
+// }
 throwableBottles() {
-  // Wenn D gedrückt wird, Spieler werfen darf und noch Flaschen verfügbar sind
+  console.log("🧴 Versuch zu werfen..."); // <== NEU
   if (
     this.keyboard.D &&
     this.canThrow &&
     this.statusBarBottle.availableBottles > 0
   ) {
-    this.canThrow = false; // Cooldown aktivieren
+    console.log("✅ Flasche wird geworfen!"); // <== NEU
+    this.canThrow = false;
     this.statusBarBottle.availableBottles--;
     this.statusBarBottle.update?.();
 
-    // 🔹 Erzeuge eine neue Flasche
     const bottle = new ThrowableObject(
       this.character.x + (this.character.otherDirection ? -30 : 30),
       this.character.y + 100,
       this.character.otherDirection
     );
-
-    // 🔹 Weise der Flasche Zugriff auf die Welt zu (wichtig für remove())
     bottle.world = this;
-
-    // 🔹 Füge sie der Liste hinzu
     this.throwableObjects.push(bottle);
 
-    // 🔹 Cooldown für nächsten Wurf
+    // Cooldown
     setTimeout(() => {
       this.canThrow = true;
-    }, 300);
+    }, 400);
   }
 }
+
 
 
   checkCoins() {
