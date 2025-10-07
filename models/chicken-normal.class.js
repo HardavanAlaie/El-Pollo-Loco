@@ -19,9 +19,7 @@ class ChickenNormal extends MovableObject {
     this.speed = 0.2 + Math.random() * 0.4;
     this.energy = 100;
     this.dead = false;
-
     this.statusBar = new StatusBarEnemy(this);
-
     this.start();
   }
 
