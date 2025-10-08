@@ -1581,9 +1581,24 @@ class World {
   // 🏆 WIN / GAME OVER
   // ---------------------------------------------------------------------------
 
+  // showWinScreen() {
+  //   this.playSound("audio/win.mp3", true);
+  //   this.fadeOverlay(0.3);
+  //   this.drawEndScreen("img/You won, you lost/You win B.png", "#44cc44");
+  // }
   showWinScreen() {
-    this.playSound("audio/win.mp3", true);
+    // Verhindert doppeltes Aufrufen
+    if (this._winShown) return;
+    this._winShown = true;
+    this._gameOverPlayed = true; // verhindert, dass Game-Over danach triggert
+
+    console.log("🏆 Spieler hat gewonnen!");
+    this.stopGameLoopHard(true);
+    this.playSound("audio/win.mp3", true); // Dauerschleife bis Neustart
+
+    // Hintergrund leicht abdunkeln, Spielbild bleibt sichtbar
     this.fadeOverlay(0.3);
+
     this.drawEndScreen("img/You won, you lost/You win B.png", "#44cc44");
   }
 
