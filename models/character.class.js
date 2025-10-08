@@ -372,7 +372,7 @@ class Character extends MovableObject {
       bar.availableBottles++;
       bar.update();
       this.world.collectableBottles = this.world.collectableBottles.filter(
-        (b) => !this.isColliding(b)
+        (b) => !this.isColliding(b),
         (b) => !this.isColliding(b)
       );
       this.world.spawnNewBottle();
