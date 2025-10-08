@@ -163,6 +163,7 @@ class Character extends MovableObject {
   speed = 5;
   energy = 100;
   otherDirection = false;
+  isDead = false;
   isHurtTimer = false;
 
   IMAGES_WALKING = Array.from(
@@ -217,7 +218,7 @@ class Character extends MovableObject {
 
   /** 🕹️ Bewegungs- und Animationsschleifen starten */
   start() {
-    this.stop();
+  this.stop();
 
     this.moveInterval = setInterval(() => {
       const kb = this.world?.keyboard;
@@ -248,11 +249,103 @@ class Character extends MovableObject {
     }, 80);
   }
 
-  stop() {
-    clearInterval(this.moveInterval);
-    clearInterval(this.animationInterval);
+
+  moveLogic() {
+    if (this.world?.keyboard?.RIGHT && this.x < this.world.level.level_end_x) {
+      this.moveRight();
+      this.otherDirection = false;
+    }
+    if (this.world?.keyboard?.LEFT && this.x > 0) {
+      this.moveLeft();
+      this.otherDirection = true;
+    }
+    if (this.world?.keyboard?.UP && !this.isAboveGround()) {
+      this.jump();
+    }
+    if (this.world?.keyboard?.D) {
+      this.world.throwableBottles();
+    }
+
+    if (this.world) this.world.camera_x = -this.x + 100;
   }
 
+  animationLogic() {
+    if (this.energy <= 0) {
+      this.playAnimation(this.IMAGES_DEAD);
+      return;
+    }
+
+    if (this.isHurtTimer) {
+      this.playAnimation(this.IMAGES_HURT);
+      return;
+    }
+
+    if (this.isAboveGround()) this.playAnimation(this.IMAGES_JUMPING);
+    else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT)
+      this.playAnimation(this.IMAGES_WALKING);
+    else this.playAnimation(this.IMAGES_IDLE);
+  }
+
+  // --- Treffer / Schaden ---
+  // hit() {
+  //   if (this.energy <= 0 || this.isDead || this.isHurtTimer) return;
+
+  //   this.energy = Math.max(this.energy - 10, 0);
+  //   this.world?.statusBar?.setPercentage(this.energy);
+
+  //   // Hurt aktivieren
+  //   this.isHurtTimer = true;
+  //   setTimeout(() => (this.isHurtTimer = false), 800);
+
+  //   // Sound abspielen
+  //   if (soundEnabled && this.hurtSound) {
+  //     this.hurtSound.currentTime = 0;
+  //     this.hurtSound.play().catch(() => {});
+  //   }
+
+  //   // Prüfen ob tot
+  //   if (this.energy <= 0) this.die();
+  // }
+  hit() {
+    if (this.energy <= 0 || this.isDead) return;
+
+    this.energy -= 10;
+    this.energy = Math.max(this.energy, 0);
+    this.world?.statusBar?.setPercentage(this.energy);
+
+    // 🔊 Hurt-Animation & Sound
+    this.playAnimation(this.IMAGES_HURT);
+    if (soundEnabled && this.hurtSound) {
+      this.hurtSound.currentTime = 0;
+      this.hurtSound.play().catch(() => {});
+    }
+
+    // 🔁 Kleine Hurt-Animation-Zeit (optisch besser sichtbar)
+    this.isHurtTimer = true;
+    setTimeout(() => (this.isHurtTimer = false), 700);
+
+    // 💀 Wenn Energie leer → Game Over
+    if (this.energy <= 0 && !this.world.playerDied) {
+      this.isDead = true;
+      this.world.playerDied = true;
+      this.world.stopGameLoopHard();
+      this.world.showGameOverScreen();
+    }
+  }
+
+  die() {
+    this.isDead = true;
+    this.energy = 0;
+    this.playAnimation(this.IMAGES_DEAD);
+
+    if (this.world && !this.world.playerDied) {
+      this.world.playerDied = true;
+      this.world.stopGameLoopHard();
+      this.world.showGameOverScreen();
+    }
+  }
+
+  // --- Aktionen ---
   jump() {
     super.jump();
     if (soundEnabled) {
@@ -279,6 +372,7 @@ class Character extends MovableObject {
       bar.availableBottles++;
       bar.update();
       this.world.collectableBottles = this.world.collectableBottles.filter(
+        (b) => !this.isColliding(b)
         (b) => !this.isColliding(b)
       );
       this.world.spawnNewBottle();

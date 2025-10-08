@@ -54,38 +54,17 @@ class EndbossLevel1 extends MovableObject {
     this.x = 2000;
     this.energy = 100;
     this.statusBar = new StatusBarEnemy(this);
-
-    // this.screamSound = new Audio("audio/chicken.mp3");
-    // this.screamSound.loop = false;
-    // this.screamSound.volume = 0.6;
     this.screamSound = new Audio("audio/chicken.mp3");
     this.screamSound.volume = 0.6;
     this.screamSound.loop = false;
     this.screamSound.muted = !soundEnabled;
-
     this.animate();
     this.moveLogic();
   }
 
-  // scream() {
-  //   if (this.isDead() || !this.screamSound) return;
-
-  //   if (!this.screamSound.paused) return;
-
-  //   this.isScreaming = true;
-  //   this.screamSound.currentTime = 0;
-  //   this.screamSound.play().catch((e) => {
-  //     console.warn("Konnte Schrei nicht abspielen:", e);
-  //   });
-
-  //   setTimeout(() => (this.isScreaming = false), 1500);
-  // }
   scream() {
     if (this.isDead() || !this.screamSound) return;
-
-    // 🔇 Sound global deaktiviert → kein Schrei
     if (!soundEnabled) return;
-
     if (!this.screamSound.paused) return;
 
     this.isScreaming = true;
@@ -93,7 +72,6 @@ class EndbossLevel1 extends MovableObject {
     this.screamSound.play().catch((e) => {
       console.warn("Konnte Schrei nicht abspielen:", e);
     });
-
     setTimeout(() => (this.isScreaming = false), 1500);
   }
 
@@ -108,9 +86,7 @@ class EndbossLevel1 extends MovableObject {
       this.isAggressive = true;
       this.attackMode = true;
     }
-
     this.scream();
-
     if (this.isDead()) this.die();
   }
 
@@ -122,6 +98,24 @@ class EndbossLevel1 extends MovableObject {
     if (this.screamSound) {
       this.screamSound.pause();
       this.screamSound.currentTime = 0;
+    }
+  }
+
+  hit() {
+    if (this.isDead()) return;
+    this.energy -= 20;
+    this.energy = Math.max(this.energy, 0);
+    this.statusBar.setPercentage(this.energy);
+
+    if (!this.isAggressive) {
+      this.isAggressive = true;
+      this.attackMode = true;
+    }
+    if (this.energy > 0) {
+      this.scream();
+    }
+    if (this.energy <= 0) {
+      this.die();
     }
   }
 
@@ -160,23 +154,25 @@ class EndbossLevel1 extends MovableObject {
 
       const player = this.world.character;
       const distance = Math.abs(this.x - player.x);
-
-      if (distance < this.alertDistance) {
-        this.scream();
-        this.attackMode = true;
-        this.isAggressive = true;
-
-        const v = this.isAggressive ? this.aggroSpeed : this.speed;
-        if (this.x > player.x) {
-          this.x -= v;
-          this.otherDirection = false;
-        } else {
-          this.x += v;
-          this.otherDirection = true;
-        }
-      } else {
-        this.attackMode = false;
-      }
+      this.alertDistanceMethod(distance, player);
     }, 1000 / 60);
+  }
+
+  alertDistanceMethod(distance, player) {
+    if (distance < this.alertDistance) {
+      this.scream();
+      this.attackMode = true;
+      this.isAggressive = true;
+      const v = this.isAggressive ? this.aggroSpeed : this.speed;
+      if (this.x > player.x) {
+        this.x -= v;
+        this.otherDirection = false;
+      } else {
+        this.x += v;
+        this.otherDirection = true;
+      }
+    } else {
+      this.attackMode = false;
+    }
   }
 }

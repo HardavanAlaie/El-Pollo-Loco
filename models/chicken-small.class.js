@@ -19,9 +19,7 @@ class ChickenSmall extends MovableObject {
     this.speed = 0.3 + Math.random() * 0.5;
     this.energy = 100;
     this.dead = false;
-
     this.statusBar = new StatusBarEnemy(this);
-
     this.start();
   }
 
