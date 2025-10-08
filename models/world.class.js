@@ -1607,12 +1607,27 @@ class World {
   //   this.fadeOverlay(0.8);
   //   this.drawEndScreen("img/You won, you lost/Game Over.png", "#fca534ff");
   // }
+  // showGameOverScreen() {
+  //   if (this._gameOverPlayed) return;
+  //   this._gameOverPlayed = true;
+
+  //   this.playSound("audio/gameover.mp3", false);
+  //   this.fadeOverlay(0.8);
+  //   this.drawEndScreen("img/You won, you lost/Game Over.png", "#fca534ff");
+  // }
   showGameOverScreen() {
+    // Nur einmal ausführen
     if (this._gameOverPlayed) return;
     this._gameOverPlayed = true;
+    this._winShown = true; // verhindert Win danach
 
-    this.playSound("audio/gameover.mp3", false);
+    console.log("💀 Game Over!");
+    this.stopGameLoopHard(false);
+    this.playSound("audio/gameover.mp3", false); // einmal abspielen
+
+    // Spielbild stark abdunkeln
     this.fadeOverlay(0.8);
+
     this.drawEndScreen("img/You won, you lost/Game Over.png", "#fca534ff");
   }
 
