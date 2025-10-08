@@ -7,19 +7,39 @@ class Character extends MovableObject {
   otherDirection = false;
   isHurtTimer = false;
 
-  IMAGES_WALKING = Array.from({ length: 6 }, (_, i) => `img/2_character_pepe/2_walk/W-2${i + 1}.png`);
-  IMAGES_IDLE = Array.from({ length: 10 }, (_, i) => `img/2_character_pepe/1_idle/idle/I-${i + 1}.png`);
-  IMAGES_JUMPING = Array.from({ length: 9 }, (_, i) => `img/2_character_pepe/3_jump/J-3${i + 1}.png`);
-  IMAGES_HURT = Array.from({ length: 3 }, (_, i) => `img/2_character_pepe/4_hurt/H-4${i + 1}.png`);
-  IMAGES_DEAD = Array.from({ length: 7 }, (_, i) => `img/2_character_pepe/5_dead/D-5${i + 1}.png`);
+  IMAGES_WALKING = Array.from(
+    { length: 6 },
+    (_, i) => `img/2_character_pepe/2_walk/W-2${i + 1}.png`
+  );
+  IMAGES_IDLE = Array.from(
+    { length: 10 },
+    (_, i) => `img/2_character_pepe/1_idle/idle/I-${i + 1}.png`
+  );
+  IMAGES_JUMPING = Array.from(
+    { length: 9 },
+    (_, i) => `img/2_character_pepe/3_jump/J-3${i + 1}.png`
+  );
+  IMAGES_HURT = Array.from(
+    { length: 3 },
+    (_, i) => `img/2_character_pepe/4_hurt/H-4${i + 1}.png`
+  );
+  IMAGES_DEAD = Array.from(
+    { length: 7 },
+    (_, i) => `img/2_character_pepe/5_dead/D-5${i + 1}.png`
+  );
 
   constructor(world) {
     super().loadImage(this.IMAGES_WALKING[0]);
     this.world = world;
 
     // 🔹 Assets laden
-    [this.IMAGES_WALKING, this.IMAGES_IDLE, this.IMAGES_JUMPING, this.IMAGES_HURT, this.IMAGES_DEAD]
-      .forEach(arr => this.loadImages(arr));
+    [
+      this.IMAGES_WALKING,
+      this.IMAGES_IDLE,
+      this.IMAGES_JUMPING,
+      this.IMAGES_HURT,
+      this.IMAGES_DEAD,
+    ].forEach((arr) => this.loadImages(arr));
 
     this.applyGravity();
     this.start();
@@ -61,7 +81,12 @@ class Character extends MovableObject {
       if (this.energy <= 0) this.playAnimation(this.IMAGES_DEAD);
       else if (this.isHurt()) this.playAnimation(this.IMAGES_HURT);
       else if (this.isAboveGround()) this.playAnimation(this.IMAGES_JUMPING);
-      else this.playAnimation(this.world?.keyboard?.RIGHT || this.world?.keyboard?.LEFT ? this.IMAGES_WALKING : this.IMAGES_IDLE);
+      else
+        this.playAnimation(
+          this.world?.keyboard?.RIGHT || this.world?.keyboard?.LEFT
+            ? this.IMAGES_WALKING
+            : this.IMAGES_IDLE
+        );
     }, 80);
   }
 
@@ -95,7 +120,9 @@ class Character extends MovableObject {
     if (bar.availableBottles < 5) {
       bar.availableBottles++;
       bar.update();
-      this.world.collectableBottles = this.world.collectableBottles.filter(b => !this.isColliding(b));
+      this.world.collectableBottles = this.world.collectableBottles.filter(
+        (b) => !this.isColliding(b)
+      );
       this.world.spawnNewBottle();
     }
   }
@@ -105,6 +132,8 @@ class Character extends MovableObject {
     if (!path || !soundEnabled) return;
     const sound = new Audio(path);
     sound.volume = 0.5;
-    sound.play().catch(e => console.warn("Sound konnte nicht abgespielt werden:", e));
+    sound
+      .play()
+      .catch((e) => console.warn("Sound konnte nicht abgespielt werden:", e));
   }
 }
