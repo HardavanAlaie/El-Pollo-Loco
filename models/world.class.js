@@ -1816,30 +1816,71 @@ class World {
   // 🖼️ ZEICHNEN
   // ---------------------------------------------------------------------------
 
+  // draw() {
+  //   if (this.playerDied) return this.showGameOverScreen();
+  //   if (this.endbossDefeated) return this.showWinScreen();
+
+  //   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  //   this.ctx.translate(this.camera_x, 0);
+
+  //   this.addObjectsToMap(this.backgroundObjects);
+  //   this.ctx.translate(-this.camera_x, 0);
+
+  //   [this.statusBar, this.statusBarBottle, this.statusBarCoin].forEach((b) =>
+  //     this.addToMap(b)
+  //   );
+
+  //   this.ctx.translate(this.camera_x, 0);
+  //   this.addToMap(this.character);
+  //   this.addObjectsToMap(this.level.enemies);
+  //   this.addObjectsToMap(this.collectableBottles);
+  //   this.addObjectsToMap(this.collectableCoins);
+  //   this.addObjectsToMap(this.throwableObjects);
+  //   this.ctx.translate(-this.camera_x, 0);
+
+  //   this.drawMobileControls();
+
+  //   if (!this.levelEnded)
+  //     this.animationFrame = requestAnimationFrame(() => this.draw());
+  // }
   draw() {
     if (this.playerDied) return this.showGameOverScreen();
     if (this.endbossDefeated) return this.showWinScreen();
 
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.translate(this.camera_x, 0);
 
+    // --- Hintergrund & Kamera ---
+    this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.backgroundObjects);
     this.ctx.translate(-this.camera_x, 0);
 
-    [this.statusBar, this.statusBarBottle, this.statusBarCoin].forEach((b) =>
-      this.addToMap(b)
+    // --- HUD (Statusleisten des Spielers) ---
+    [this.statusBar, this.statusBarBottle, this.statusBarCoin].forEach((bar) =>
+      this.addToMap(bar)
     );
 
+    // --- Spielfiguren & Gegner ---
     this.ctx.translate(this.camera_x, 0);
     this.addToMap(this.character);
-    this.addObjectsToMap(this.level.enemies);
+
+    // 🐔 Gegner und ihre Lebensleisten zeichnen
+    this.level.enemies.forEach((enemy) => {
+      this.addToMap(enemy); // Gegner selbst
+      if (enemy.statusBar) this.addToMap(enemy.statusBar); // Lebensbalken drüber
+    });
+
+    // --- Sammelobjekte & Wurfobjekte ---
     this.addObjectsToMap(this.collectableBottles);
     this.addObjectsToMap(this.collectableCoins);
     this.addObjectsToMap(this.throwableObjects);
+
+    // --- Kamera zurücksetzen ---
     this.ctx.translate(-this.camera_x, 0);
 
+    // --- Mobile Steuerung (Buttons) ---
     this.drawMobileControls();
 
+    // --- Nächster Frame ---
     if (!this.levelEnded)
       this.animationFrame = requestAnimationFrame(() => this.draw());
   }
