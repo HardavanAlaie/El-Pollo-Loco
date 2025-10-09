@@ -36,6 +36,41 @@
 //   }
 // }
 
+// class StatusBarEnemy extends DrawableObject {
+//   IMAGES = [
+//     "img/7_statusbars/2_statusbar_endboss/blue/blue100.png",
+//     "img/7_statusbars/2_statusbar_endboss/blue/blue80.png",
+//     "img/7_statusbars/2_statusbar_endboss/blue/blue60.png",
+//     "img/7_statusbars/2_statusbar_endboss/blue/blue40.png",
+//     "img/7_statusbars/2_statusbar_endboss/blue/blue20.png",
+//     "img/7_statusbars/2_statusbar_endboss/blue/blue0.png",
+//   ];
+
+//   constructor(enemy) {
+//     super();
+//     this.enemy = enemy;
+//     this.width = 60;
+//     this.height = 15;
+//     this.loadImages(this.IMAGES);
+//     this.setPercentage(enemy.energy);
+//   }
+
+//   /** 🔋 Setzt Energielevel & wählt Bild aus */
+//   setPercentage(percentage) {
+//     this.percentage = percentage;
+//     const thresholds = [100, 80, 60, 40, 20, 0];
+//     const index = thresholds.findIndex((t) => percentage >= t);
+//     this.img = this.imageCache[this.IMAGES[index === -1 ? 5 : index]];
+//   }
+
+//   /** 🎯 Position über dem Gegner aktualisieren */
+//   updatePosition() {
+//     if (!this.enemy) return;
+//     this.x = this.enemy.x;
+//     this.y = this.enemy.y - 20;
+//   }
+// }
+
 class StatusBarEnemy extends DrawableObject {
   IMAGES = [
     "img/7_statusbars/2_statusbar_endboss/blue/blue100.png",
@@ -55,7 +90,7 @@ class StatusBarEnemy extends DrawableObject {
     this.setPercentage(enemy.energy);
   }
 
-  /** 🔋 Setzt Energielevel & wählt Bild aus */
+  /** 🔋 Energielevel setzen & passendes Bild wählen */
   setPercentage(percentage) {
     this.percentage = percentage;
     const thresholds = [100, 80, 60, 40, 20, 0];
@@ -66,7 +101,13 @@ class StatusBarEnemy extends DrawableObject {
   /** 🎯 Position über dem Gegner aktualisieren */
   updatePosition() {
     if (!this.enemy) return;
-    this.x = this.enemy.x;
+    this.x = this.enemy.x + (this.enemy.width / 2 - this.width / 2);
     this.y = this.enemy.y - 20;
+  }
+
+  /** 🧱 Balken zeichnen (automatisch über Gegner) */
+  draw(ctx) {
+    this.updatePosition();
+    super.draw(ctx);
   }
 }
