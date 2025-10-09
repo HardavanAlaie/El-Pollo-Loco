@@ -1955,4 +1955,22 @@ class World {
         !(e instanceof ChickenSmall || e instanceof ChickenNormal) || e.x > -50
     );
   }
+
+  stopAllSounds() {
+    try {
+      // Stoppe alle Gegner-Sounds
+      this.stopEnemySounds();
+
+      // Stoppe globale Sounds, falls aktiv
+      const audios = document.querySelectorAll("audio");
+      audios.forEach((a) => {
+        a.pause();
+        a.currentTime = 0;
+      });
+
+      console.log("🔇 Alle Sounds gestoppt.");
+    } catch (err) {
+      console.warn("Fehler beim Stoppen der Sounds:", err);
+    }
+  }
 }
