@@ -1684,6 +1684,34 @@ class World {
   //     this.canvasClickListenerAdded = true;
   //   }
   // }
+  // drawRestartButton(color) {
+  //   const ctx = this.ctx;
+  //   const canvas = this.canvas;
+  //   const w = 250,
+  //     h = 60;
+  //   const x = canvas.width / 2 - w / 2;
+  //   const y = canvas.height / 2;
+
+  //   // 🔳 Button zeichnen
+  //   ctx.fillStyle = color;
+  //   ctx.fillRect(x, y, w, h);
+  //   ctx.font = "24px Comic Sans MS";
+  //   ctx.fillStyle = "white";
+  //   ctx.textAlign = "center";
+  //   ctx.fillText("Spiel neu starten", canvas.width / 2, y + 38);
+
+  //   // 🔹 Klickbereich speichern
+  //   this.restartButtonArea = { x, y, width: w, height: h };
+
+  //   // 🖱️ Listener nur einmal hinzufügen
+  //   if (!this.canvasClickListenerAdded) {
+  //     const boundHandler = this.handleRestartClick.bind(this);
+  //     canvas.addEventListener("click", boundHandler);
+  //     canvas.addEventListener("touchstart", boundHandler, { passive: false });
+  //     canvas.addEventListener("pointerdown", boundHandler);
+  //     this.canvasClickListenerAdded = true;
+  //   }
+  // }
   drawRestartButton(color) {
     const ctx = this.ctx;
     const canvas = this.canvas;
@@ -1692,18 +1720,41 @@ class World {
     const x = canvas.width / 2 - w / 2;
     const y = canvas.height / 2;
 
-    // 🔳 Button zeichnen
-    ctx.fillStyle = color;
-    ctx.fillRect(x, y, w, h);
-    ctx.font = "24px Comic Sans MS";
-    ctx.fillStyle = "white";
-    ctx.textAlign = "center";
-    ctx.fillText("Spiel neu starten", canvas.width / 2, y + 38);
+    // 🌟 Pulsierende Animation
+    let pulse = 0;
+    const animatePulse = () => {
+      if (this.levelEnded) {
+        // Nur animieren, wenn das Spiel vorbei ist
+        ctx.save();
+        ctx.globalAlpha = 0.2 + Math.sin(Date.now() / 400) * 0.2; // Leichte Transparenzbewegung
+        ctx.fillStyle = "#fff"; // heller Schein
+        ctx.beginPath();
+        ctx.roundRect(x - 5, y - 5, w + 10, h + 10, 10);
+        ctx.fill();
+        ctx.restore();
 
-    // 🔹 Klickbereich speichern
+        // 🔳 Hauptbutton
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, w, h);
+        ctx.font = "24px Comic Sans MS";
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
+        ctx.fillText("Spiel neu starten", canvas.width / 2, y + 38);
+
+        // ♻️ Wiederholen (sanftes Leuchten)
+        pulse = requestAnimationFrame(animatePulse);
+      } else {
+        cancelAnimationFrame(pulse);
+      }
+    };
+
+    // Erste Zeichnung
+    animatePulse();
+
+    // Klickbereich speichern
     this.restartButtonArea = { x, y, width: w, height: h };
 
-    // 🖱️ Listener nur einmal hinzufügen
+    // Listener nur einmal hinzufügen
     if (!this.canvasClickListenerAdded) {
       const boundHandler = this.handleRestartClick.bind(this);
       canvas.addEventListener("click", boundHandler);
