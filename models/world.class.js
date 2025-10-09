@@ -1713,6 +1713,37 @@ class World {
     }
   }
 
+  handleRestartClick(e) {
+    const rect = this.canvas.getBoundingClientRect();
+    const scaleX = this.canvas.width / rect.width;
+    const scaleY = this.canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+
+    const btn = this.restartButtonArea;
+    if (!btn) return;
+
+    // Prüfen, ob Klick auf Button erfolgte
+    const inside =
+      x >= btn.x &&
+      x <= btn.x + btn.width &&
+      y >= btn.y &&
+      y <= btn.y + btn.height;
+
+    if (inside) {
+      console.log("🔁 Neustart des Spiels...");
+
+      // 🧹 Sauber aufräumen vor Reload
+      this.stopAllSounds();
+      this.stopGameLoopHard();
+      this._winShown = false;
+      this._gameOverPlayed = false;
+
+      // ⏳ kleine Verzögerung für bessere UX
+      setTimeout(() => location.reload(), 300);
+    }
+  }
+
   handleCanvasClick(e) {
     const rect = this.canvas.getBoundingClientRect();
     const scaleX = this.canvas.width / rect.width;
