@@ -1727,7 +1727,7 @@ class World {
         // Nur animieren, wenn das Spiel vorbei ist
         ctx.save();
         ctx.globalAlpha = 0.2 + Math.sin(Date.now() / 400) * 0.2; // Leichte Transparenzbewegung
-        ctx.fillStyle = "#fff"; // heller Schein
+        ctx.fillStyle = "#c07512ff"; // heller Schein
         ctx.beginPath();
         ctx.roundRect(x - 5, y - 5, w + 10, h + 10, 10);
         ctx.fill();
