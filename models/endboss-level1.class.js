@@ -204,8 +204,6 @@ class EndbossLevel1 extends MovableObject {
     this.x = 2000;
     this.energy = 100;
     this.statusBar = new StatusBarEnemy(this);
-    this.bossBar = new StatusBarBoss(this);
-
 
     this.screamSound = this.initSound("audio/chicken.mp3", 0.6);
     this.animate();
