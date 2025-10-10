@@ -1912,31 +1912,76 @@ class World {
   // 📱 MOBILE STEUERUNG
   // ---------------------------------------------------------------------------
 
+  // setupCanvasControls() {
+  //   if (this.uiClickListenerAdded) return;
+  //   this.uiClickListenerAdded = true;
+
+  //   const handleDown = (e) => {
+  //     if (e.cancelable) e.preventDefault();
+  //     const { x, y } = this.toCanvasXY(e);
+  //     this.keyboard.LEFT = this.isInsideButton(x, y, this.leftBtnArea);
+  //     this.keyboard.RIGHT = this.isInsideButton(x, y, this.rightBtnArea);
+  //     this.keyboard.UP = this.isInsideButton(x, y, this.jumpBtnArea);
+  //     this.keyboard.D = this.isInsideButton(x, y, this.throwBtnArea);
+  //   };
+  //   const handleUp = () =>
+  //     Object.assign(this.keyboard, {
+  //       LEFT: false,
+  //       RIGHT: false,
+  //       UP: false,
+  //       D: false,
+  //     });
+
+  //   ["pointerdown", "touchstart", "mousedown"].forEach((t) =>
+  //     this.canvas.addEventListener(t, handleDown, { passive: false })
+  //   );
+  //   ["pointerup", "touchend", "mouseup"].forEach((t) =>
+  //     this.canvas.addEventListener(t, handleUp)
+  //   );
+  // }
   setupCanvasControls() {
     if (this.uiClickListenerAdded) return;
     this.uiClickListenerAdded = true;
 
+    const getTouchPosition = (e) => {
+      const rect = this.canvas.getBoundingClientRect();
+      const scaleX = this.canvas.width / rect.width;
+      const scaleY = this.canvas.height / rect.height;
+      let x, y;
+
+      if (e.touches && e.touches.length > 0) {
+        x = (e.touches[0].clientX - rect.left) * scaleX;
+        y = (e.touches[0].clientY - rect.top) * scaleY;
+      } else {
+        x = (e.clientX - rect.left) * scaleX;
+        y = (e.clientY - rect.top) * scaleY;
+      }
+      return { x, y };
+    };
+
     const handleDown = (e) => {
       if (e.cancelable) e.preventDefault();
-      const { x, y } = this.toCanvasXY(e);
+      const { x, y } = getTouchPosition(e);
+
       this.keyboard.LEFT = this.isInsideButton(x, y, this.leftBtnArea);
       this.keyboard.RIGHT = this.isInsideButton(x, y, this.rightBtnArea);
       this.keyboard.UP = this.isInsideButton(x, y, this.jumpBtnArea);
       this.keyboard.D = this.isInsideButton(x, y, this.throwBtnArea);
     };
-    const handleUp = () =>
-      Object.assign(this.keyboard, {
-        LEFT: false,
-        RIGHT: false,
-        UP: false,
-        D: false,
-      });
 
-    ["pointerdown", "touchstart", "mousedown"].forEach((t) =>
-      this.canvas.addEventListener(t, handleDown, { passive: false })
+    const handleUp = () => {
+      this.keyboard.LEFT = false;
+      this.keyboard.RIGHT = false;
+      this.keyboard.UP = false;
+      this.keyboard.D = false;
+    };
+
+    // 📱 Für alle Event-Typen
+    ["pointerdown", "touchstart", "mousedown"].forEach((type) =>
+      this.canvas.addEventListener(type, handleDown, { passive: false })
     );
-    ["pointerup", "touchend", "mouseup"].forEach((t) =>
-      this.canvas.addEventListener(t, handleUp)
+    ["pointerup", "touchend", "mouseup", "touchcancel"].forEach((type) =>
+      this.canvas.addEventListener(type, handleUp)
     );
   }
 
