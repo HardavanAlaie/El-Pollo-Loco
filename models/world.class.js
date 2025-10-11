@@ -1599,7 +1599,7 @@ class World {
     // Hintergrund leicht abdunkeln, Spielbild bleibt sichtbar
     this.fadeOverlay(0.3);
 
-    this.drawEndScreen("img/You won, you lost/You win B.png", "#44cc44");
+    this.drawEndScreen("img/You won, you lost/You win B.png", "#fca534ff");
   }
 
   // showGameOverScreen() {
@@ -1939,29 +1939,60 @@ class World {
   //     this.canvas.addEventListener(t, handleUp)
   //   );
   // }
+  // setupCanvasControls() {
+  //   if (this.uiClickListenerAdded) return;
+  //   this.uiClickListenerAdded = true;
+
+  //   const getTouchPosition = (e) => {
+  //     const rect = this.canvas.getBoundingClientRect();
+  //     const scaleX = this.canvas.width / rect.width;
+  //     const scaleY = this.canvas.height / rect.height;
+  //     let x, y;
+
+  //     if (e.touches && e.touches.length > 0) {
+  //       x = (e.touches[0].clientX - rect.left) * scaleX;
+  //       y = (e.touches[0].clientY - rect.top) * scaleY;
+  //     } else {
+  //       x = (e.clientX - rect.left) * scaleX;
+  //       y = (e.clientY - rect.top) * scaleY;
+  //     }
+  //     return { x, y };
+  //   };
+
+  //   const handleDown = (e) => {
+  //     if (e.cancelable) e.preventDefault();
+  //     //const { x, y } = getTouchPosition(e);
+  //     const { x, y } = this.getCanvasCoordinates(e);
+
+  //     this.keyboard.LEFT = this.isInsideButton(x, y, this.leftBtnArea);
+  //     this.keyboard.RIGHT = this.isInsideButton(x, y, this.rightBtnArea);
+  //     this.keyboard.UP = this.isInsideButton(x, y, this.jumpBtnArea);
+  //     this.keyboard.D = this.isInsideButton(x, y, this.throwBtnArea);
+  //   };
+
+  //   const handleUp = () => {
+  //     this.keyboard.LEFT = false;
+  //     this.keyboard.RIGHT = false;
+  //     this.keyboard.UP = false;
+  //     this.keyboard.D = false;
+  //   };
+
+  //   // 📱 Für alle Event-Typen
+  //   ["pointerdown", "touchstart", "mousedown"].forEach((type) =>
+  //     this.canvas.addEventListener(type, handleDown, { passive: false })
+  //   );
+  //   ["pointerup", "touchend", "mouseup", "touchcancel"].forEach((type) =>
+  //     this.canvas.addEventListener(type, handleUp)
+  //   );
+  // }
   setupCanvasControls() {
     if (this.uiClickListenerAdded) return;
     this.uiClickListenerAdded = true;
 
-    const getTouchPosition = (e) => {
-      const rect = this.canvas.getBoundingClientRect();
-      const scaleX = this.canvas.width / rect.width;
-      const scaleY = this.canvas.height / rect.height;
-      let x, y;
-
-      if (e.touches && e.touches.length > 0) {
-        x = (e.touches[0].clientX - rect.left) * scaleX;
-        y = (e.touches[0].clientY - rect.top) * scaleY;
-      } else {
-        x = (e.clientX - rect.left) * scaleX;
-        y = (e.clientY - rect.top) * scaleY;
-      }
-      return { x, y };
-    };
-
     const handleDown = (e) => {
       if (e.cancelable) e.preventDefault();
-      const { x, y } = getTouchPosition(e);
+
+      const { x, y } = this.getCanvasCoordinates(e);
 
       this.keyboard.LEFT = this.isInsideButton(x, y, this.leftBtnArea);
       this.keyboard.RIGHT = this.isInsideButton(x, y, this.rightBtnArea);
@@ -1976,10 +2007,11 @@ class World {
       this.keyboard.D = false;
     };
 
-    // 📱 Für alle Event-Typen
+    // 📱 Unterstützt Maus, Touch und Pointer Events
     ["pointerdown", "touchstart", "mousedown"].forEach((type) =>
       this.canvas.addEventListener(type, handleDown, { passive: false })
     );
+
     ["pointerup", "touchend", "mouseup", "touchcancel"].forEach((type) =>
       this.canvas.addEventListener(type, handleUp)
     );

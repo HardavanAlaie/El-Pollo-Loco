@@ -1,14 +1,16 @@
-/* Hintergrund */
-body {
+/* === GRUNDLAYOUT === */
+html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
+  width: 100%;
+  background: #000;
+  font-family: 'myFont', sans-serif;
+  overflow: hidden;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  font-family: 'myFont', sans-serif;
-  background: #000;
-  overflow: hidden;
 }
 
 /* Hintergrundbild mit Blur */
@@ -19,7 +21,7 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('img/5_background/cactus-9085905_1280.jpg');
+  background-image: url("img/5_background/cactus-9085905_1280.jpg");
   background-position: center;
   background-size: cover;
   filter: blur(3px);
@@ -27,50 +29,26 @@ body::before {
   z-index: -1;
 }
 
-/* Spielfeld-Wrapper */
-/* #game-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-} */
- #game-wrapper {
+/* === SPIELFELD === */
+#game-wrapper {
   position: relative;
-  display: inline-block;      /* passt sich der Canvas-Größe an */
+  display: inline-block; /* passt sich der Canvasgröße an */
 }
 
-
-/* Canvas – immer mittig */
-/* canvas {
-  display: block;
-  background: black;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain; /* behält Seitenverhältnis *//*
-} */
+/* Canvas */
 canvas {
   display: block;
-  background: black;
+  background: #000;
   border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  touch-action: none; /* verhindert Scroll/Gesten */
 }
 
-/* Button-Container oben rechts relativ zum Canvas */
-/* #canvas-buttons {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  display: flex;
-  gap: 10px;
-  z-index: 10;             
-} */
- #canvas-buttons {
+/* === OBERE BUTTONS === */
+#canvas-buttons {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -79,35 +57,29 @@ canvas {
   z-index: 1000;
 }
 
-/* Buttons im Comic-/Spielstil */
 #canvas-buttons button {
   width: 48px;
   height: 48px;
-  border-radius: 50%;
-  /* border: 3px solid #fff; */
   border: none;
+  border-radius: 50%;
   background: radial-gradient(circle, #fca534 0%, #e88b1b 100%);
   color: #fff;
   font-size: 22px;
-  line-height: 1;
   cursor: pointer;
-  /* box-shadow: 0 4px 8px rgba(0,0,0,0.5); */
   user-select: none;
   touch-action: manipulation;
   transition: transform 0.1s, filter 0.2s;
 }
-
 
 #canvas-buttons button:active {
   transform: scale(0.9);
   filter: brightness(1.1);
 }
 
-
-/* Schrift */
+/* === SCHRIFT UND TITEL === */
 @font-face {
-  font-family: 'myFont';
-  src: url('fonts/fascinateInline-regular.ttf') format('truetype');
+  font-family: "myFont";
+  src: url("fonts/fascinateInline-regular.ttf") format("truetype");
 }
 
 h1 {
@@ -117,7 +89,7 @@ h1 {
   margin: 20px 0;
 }
 
-/* Startscreen */
+/* === STARTSCREEN === */
 #start-screen {
   text-align: center;
   margin-top: 100px;
@@ -131,19 +103,17 @@ h1 {
   color: white;
   border: none;
   border-radius: 10px;
+  transition: background 0.2s;
 }
 
 #start-screen button:hover {
   background-color: rgb(175, 103, 8);
 }
 
-/* Overlay (z. B. Anleitung) */
+/* === OVERLAY (z. B. Anleitung) === */
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
   z-index: 1000;
   display: flex;
   justify-content: center;
@@ -152,8 +122,8 @@ h1 {
 
 .overlay-content {
   background-color: #fca534ff;
-  color: white;
-  font-family: 'Comic Sans MS' ;
+  color: #fff;
+  font-family: "Comic Sans MS";
   padding: 30px;
   border-radius: 15px;
   max-width: 400px;
@@ -166,9 +136,9 @@ h1 {
   margin-top: 20px;
   padding: 10px 20px;
   font-size: 16px;
-  font-family: 'Comic Sans MS';
+  font-family: "Comic Sans MS";
   background-color: #fca534ff;
-  color: white;
+  color: #fff;
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -178,11 +148,9 @@ h1 {
   display: none;
 }
 
-/* Mobile Anpassungen */
-@media only screen and (max-width: 720px) {
-  h1 { display: none; }
-}
-
-@media only screen and (max-height: 480px) {
-  h1 { display: none; }
+/* === MOBILE ANPASSUNGEN === */
+@media (max-width: 720px), (max-height: 480px) {
+  h1 {
+    display: none;
+  }
 }
