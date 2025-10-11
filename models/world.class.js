@@ -2017,27 +2017,49 @@ class World {
     );
   }
 
+  // getCanvasCoordinates(e) {
+  //   const rect = this.canvas.getBoundingClientRect();
+  //   const scaleX = this.canvas.width / rect.width;
+  //   const scaleY = this.canvas.height / rect.height;
+
+  //   let clientX, clientY;
+  //   if (e.touches && e.touches[0]) {
+  //     clientX = e.touches[0].clientX;
+  //     clientY = e.touches[0].clientY;
+  //   } else if (e.changedTouches && e.changedTouches[0]) {
+  //     clientX = e.changedTouches[0].clientX;
+  //     clientY = e.changedTouches[0].clientY;
+  //   } else {
+  //     clientX = e.clientX;
+  //     clientY = e.clientY;
+  //   }
+
+  //   return {
+  //     x: (clientX - rect.left) * scaleX,
+  //     y: (clientY - rect.top) * scaleY,
+  //   };
+  // }
+  updateCanvasRect() {
+    this.lastCanvasRect = this.canvas.getBoundingClientRect();
+  }
+
   getCanvasCoordinates(e) {
-    const rect = this.canvas.getBoundingClientRect();
+    const rect = this.lastCanvasRect || this.canvas.getBoundingClientRect();
     const scaleX = this.canvas.width / rect.width;
     const scaleY = this.canvas.height / rect.height;
 
     let clientX, clientY;
-    if (e.touches && e.touches[0]) {
+    if (e.touches && e.touches.length > 0) {
       clientX = e.touches[0].clientX;
       clientY = e.touches[0].clientY;
-    } else if (e.changedTouches && e.changedTouches[0]) {
-      clientX = e.changedTouches[0].clientX;
-      clientY = e.changedTouches[0].clientY;
     } else {
       clientX = e.clientX;
       clientY = e.clientY;
     }
 
-    return {
-      x: (clientX - rect.left) * scaleX,
-      y: (clientY - rect.top) * scaleY,
-    };
+    const x = (clientX - rect.left) * scaleX;
+    const y = (clientY - rect.top) * scaleY;
+    return { x, y };
   }
 
   drawMobileControls() {
