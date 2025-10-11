@@ -1848,6 +1848,8 @@ class World {
     if (this.endbossDefeated) return this.showWinScreen();
 
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.updateCanvasRect();
+
 
     // --- Hintergrund & Kamera ---
     this.ctx.translate(this.camera_x, 0);
