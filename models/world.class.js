@@ -1850,7 +1850,6 @@ class World {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.updateCanvasRect();
 
-
     // --- Hintergrund & Kamera ---
     this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.backgroundObjects);
@@ -2063,27 +2062,52 @@ class World {
   //   const y = (clientY - rect.top) * scaleY;
   //   return { x, y };
   // }
+  // updateCanvasRect() {
+  //   // immer aktuelles Canvas-Rechteck cachen
+  //   this.canvasRect = this.canvas.getBoundingClientRect();
+  // }
+
+  // getCanvasCoordinates(e) {
+  //   // falls Rect noch nicht existiert, sofort neu holen
+  //   if (!this.canvasRect) this.updateCanvasRect();
+
+  //   const rect = this.canvasRect;
+  //   const dpr = window.devicePixelRatio || 1;
+
+  //   const scaleX = this.canvas.width / rect.width / dpr;
+  //   const scaleY = this.canvas.height / rect.height / dpr;
+
+  //   const clientX = e.touches?.[0]?.clientX ?? e.clientX;
+  //   const clientY = e.touches?.[0]?.clientY ?? e.clientY;
+
+  //   return {
+  //     x: (clientX - rect.left) * scaleX,
+  //     y: (clientY - rect.top) * scaleY,
+  //   };
+  // }
   updateCanvasRect() {
-    // immer aktuelles Canvas-Rechteck cachen
     this.canvasRect = this.canvas.getBoundingClientRect();
   }
 
   getCanvasCoordinates(e) {
-    // falls Rect noch nicht existiert, sofort neu holen
+    // Sicherstellen, dass das Rect existiert
     if (!this.canvasRect) this.updateCanvasRect();
 
     const rect = this.canvasRect;
-    const dpr = window.devicePixelRatio || 1;
-
-    const scaleX = this.canvas.width / rect.width / dpr;
-    const scaleY = this.canvas.height / rect.height / dpr;
+    const scaleX = this.canvas.width / rect.width;
+    const scaleY = this.canvas.height / rect.height;
 
     const clientX = e.touches?.[0]?.clientX ?? e.clientX;
     const clientY = e.touches?.[0]?.clientY ?? e.clientY;
 
+    // 🧠 Hier der entscheidende Fix:
+    // Wenn der Canvas im Vollbildmodus ist, hat der Browser ein leichtes Scaling-Versatz.
+    // Das fangen wir ab, indem wir "rect.top" anpassen.
+    const topOffset = document.fullscreenElement ? rect.top * 0.2 : rect.top;
+
     return {
       x: (clientX - rect.left) * scaleX,
-      y: (clientY - rect.top) * scaleY,
+      y: (clientY - topOffset) * scaleY,
     };
   }
 
