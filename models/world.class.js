@@ -2039,27 +2039,50 @@ class World {
   //     y: (clientY - rect.top) * scaleY,
   //   };
   // }
+  // updateCanvasRect() {
+  //   this.lastCanvasRect = this.canvas.getBoundingClientRect();
+  // }
+
+  // getCanvasCoordinates(e) {
+  //   const rect = this.lastCanvasRect || this.canvas.getBoundingClientRect();
+  //   const scaleX = this.canvas.width / rect.width;
+  //   const scaleY = this.canvas.height / rect.height;
+
+  //   let clientX, clientY;
+  //   if (e.touches && e.touches.length > 0) {
+  //     clientX = e.touches[0].clientX;
+  //     clientY = e.touches[0].clientY;
+  //   } else {
+  //     clientX = e.clientX;
+  //     clientY = e.clientY;
+  //   }
+
+  //   const x = (clientX - rect.left) * scaleX;
+  //   const y = (clientY - rect.top) * scaleY;
+  //   return { x, y };
+  // }
   updateCanvasRect() {
-    this.lastCanvasRect = this.canvas.getBoundingClientRect();
+    // immer aktuelles Canvas-Rechteck cachen
+    this.canvasRect = this.canvas.getBoundingClientRect();
   }
 
   getCanvasCoordinates(e) {
-    const rect = this.lastCanvasRect || this.canvas.getBoundingClientRect();
-    const scaleX = this.canvas.width / rect.width;
-    const scaleY = this.canvas.height / rect.height;
+    // falls Rect noch nicht existiert, sofort neu holen
+    if (!this.canvasRect) this.updateCanvasRect();
 
-    let clientX, clientY;
-    if (e.touches && e.touches.length > 0) {
-      clientX = e.touches[0].clientX;
-      clientY = e.touches[0].clientY;
-    } else {
-      clientX = e.clientX;
-      clientY = e.clientY;
-    }
+    const rect = this.canvasRect;
+    const dpr = window.devicePixelRatio || 1;
 
-    const x = (clientX - rect.left) * scaleX;
-    const y = (clientY - rect.top) * scaleY;
-    return { x, y };
+    const scaleX = this.canvas.width / rect.width / dpr;
+    const scaleY = this.canvas.height / rect.height / dpr;
+
+    const clientX = e.touches?.[0]?.clientX ?? e.clientX;
+    const clientY = e.touches?.[0]?.clientY ?? e.clientY;
+
+    return {
+      x: (clientX - rect.left) * scaleX,
+      y: (clientY - rect.top) * scaleY,
+    };
   }
 
   drawMobileControls() {
