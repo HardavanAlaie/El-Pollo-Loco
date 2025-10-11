@@ -418,9 +418,14 @@ window.addEventListener("load", () => {
 );
 
 /** 📐 Fullscreen-Update – wichtig für Touchsteuerung */
+// document.addEventListener("fullscreenchange", () => {
+//   resizeCanvas();
+//   if (world?.updateCanvasRect) world.updateCanvasRect();
+// });
 document.addEventListener("fullscreenchange", () => {
   resizeCanvas();
-  if (world?.updateCanvasRect) world.updateCanvasRect();
+  if (world) world.updateCanvasRect();
+  setTimeout(() => world?.updateCanvasRect(), 100); // 🕒 zweiter Versuch nach Layout-Reflow
 });
 
 /** 🧠 Zusätzliche Buttons (Fallback) */
