@@ -58,7 +58,7 @@ const level1 = (world) => {
       spawnConfig: [
         {
           type: ChickenSmall,
-          maxCount: 15,
+          maxCount: 4,
           interval: 3000,
           condition: (level) =>
             level.enemies.some((e) => e instanceof EndbossLevel1 && !e.isDead()),
