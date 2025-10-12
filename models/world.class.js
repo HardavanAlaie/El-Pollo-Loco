@@ -2122,57 +2122,88 @@ class World {
     };
   }
 
+  // drawMobileControls() {
+  //   const ctx = this.ctx,
+  //     w = this.canvas.width,
+  //     h = this.canvas.height;
+  //   ctx.font = "32px Comic Sans MS";
+  //   ctx.textAlign = "center";
+  //   ctx.textBaseline = "middle";
+
+  //   this.leftBtnArea = { x: 30, y: h - 80, width: 60, height: 60, label: "⬅️" };
+  //   this.rightBtnArea = {
+  //     x: 100,
+  //     y: h - 80,
+  //     width: 60,
+  //     height: 60,
+  //     label: "➡️",
+  //   };
+  //   this.jumpBtnArea = {
+  //     x: w - 140,
+  //     y: h - 80,
+  //     width: 60,
+  //     height: 60,
+  //     label: "⤴️",
+  //   };
+  //   this.throwBtnArea = {
+  //     x: w - 60,
+  //     y: h - 80,
+  //     width: 60,
+  //     height: 60,
+  //     label: "🧴",
+  //   };
+
+  //   [
+  //     this.leftBtnArea,
+  //     this.rightBtnArea,
+  //     this.jumpBtnArea,
+  //     this.throwBtnArea,
+  //   ].forEach((b) => {
+  //     ctx.fillStyle = "#fca534ff";
+  //     ctx.beginPath();
+  //     ctx.arc(
+  //       b.x + b.width / 2,
+  //       b.y + b.height / 2,
+  //       b.width / 2,
+  //       0,
+  //       Math.PI * 2
+  //     );
+  //     ctx.fill();
+  //     ctx.fillStyle = "white";
+  //     ctx.fillText(b.label, b.x + b.width / 2, b.y + b.height / 2);
+  //   });
+  // }
   drawMobileControls() {
-    const ctx = this.ctx,
-      w = this.canvas.width,
-      h = this.canvas.height;
-    ctx.font = "32px Comic Sans MS";
+  const ctx = this.ctx;
+  const w = this.canvas.width;
+  const h = this.canvas.height;
+
+  // relative Größe (funktioniert auch bei Skalierung)
+  const size = 60;
+  const margin = 20;
+
+  // Definiere Positionen in Prozent, damit sie sich mit Canvas-Größe mitverändern
+  this.leftBtnArea = { x: margin, y: h - size - margin, width: size, height: size, label: "⬅️" };
+  this.rightBtnArea = { x: margin + size + 20, y: h - size - margin, width: size, height: size, label: "➡️" };
+  this.jumpBtnArea = { x: w - (size * 2) - 40, y: h - size - margin, width: size, height: size, label: "⤴️" };
+  this.throwBtnArea = { x: w - size - margin, y: h - size - margin, width: size, height: size, label: "🧴" };
+
+  // Buttons zeichnen
+  [this.leftBtnArea, this.rightBtnArea, this.jumpBtnArea, this.throwBtnArea].forEach((b) => {
+    ctx.save();
+    ctx.fillStyle = "#fca534ff";
+    ctx.beginPath();
+    ctx.arc(b.x + b.width / 2, b.y + b.height / 2, b.width / 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "white";
+    ctx.font = `${Math.floor(b.width / 2)}px Comic Sans MS`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
+    ctx.fillText(b.label, b.x + b.width / 2, b.y + b.height / 2);
+    ctx.restore();
+  });
+}
 
-    this.leftBtnArea = { x: 30, y: h - 80, width: 60, height: 60, label: "⬅️" };
-    this.rightBtnArea = {
-      x: 100,
-      y: h - 80,
-      width: 60,
-      height: 60,
-      label: "➡️",
-    };
-    this.jumpBtnArea = {
-      x: w - 140,
-      y: h - 80,
-      width: 60,
-      height: 60,
-      label: "⤴️",
-    };
-    this.throwBtnArea = {
-      x: w - 60,
-      y: h - 80,
-      width: 60,
-      height: 60,
-      label: "🧴",
-    };
-
-    [
-      this.leftBtnArea,
-      this.rightBtnArea,
-      this.jumpBtnArea,
-      this.throwBtnArea,
-    ].forEach((b) => {
-      ctx.fillStyle = "#fca534ff";
-      ctx.beginPath();
-      ctx.arc(
-        b.x + b.width / 2,
-        b.y + b.height / 2,
-        b.width / 2,
-        0,
-        Math.PI * 2
-      );
-      ctx.fill();
-      ctx.fillStyle = "white";
-      ctx.fillText(b.label, b.x + b.width / 2, b.y + b.height / 2);
-    });
-  }
 
   toCanvasXY(e) {
     const rect = this.canvas.getBoundingClientRect();
