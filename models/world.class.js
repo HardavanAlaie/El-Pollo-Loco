@@ -2100,27 +2100,67 @@ class World {
     this.canvasRect = this.canvas.getBoundingClientRect();
   }
 
+  // getCanvasCoordinates(e) {
+  //   // Sicherstellen, dass das Rect existiert
+  //   if (!this.canvasRect) this.updateCanvasRect();
+
+  //   const rect = this.canvasRect;
+  //   const scaleX = this.canvas.width / rect.width;
+  //   const scaleY = this.canvas.height / rect.height;
+
+  //   const clientX = e.touches?.[0]?.clientX ?? e.clientX;
+  //   const clientY = e.touches?.[0]?.clientY ?? e.clientY;
+
+  //   // 🧠 Hier der entscheidende Fix:
+  //   // Wenn der Canvas im Vollbildmodus ist, hat der Browser ein leichtes Scaling-Versatz.
+  //   // Das fangen wir ab, indem wir "rect.top" anpassen.
+  //   const topOffset = document.fullscreenElement ? rect.top * 0.2 : rect.top;
+
+  //   return {
+  //     x: (clientX - rect.left) * scaleX,
+  //     y: (clientY - topOffset) * scaleY,
+  //   };
+  // }
   getCanvasCoordinates(e) {
-    // Sicherstellen, dass das Rect existiert
-    if (!this.canvasRect) this.updateCanvasRect();
+  if (!this.canvasRect) this.updateCanvasRect();
+  const rect = this.canvasRect;
 
-    const rect = this.canvasRect;
-    const scaleX = this.canvas.width / rect.width;
-    const scaleY = this.canvas.height / rect.height;
+  // Berechne Verhältnis zwischen echter und logischer Canvasgröße
+  const scaleX = this.canvas.width / rect.width;
+  const scaleY = this.canvas.height / rect.height;
 
-    const clientX = e.touches?.[0]?.clientX ?? e.clientX;
-    const clientY = e.touches?.[0]?.clientY ?? e.clientY;
+  // Tatsächliche Klick-Position
+  const clientX = e.touches?.[0]?.clientX ?? e.clientX;
+  const clientY = e.touches?.[0]?.clientY ?? e.clientY;
 
-    // 🧠 Hier der entscheidende Fix:
-    // Wenn der Canvas im Vollbildmodus ist, hat der Browser ein leichtes Scaling-Versatz.
-    // Das fangen wir ab, indem wir "rect.top" anpassen.
-    const topOffset = document.fullscreenElement ? rect.top * 0.2 : rect.top;
+  // 🔧 NEU: korrigiert horizontale Verschiebung durch zentriertes Canvas
+  const offsetX = rect.left;
+  const offsetY = rect.top;
 
+  const x = (clientX - offsetX) * scaleX;
+  const y = (clientY - offsetY) * scaleY;
+
+  // 💡 Wenn Canvas horizontal zentriert (z. B. im Querformat),
+  // prüfen wir, ob rechts/links Ränder entstanden sind
+  const pageWidth = window.innerWidth;
+  const pageHeight = window.innerHeight;
+  const aspectRatio = this.canvas.width / this.canvas.height;
+  const windowRatio = pageWidth / pageHeight;
+
+  if (windowRatio > aspectRatio) {
+    // Bildschirm breiter als Canvas → schwarzer Rand links/rechts
+    const displayedWidth = pageHeight * aspectRatio;
+    const horizontalOffset = (pageWidth - displayedWidth) / 2;
     return {
-      x: (clientX - rect.left) * scaleX,
-      y: (clientY - topOffset) * scaleY,
+      x: (clientX - horizontalOffset) * (this.canvas.width / displayedWidth),
+      y: y,
     };
   }
+
+  // normaler Fall
+  return { x, y };
+}
+
 
   // drawMobileControls() {
   //   const ctx = this.ctx,
