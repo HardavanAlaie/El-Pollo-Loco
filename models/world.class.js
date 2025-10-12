@@ -1995,6 +1995,17 @@ class World {
 
       const { x, y } = this.getCanvasCoordinates(e);
 
+      // 👉 Debug-Overlay zeichnen (zeigt Klickpunkt)
+      const ctx = this.ctx;
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(x, y, 8, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(255,0,0,0.6)";
+      ctx.fill();
+      ctx.restore();
+
+      console.log(`Touch: x=${x.toFixed(1)}, y=${y.toFixed(1)}`);
+
       this.keyboard.LEFT = this.isInsideButton(x, y, this.leftBtnArea);
       this.keyboard.RIGHT = this.isInsideButton(x, y, this.rightBtnArea);
       this.keyboard.UP = this.isInsideButton(x, y, this.jumpBtnArea);
