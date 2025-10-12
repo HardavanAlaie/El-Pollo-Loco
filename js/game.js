@@ -422,10 +422,20 @@ window.addEventListener("load", () => {
 //   resizeCanvas();
 //   if (world?.updateCanvasRect) world.updateCanvasRect();
 // });
+// document.addEventListener("fullscreenchange", () => {
+//   resizeCanvas();
+//   if (world) world.updateCanvasRect();
+//   setTimeout(() => world?.updateCanvasRect(), 100); // 🕒 zweiter Versuch nach Layout-Reflow
+// });
 document.addEventListener("fullscreenchange", () => {
   resizeCanvas();
   if (world) world.updateCanvasRect();
-  setTimeout(() => world?.updateCanvasRect(), 100); // 🕒 zweiter Versuch nach Layout-Reflow
+  setTimeout(() => world?.updateCanvasRect(), 100);
+});
+
+window.addEventListener("resize", () => {
+  resizeCanvas();
+  if (world) world.updateCanvasRect();
 });
 
 /** 🧠 Zusätzliche Buttons (Fallback) */
