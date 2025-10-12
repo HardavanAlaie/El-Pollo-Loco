@@ -164,19 +164,70 @@ class Menu {
   //     }
   //   });
   // }
+  // handleClick(event) {
+  //   if (!this.buttons) return;
+
+  //   const rect = this.canvas.getBoundingClientRect();
+  //   const mouseX = event.clientX - rect.left;
+  //   const mouseY = event.clientY - rect.top;
+
+  //   Object.values(this.buttons).forEach((btn) => {
+  //     if (
+  //       mouseX >= btn.x &&
+  //       mouseX <= btn.x + btn.width &&
+  //       mouseY >= btn.y &&
+  //       mouseY <= btn.y + btn.height
+  //     ) {
+  //       this.handleButtonClick(btn.action);
+  //     }
+  //   });
+  // }
   handleClick(event) {
     if (!this.buttons) return;
 
+    // 📏 Aktuelle Canvas-BoundingBox ermitteln (auch im Vollbild korrekt)
     const rect = this.canvas.getBoundingClientRect();
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
+    const clientX = event.touches?.[0]?.clientX ?? event.clientX;
+    const clientY = event.touches?.[0]?.clientY ?? event.clientY;
 
+    // 🔧 Verhältnis zwischen angezeigtem Canvas und tatsächlicher Logikgröße
+    const scaleX = this.canvas.width / rect.width;
+    const scaleY = this.canvas.height / rect.height;
+
+    // 🎯 Exakte Canvas-Koordinaten des Klicks berechnen
+    const x = (clientX - rect.left) * scaleX;
+    const y = (clientY - rect.top) * scaleY;
+
+    // ✅ BONUS: Korrektur für horizontale/vertikale Ränder im Vollbild
+    const pageWidth = window.innerWidth;
+    const pageHeight = window.innerHeight;
+    const aspectRatio = this.canvas.width / this.canvas.height;
+    const windowRatio = pageWidth / pageHeight;
+
+    let finalX = x,
+      finalY = y;
+
+    if (windowRatio > aspectRatio) {
+      // Wenn Canvas schmaler → schwarze Ränder links/rechts
+      const displayedWidth = pageHeight * aspectRatio;
+      const horizontalOffset = (pageWidth - displayedWidth) / 2;
+      finalX =
+        (clientX - horizontalOffset) * (this.canvas.width / displayedWidth);
+    } else if (windowRatio < aspectRatio) {
+      // Wenn Canvas höher → schwarze Balken oben/unten
+      const displayedHeight = pageWidth / aspectRatio;
+      const verticalOffset = (pageHeight - displayedHeight) / 2;
+      finalY =
+        (clientY - verticalOffset) * (this.canvas.height / displayedHeight);
+    }
+
+    // 🧩 Klickprüfung
     Object.values(this.buttons).forEach((btn) => {
       if (
-        mouseX >= btn.x &&
-        mouseX <= btn.x + btn.width &&
-        mouseY >= btn.y &&
-        mouseY <= btn.y + btn.height
+        finalX >= btn.x &&
+        finalX <= btn.x + btn.width &&
+        finalY >= btn.y &&
+        finalY <= btn.y + btn.height
       ) {
         this.handleButtonClick(btn.action);
       }
