@@ -146,6 +146,24 @@ class Menu {
   }
 
   /** 🖱️ Klick-Handling */
+  // handleClick(event) {
+  //   if (!this.buttons) return;
+
+  //   const rect = this.canvas.getBoundingClientRect();
+  //   const mouseX = event.clientX - rect.left;
+  //   const mouseY = event.clientY - rect.top;
+
+  //   Object.values(this.buttons).forEach((btn) => {
+  //     if (
+  //       mouseX >= btn.x &&
+  //       mouseX <= btn.x + btn.width &&
+  //       mouseY >= btn.y &&
+  //       mouseY <= btn.y + btn.height
+  //     ) {
+  //       this.handleButtonClick(btn.action);
+  //     }
+  //   });
+  // }
   handleClick(event) {
     if (!this.buttons) return;
 
