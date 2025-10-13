@@ -1,6 +1,7 @@
 /* === GRUNDLAYOUT === */
 /* === GRUNDLAYOUT === */
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -59,7 +60,8 @@ html::before {
 /* === SPIELFELD === */
 #game-wrapper {
   position: relative;
-  display: inline-block; /* passt sich der Canvasgröße an */
+  display: inline-block;
+  /* passt sich der Canvasgröße an */
 }
 
 /* Canvas */
@@ -71,7 +73,8 @@ canvas {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  touch-action: none; /* verhindert Scroll/Gesten */
+  touch-action: none;
+  /* verhindert Scroll/Gesten */
 }
 
 /* === OBERE BUTTONS === */
@@ -176,8 +179,56 @@ h1 {
 }
 
 /* === MOBILE ANPASSUNGEN === */
-@media (max-width: 720px), (max-height: 480px) {
+@media (max-width: 720px),
+(max-height: 480px) {
   h1 {
     display: none;
+  }
+}
+
+/* 📱 Hinweis bei falscher Geräteausrichtung */
+#rotate-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  font-family: 'Comic Sans MS', sans-serif;
+  font-size: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 2000;
+  padding: 20px;
+  transition: opacity 0.3s ease;
+}
+
+#rotate-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.rotate-message {
+  background: #fca534;
+  padding: 20px 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px #000;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
   }
 }
