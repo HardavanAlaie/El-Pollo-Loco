@@ -7,26 +7,11 @@ class Character extends MovableObject {
   otherDirection = false;
   isHurtTimer = false;
 
-  IMAGES_WALKING = Array.from(
-    { length: 6 },
-    (_, i) => `img/2_character_pepe/2_walk/W-2${i + 1}.png`
-  );
-  IMAGES_IDLE = Array.from(
-    { length: 10 },
-    (_, i) => `img/2_character_pepe/1_idle/idle/I-${i + 1}.png`
-  );
-  IMAGES_JUMPING = Array.from(
-    { length: 9 },
-    (_, i) => `img/2_character_pepe/3_jump/J-3${i + 1}.png`
-  );
-  IMAGES_HURT = Array.from(
-    { length: 3 },
-    (_, i) => `img/2_character_pepe/4_hurt/H-4${i + 1}.png`
-  );
-  IMAGES_DEAD = Array.from(
-    { length: 7 },
-    (_, i) => `img/2_character_pepe/5_dead/D-5${i + 1}.png`
-  );
+  IMAGES_WALKING = Array.from({ length: 6 },(_, i) => `img/2_character_pepe/2_walk/W-2${i + 1}.png`);
+  IMAGES_IDLE = Array.from({ length: 10 },(_, i) => `img/2_character_pepe/1_idle/idle/I-${i + 1}.png`);
+  IMAGES_JUMPING = Array.from({ length: 9 },(_, i) => `img/2_character_pepe/3_jump/J-3${i + 1}.png`);
+  IMAGES_HURT = Array.from({ length: 3 },(_, i) => `img/2_character_pepe/4_hurt/H-4${i + 1}.png`);
+  IMAGES_DEAD = Array.from({ length: 7 },(_, i) => `img/2_character_pepe/5_dead/D-5${i + 1}.png`);
 
   constructor(world) {
     super().loadImage(this.IMAGES_WALKING[0]);
@@ -60,7 +45,11 @@ class Character extends MovableObject {
   /** 🕹️ Bewegungs- und Animationsschleifen starten */
   start() {
     this.stop();
+    this.moveIntervalMethod();
+    this.animationIntervalMethod();
+  }
 
+  moveIntervalMethod() {
     this.moveInterval = setInterval(() => {
       const kb = this.world?.keyboard;
       if (kb?.RIGHT && this.x < this.world.level.level_end_x) {
@@ -73,10 +62,11 @@ class Character extends MovableObject {
       }
       if (kb?.UP && !this.isAboveGround()) this.jump();
       if (kb?.D) this.world.throwableBottles();
-
       this.world.camera_x = -this.x + 100;
     }, 1000 / 60);
+  }
 
+  animationIntervalMethod() {
     this.animationInterval = setInterval(() => {
       if (this.energy <= 0) this.playAnimation(this.IMAGES_DEAD);
       else if (this.isHurt()) this.playAnimation(this.IMAGES_HURT);
