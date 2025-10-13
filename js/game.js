@@ -446,3 +446,23 @@ document
   .getElementById("fullscreen-btn")
   ?.addEventListener("click", () => toggleFullscreen(canvas));
 document.getElementById("sound-btn")?.addEventListener("click", toggleSound);
+
+/** 📱 Zeige Hinweis, wenn Handy nicht im Querformat ist */
+function checkOrientation() {
+  const overlay = document.getElementById("rotate-overlay");
+  if (!overlay) return;
+
+  // true = Hochformat (Portrait)
+  const isPortrait = window.innerHeight > window.innerWidth;
+
+  if (isPortrait) {
+    overlay.classList.remove("hidden");
+  } else {
+    overlay.classList.add("hidden");
+  }
+}
+
+// Überwache Bildschirmdrehung & Fenstergröße
+window.addEventListener("resize", checkOrientation);
+window.addEventListener("orientationchange", checkOrientation);
+window.addEventListener("load", checkOrientation);
