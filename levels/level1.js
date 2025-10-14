@@ -1,3 +1,13 @@
+/**
+ * Generates an array of CollectableBottle objects with random positions within the specified bounds.
+ *
+ * @param {number} count - The number of bottles to generate.
+ * @param {number} xMin - The minimum x-coordinate for bottle placement.
+ * @param {number} xMax - The maximum x-coordinate for bottle placement.
+ * @param {number} yMin - The minimum y-coordinate for bottle placement.
+ * @param {number} yMax - The maximum y-coordinate for bottle placement.
+ * @returns {CollectableBottle[]} An array of randomly positioned CollectableBottle instances.
+ */
 function generateRandomBottles(count, xMin, xMax, yMin, yMax) {
   let bottles = [];
   for (let i = 0; i < count; i++) {
@@ -8,6 +18,16 @@ function generateRandomBottles(count, xMin, xMax, yMin, yMax) {
   return bottles;
 }
 
+/**
+ * Initializes and returns the configuration for Level 1 of the game.
+ *
+ * @function
+ * @param {World} world - The game world instance to associate with the level's end boss.
+ * @returns {Level} The configured Level 1 instance, including enemies, clouds, background objects, bottles, coins, and spawn configuration.
+ *
+ * @example
+ * const level = level1(gameWorld);
+ */
 const level1 = (world) => {
   const boss = new EndbossLevel1();
   boss.world = world;
