@@ -13,11 +13,16 @@ class Character extends MovableObject {
   IMAGES_HURT = Array.from({ length: 3 },(_, i) => `img/2_character_pepe/4_hurt/H-4${i + 1}.png`);
   IMAGES_DEAD = Array.from({ length: 7 },(_, i) => `img/2_character_pepe/5_dead/D-5${i + 1}.png`);
 
+  /**
+   * Creates an instance of the character and initializes its assets, sounds, and physics.
+   * 
+   * @param {World} world - The game world instance to which the character belongs.
+   *
+   * @constructor
+   */
   constructor(world) {
     super().loadImage(this.IMAGES_WALKING[0]);
     this.world = world;
-
-    // 🔹 Assets laden
     [
       this.IMAGES_WALKING,
       this.IMAGES_IDLE,
@@ -25,16 +30,20 @@ class Character extends MovableObject {
       this.IMAGES_HURT,
       this.IMAGES_DEAD,
     ].forEach((arr) => this.loadImages(arr));
-
     this.applyGravity();
     this.start();
-
-    // 🔊 Sounds
     this.jumpSound = this.initSound("audio/jump.mp3", 0.5);
     this.coinSound = this.initSound("audio/coins.mp3", 0.5);
   }
 
-  /** 🔊 Initialisiert einen Sound mit globalem Mute-Zustand */
+  
+  /**
+   * Initializes and returns an Audio object with the specified source and volume.
+   *
+   * @param {string} src - The source URL of the audio file.
+   * @param {number} [volume=0.5] - The volume level of the audio (between 0.0 and 1.0).
+   * @returns {HTMLAudioElement} The initialized Audio object.
+   */
   initSound(src, volume = 0.5) {
     const sound = new Audio(src);
     sound.volume = volume;
@@ -42,13 +51,24 @@ class Character extends MovableObject {
     return sound;
   }
 
-  /** 🕹️ Bewegungs- und Animationsschleifen starten */
+  /**
+   * Starts the character's movement and animation by initializing the necessary intervals.
+   * Stops any existing intervals before starting new ones to prevent duplicates.
+   */
   start() {
     this.stop();
     this.moveIntervalMethod();
     this.animationIntervalMethod();
   }
 
+  /**
+   * Starts an interval that continuously checks keyboard input to control character movement and actions.
+   * - Moves the character right or left based on arrow key input, within level boundaries.
+   * - Initiates a jump if the up arrow is pressed and the character is on the ground.
+   * - Throws a bottle if the 'D' key is pressed.
+   * - Updates the camera position to follow the character.
+   * The interval runs at 60 frames per second.
+   */
   moveIntervalMethod() {
     this.moveInterval = setInterval(() => {
       const kb = this.world?.keyboard;
@@ -66,6 +86,14 @@ class Character extends MovableObject {
     }, 1000 / 60);
   }
 
+  /**
+   * Starts an interval that updates the character's animation based on its current state.
+   * The animation changes depending on whether the character is dead, hurt, jumping, walking, or idle.
+   * The interval runs every 80 milliseconds.
+   *
+   * @method
+   * @returns {void}
+   */
   animationIntervalMethod() {
     this.animationInterval = setInterval(() => {
       if (this.energy <= 0) this.playAnimation(this.IMAGES_DEAD);
@@ -80,11 +108,20 @@ class Character extends MovableObject {
     }, 80);
   }
 
+  /**
+   * Stops the character's movement and animation by clearing their respective intervals.
+   * This method should be called to halt any ongoing actions performed by the character.
+   */
   stop() {
     clearInterval(this.moveInterval);
     clearInterval(this.animationInterval);
   }
 
+  /**
+   * Makes the character jump by calling the parent class's jump method.
+   * If sound is enabled, plays the jump sound effect from the beginning.
+   * Handles any errors from playing the sound silently.
+   */
   jump() {
     super.jump();
     if (soundEnabled) {
@@ -93,6 +130,12 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * Increases the coin count in the status bar by one, up to a maximum of 5.
+   * Updates the coin status bar and plays a coin collection sound if sound is enabled.
+   *
+   * @method
+   */
   collectCoin() {
     const bar = this.world.statusBarCoin;
     if (bar.availableCoins < 5) {
@@ -105,6 +148,12 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * Handles the collection of a bottle by the character.
+   * Increments the available bottles in the status bar if less than 5,
+   * updates the status bar, removes the collected bottle from the world,
+   * and spawns a new bottle.
+   */
   collectBottle() {
     const bar = this.world.statusBarBottle;
     if (bar.availableBottles < 5) {
@@ -117,7 +166,12 @@ class Character extends MovableObject {
     }
   }
 
-  /** 🔉 Spiele beliebigen Sound ab (mit globalem Check) */
+  /**
+   * Plays a sound from the specified file path if sound is enabled.
+   * 
+   * @param {string} path - The path to the audio file to play.
+   * @returns {void}
+   */
   playSound(path) {
     if (!path || !soundEnabled) return;
     const sound = new Audio(path);
