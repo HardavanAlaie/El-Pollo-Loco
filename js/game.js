@@ -3,24 +3,29 @@ let world;
 let keyboard = new Keyboard();
 let soundEnabled = true;
 
-/** 🎮 Spielstart & Initialisierung */
+/**
+ * Starts the game by hiding the start screen and initializing the game logic.
+ * Hides the element with the ID "start-screen" and calls the `init` function to begin the game.
+ */
 function startGame() {
   document.getElementById("start-screen").style.display = "none";
   init();
 }
 
+/**
+ * Initializes the game by setting up the canvas element, configuring its dimensions,
+ * creating a new World instance, resizing the canvas, and updating the canvas rectangle.
+ * This function should be called once to start the game setup process.
+ */
 function init() {
   canvas = document.getElementById("canvas");
   canvas.width = 720;
   canvas.height = 480;
   world = new World(canvas, keyboard);
   resizeCanvas();
-
-  // 🧩 Nach Initialisierung sofort BoundingRect speichern
   world.updateCanvasRect?.();
 }
 
-/** ⌨️ Tastatur-Steuerung */
 window.addEventListener("keydown", (e) => {
   switch (e.keyCode) {
     case 37:
@@ -61,15 +66,17 @@ window.addEventListener("keyup", (e) => {
   }
 });
 
-/** 🧭 Canvas-Größe dynamisch anpassen */
+/**
+ * Resizes the canvas element with the ID "canvas" to maintain a 720:480 aspect ratio,
+ * adjusting its size based on the current window dimensions. If the global `world` object
+ * has an `updateCanvasRect` method, it will be called after resizing.
+ */
 function resizeCanvas() {
   const canvas = document.getElementById("canvas");
   if (!canvas) return;
-
   const aspectRatio = 720 / 480;
   const windowRatio = window.innerWidth / window.innerHeight;
   let newWidth, newHeight;
-
   if (windowRatio > aspectRatio) {
     newHeight = window.innerHeight;
     newWidth = newHeight * aspectRatio;
@@ -77,19 +84,20 @@ function resizeCanvas() {
     newWidth = window.innerWidth;
     newHeight = newWidth / aspectRatio;
   }
-
   canvas.style.width = `${newWidth}px`;
   canvas.style.height = `${newHeight}px`;
-
-  // 📐 Nach jedem Resize neu berechnen (für Touch-Buttons!)
   if (world?.updateCanvasRect) world.updateCanvasRect();
 }
 
-/** 🖥️ Vollbildmodus umschalten */
+/**
+ * Toggles fullscreen mode for the canvas element with the ID "canvas".
+ * If the canvas is not currently in fullscreen, it requests fullscreen mode.
+ * If already in fullscreen, it exits fullscreen mode.
+ * Logs an error to the console if the fullscreen request fails.
+ */
 function toggleFullscreen() {
   const canvas = document.getElementById("canvas");
   if (!canvas) return;
-
   if (!document.fullscreenElement) {
     canvas
       .requestFullscreen()
@@ -99,25 +107,36 @@ function toggleFullscreen() {
   }
 }
 
-/** 🔊 Sound umschalten */
+/**
+ * Toggles the game's sound state between enabled and disabled.
+ * Updates the global `soundEnabled` variable, notifies the `world` object (if available),
+ * and updates the sound button's icon in the UI.
+ *
+ * @function
+ */
 function toggleSound() {
   soundEnabled = !soundEnabled;
   if (world?.toggleSound) world.toggleSound(soundEnabled);
-
   const soundBtn = document.getElementById("sound-btn");
   if (soundBtn) soundBtn.textContent = soundEnabled ? "🔊" : "🔇";
 }
 
-/** 📖 Anleitung anzeigen / ausblenden */
+/**
+ * Displays the instructions overlay by removing the "hidden" class
+ * from the element with the ID "instructions-overlay", if it exists.
+ */
 function showInstructions() {
   document.getElementById("instructions-overlay")?.classList.remove("hidden");
 }
 
+/**
+ * Hides the instructions overlay by adding the "hidden" class
+ * to the element with the ID "instructions-overlay", if it exists.
+ */
 function hideInstructions() {
   document.getElementById("instructions-overlay")?.classList.add("hidden");
 }
 
-/** 🧩 UI-Setup */
 window.addEventListener("load", () => {
   resizeCanvas();
 
@@ -136,21 +155,10 @@ window.addEventListener("load", () => {
   if (soundBtn) soundBtn.textContent = soundEnabled ? "🔊" : "🔇";
 });
 
-/** 📱 Automatische Anpassung bei Fensteränderung */
 ["resize", "orientationchange"].forEach((evt) =>
   window.addEventListener(evt, resizeCanvas)
 );
 
-/** 📐 Fullscreen-Update – wichtig für Touchsteuerung */
-// document.addEventListener("fullscreenchange", () => {
-//   resizeCanvas();
-//   if (world?.updateCanvasRect) world.updateCanvasRect();
-// });
-// document.addEventListener("fullscreenchange", () => {
-//   resizeCanvas();
-//   if (world) world.updateCanvasRect();
-//   setTimeout(() => world?.updateCanvasRect(), 100); // 🕒 zweiter Versuch nach Layout-Reflow
-// });
 document.addEventListener("fullscreenchange", () => {
   resizeCanvas();
   if (world) world.updateCanvasRect();
@@ -162,7 +170,6 @@ window.addEventListener("resize", () => {
   if (world) world.updateCanvasRect();
 });
 
-/** 🧠 Zusätzliche Buttons (Fallback) */
 document
   .getElementById("instructions-btn")
   ?.addEventListener("click", showInstructions);
@@ -171,12 +178,18 @@ document
   ?.addEventListener("click", () => toggleFullscreen(canvas));
 document.getElementById("sound-btn")?.addEventListener("click", toggleSound);
 
-/** 📱 Zeige Hinweis, wenn Handy nicht im Querformat ist */
+/**
+ * Checks the current screen orientation and toggles the visibility
+ * of the "rotate-overlay" element. If the device is in portrait mode,
+ * the overlay is shown; otherwise, it is hidden.
+ *
+ * @function
+ * @returns {void}
+ */
 function checkOrientation() {
   const overlay = document.getElementById("rotate-overlay");
   if (!overlay) return;
 
-  // true = Hochformat (Portrait)
   const isPortrait = window.innerHeight > window.innerWidth;
 
   if (isPortrait) {
@@ -186,7 +199,6 @@ function checkOrientation() {
   }
 }
 
-// Überwache Bildschirmdrehung & Fenstergröße
 window.addEventListener("resize", checkOrientation);
 window.addEventListener("orientationchange", checkOrientation);
 window.addEventListener("load", checkOrientation);
