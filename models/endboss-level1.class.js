@@ -10,28 +10,21 @@ class EndbossLevel1 extends MovableObject {
   isScreaming = false;
 
   IMAGES_ALERT = this.makeImgList("img/4_enemie_boss_chicken/2_alert/", 5, 12);
-  IMAGES_ATTACK = this.makeImgList(
-    "img/4_enemie_boss_chicken/3_attack/",
-    13,
-    20
-  );
+  IMAGES_ATTACK = this.makeImgList("img/4_enemie_boss_chicken/3_attack/", 13, 20);
   IMAGES_HURT = this.makeImgList("img/4_enemie_boss_chicken/4_hurt/", 21, 23);
   IMAGES_DEAD = this.makeImgList("img/4_enemie_boss_chicken/5_dead/", 24, 26);
 
   constructor() {
     super().loadImage(this.IMAGES_ALERT[0]);
     this.loadAllImages();
-
     this.x = 2000;
     this.energy = 100;
     this.statusBar = new StatusBarEnemy(this);
-
     this.screamSound = this.initSound("audio/chicken.mp3", 0.6);
     this.animate();
     this.moveLogic();
   }
 
-  /** 🔹 Hilfsfunktionen zum Laden von Bildern und Sounds */
   makeImgList(base, start, end) {
     return Array.from(
       { length: end - start + 1 },
@@ -56,7 +49,6 @@ class EndbossLevel1 extends MovableObject {
     return sound;
   }
 
-  /** 🔊 Verhalten & Kampf-Logik */
   scream() {
     if (this.isDead() || !soundEnabled || !this.screamSound.paused) return;
     this.isScreaming = true;
@@ -69,10 +61,8 @@ class EndbossLevel1 extends MovableObject {
 
   hit() {
     if (this.isDead()) return;
-
     this.energy = Math.max(this.energy - 20, 0);
     this.statusBar.setPercentage(this.energy);
-
     if (!this.isAggressive) {
       this.isAggressive = true;
       this.attackMode = true;
@@ -103,7 +93,6 @@ class EndbossLevel1 extends MovableObject {
     return this.energy <= 0;
   }
 
-  /** 🎞️ Animation & Bewegung */
   animate() {
     this.bossAnimationInterval = setInterval(() => {
       if (this.isDead()) this.playAnimation(this.IMAGES_DEAD);
