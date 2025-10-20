@@ -14,7 +14,6 @@ class Menu {
     this.ctx = ctx;
     this.buttons = {};
     this.clickHandler = this.handleClick.bind(this);
-
     this.canvas.addEventListener("click", this.clickHandler);
     this.drawStartScreen();
   }
@@ -24,14 +23,11 @@ class Menu {
    */
   drawStartScreen() {
     this.clear();
-
     const img = new Image();
     img.src = "img/9_intro_outro_screens/start/startscreen_1.png";
-
     img.onload = () => {
       // Draw background image
       this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
-
       // Create a "Start" button
       const startBtn = this.drawButton(
         "Start",
@@ -40,7 +36,6 @@ class Menu {
         "#fca534ff",
         "start"
       );
-
       this.buttons = { startBtn };
     };
   }
@@ -60,10 +55,8 @@ class Menu {
     ctx.fillStyle = color;
     ctx.textAlign = "center";
     ctx.fillText(text, x, y);
-
     const width = ctx.measureText(text).width + 20; // padding
     const height = 40;
-
     return this.createButtonArea(x, width, y, height, action);
   }
 
@@ -94,27 +87,47 @@ class Menu {
     if (!this.buttons) return;
 
     // Get the current canvas size and position
+    const { x, y, windowRatio, aspectRatio, pageHeight, pageWidth, clientX, clientY } = this.handleClickVars(event);
+
+    let finalX = x,
+      finalY = y;
+
+    ({ finalX, finalY } = this.horizontalVerticalOffset(windowRatio, aspectRatio, pageHeight, pageWidth, finalX, clientX, finalY, clientY));
+
+    // Check if the click is inside a button hitbox
+    this.buttonHitbox(finalX, finalY);
+  }
+
+  handleClickVars(event) {
     const rect = this.canvas.getBoundingClientRect();
     const clientX = event.touches?.[0]?.clientX ?? event.clientX;
     const clientY = event.touches?.[0]?.clientY ?? event.clientY;
-
     // Scale factors between display size and logical canvas size
     const scaleX = this.canvas.width / rect.width;
     const scaleY = this.canvas.height / rect.height;
-
     // Compute actual canvas coordinates
     const x = (clientX - rect.left) * scaleX;
     const y = (clientY - rect.top) * scaleY;
-
     // Adjust for black borders (letterboxing in fullscreen)
     const pageWidth = window.innerWidth;
     const pageHeight = window.innerHeight;
     const aspectRatio = this.canvas.width / this.canvas.height;
     const windowRatio = pageWidth / pageHeight;
+    return { x, y, windowRatio, aspectRatio, pageHeight, pageWidth, clientX, clientY };
+  }
 
-    let finalX = x,
-      finalY = y;
+  buttonHitbox(finalX, finalY) {
+    Object.values(this.buttons).forEach((btn) => {
+      if (finalX >= btn.x &&
+        finalX <= btn.x + btn.width &&
+        finalY >= btn.y &&
+        finalY <= btn.y + btn.height) {
+        this.handleButtonClick(btn.action);
+      }
+    });
+  }
 
+  horizontalVerticalOffset(windowRatio, aspectRatio, pageHeight, pageWidth, finalX, clientX, finalY, clientY) {
     if (windowRatio > aspectRatio) {
       // Black bars on left/right
       const displayedWidth = pageHeight * aspectRatio;
@@ -128,18 +141,7 @@ class Menu {
       finalY =
         (clientY - verticalOffset) * (this.canvas.height / displayedHeight);
     }
-
-    // Check if the click is inside a button hitbox
-    Object.values(this.buttons).forEach((btn) => {
-      if (
-        finalX >= btn.x &&
-        finalX <= btn.x + btn.width &&
-        finalY >= btn.y &&
-        finalY <= btn.y + btn.height
-      ) {
-        this.handleButtonClick(btn.action);
-      }
-    });
+    return { finalX, finalY };
   }
 
   /**
