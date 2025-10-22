@@ -1,29 +1,36 @@
 /**
- * 🌍 Hauptklasse, die das gesamte Spiel verwaltet
- * - steuert Spiellogik, Rendering, Kollisionen, Sounds, UI und Eingaben
+ * 🌍 Class: World
+ * The main game controller — handles the entire gameplay logic, rendering, physics,
+ * collisions, input, UI updates, and sound effects.
  */
 class World {
+  /**
+   * Creates the game world and initializes core systems.
+   * @param {HTMLCanvasElement} canvas - The canvas element used for rendering.
+   * @param {Keyboard} keyboard - The keyboard input handler.
+   */
   constructor(canvas, keyboard) {
-    /** --- Basis Setup --- */
+    /** --- 🧱 Core Setup --- */
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.keyboard = keyboard;
-
     this.canThrow = true;
 
-    /** --- Statusflags --- */
+    /** --- ⚙️ Game State Flags --- */
     this.levelEnded = false;
     this.playerDied = false;
     this.endbossDefeated = false;
     this.uiScreen = null;
 
-    /** --- Spielobjekte --- */
+    /** --- 🧩 UI Elements --- */
     this.statusBar = new StatusBar();
     this.statusBarBottle = new StatusBarBottle();
     this.statusBarCoin = new StatusBarCoin();
+
+    /** --- 📦 Object Containers --- */
     this.throwableObjects = [];
 
-    /** --- Level / Charakter laden --- */
+    /** --- 🌄 Level Setup --- */
     this.level = level1(this);
     this.character = new Character(this);
     this.enemies = this.level.enemies;
@@ -32,46 +39,50 @@ class World {
     this.collectableBottles = this.level.collectableObjects || [];
     this.collectableCoins = this.level.collectableCoins || [];
 
-    /** --- Initialisierung --- */
+    /** --- 🚀 Initialization --- */
     this.setWorld();
     this.setupCanvasControls();
     this.draw();
     this.run();
   }
 
-  /** 🔧 Welt konfigurieren */
+  /** 🔧 Links character to world and starts enemy spawn loops. */
   setWorld() {
     this.character.world = this;
     this.spawnEnemyLoop();
   }
 
-  /** ♻️ Spiel-Loop */
+  /** ♻️ Main game loop — checks collisions, spawns, and victory/defeat conditions. */
   run() {
     this.gameInterval = setInterval(() => {
-      // ⛔ Wenn das Spiel schon vorbei ist, nichts mehr tun
       if (this.levelEnded) return;
 
-      // 🔍 Hauptprüfungen pro Tick
-      this.checkCollisions(); // prüft Kollisionen mit Gegnern & Items
-      this.checkThrowableObjects(); // verwaltet fliegende Flaschen
-      this.checkEndbossDefeated(); // prüft, ob Endboss tot ist
-      this.removeOffscreenEnemies(); // entfernt Gegner außerhalb des Bildschirms
-      this.checkEndboss1Hit(); // prüft, ob Spieler vom Boss getroffen wurde
+      this.checkCollisions();
+      this.checkThrowableObjects();
+      this.checkEndbossDefeated();
+      this.removeOffscreenEnemies();
+      this.checkEndboss1Hit();
 
-      // 💀 Prüfen, ob Spieler tot ist
-      if (
-        this.character.energy <= 0 && // keine Energie mehr
-        !this.playerDied && // noch kein Tod markiert
-        !this.endbossDefeated // kein Win-Screen aktiv
-      ) {
-        this.playerDied = true;
-        this.stopGameLoopHard(); // stoppt alle Intervalle / Animationen
-        this.showGameOverScreen(); // zeigt Game-Over-Screen + Sound
-      }
+      // 💀 Check if player has died
+      this.ifPlayerDead();
     }, 200);
   }
 
-  /** 🛑 Spiel stoppen */
+  // 💀 Check if player has died
+  ifPlayerDead() {
+    if (this.character.energy <= 0 &&
+      !this.playerDied &&
+      !this.endbossDefeated) {
+      this.playerDied = true;
+      this.stopGameLoopHard();
+      this.showGameOverScreen();
+    }
+  }
+
+  /**
+   * 🛑 Completely stops the game — halts all intervals and animations.
+   * @param {boolean} [isWin=false] - Whether the stop was triggered by a win.
+   */
   stopGameLoopHard(isWin = false) {
     clearInterval(this.gameInterval);
     clearInterval(this.enemySpawnInterval);
@@ -80,7 +91,7 @@ class World {
     this.gameOver = !isWin;
   }
 
-  /** Prüft alle Kollisionen */
+  /** ⚔️ Handles all types of collisions in the world. */
   checkCollisions() {
     this.level.enemies.forEach((e) => this.characterColliding(e));
     this.checkThrowableObjects();
@@ -88,7 +99,7 @@ class World {
     this.checkCoins();
   }
 
-  /** Prüft Kollision mit Endboss */
+  /** 🦅 Checks if the Endboss collides with the player (causes damage). */
   checkEndboss1Hit() {
     const boss = this.level.enemies.find(
       (e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2
@@ -102,12 +113,10 @@ class World {
     }
   }
 
-  /** Prüft geworfene Flaschen */
+  /** 🧴 Manages all throwable objects and checks for enemy collisions. */
   checkThrowableObjects() {
-    // Entferne zerstörte Flaschen
     this.throwableObjects = this.throwableObjects.filter((b) => !b.isDead?.());
 
-    // Prüfe Kollision jeder aktiven Flasche mit jedem Gegner
     this.throwableObjects.forEach((bottle) => {
       this.level.enemies.forEach((enemy) => {
         if (!enemy.isDead?.() && bottle.isColliding(enemy)) {
@@ -117,34 +126,28 @@ class World {
       });
     });
 
-    // Flaschenwurf prüfen (Taste D)
     this.throwableBottles();
   }
 
-  /** Flaschenwurf */
+  /** 🎯 Throws a new bottle when allowed and updates the bottle counter. */
   throwableBottles() {
     if (
-      this.keyboard.D &&
-      this.canThrow &&
-      this.statusBarBottle.availableBottles > 0
+      this.keyboard.D && this.canThrow && this.statusBarBottle.availableBottles > 0
     ) {
       this.canThrow = false;
       this.statusBarBottle.availableBottles--;
       this.statusBarBottle.update?.();
-
       const bottle = new ThrowableObject(
         this.character.x + (this.character.otherDirection ? -30 : 30),
         this.character.y + 100,
-        this.character.otherDirection
-      );
+        this.character.otherDirection);
       bottle.world = this;
       this.throwableObjects.push(bottle);
-
       setTimeout(() => (this.canThrow = true), 400);
     }
   }
 
-  /** Kollision mit Münzen */
+  /** 🪙 Checks for player collisions with coins and updates the coin bar. */
   checkCoins() {
     this.collectableCoins = this.collectableCoins.filter((coin) => {
       if (this.character.isColliding(coin)) {
@@ -161,14 +164,12 @@ class World {
     });
   }
 
-  /** Kollision Spieler ↔ Gegner */
+  /** 🐔 Handles player–enemy collision logic (jumping on enemies vs taking damage). */
   characterColliding(enemy) {
     if (!this.character.isColliding(enemy)) return;
-
     const isAbove =
       this.character.y + this.character.height <=
         enemy.y + enemy.height * 0.25 && this.character.speedY > 0;
-
     if (isAbove) {
       enemy.hit?.();
       this.character.jump();
@@ -179,7 +180,7 @@ class World {
     }
   }
 
-  /** Kollision Spieler ↔ Flaschen */
+  /** 🧴 Handles collisions with collectible bottles. */
   characterCollidingBottle() {
     this.collectableBottles = this.collectableBottles.filter((bottle) => {
       if (this.character.isColliding(bottle)) {
@@ -193,7 +194,7 @@ class World {
     });
   }
 
-  /** Prüft, ob Endboss besiegt wurde */
+  /** 🏆 Checks if the Endboss has been defeated. */
   checkEndbossDefeated() {
     const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
     if (!endboss || this.endbossDefeated || this.playerDied) return;
@@ -205,7 +206,7 @@ class World {
     }
   }
 
-  /** Beendet das Spiel */
+  /** 🧩 Stops all sounds and displays the game over screen. */
   endGame() {
     this.stopGameLoopHard();
     this.stopEnemySounds();
@@ -213,6 +214,11 @@ class World {
     this.showGameOverScreen();
   }
 
+  /**
+   * 🎵 Plays a sound if sound is enabled.
+   * @param {string} path - Audio file path.
+   * @param {boolean} [loop=false] - Whether the sound should loop.
+   */
   playSound(path, loop = false) {
     if (!soundEnabled) return;
     const s = new Audio(path);
@@ -221,113 +227,127 @@ class World {
     s.play().catch(() => {});
   }
 
+  /** 🔇 Stops all enemy sounds. */
   stopEnemySounds() {
     this.level.enemies.forEach((e) => e.stopScreamSound?.());
   }
 
+  /** 🏁 Displays the victory screen and plays win music. */
   showWinScreen() {
-    // Verhindert doppeltes Aufrufen
     if (this._winShown) return;
     this._winShown = true;
-    this._gameOverPlayed = true; // verhindert, dass Game-Over danach triggert
-
+    this._gameOverPlayed = true;
     this.stopGameLoopHard(true);
-    this.playSound("audio/win.mp3", true); // Dauerschleife bis Neustart
-
-    // Hintergrund leicht abdunkeln, Spielbild bleibt sichtbar
+    this.playSound("audio/win.mp3", true);
     this.fadeOverlay(0.3);
-
     this.drawEndScreen("img/You won, you lost/You win B.png", "#fca534ff");
   }
 
+  /** ☠️ Displays the game over screen. */
   showGameOverScreen() {
-    // Nur einmal ausführen
     if (this._gameOverPlayed) return;
     this._gameOverPlayed = true;
-    this._winShown = true; // verhindert Win danach
-
+    this._winShown = true;
     this.stopGameLoopHard(false);
-    this.playSound("audio/gameover.mp3", false); // einmal abspielen
-
-    // Spielbild stark abdunkeln
+    this.playSound("audio/gameover.mp3", false);
     this.fadeOverlay(0.8);
-
     this.drawEndScreen("img/You won, you lost/Game Over.png", "#fca534ff");
   }
 
+  /** 🌫️ Draws a transparent overlay to darken the screen. */
   fadeOverlay(alpha = 0.2) {
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.fillStyle = `rgba(0,0,0,${alpha})`;
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
+  /**
+   * 🖼️ Draws either the win or game-over screen with a restart button.
+   * @param {string} imgSrc - Path to the end screen image.
+   * @param {string} btnColor - Color for the restart button.
+   */
   drawEndScreen(imgSrc, btnColor) {
     const ctx = this.ctx;
     const canvas = this.canvas;
     const img = new Image();
 
     img.src = imgSrc;
+    this.imgOnload(img, canvas, ctx, btnColor);
+  }
+
+  /**
+   * 🖼️ Handles image loading and scaling for end screens (win/game over).
+   * Once the image is fully loaded, it is drawn centered on the canvas,
+   * and the restart button is rendered below it.
+   *
+   * @param {HTMLImageElement} img - The image element to load and display.
+   * @param {HTMLCanvasElement} canvas - The target canvas where the image is drawn.
+   * @param {CanvasRenderingContext2D} ctx - The 2D drawing context of the canvas.
+   * @param {string} btnColor - The color to use for the restart button.
+   */
+  imgOnload(img, canvas, ctx, btnColor) {
     img.onload = () => {
+      // 📏 Dynamically scale image to fit ~60% of canvas width, 30% of height
       const scale = Math.min(
         (canvas.width * 0.6) / img.width,
         (canvas.height * 0.3) / img.height
       );
       const w = img.width * scale;
       const h = img.height * scale;
-      ctx.drawImage(
-        img,
-        canvas.width / 2 - w / 2,
-        canvas.height / 2 - h - 40,
-        w,
-        h
-      );
+      // 🎯 Center the image horizontally, slightly above the canvas center
+      this.drawImageMethod(ctx, img, canvas, w, h);
+      // 🔘 Draw restart button after image appears
       this.drawRestartButton(btnColor);
     };
   }
 
+// 🎯 Center the image horizontally, slightly above the canvas center
+  drawImageMethod(ctx, img, canvas, w, h) {
+    ctx.drawImage(
+      img,
+      canvas.width / 2 - w / 2,
+      canvas.height / 2 - h - 40,
+      w,
+      h
+    );
+  }
+
+    /**
+   * 🔁 Draws and animates the restart button shown after win or game over.
+   * @param {string} color - Button background color.
+   */
   drawRestartButton(color) {
     const ctx = this.ctx;
     const canvas = this.canvas;
-    const w = 250,
-      h = 60;
+    const w = 250, h = 60;
     const x = canvas.width / 2 - w / 2;
     const y = canvas.height / 2;
 
-    // 🌟 Pulsierende Animation
+    // 🌟 Pulsating glow animation for better visibility
     let pulse = 0;
     const animatePulse = () => {
       if (this.levelEnded) {
-        // Nur animieren, wenn das Spiel vorbei ist
         ctx.save();
-        ctx.globalAlpha = 0.2 + Math.sin(Date.now() / 400) * 0.2; // Leichte Transparenzbewegung
-        ctx.fillStyle = "#c07512ff"; // heller Schein
+        ctx.globalAlpha = 0.2 + Math.sin(Date.now() / 400) * 0.2;
+        ctx.fillStyle = "#c07512ff";
         ctx.beginPath();
         ctx.roundRect(x - 5, y - 5, w + 10, h + 10, 10);
         ctx.fill();
         ctx.restore();
-
-        // 🔳 Hauptbutton
-        ctx.fillStyle = color;
-        ctx.fillRect(x, y, w, h);
-        ctx.font = "24px Comic Sans MS";
-        ctx.fillStyle = "white";
-        ctx.textAlign = "center";
-        ctx.fillText("Spiel neu starten", canvas.width / 2, y + 38);
-
-        // ♻️ Wiederholen (sanftes Leuchten)
+        // 🔳 Main restart button
+        this.mainRestartButtonMethod(ctx, color, x, y, w, h, canvas);
         pulse = requestAnimationFrame(animatePulse);
       } else {
         cancelAnimationFrame(pulse);
       }
     };
 
-    // Erste Zeichnung
-    animatePulse();
+    animatePulse(); // Initial draw
 
-    // Klickbereich speichern
+    // Save clickable area for restart detection
     this.restartButtonArea = { x, y, width: w, height: h };
 
-    // Listener nur einmal hinzufügen
+    // Add click / touch listeners only once
     if (!this.canvasClickListenerAdded) {
       const boundHandler = this.handleRestartClick.bind(this);
       canvas.addEventListener("click", boundHandler);
@@ -337,53 +357,61 @@ class World {
     }
   }
 
+  // 🔳 Main restart button
+  mainRestartButtonMethod(ctx, color, x, y, w, h, canvas) {
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, w, h);
+    ctx.font = "24px Comic Sans MS";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.fillText("Restart Game", canvas.width / 2, y + 38);
+  }
+
+  /**
+   * 🖱️ Handles clicks on the restart button and reloads the game.
+   * @param {MouseEvent|TouchEvent} e
+   */
   handleRestartClick(e) {
     const rect = this.canvas.getBoundingClientRect();
     const scaleX = this.canvas.width / rect.width;
     const scaleY = this.canvas.height / rect.height;
     const x = (e.clientX - rect.left) * scaleX;
     const y = (e.clientY - rect.top) * scaleY;
-
     const btn = this.restartButtonArea;
     if (!btn) return;
-
-    // Prüfen, ob Klick auf Button erfolgte
     const inside =
       x >= btn.x &&
       x <= btn.x + btn.width &&
       y >= btn.y &&
       y <= btn.y + btn.height;
+    this.stopSoundsMethod(inside);
+  }
 
+  /**
+   * 🔇 Stops all active sounds and resets the game state when the player
+   * clicks inside the restart button area. Used to cleanly restart the game.
+   *
+   * @param {boolean} inside - Indicates whether the click occurred inside the restart button area.
+   */
+  stopSoundsMethod(inside) {
     if (inside) {
-
-      // 🧹 Sauber aufräumen vor Reload
+      // 🧹 Stop all currently playing sounds and clear game intervals
       this.stopAllSounds();
       this.stopGameLoopHard();
+
+      // ♻️ Reset internal flags for proper restart
       this._winShown = false;
       this._gameOverPlayed = false;
 
-      // ⏳ kleine Verzögerung für bessere UX
+      // ⏳ Small delay before reloading for smoother UX
       setTimeout(() => location.reload(), 300);
     }
   }
 
-  handleCanvasClick(e) {
-    const rect = this.canvas.getBoundingClientRect();
-    const scaleX = this.canvas.width / rect.width;
-    const scaleY = this.canvas.height / rect.height;
-    const x = (e.clientX - rect.left) * scaleX;
-    const y = (e.clientY - rect.top) * scaleY;
-    const btn = this.restartButtonArea;
-    if (
-      btn &&
-      x >= btn.x &&
-      x <= btn.x + btn.width &&
-      y >= btn.y &&
-      y <= btn.y + btn.height
-    )
-      location.reload();
-  }
 
+  /**
+   * 🎨 Main render loop — draws background, entities, UI and controls.
+   */
   draw() {
     if (this.playerDied) return this.showGameOverScreen();
     if (this.endbossDefeated) return this.showWinScreen();
@@ -391,46 +419,46 @@ class World {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.updateCanvasRect();
 
-    // --- Hintergrund & Kamera ---
+    // --- Background & camera movement ---
     this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.backgroundObjects);
     this.ctx.translate(-this.camera_x, 0);
 
-    // --- HUD (Statusleisten des Spielers) ---
+    // --- HUD elements ---
     [this.statusBar, this.statusBarBottle, this.statusBarCoin].forEach((bar) =>
       this.addToMap(bar)
     );
 
-    // --- Spielfiguren & Gegner ---
+    // --- Character and enemies ---
     this.ctx.translate(this.camera_x, 0);
     this.addToMap(this.character);
 
-    // 🐔 Gegner und ihre Lebensleisten zeichnen
     this.level.enemies.forEach((enemy) => {
-      this.addToMap(enemy); // Gegner selbst
-      if (enemy.statusBar) this.addToMap(enemy.statusBar); // Lebensbalken drüber
+      this.addToMap(enemy);
+      if (enemy.statusBar) this.addToMap(enemy.statusBar);
     });
 
-    // --- Sammelobjekte & Wurfobjekte ---
+    // --- Collectibles & projectiles ---
     this.addObjectsToMap(this.collectableBottles);
     this.addObjectsToMap(this.collectableCoins);
     this.addObjectsToMap(this.throwableObjects);
 
-    // --- Kamera zurücksetzen ---
+    // --- Reset camera ---
     this.ctx.translate(-this.camera_x, 0);
 
-    // --- Mobile Steuerung (Buttons) ---
+    // --- On-screen mobile controls ---
     this.drawMobileControls();
 
-    // --- Nächster Frame ---
     if (!this.levelEnded)
       this.animationFrame = requestAnimationFrame(() => this.draw());
   }
 
+  /** 🧩 Draws all objects from a given list to the canvas. */
   addObjectsToMap(objects = []) {
     objects.forEach((o) => this.addToMap(o));
   }
 
+  /** 🧱 Draws a single movable object, handling horizontal flipping if needed. */
   addToMap(mo) {
     if (!mo) return;
     if (mo.otherDirection) this.flipImage(mo);
@@ -438,6 +466,7 @@ class World {
     if (mo.otherDirection) this.flipImageBack(mo);
   }
 
+  /** ↔️ Flips an image horizontally (used for left-facing movement). */
   flipImage(mo) {
     this.ctx.save();
     this.ctx.translate(mo.width, 0);
@@ -445,106 +474,174 @@ class World {
     mo.x *= -1;
   }
 
+  /** ↩️ Restores the original image orientation after drawing. */
   flipImageBack(mo) {
     this.ctx.restore();
     mo.x *= -1;
   }
 
+  /**
+   * 📱 Sets up touch / pointer controls for mobile gameplay.
+   * Converts screen coordinates into logical canvas coordinates.
+   */
   setupCanvasControls() {
     if (this.uiClickListenerAdded) return;
     this.uiClickListenerAdded = true;
 
     const handleDown = (e) => {
       if (e.cancelable) e.preventDefault();
-
       const { x, y } = this.getCanvasCoordinates(e);
 
-      // 👉 Debug-Overlay zeichnen (zeigt Klickpunkt)
-      const ctx = this.ctx;
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(x, y, 8, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(255,0,0,0.6)";
-      ctx.fill();
-      ctx.restore();
-
-      this.keyboard.LEFT = this.isInsideButton(x, y, this.leftBtnArea);
-      this.keyboard.RIGHT = this.isInsideButton(x, y, this.rightBtnArea);
-      this.keyboard.UP = this.isInsideButton(x, y, this.jumpBtnArea);
-      this.keyboard.D = this.isInsideButton(x, y, this.throwBtnArea);
+      // 🔴 Optional: Debug indicator for tap location
+      this.debugIndicatorMethod(x, y);
+      this.keyboardInsidebuttonMethod(x, y);
     };
+    const handleUp = this.handleUpMethod();
+    this.touchButtonsMethod(handleDown, handleUp);
+  }
 
-    const handleUp = () => {
+  /**
+   * 📱 Attaches touch, pointer, and mouse event listeners to the canvas
+   * for handling on-screen control buttons (mobile-friendly input).
+   *
+   * @param {Function} handleDown - Function to call when a control button is pressed.
+   * @param {Function} handleUp - Function to call when a control button is released.
+   */
+  touchButtonsMethod(handleDown, handleUp) {
+    // Add "press" events for mobile and desktop input types
+    ["pointerdown", "touchstart", "mousedown"].forEach((t) =>
+      this.canvas.addEventListener(t, handleDown, { passive: false })
+    );
+
+    // Add "release" events to reset input state
+    ["pointerup", "touchend", "mouseup", "touchcancel"].forEach((t) =>
+      this.canvas.addEventListener(t, handleUp)
+    );
+  }
+
+  /**
+   * 🎮 Checks if a given touch or click position is inside one of the on-screen
+   * control buttons and updates keyboard state accordingly.
+   *
+   * @param {number} x - X coordinate on the canvas.
+   * @param {number} y - Y coordinate on the canvas.
+   */
+  keyboardInsidebuttonMethod(x, y) {
+    this.keyboard.LEFT = this.isInsideButton(x, y, this.leftBtnArea);
+    this.keyboard.RIGHT = this.isInsideButton(x, y, this.rightBtnArea);
+    this.keyboard.UP = this.isInsideButton(x, y, this.jumpBtnArea);
+    this.keyboard.D = this.isInsideButton(x, y, this.throwBtnArea);
+  }
+
+  /**
+   * ⬆️ Returns a reusable function that resets all virtual key states
+   * (used for mobile button release handling).
+   *
+   * @returns {Function} A function that, when executed, clears all keyboard inputs.
+   */
+  handleUpMethod() {
+    return () => {
       this.keyboard.LEFT = false;
       this.keyboard.RIGHT = false;
       this.keyboard.UP = false;
       this.keyboard.D = false;
     };
-
-    // 📱 Unterstützt Maus, Touch und Pointer Events
-    ["pointerdown", "touchstart", "mousedown"].forEach((type) =>
-      this.canvas.addEventListener(type, handleDown, { passive: false })
-    );
-
-    ["pointerup", "touchend", "mouseup", "touchcancel"].forEach((type) =>
-      this.canvas.addEventListener(type, handleUp)
-    );
   }
 
+
+  // 🔴 Optional: Debug indicator for tap location
+  debugIndicatorMethod(x, y) {
+    const ctx = this.ctx;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(x, y, 8, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255,0,0,0.6)";
+    ctx.fill();
+    ctx.restore();
+  }
+
+  /** 🧭 Updates cached canvas bounding box for accurate input scaling. */
   updateCanvasRect() {
     this.canvasRect = this.canvas.getBoundingClientRect();
   }
 
+  /**
+   * 🔍 Converts click or touch event into logical canvas coordinates,
+   * accounting for scaling and fullscreen offsets.
+   * @param {Event} e
+   * @returns {{x:number,y:number}} Position on canvas
+   */
   getCanvasCoordinates(e) {
     if (!this.canvasRect) this.updateCanvasRect();
-    const rect = this.canvasRect;
+    const { clientX, y, x } = this.canvasCoordinatesMethod(e);
+    const { windowRatio, aspectRatio, pageHeight, pageWidth } = this.windowWidthHeightMethod();
+    if (windowRatio > aspectRatio) {
+      const displayedWidth = pageHeight * aspectRatio;
+      const horizontalOffset = (pageWidth - displayedWidth) / 2;
+      return {
+        x: (clientX - horizontalOffset) * (this.canvas.width / displayedWidth),
+        y,
+      };
+    }
+    return { x, y };
+  }
 
-    // Berechne Verhältnis zwischen echter und logischer Canvasgröße
+  /**
+   * 🎯 Converts a touch or mouse event position to accurate canvas coordinates.
+   * This ensures that input positions are correctly mapped even when the canvas
+   * is scaled or centered in fullscreen or responsive layouts.
+   *
+   * @param {TouchEvent | MouseEvent} e - The input event (touch or mouse).
+   * @returns {{ clientX: number, x: number, y: number }} The calculated canvas coordinates.
+   */
+  canvasCoordinatesMethod(e) {
+    // Get current canvas position and size relative to the viewport
+    const rect = this.canvasRect;
+    // Calculate scaling ratio between actual canvas resolution and displayed size
     const scaleX = this.canvas.width / rect.width;
     const scaleY = this.canvas.height / rect.height;
-
-    // Tatsächliche Klick-Position
+    // Detect touch or mouse coordinates
     const clientX = e.touches?.[0]?.clientX ?? e.clientX;
     const clientY = e.touches?.[0]?.clientY ?? e.clientY;
-
-    // 🔧 NEU: korrigiert horizontale Verschiebung durch zentriertes Canvas
+    // Subtract offsets (canvas position on screen)
     const offsetX = rect.left;
     const offsetY = rect.top;
-
+    // Convert to logical canvas coordinates
     const x = (clientX - offsetX) * scaleX;
     const y = (clientY - offsetY) * scaleY;
+    return { clientX, y, x };
+  }
 
-    // 💡 Wenn Canvas horizontal zentriert (z. B. im Querformat),
-    // prüfen wir, ob rechts/links Ränder entstanden sind
+  /**
+   * 📏 Retrieves and returns the current window and canvas aspect ratio information.
+   * This helps determine how the canvas should be scaled or centered
+   * when resizing or entering fullscreen mode.
+   *
+   * @returns {{ windowRatio: number, aspectRatio: number, pageHeight: number, pageWidth: number }}
+   * Object containing window and canvas size ratios and dimensions.
+   */
+  windowWidthHeightMethod() {
     const pageWidth = window.innerWidth;
     const pageHeight = window.innerHeight;
     const aspectRatio = this.canvas.width / this.canvas.height;
     const windowRatio = pageWidth / pageHeight;
 
-    if (windowRatio > aspectRatio) {
-      // Bildschirm breiter als Canvas → schwarzer Rand links/rechts
-      const displayedWidth = pageHeight * aspectRatio;
-      const horizontalOffset = (pageWidth - displayedWidth) / 2;
-      return {
-        x: (clientX - horizontalOffset) * (this.canvas.width / displayedWidth),
-        y: y,
-      };
-    }
-
-    // normaler Fall
-    return { x, y };
+    return { windowRatio, aspectRatio, pageHeight, pageWidth };
   }
 
+
+  /**
+   * 🎮 Draws on-screen circular control buttons for mobile users.
+   * Includes movement, jump, and throw controls.
+   */
   drawMobileControls() {
     const ctx = this.ctx;
     const w = this.canvas.width;
     const h = this.canvas.height;
-
-    // relative Größe (funktioniert auch bei Skalierung)
     const size = 60;
     const margin = 20;
 
-    // Definiere Positionen in Prozent, damit sie sich mit Canvas-Größe mitverändern
+    // Define button positions relative to canvas size
     this.leftBtnArea = {
       x: margin,
       y: h - size - margin,
@@ -574,7 +671,7 @@ class World {
       label: "🧴",
     };
 
-    // Buttons zeichnen
+    // Draw each button with consistent style
     [
       this.leftBtnArea,
       this.rightBtnArea,
@@ -601,24 +698,20 @@ class World {
     });
   }
 
-  toCanvasXY(e) {
-    const rect = this.canvas.getBoundingClientRect();
-    const scaleX = this.canvas.width / rect.width;
-    const scaleY = this.canvas.height / rect.height;
-    return {
-      x: (e.clientX - rect.left) * scaleX,
-      y: (e.clientY - rect.top) * scaleY,
-    };
-  }
-
+  /**
+   * 🧩 Utility: checks if a point (x,y) is inside a button’s area.
+   */
   isInsideButton(x, y, b) {
     return (
       b && x >= b.x && x <= b.x + b.width && y >= b.y && y <= b.y + b.height
     );
   }
 
+  /**
+   * 🚫 Shows a short message if the player tries to collect more bottles than allowed.
+   */
   showBottleLimitMessage() {
-    this.bottleLimitMessage = "Flaschenlimit erreicht!";
+    this.bottleLimitMessage = "Bottle limit reached!";
     clearTimeout(this.bottleLimitTimeout);
     this.bottleLimitTimeout = setTimeout(
       () => (this.bottleLimitMessage = ""),
@@ -626,10 +719,13 @@ class World {
     );
   }
 
+  /**
+   * 🐣 Spawns enemies dynamically based on level configuration.
+   * Uses the `spawnConfig` defined inside each level.
+   */
   spawnEnemyLoop() {
     const configs = this.level.config?.spawnConfig || [];
     this.spawnIntervals = [];
-
     configs.forEach((cfg) => {
       const id = setInterval(() => {
         if (typeof cfg.condition === "function" && !cfg.condition(this.level))
@@ -645,7 +741,7 @@ class World {
     });
   }
 
-  /** Entfernt Gegner, die vom Bildschirm verschwinden */
+  /** 🧹 Removes enemies that have moved off-screen to optimize performance. */
   removeOffscreenEnemies() {
     this.level.enemies = this.level.enemies.filter(
       (e) =>
@@ -653,18 +749,15 @@ class World {
     );
   }
 
+  /** 🔇 Stops all sounds, both enemy and global audio elements. */
   stopAllSounds() {
     try {
-      // Stoppe alle Gegner-Sounds
       this.stopEnemySounds();
-
-      // Stoppe globale Sounds, falls aktiv
-      const audios = document.querySelectorAll("audio");
-      audios.forEach((a) => {
+      document.querySelectorAll("audio").forEach((a) => {
         a.pause();
         a.currentTime = 0;
       });
-    } catch (err) {
-    }
+    } catch (err) {}
   }
 }
+
