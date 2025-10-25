@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>El Pollo Loco</title>
 
-    <link rel="icon" type="image/png" href="img/6_salsa_bottle/2_salsa_bottle_on_ground.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="img/6_salsa_bottle/2_salsa_bottle_on_ground.png"
+    />
 
     <link rel="stylesheet" href="style.css" />
 
@@ -61,7 +65,7 @@
         </div>
       </div>
 
-      <div id="instructions-overlay" class="overlay hidden">
+      <!-- <div id="instructions-overlay" class="overlay hidden">
         <div class="overlay-content">
           <h2>📖 Anleitung</h2>
           <p>⬅️ / ➡️ – Bewegung</p>
@@ -70,6 +74,17 @@
           <p>🔊 – Sound ein/aus</p>
           <p>🖥️ – Vollbild ein/aus</p>
           <button onclick="hideInstructions()">Schließen</button>
+        </div>
+      </div> -->
+      <div id="instructions-overlay" class="overlay hidden">
+        <div class="overlay-content" id="instructions-content">
+          <h2>📖 Anleitung</h2>
+          <p>⬅️ / ➡️ – Bewegung</p>
+          <p>⬆️ – Springen</p>
+          <p>D – Flasche werfen</p>
+          <p>🔊 – Sound ein/aus</p>
+          <p>🖥️ – Vollbild ein/aus</p>
+          <button id="close-instructions-btn">Schließen</button>
         </div>
       </div>
     </body>
