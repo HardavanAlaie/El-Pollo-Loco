@@ -141,7 +141,7 @@ h1 {
 }
 
 /* === OVERLAY (z. B. Anleitung) === */
-.overlay {
+/* .overlay {
   position: fixed;
   inset: 0;
   z-index: 1000;
@@ -154,6 +154,33 @@ h1 {
   background-color: #fca534ff;
   color: #fff;
   font-family: "Comic Sans MS";
+  padding: 30px;
+  border-radius: 15px;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 0 10px #000;
+  font-size: 18px;
+} */
+
+/* 🔳 Instructions overlay (darkened background) */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* 📖 Content box in the middle */
+.overlay-content {
+  background-color: #fca534ff;
+  color: white;
+  font-family: 'Comic Sans MS';
   padding: 30px;
   border-radius: 15px;
   max-width: 400px;
