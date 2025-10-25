@@ -121,19 +121,49 @@ function toggleSound() {
   if (soundBtn) soundBtn.textContent = soundEnabled ? "🔊" : "🔇";
 }
 
+// /**
+//  * Displays the instructions overlay.
+//  */
+// function showInstructions() {
+//   document.getElementById("instructions-overlay")?.classList.remove("hidden");
+// }
+
+// /**
+//  * Hides the instructions overlay.
+//  */
+// function hideInstructions() {
+//   document.getElementById("instructions-overlay")?.classList.add("hidden");
+// }
 /**
- * Displays the instructions overlay.
+ * Displays the instructions overlay and darkens background.
  */
 function showInstructions() {
-  document.getElementById("instructions-overlay")?.classList.remove("hidden");
+  const overlay = document.getElementById("instructions-overlay");
+  overlay?.classList.remove("hidden");
 }
 
 /**
  * Hides the instructions overlay.
  */
 function hideInstructions() {
-  document.getElementById("instructions-overlay")?.classList.add("hidden");
+  const overlay = document.getElementById("instructions-overlay");
+  overlay?.classList.add("hidden");
 }
+
+// 🧩 Event listener for open button
+document.getElementById("instructions-btn")?.addEventListener("click", showInstructions);
+
+// 🧩 Event listener for close button inside overlay
+document.getElementById("close-instructions-btn")?.addEventListener("click", hideInstructions);
+
+// 🖱️ Close overlay when clicking anywhere outside the content box
+document.getElementById("instructions-overlay")?.addEventListener("click", (event) => {
+  // If the click target is NOT the content box → close
+  if (!event.target.closest("#instructions-content")) {
+    hideInstructions();
+  }
+});
+
 
 /**
  * Initializes the start menu, UI buttons, and listeners when the page loads.
