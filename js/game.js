@@ -97,10 +97,26 @@ function toggleFullscreen() {
 /**
  * Toggles game sound on/off and updates the UI button.
  */
+// function toggleSound() {
+//   soundEnabled = !soundEnabled;
+//   if (world?.toggleSound) world.toggleSound(soundEnabled);
+
+//   const soundBtn = document.getElementById("sound-btn");
+//   if (soundBtn) soundBtn.textContent = soundEnabled ? "🔊" : "🔇";
+// }
+/**
+ * 🔊 Toggles sound on/off and saves the preference in localStorage.
+ */
 function toggleSound() {
   soundEnabled = !soundEnabled;
+
+  // Save current sound state to localStorage
+  localStorage.setItem("soundEnabled", soundEnabled);
+
+  // Update world sound setting if available
   if (world?.toggleSound) world.toggleSound(soundEnabled);
 
+  // Update button icon
   const soundBtn = document.getElementById("sound-btn");
   if (soundBtn) soundBtn.textContent = soundEnabled ? "🔊" : "🔇";
 }
