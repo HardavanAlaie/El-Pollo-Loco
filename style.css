@@ -148,19 +148,8 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-}
+}*/
 
-.overlay-content {
-  background-color: #fca534ff;
-  color: #fff;
-  font-family: "Comic Sans MS";
-  padding: 30px;
-  border-radius: 15px;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 0 10px #000;
-  font-size: 18px;
-} */
 
 /* 🔳 Instructions overlay (darkened background) */
 .overlay {
