@@ -96,29 +96,68 @@ function resizeCanvas() {
 /**
  * Toggles fullscreen mode for the canvas.
  */
+// function toggleFullscreen() {
+//   const canvas = document.getElementById("canvas");
+//   if (!canvas) return;
+
+//   try {
+//     if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+//       // ✅ Use correct API depending on browser
+//       if (canvas.requestFullscreen) {
+//         canvas.requestFullscreen();
+//       } else if (canvas.webkitRequestFullscreen) {
+//         canvas.webkitRequestFullscreen(); // Safari fallback
+//       }
+//     } else {
+//       if (document.exitFullscreen) {
+//         document.exitFullscreen();
+//       } else if (document.webkitExitFullscreen) {
+//         document.webkitExitFullscreen(); // Safari fallback
+//       }
+//     }
+//   } catch (err) {
+//     console.warn("Fullscreen permission denied:", err);
+//   }
+// }
+/**
+ * 🖥️ Safely toggles fullscreen mode for the canvas (with browser fallbacks).
+ */
 function toggleFullscreen() {
   const canvas = document.getElementById("canvas");
   if (!canvas) return;
 
+  // Use vendor-prefixed APIs for Safari compatibility
+  const doc = document;
+  const isFullscreen = doc.fullscreenElement || doc.webkitFullscreenElement;
+
   try {
-    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-      // ✅ Use correct API depending on browser
-      if (canvas.requestFullscreen) {
-        canvas.requestFullscreen();
-      } else if (canvas.webkitRequestFullscreen) {
-        canvas.webkitRequestFullscreen(); // Safari fallback
+    if (!isFullscreen) {
+      const requestFullscreen =
+        canvas.requestFullscreen ||
+        canvas.webkitRequestFullscreen ||
+        canvas.msRequestFullscreen;
+
+      if (requestFullscreen) {
+        // ✅ Important: return the Promise to properly catch rejections
+        return requestFullscreen.call(canvas).catch((err) => {
+          console.warn("Fullscreen permission check failed:", err.message);
+        });
+      } else {
+        console.warn("Fullscreen API not supported by this browser.");
       }
     } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen(); // Safari fallback
-      }
+      const exitFullscreen =
+        doc.exitFullscreen ||
+        doc.webkitExitFullscreen ||
+        doc.msExitFullscreen;
+
+      if (exitFullscreen) exitFullscreen.call(doc);
     }
   } catch (err) {
-    console.warn("Fullscreen permission denied:", err);
+    console.warn("Fullscreen could not be activated:", err.message);
   }
 }
+
 
 
 /**
