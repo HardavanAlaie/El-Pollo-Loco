@@ -158,6 +158,28 @@ class Menu {
   }
 
   /**
+ * 🖱️ Changes the mouse cursor to a pointer when hovering over the start button.
+ */
+handleHover(event) {
+  if (!this.buttons) return;
+  const rect = this.canvas.getBoundingClientRect();
+  const scaleX = this.canvas.width / rect.width;
+  const scaleY = this.canvas.height / rect.height;
+  const x = (event.clientX - rect.left) * scaleX;
+  const y = (event.clientY - rect.top) * scaleY;
+  // Prüfen, ob Maus über dem Button ist
+  const hovering = Object.values(this.buttons).some(
+    (btn) =>
+      x >= btn.x &&
+      x <= btn.x + btn.width &&
+      y >= btn.y &&
+      y <= btn.y + btn.height
+  );  
+  this.canvas.style.cursor = hovering ? "pointer" : "default"; // 🎨 Cursor ändern
+}
+
+
+  /**
    * 🧹 Clears the entire canvas area.
    */
   clear() {
