@@ -295,11 +295,32 @@ window.addEventListener("load", () => {
 /**
  * Ensures canvas input area updates correctly when entering/exiting fullscreen.
  */
+// document.addEventListener("fullscreenchange", () => {
+//   resizeCanvas();
+//   if (world) world.updateCanvasRect();
+//   setTimeout(() => world?.updateCanvasRect(), 100); // Small delay for layout adjustment
+// });
+/**
+ * 🔁 Automatically update the fullscreen button icon
+ * whenever the fullscreen state changes.
+ */
 document.addEventListener("fullscreenchange", () => {
+  const fullBtn = document.getElementById("fullscreen-btn");
+  if (!fullBtn) return;
+
+  if (document.fullscreenElement || document.webkitFullscreenElement) {
+    fullBtn.textContent = "🗗"; // Exit fullscreen icon
+    fullBtn.title = "Vollbild verlassen";
+  } else {
+    fullBtn.textContent = "🖥️"; // Enter fullscreen icon
+    fullBtn.title = "Vollbild aktivieren";
+  }
+
+  // Recalculate canvas size for touch input alignment
   resizeCanvas();
-  if (world) world.updateCanvasRect();
-  setTimeout(() => world?.updateCanvasRect(), 100); // Small delay for layout adjustment
+  world?.updateCanvasRect?.();
 });
+
 
 /**
  * Handles window resize updates for responsive canvas scaling.
