@@ -178,7 +178,8 @@ window.addEventListener("load", () => {
   const soundBtn = document.getElementById("sound-btn");
   // Button event bindings
   instrBtn?.addEventListener("click", showInstructions);
-  fullBtn?.addEventListener("click", () => toggleFullscreen(canvas));
+  //fullBtn?.addEventListener("click", () => toggleFullscreen(canvas));
+  fullBtn?.addEventListener("click", toggleFullscreen);
   soundBtn?.addEventListener("click", toggleSound);
   // Set initial sound button icon
   if (soundBtn) soundBtn.textContent = soundEnabled ? "🔊" : "🔇";
