@@ -122,41 +122,75 @@ function resizeCanvas() {
 /**
  * 🖥️ Safely toggles fullscreen mode for the canvas (with browser fallbacks).
  */
+// function toggleFullscreen() {
+//   const canvas = document.getElementById("canvas");
+//   if (!canvas) return;
+
+//   // Use vendor-prefixed APIs for Safari compatibility
+//   const doc = document;
+//   const isFullscreen = doc.fullscreenElement || doc.webkitFullscreenElement;
+
+//   try {
+//     if (!isFullscreen) {
+//       const requestFullscreen =
+//         canvas.requestFullscreen ||
+//         canvas.webkitRequestFullscreen ||
+//         canvas.msRequestFullscreen;
+
+//       if (requestFullscreen) {
+//         // ✅ Important: return the Promise to properly catch rejections
+//         return requestFullscreen.call(canvas).catch((err) => {
+//           console.warn("Fullscreen permission check failed:", err.message);
+//         });
+//       } else {
+//         console.warn("Fullscreen API not supported by this browser.");
+//       }
+//     } else {
+//       const exitFullscreen =
+//         doc.exitFullscreen ||
+//         doc.webkitExitFullscreen ||
+//         doc.msExitFullscreen;
+
+//       if (exitFullscreen) exitFullscreen.call(doc);
+//     }
+//   } catch (err) {
+//     console.warn("Fullscreen could not be activated:", err.message);
+//   }
+// }
+/**
+ * 🖥️ Safely toggles fullscreen mode for the canvas (with icon auto-update)
+ */
 function toggleFullscreen() {
   const canvas = document.getElementById("canvas");
   if (!canvas) return;
 
-  // Use vendor-prefixed APIs for Safari compatibility
   const doc = document;
   const isFullscreen = doc.fullscreenElement || doc.webkitFullscreenElement;
+  const fullBtn = document.getElementById("fullscreen-btn");
 
-  try {
-    if (!isFullscreen) {
-      const requestFullscreen =
-        canvas.requestFullscreen ||
-        canvas.webkitRequestFullscreen ||
-        canvas.msRequestFullscreen;
+  if (!isFullscreen) {
+    // 🟢 Enter fullscreen (desktop + Safari fallback)
+    const requestFullscreen =
+      canvas.requestFullscreen ||
+      canvas.webkitRequestFullscreen ||
+      canvas.msRequestFullscreen;
 
-      if (requestFullscreen) {
-        // ✅ Important: return the Promise to properly catch rejections
-        return requestFullscreen.call(canvas).catch((err) => {
-          console.warn("Fullscreen permission check failed:", err.message);
-        });
-      } else {
-        console.warn("Fullscreen API not supported by this browser.");
-      }
-    } else {
-      const exitFullscreen =
-        doc.exitFullscreen ||
-        doc.webkitExitFullscreen ||
-        doc.msExitFullscreen;
-
-      if (exitFullscreen) exitFullscreen.call(doc);
+    if (requestFullscreen) {
+      requestFullscreen.call(canvas).catch((err) => {
+        console.warn("Fullscreen permission check failed:", err.message);
+      });
     }
-  } catch (err) {
-    console.warn("Fullscreen could not be activated:", err.message);
+  } else {
+    // 🔴 Exit fullscreen
+    const exitFullscreen =
+      doc.exitFullscreen ||
+      doc.webkitExitFullscreen ||
+      doc.msExitFullscreen;
+
+    if (exitFullscreen) exitFullscreen.call(doc);
   }
 }
+
 
 
 
