@@ -279,9 +279,9 @@ window.addEventListener("resize", () => {
  * Fallback UI bindings (ensures buttons always work, even if reloaded).
  */
 document.getElementById("instructions-btn")?.addEventListener("click", showInstructions);
-document.getElementById("fullscreen-btn")?.addEventListener("click", () => toggleFullscreen(canvas));
-//document.getElementById("sound-btn")?.addEventListener("click", toggleSound);
+//document.getElementById("fullscreen-btn")?.addEventListener("click", () => toggleFullscreen(canvas));
 document.getElementById("fullscreen-btn")?.addEventListener("click", toggleFullscreen);
+document.getElementById("sound-btn")?.addEventListener("click", toggleSound);
 
 /**
  * Displays a "Rotate Device" overlay when the device is in portrait mode.
