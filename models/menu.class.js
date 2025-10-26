@@ -15,6 +15,8 @@ class Menu {
     this.buttons = {};
     this.clickHandler = this.handleClick.bind(this);
     this.canvas.addEventListener("click", this.clickHandler);
+    // 🖱️ Cursor-Wechsel hinzufügen
+    this.canvas.addEventListener("mousemove", this.handleHover.bind(this));
     this.drawStartScreen();
   }
 
