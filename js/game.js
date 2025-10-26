@@ -214,7 +214,8 @@ window.addEventListener("resize", () => {
  */
 document.getElementById("instructions-btn")?.addEventListener("click", showInstructions);
 document.getElementById("fullscreen-btn")?.addEventListener("click", () => toggleFullscreen(canvas));
-document.getElementById("sound-btn")?.addEventListener("click", toggleSound);
+//document.getElementById("sound-btn")?.addEventListener("click", toggleSound);
+document.getElementById("fullscreen-btn")?.addEventListener("click", toggleFullscreen);
 
 /**
  * Displays a "Rotate Device" overlay when the device is in portrait mode.
