@@ -81,18 +81,45 @@ function resizeCanvas() {
 /**
  * Toggles fullscreen mode for the canvas.
  */
+// function toggleFullscreen() {
+//   const canvas = document.getElementById("canvas");
+//   if (!canvas) return;
+
+//   if (!document.fullscreenElement) {
+//     canvas.requestFullscreen().catch((err) =>
+//       console.error(`Fullscreen error: ${err.message}`)
+//     );
+//   } else {
+//     document.exitFullscreen();
+//   }
+// }
+/**
+ * Toggles fullscreen mode for the canvas.
+ */
 function toggleFullscreen() {
   const canvas = document.getElementById("canvas");
   if (!canvas) return;
 
-  if (!document.fullscreenElement) {
-    canvas.requestFullscreen().catch((err) =>
-      console.error(`Fullscreen error: ${err.message}`)
-    );
-  } else {
-    document.exitFullscreen();
+  try {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      // ✅ Use correct API depending on browser
+      if (canvas.requestFullscreen) {
+        canvas.requestFullscreen();
+      } else if (canvas.webkitRequestFullscreen) {
+        canvas.webkitRequestFullscreen(); // Safari fallback
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen(); // Safari fallback
+      }
+    }
+  } catch (err) {
+    console.warn("Fullscreen permission denied:", err);
   }
 }
+
 
 /**
  * Toggles game sound on/off and updates the UI button.
