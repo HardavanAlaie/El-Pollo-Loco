@@ -90,6 +90,7 @@
 //       new CollectableCoin(700, 350),
 //     ],
 
+
 //     // --- Dynamic enemy spawn configuration ---
 //     {
 //       spawnConfig: [
