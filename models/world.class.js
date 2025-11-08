@@ -148,21 +148,38 @@ class World {
   }
 
   /** 🪙 Checks for player collisions with coins and updates the coin bar. */
-  checkCoins() {
-    this.collectableCoins = this.collectableCoins.filter((coin) => {
-      if (this.character.isColliding(coin)) {
-        this.statusBarCoin.availableCoins++;
-        this.statusBarCoin.update();
-        if (soundEnabled) {
-          const s = new Audio("audio/coins.mp3");
-          s.volume = 0.5;
-          s.play().catch(() => {});
-        }
-        return false;
+  // checkCoins() {
+  //   this.collectableCoins = this.collectableCoins.filter((coin) => {
+  //     if (this.character.isColliding(coin)) {
+  //       this.statusBarCoin.availableCoins++;
+  //       this.statusBarCoin.update();
+  //       if (soundEnabled) {
+  //         const s = new Audio("audio/coins.mp3");
+  //         s.volume = 0.5;
+  //         s.play().catch(() => {});
+  //       }
+  //       return false;
+  //     }
+  //     return true;
+  //   });
+  // }
+  // Coins einsammeln – TIGHT COLLISION
+checkCoins() {
+  const inset = 12; // feiner einstellen, z.B. 10–16
+  this.collectableCoins = this.collectableCoins.filter((coin) => {
+    if (this.character.isCollidingTight(coin, inset)) {
+      this.statusBarCoin.availableCoins++;
+      this.statusBarCoin.update();
+      if (soundEnabled) {
+        const s = new Audio("audio/coins.mp3");
+        s.volume = 0.5;
+        s.play().catch(() => {});
       }
-      return true;
-    });
-  }
+      return false; // aus Liste entfernen (eingesammelt)
+    }
+    return true;
+  });
+}
 
   /** 🐔 Handles player–enemy collision logic (jumping on enemies vs taking damage). */
   characterColliding(enemy) {
