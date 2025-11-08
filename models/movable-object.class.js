@@ -50,21 +50,49 @@ class MovableObject extends DrawableObject {
   //   );
   // }
   /** 🔒 Tight AABB collision – requires closer contact (inset shrinks boxes) */
-isCollidingTight(mo, inset = 10) {
-  if (!mo) return false;
+// isCollidingTight(mo, inset = 10) {
+//   if (!mo) return false;
 
-  const ax1 = this.x + inset;
-  const ay1 = this.y + inset;
-  const ax2 = this.x + this.width - inset;
-  const ay2 = this.y + this.height - inset;
+//   const ax1 = this.x + inset;
+//   const ay1 = this.y + inset;
+//   const ax2 = this.x + this.width - inset;
+//   const ay2 = this.y + this.height - inset;
 
-  const bx1 = mo.x + inset;
-  const by1 = mo.y + inset;
-  const bx2 = mo.x + mo.width - inset;
-  const by2 = mo.y + mo.height - inset;
+//   const bx1 = mo.x + inset;
+//   const by1 = mo.y + inset;
+//   const bx2 = mo.x + mo.width - inset;
+//   const by2 = mo.y + mo.height - inset;
 
-  return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
-}
+//   return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
+// }
+
+  /** 💥 Standard-Kollision (mit leichtem Padding) */
+  isColliding(mo, padding = 15) {
+    if (!mo) return false;
+    return (
+      this.x + this.width > mo.x - padding &&
+      this.x - padding      < mo.x + mo.width + padding &&
+      this.y + this.height > mo.y - padding &&
+      this.y - padding      < mo.y + mo.height + padding
+    );
+  }
+
+  /** 🔒 Engere Kollision für Pickups */
+  isCollidingTight(mo, inset = 12) {
+    if (!mo) return false;
+
+    const ax1 = this.x + inset;
+    const ay1 = this.y + inset;
+    const ax2 = this.x + this.width - inset;
+    const ay2 = this.y + this.height - inset;
+
+    const bx1 = mo.x + inset;
+    const by1 = mo.y + inset;
+    const bx2 = mo.x + mo.width - inset;
+    const by2 = mo.y + mo.height - inset;
+
+    return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
+  }
 
 
   /**
