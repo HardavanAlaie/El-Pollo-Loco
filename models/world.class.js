@@ -165,7 +165,7 @@ class World {
   // }
   // Coins einsammeln – TIGHT COLLISION
 checkCoins() {
-  const inset = 12; // feiner einstellen, z.B. 10–16
+  const inset = 10; // feiner einstellen, z.B. 10–16
   this.collectableCoins = this.collectableCoins.filter((coin) => {
     if (this.character.isCollidingTight(coin, inset)) {
       this.statusBarCoin.availableCoins++;
