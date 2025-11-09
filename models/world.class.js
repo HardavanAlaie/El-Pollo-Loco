@@ -198,34 +198,34 @@ checkCoins() {
   }
 
   /** 🧴 Handles collisions with collectible bottles. */
-  // characterCollidingBottle() {
-  //   this.collectableBottles = this.collectableBottles.filter((bottle) => {
-  //     if (this.character.isColliding(bottle)) {
-  //       if (this.statusBarBottle.availableBottles < 5) {
-  //         this.statusBarBottle.availableBottles++;
-  //         this.statusBarBottle.update();
-  //       } else this.showBottleLimitMessage();
-  //       return false;
-  //     }
-  //     return true;
-  //   });
-  // }
-  // Flaschen einsammeln – TIGHT COLLISION
-characterCollidingBottle() {
-  const inset = 12; // gleich wie oben oder separat einstellen
-  this.collectableBottles = this.collectableBottles.filter((bottle) => {
-    if (this.character.isCollidingTight(bottle, inset)) {
-      if (this.statusBarBottle.availableBottles < 5) {
-        this.statusBarBottle.availableBottles++;
-        this.statusBarBottle.update();
-      } else {
-        this.showBottleLimitMessage();
+  characterCollidingBottle() {
+    this.collectableBottles = this.collectableBottles.filter((bottle) => {
+      if (this.character.isColliding(bottle)) {
+        if (this.statusBarBottle.availableBottles < 5) {
+          this.statusBarBottle.availableBottles++;
+          this.statusBarBottle.update();
+        } else this.showBottleLimitMessage();
+        return false;
       }
-      return false; // eingesammelt -> entfernen
-    }
-    return true;
-  });
-}
+      return true;
+    });
+  }
+  // Flaschen einsammeln – TIGHT COLLISION
+// characterCollidingBottle() {
+//   const inset = 12; // gleich wie oben oder separat einstellen
+//   this.collectableBottles = this.collectableBottles.filter((bottle) => {
+//     if (this.character.isCollidingTight(bottle, inset)) {
+//       if (this.statusBarBottle.availableBottles < 5) {
+//         this.statusBarBottle.availableBottles++;
+//         this.statusBarBottle.update();
+//       } else {
+//         this.showBottleLimitMessage();
+//       }
+//       return false; // eingesammelt -> entfernen
+//     }
+//     return true;
+//   });
+// }
 
   /** 🏆 Checks if the Endboss has been defeated. */
   checkEndbossDefeated() {
