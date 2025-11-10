@@ -198,18 +198,34 @@ checkCoins() {
   }
 
   /** 🧴 Handles collisions with collectible bottles. */
+  // characterCollidingBottle() {
+  //   this.collectableBottles = this.collectableBottles.filter((bottle) => {
+  //     if (this.character.isColliding(bottle)) {
+  //       if (this.statusBarBottle.availableBottles < 5) {
+  //         this.statusBarBottle.availableBottles++;
+  //         this.statusBarBottle.update();
+  //       } else this.showBottleLimitMessage();
+  //       return false;
+  //     }
+  //     return true;
+  //   });
+  // }
   characterCollidingBottle() {
-    this.collectableBottles = this.collectableBottles.filter((bottle) => {
-      if (this.character.isColliding(bottle)) {
-        if (this.statusBarBottle.availableBottles < 5) {
-          this.statusBarBottle.availableBottles++;
-          this.statusBarBottle.update();
-        } else this.showBottleLimitMessage();
-        return false;
+  this.collectableBottles = this.collectableBottles.filter((bottle) => {
+    if (this.character.isColliding(bottle)) {
+      if (this.statusBarBottle.availableBottles < 5) {
+        this.statusBarBottle.availableBottles++;
+        this.statusBarBottle.update();
+      } else {
+        this.showBottleLimitMessage();
       }
-      return true;
-    });
-  }
+      // ❗ Flasche immer entfernen, egal ob Limit erreicht oder nicht
+      return false;
+    }
+    return true;
+  });
+}
+
   // Flaschen einsammeln – TIGHT COLLISION
 // characterCollidingBottle() {
 //   const inset = 12; // gleich wie oben oder separat einstellen
