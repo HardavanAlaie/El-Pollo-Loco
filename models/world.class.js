@@ -437,9 +437,31 @@ checkCoins() {
       this._gameOverPlayed = false;
 
       // ⏳ Small delay before reloading for smoother UX
-      setTimeout(() => location.reload(), 300);
+      //setTimeout(() => location.reload(), 300);
+      setTimeout(() => restartGame(), 300);
     }
   }
+
+  /**
+ * 🔁 Restarts the game without reloading the page.
+ */
+ restartGame() {
+  // 🧹 Alte Welt vollständig entfernen
+  if (world) {
+    world.stopAllSounds();
+    world.stopGameLoopHard();
+    world = null;
+  }
+
+  // 💡 Canvas zurücksetzen
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // 🕹️ Neues Spiel starten
+  startGame();
+}
+
 
 
   /**
