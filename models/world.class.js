@@ -484,6 +484,23 @@ checkCoins() {
 
     if (!this.levelEnded)
       this.animationFrame = requestAnimationFrame(() => this.draw());
+
+    // --- Nach allen Zeichnungen ---
+if (this.bottleLimitMessage) {
+  this.ctx.save();
+  this.ctx.font = "26px Comic Sans MS";
+  this.ctx.fillStyle = "#fca534";
+  this.ctx.textAlign = "center";
+  this.ctx.shadowColor = "black";
+  this.ctx.shadowBlur = 6;
+  this.ctx.fillText(
+    this.bottleLimitMessage,
+    this.canvas.width / 2,
+    this.canvas.height - 50
+  );
+  this.ctx.restore();
+}
+
   }
 
   /** 🧩 Draws all objects from a given list to the canvas. */
