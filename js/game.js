@@ -399,30 +399,82 @@ window.addEventListener("orientationchange", checkOrientation);
 window.addEventListener("load", checkOrientation);
 
 // 🔁 Restart the game without reloading the page (global)
+// window.restartGame = function restartGame() {
+//   // Alte Welt sauber stoppen
+//   if (window.world) {
+//     try { world.stopAllSounds?.(); } catch(e) {}
+//     try { world.stopGameLoopHard?.(); } catch(e) {}
+//     window.world = null;
+//   }
+
+//   // Canvas zurücksetzen
+//   const canvas = document.getElementById("canvas");
+//   if (canvas) {
+//     const ctx = canvas.getContext("2d");
+//     ctx.setTransform(1, 0, 0, 1, 0, 0);
+//     ctx.clearRect(0, 0, canvas.width, canvas.height);
+//   }
+
+//   // Optional: Eingaben zurücksetzen
+//   if (!window.keyboard) window.keyboard = new Keyboard();
+
+//   // Neues Spiel direkt starten
+//   init();
+
+//   // 👉 Falls du stattdessen zurück zum Startscreen willst:
+//   // const ctx = canvas.getContext("2d");
+//   // new Menu(canvas, ctx);
+// };
+
+function ensureRestartOverlay() {
+  const el = document.getElementById('restart-fade');
+  return el;
+}
+
 window.restartGame = function restartGame() {
-  // Alte Welt sauber stoppen
-  if (window.world) {
-    try { world.stopAllSounds?.(); } catch(e) {}
-    try { world.stopGameLoopHard?.(); } catch(e) {}
-    window.world = null;
-  }
+  if (isRestarting) return;
+  isRestarting = true;
 
-  // Canvas zurücksetzen
-  const canvas = document.getElementById("canvas");
-  if (canvas) {
-    const ctx = canvas.getContext("2d");
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
+  const overlay = ensureRestartOverlay();
+  const canvas  = document.getElementById('canvas');
 
-  // Optional: Eingaben zurücksetzen
-  if (!window.keyboard) window.keyboard = new Keyboard();
+  // aktuelle Canvas-Displaygröße merken (damit wir sie beibehalten)
+  const keepW = canvas.style.width;
+  const keepH = canvas.style.height;
 
-  // Neues Spiel direkt starten
-  init();
+  // Fade-Out starten (frame abwarten für CSS-Transition)
+  overlay.style.display = 'block';
+  requestAnimationFrame(() => overlay.classList.add('show'));
 
-  // 👉 Falls du stattdessen zurück zum Startscreen willst:
-  // const ctx = canvas.getContext("2d");
-  // new Menu(canvas, ctx);
+  // erst nach kurzer Überblendung wirklich neustarten
+  setTimeout(() => {
+    try {
+      // alte Welt sauber stoppen
+      if (window.world) {
+        world.stopAllSounds?.();
+        world.stopGameLoopHard?.();
+      }
+
+      // Canvas resetten (ohne Layoutsprung)
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      // init – aber ohne resize (keine Reflow-Jumps)
+      init({ skipResize: true });
+
+      // alte Displaygröße wiederherstellen
+      canvas.style.width  = keepW;
+      canvas.style.height = keepH;
+      world.updateCanvasRect?.();
+    } finally {
+      // Fade-In
+      overlay.classList.remove('show');
+      overlay.addEventListener('transitionend', () => {
+        overlay.style.display = 'none';
+        isRestarting = false;
+      }, { once: true });
+    }
+  }, 250); // Dauer des Fade-Outs (muss zur CSS-Transition passen)
 };
 
