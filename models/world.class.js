@@ -289,7 +289,7 @@ checkCoins() {
   endGame() {
     this.stopGameLoopHard();
     this.stopEnemySounds();
-    this.playSound("audio/gameover.mp3");
+    //this.playSound("audio/gameover.mp3");
     this.showGameOverScreen();
   }
 
