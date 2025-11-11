@@ -74,24 +74,47 @@ window.addEventListener("keyup", (e) => {
  * Dynamically resizes the canvas while keeping the 720x480 aspect ratio.
  * Also updates touch button positions after resizing.
  */
+// function resizeCanvas() {
+//   const canvas = document.getElementById("canvas");
+//   if (!canvas) return;
+//   const aspectRatio = 720 / 480;
+//   const windowRatio = window.innerWidth / window.innerHeight;
+//   let newWidth, newHeight;
+//   if (windowRatio > aspectRatio) {
+//     newHeight = window.innerHeight;
+//     newWidth = newHeight * aspectRatio;
+//   } else {
+//     newWidth = window.innerWidth;
+//     newHeight = newWidth / aspectRatio;
+//   }
+//   canvas.style.width = `${newWidth}px`;
+//   canvas.style.height = `${newHeight}px`;
+//   // Update canvas touch bounds for accurate input detection
+//   if (world?.updateCanvasRect) world.updateCanvasRect();
+// }
 function resizeCanvas() {
+  if (isRestarting) return; // 👉 während Restart keine Layoutsprünge
+
   const canvas = document.getElementById("canvas");
   if (!canvas) return;
+
   const aspectRatio = 720 / 480;
   const windowRatio = window.innerWidth / window.innerHeight;
   let newWidth, newHeight;
+
   if (windowRatio > aspectRatio) {
     newHeight = window.innerHeight;
-    newWidth = newHeight * aspectRatio;
+    newWidth  = newHeight * aspectRatio;
   } else {
-    newWidth = window.innerWidth;
+    newWidth  = window.innerWidth;
     newHeight = newWidth / aspectRatio;
   }
-  canvas.style.width = `${newWidth}px`;
+
+  canvas.style.width  = `${newWidth}px`;
   canvas.style.height = `${newHeight}px`;
-  // Update canvas touch bounds for accurate input detection
-  if (world?.updateCanvasRect) world.updateCanvasRect();
+  world?.updateCanvasRect?.();
 }
+
 
 /**
  * Toggles fullscreen mode for the canvas.
