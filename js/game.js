@@ -20,14 +20,27 @@ function startGame() {
 /**
  * Initializes the canvas, world, and game environment.
  */
-function init() {
+// function init() {
+//   canvas = document.getElementById("canvas");
+//   canvas.width = 720;
+//   canvas.height = 480;
+//   world = new World(canvas, keyboard);
+//   resizeCanvas();
+//   world.updateCanvasRect?.(); // Ensure correct touch area mapping
+// }
+function init(options = {}) {
   canvas = document.getElementById("canvas");
   canvas.width = 720;
   canvas.height = 480;
+
   world = new World(canvas, keyboard);
-  resizeCanvas();
-  world.updateCanvasRect?.(); // Ensure correct touch area mapping
+
+  if (!options.skipResize) {
+    resizeCanvas();
+  }
+  world.updateCanvasRect?.();
 }
+
 
 /**
  * Handles keyboard keydown events for player control.
