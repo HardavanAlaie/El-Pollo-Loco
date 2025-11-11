@@ -8,6 +8,8 @@ let world;
 let keyboard = new Keyboard();
 //let soundEnabled = true;
 let soundEnabled = localStorage.getItem("soundEnabled") === "false" ? false : true;
+let isRestarting = false;
+
 
 /**
  * Starts the game by hiding the start screen and initializing the world.
