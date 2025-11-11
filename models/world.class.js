@@ -205,20 +205,43 @@ checkCoins() {
 }
 
   /** 🐔 Handles player–enemy collision logic (jumping on enemies vs taking damage). */
+  // characterColliding(enemy) {
+  //   if (!this.character.isColliding(enemy)) return;
+  //   const isAbove =
+  //     this.character.y + this.character.height <=
+  //       enemy.y + enemy.height * 0.25 && this.character.speedY > 0;
+  //   if (isAbove) {
+  //     enemy.hit?.();
+  //     this.character.jump();
+  //     if (enemy.isDead?.()) enemy.die?.();
+  //   } else {
+  //     this.character.hit();
+  //     this.statusBar.setPercentage(this.character.energy);
+  //   }
+  // }
   characterColliding(enemy) {
-    if (!this.character.isColliding(enemy)) return;
-    const isAbove =
-      this.character.y + this.character.height <=
-        enemy.y + enemy.height * 0.25 && this.character.speedY > 0;
-    if (isAbove) {
-      enemy.hit?.();
-      this.character.jump();
-      if (enemy.isDead?.()) enemy.die?.();
+  if (!this.character.isColliding(enemy)) return;
+
+  const isAbove =
+    this.character.y + this.character.height <= enemy.y + enemy.height * 0.25 &&
+    this.character.speedY > 0;
+
+  if (isAbove) {
+    // 👇 Boss: 20 Schaden, Chicken: wie gehabt
+    if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+      enemy.takeDamage?.(20);
     } else {
-      this.character.hit();
-      this.statusBar.setPercentage(this.character.energy);
+      enemy.hit?.();
     }
+    this.character.jump();
+
+    if (enemy.isDead?.()) enemy.die?.();
+  } else {
+    this.character.hit();
+    this.statusBar.setPercentage(this.character.energy);
   }
+}
+
 
   /** 🧴 Handles collisions with collectible bottles. */
   characterCollidingBottle() {
