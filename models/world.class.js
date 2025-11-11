@@ -879,3 +879,39 @@ if (this.bottleLimitMessage) {
   }
 }
 
+/** 🎵 Start/ersetze Hintergrundmusik (z. B. Win/GameOver). */
+setBackgroundMusic(path, loop = false) {
+  try {
+    // evtl. laufende BG-Musik stoppen
+    if (this._bgMusic) {
+      this._bgMusic.pause();
+      this._bgMusic.currentTime = 0;
+    }
+    if (!soundEnabled) {
+      this._bgMusic = null;
+      return;
+    }
+    const a = new Audio(path);
+    a.volume = 0.7;
+    a.loop = loop;
+    this._bgMusic = a;
+    a.play().catch(() => {});
+  } catch (e) {
+    console.warn("setBackgroundMusic failed:", e);
+  }
+}
+
+/** 🔇 Stoppt nur die hinterlegte Hintergrundmusik (Win/GameOver). */
+stopBackgroundMusic() {
+  try {
+    if (this._bgMusic) {
+      this._bgMusic.pause();
+      this._bgMusic.currentTime = 0;
+    }
+  } catch (e) {
+    console.warn("stopBackgroundMusic failed:", e);
+  }
+  this._bgMusic = null;
+}
+
+
