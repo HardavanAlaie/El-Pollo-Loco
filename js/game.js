@@ -431,6 +431,53 @@ function ensureRestartOverlay() {
   return el;
 }
 
+// window.restartGame = function restartGame() {
+//   if (isRestarting) return;
+//   isRestarting = true;
+
+//   const overlay = ensureRestartOverlay();
+//   const canvas  = document.getElementById('canvas');
+
+//   // aktuelle Canvas-Displaygröße merken (damit wir sie beibehalten)
+//   const keepW = canvas.style.width;
+//   const keepH = canvas.style.height;
+
+//   // Fade-Out starten (frame abwarten für CSS-Transition)
+//   overlay.style.display = 'block';
+//   requestAnimationFrame(() => overlay.classList.add('show'));
+
+//   // erst nach kurzer Überblendung wirklich neustarten
+//   setTimeout(() => {
+//     try {
+//       // alte Welt sauber stoppen
+//       if (window.world) {
+//         world.stopAllSounds?.();
+//         world.stopGameLoopHard?.();
+//       }
+
+//       // Canvas resetten (ohne Layoutsprung)
+//       const ctx = canvas.getContext('2d');
+//       ctx.setTransform(1,0,0,1,0,0);
+//       ctx.clearRect(0,0,canvas.width,canvas.height);
+
+//       // init – aber ohne resize (keine Reflow-Jumps)
+//       init({ skipResize: true });
+
+//       // alte Displaygröße wiederherstellen
+//       canvas.style.width  = keepW;
+//       canvas.style.height = keepH;
+//       world.updateCanvasRect?.();
+//     } finally {
+//       // Fade-In
+//       overlay.classList.remove('show');
+//       overlay.addEventListener('transitionend', () => {
+//         overlay.style.display = 'none';
+//         isRestarting = false;
+//       }, { once: true });
+//     }
+//   }, 250); // Dauer des Fade-Outs (muss zur CSS-Transition passen)
+// };
+
 window.restartGame = function restartGame() {
   if (isRestarting) return;
   isRestarting = true;
@@ -438,43 +485,37 @@ window.restartGame = function restartGame() {
   const overlay = ensureRestartOverlay();
   const canvas  = document.getElementById('canvas');
 
-  // aktuelle Canvas-Displaygröße merken (damit wir sie beibehalten)
   const keepW = canvas.style.width;
   const keepH = canvas.style.height;
 
-  // Fade-Out starten (frame abwarten für CSS-Transition)
   overlay.style.display = 'block';
   requestAnimationFrame(() => overlay.classList.add('show'));
 
-  // erst nach kurzer Überblendung wirklich neustarten
   setTimeout(() => {
     try {
-      // alte Welt sauber stoppen
       if (window.world) {
         world.stopAllSounds?.();
+        world.stopBackgroundMusic?.();   // 👈 neu
         world.stopGameLoopHard?.();
       }
 
-      // Canvas resetten (ohne Layoutsprung)
       const ctx = canvas.getContext('2d');
       ctx.setTransform(1,0,0,1,0,0);
       ctx.clearRect(0,0,canvas.width,canvas.height);
 
-      // init – aber ohne resize (keine Reflow-Jumps)
       init({ skipResize: true });
 
-      // alte Displaygröße wiederherstellen
       canvas.style.width  = keepW;
       canvas.style.height = keepH;
       world.updateCanvasRect?.();
     } finally {
-      // Fade-In
       overlay.classList.remove('show');
       overlay.addEventListener('transitionend', () => {
         overlay.style.display = 'none';
         isRestarting = false;
       }, { once: true });
     }
-  }, 250); // Dauer des Fade-Outs (muss zur CSS-Transition passen)
+  }, 250);
 };
+
 
