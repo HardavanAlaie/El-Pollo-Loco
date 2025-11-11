@@ -359,3 +359,32 @@ function checkOrientation() {
 window.addEventListener("resize", checkOrientation);
 window.addEventListener("orientationchange", checkOrientation);
 window.addEventListener("load", checkOrientation);
+
+// 🔁 Restart the game without reloading the page (global)
+window.restartGame = function restartGame() {
+  // Alte Welt sauber stoppen
+  if (window.world) {
+    try { world.stopAllSounds?.(); } catch(e) {}
+    try { world.stopGameLoopHard?.(); } catch(e) {}
+    window.world = null;
+  }
+
+  // Canvas zurücksetzen
+  const canvas = document.getElementById("canvas");
+  if (canvas) {
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  // Optional: Eingaben zurücksetzen
+  if (!window.keyboard) window.keyboard = new Keyboard();
+
+  // Neues Spiel direkt starten
+  init();
+
+  // 👉 Falls du stattdessen zurück zum Startscreen willst:
+  // const ctx = canvas.getContext("2d");
+  // new Menu(canvas, ctx);
+};
+
