@@ -14,6 +14,8 @@ class EndbossLevel1 extends MovableObject {
   isAggressive = false; // Whether the boss is in aggressive mode
   attackMode = false;   // Whether the boss is currently attacking
   isScreaming = false;  // Prevents multiple screams at once
+  damageCooldownMs = 250;   // verhindert Mehrfachtreffer im selben Moment
+  _lastDamageAt = 0;
 
   // --- Sprite image sets ---
   IMAGES_ALERT = this.makeImgList("img/4_enemie_boss_chicken/2_alert/", 5, 12);
@@ -76,23 +78,23 @@ class EndbossLevel1 extends MovableObject {
   /**
    * Called when the boss gets hit by a throwable object.
    */
-  hit() {
-    if (this.isDead()) return;
+  // hit() {
+  //   if (this.isDead()) return;
 
-    // Reduce energy
-    this.energy = Math.max(this.energy - 20, 0);
-    this.statusBar.setPercentage(this.energy);
+  //   // Reduce energy
+  //   this.energy = Math.max(this.energy - 20, 0);
+  //   this.statusBar.setPercentage(this.energy);
 
-    // Becomes aggressive after first hit
-    if (!this.isAggressive) {
-      this.isAggressive = true;
-      this.attackMode = true;
-    }
+  //   // Becomes aggressive after first hit
+  //   if (!this.isAggressive) {
+  //     this.isAggressive = true;
+  //     this.attackMode = true;
+  //   }
 
-    // Either scream or die depending on energy level
-    if (this.energy > 0) this.scream();
-    else this.die();
-  }
+  //   // Either scream or die depending on energy level
+  //   if (this.energy > 0) this.scream();
+  //   else this.die();
+  // }
 
   /**
    * Handles the boss death animation and logic stop.
@@ -166,5 +168,33 @@ class EndbossLevel1 extends MovableObject {
     } else {
       this.attackMode = false;
     }
+  }
+
+    /**
+   * Apply a single packet of damage (default 20) with cooldown.
+   * Keeps existing .hit() behavior intact (hit() calls this).
+   */
+  takeDamage(amount = 20) {
+    if (this.isDead()) return;
+
+    const now = Date.now();
+    if (now - this._lastDamageAt < this.damageCooldownMs) return; // ignore double-hit
+    this._lastDamageAt = now;
+
+    this.energy = Math.max(0, this.energy - amount);
+    this.statusBar?.setPercentage?.(this.energy);
+
+    if (!this.isAggressive) {
+      this.isAggressive = true;
+      this.attackMode = true;
+    }
+
+    if (this.energy > 0) this.scream();
+    else this.die();
+  }
+
+  // Bestehende hit() NICHT löschen; nur so umbauen, dass es obigen Pfad nutzt:
+  hit() {
+    this.takeDamage(20);
   }
 }
