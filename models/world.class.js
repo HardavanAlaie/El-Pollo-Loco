@@ -868,16 +868,30 @@ if (this.bottleLimitMessage) {
   }
 
   /** 🔇 Stops all sounds, both enemy and global audio elements. */
-  stopAllSounds() {
-    try {
-      this.stopEnemySounds();
-      document.querySelectorAll("audio").forEach((a) => {
-        a.pause();
-        a.currentTime = 0;
-      });
-    } catch (err) {}
-  }
+//   stopAllSounds() {
+//     try {
+//       this.stopEnemySounds();
+//       document.querySelectorAll("audio").forEach((a) => {
+//         a.pause();
+//         a.currentTime = 0;
+//       });
+//     } catch (err) {}
+//   }
+// }
+/** 🔇 Stops all sounds, both enemy and global audio elements. */
+stopAllSounds() {
+  try {
+    this.stopEnemySounds();
+    // alle <audio>-Elemente im DOM stoppen
+    document.querySelectorAll("audio").forEach((a) => {
+      a.pause();
+      a.currentTime = 0;
+    });
+    // explizit hinterlegte Hintergrundmusik stoppen
+    this.stopBackgroundMusic?.();
+  } catch (err) {}
 }
+
 
 /** 🎵 Start/ersetze Hintergrundmusik (z. B. Win/GameOver). */
 setBackgroundMusic(path, loop = false) {
