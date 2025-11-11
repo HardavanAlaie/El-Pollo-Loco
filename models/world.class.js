@@ -114,20 +114,43 @@ class World {
   }
 
   /** 🧴 Manages all throwable objects and checks for enemy collisions. */
+  // checkThrowableObjects() {
+  //   this.throwableObjects = this.throwableObjects.filter((b) => !b.isDead?.());
+
+  //   this.throwableObjects.forEach((bottle) => {
+  //     this.level.enemies.forEach((enemy) => {
+  //       if (!enemy.isDead?.() && bottle.isColliding(enemy)) {
+  //         enemy.hit?.();
+  //         bottle.break?.();
+  //       }
+  //     });
+  //   });
+
+  //   this.throwableBottles();
+  // }
   checkThrowableObjects() {
-    this.throwableObjects = this.throwableObjects.filter((b) => !b.isDead?.());
+  this.throwableObjects = this.throwableObjects.filter((b) => !b.isDead?.());
 
-    this.throwableObjects.forEach((bottle) => {
-      this.level.enemies.forEach((enemy) => {
-        if (!enemy.isDead?.() && bottle.isColliding(enemy)) {
+  this.throwableObjects.forEach((bottle) => {
+    if (bottle.isBroken) return; // safety
+
+    this.level.enemies.forEach((enemy) => {
+      if (bottle.isBroken) return; // wurde bereits an einem Gegner zerbrochen
+      if (!enemy.isDead?.() && bottle.isColliding(enemy)) {
+        // 👇 Boss: exakt 20 Schaden, Chicken: bestehende Logik (hit())
+        if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+          enemy.takeDamage?.(20);
+        } else {
           enemy.hit?.();
-          bottle.break?.();
         }
-      });
+        bottle.break?.();
+      }
     });
+  });
 
-    this.throwableBottles();
-  }
+  this.throwableBottles();
+}
+
 
   /** 🎯 Throws a new bottle when allowed and updates the bottle counter. */
   throwableBottles() {
