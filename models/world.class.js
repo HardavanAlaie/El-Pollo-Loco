@@ -312,26 +312,54 @@ checkCoins() {
   }
 
   /** 🏁 Displays the victory screen and plays win music. */
-  showWinScreen() {
-    if (this._winShown) return;
-    this._winShown = true;
-    this._gameOverPlayed = true;
-    this.stopGameLoopHard(true);
-    this.playSound("audio/win.mp3", true);
-    this.fadeOverlay(0.3);
-    this.drawEndScreen("img/You won, you lost/You win B.png", "#fca534ff");
-  }
+  // showWinScreen() {
+  //   if (this._winShown) return;
+  //   this._winShown = true;
+  //   this._gameOverPlayed = true;
+  //   this.stopGameLoopHard(true);
+  //   this.playSound("audio/win.mp3", true);
+  //   this.fadeOverlay(0.3);
+  //   this.drawEndScreen("img/You won, you lost/You win B.png", "#fca534ff");
+  // }
 
-  /** ☠️ Displays the game over screen. */
-  showGameOverScreen() {
-    if (this._gameOverPlayed) return;
-    this._gameOverPlayed = true;
-    this._winShown = true;
-    this.stopGameLoopHard(false);
-    this.playSound("audio/gameover.mp3", false);
-    this.fadeOverlay(0.8);
-    this.drawEndScreen("img/You won, you lost/Game Over.png", "#fca534ff");
-  }
+  // /** ☠️ Displays the game over screen. */
+  // showGameOverScreen() {
+  //   if (this._gameOverPlayed) return;
+  //   this._gameOverPlayed = true;
+  //   this._winShown = true;
+  //   this.stopGameLoopHard(false);
+  //   this.playSound("audio/gameover.mp3", false);
+  //   this.fadeOverlay(0.8);
+  //   this.drawEndScreen("img/You won, you lost/Game Over.png", "#fca534ff");
+  // }
+  /** 🏁 Displays the victory screen and plays win music. */
+showWinScreen() {
+  if (this._winShown) return;
+  this._winShown = true;
+  this._gameOverPlayed = true;
+
+  this.stopGameLoopHard(true);
+  this.stopAllSounds(); // sicherstellen, dass vorher alles still ist
+  this.setBackgroundMusic("audio/win.mp3", true); // 🔁 loopend
+
+  this.fadeOverlay(0.3);
+  this.drawEndScreen("img/You won, you lost/You win B.png", "#fca534ff");
+}
+
+/** ☠️ Displays the game over screen. */
+showGameOverScreen() {
+  if (this._gameOverPlayed) return;
+  this._gameOverPlayed = true;
+  this._winShown = true;
+
+  this.stopGameLoopHard(false);
+  this.stopAllSounds(); // sicherstellen, dass vorher alles still ist
+  this.setBackgroundMusic("audio/gameover.mp3", false); // ▶️ einmalig
+
+  this.fadeOverlay(0.8);
+  this.drawEndScreen("img/You won, you lost/Game Over.png", "#fca534ff");
+}
+
 
   /** 🌫️ Draws a transparent overlay to darken the screen. */
   fadeOverlay(alpha = 0.2) {
