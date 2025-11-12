@@ -494,6 +494,7 @@ window.restartGame = function restartGame() {
   setTimeout(() => {
     try {
       if (window.world) {
+        world.hardStopEnemyAudio?.();
         world.stopAllSounds?.();
         world.stopBackgroundMusic?.();   // 👈 neu
         world.stopGameLoopHard?.();
