@@ -68,6 +68,7 @@ class EndbossLevel1 extends MovableObject {
    * Plays a scream sound if not already playing.
    */
   scream() {
+    if (this.world?.levelEnded || this.world?._gameOverPlayed || this.world?._winShown) return;
     if (this.isDead() || !soundEnabled || !this.screamSound.paused) return;
     this.isScreaming = true;
     this.screamSound.currentTime = 0;
