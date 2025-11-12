@@ -920,6 +920,26 @@ stopAllSounds() {
   } catch (err) {}
 }
 
+/** 🧨 Hartes Stoppen aller Gegner-Audios (v. a. Boss-Schrei) */
+hardStopEnemyAudio() {
+  try {
+    (this.level?.enemies || []).forEach((e) => {
+      // preferierte Methode
+      if (typeof e.stopScreamSound === 'function') {
+        e.stopScreamSound();
+      }
+      // fallback: direkt an der Audio-Instanz
+      if (e.screamSound) {
+        e.screamSound.pause();
+        e.screamSound.currentTime = 0;
+      }
+      // Flag sicher zurücksetzen
+      if ('isScreaming' in e) e.isScreaming = false;
+    });
+  } catch {}
+}
+
+
 
 /** 🎵 Start/ersetze Hintergrundmusik (z. B. Win/GameOver). */
 setBackgroundMusic(path, loop = false) {
