@@ -504,6 +504,7 @@ showGameOverScreen() {
   stopSoundsMethod(inside) {
     if (inside) {
       // 🧹 Stop all currently playing sounds and clear game intervals
+      this.hardStopEnemyAudio();
       this.stopAllSounds();
       this.stopGameLoopHard();
 
