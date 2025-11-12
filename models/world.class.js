@@ -353,6 +353,7 @@ showGameOverScreen() {
   this._winShown = true;
 
   this.stopGameLoopHard(false);
+  this.hardStopEnemyAudio();
   this.stopAllSounds(); // sicherstellen, dass vorher alles still ist
   this.setBackgroundMusic("audio/gameover.mp3", false); // ▶️ einmalig
 
