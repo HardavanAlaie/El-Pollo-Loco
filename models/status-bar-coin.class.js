@@ -25,6 +25,8 @@ class StatusBarCoin extends StatusBar {
   constructor() {
     super();
     this.loadImages(this.IMAGES);
+    this.percentage = 0;
+    this.img = this.imageCache[this.IMAGES[0]];
     this.setPercentage(0);
     this.x = 40;     // Horizontal screen position
     this.y = 30;     // Vertical screen position
