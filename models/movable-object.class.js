@@ -78,21 +78,39 @@ class MovableObject extends DrawableObject {
   }
 
   /** 🔒 Engere Kollision für Pickups */
+  // isCollidingTight(mo, inset = 12) {
+  //   if (!mo) return false;
+
+  //   const ax1 = this.x + inset;
+  //   const ay1 = this.y + inset;
+  //   const ax2 = this.x + this.width - inset;
+  //   const ay2 = this.y + this.height - inset;
+
+  //   const bx1 = mo.x + inset;
+  //   const by1 = mo.y + inset;
+  //   const bx2 = mo.x + mo.width - inset;
+  //   const by2 = mo.y + mo.height - inset;
+
+  //   return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
+  // }
   isCollidingTight(mo, inset = 12) {
-    if (!mo) return false;
+  if (!mo) return false;
 
-    const ax1 = this.x + inset;
-    const ay1 = this.y + inset;
-    const ax2 = this.x + this.width - inset;
-    const ay2 = this.y + this.height - inset;
+  // Spieler verkleinert
+  const ax1 = this.x + inset;
+  const ay1 = this.y + inset;
+  const ax2 = this.x + this.width - inset;
+  const ay2 = this.y + this.height - inset;
 
-    const bx1 = mo.x + inset;
-    const by1 = mo.y + inset;
-    const bx2 = mo.x + mo.width - inset;
-    const by2 = mo.y + mo.height - inset;
+  // Coin / Item NICHT verkleinern!
+  const bx1 = mo.x;
+  const by1 = mo.y;
+  const bx2 = mo.x + mo.width;
+  const by2 = mo.y + mo.height;
 
-    return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
-  }
+  return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
+}
+
 
 
   /**
