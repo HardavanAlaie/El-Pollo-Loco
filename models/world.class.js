@@ -205,70 +205,70 @@ checkCoins() {
 }
 
   /** 🐔 Handles player–enemy collision logic (jumping on enemies vs taking damage). */
-  // characterColliding(enemy) {
-  //   if (!this.character.isColliding(enemy)) return;
-  //   const isAbove =
-  //     this.character.y + this.character.height <=
-  //       enemy.y + enemy.height * 0.25 && this.character.speedY > 0;
-  //   if (isAbove) {
-  //     enemy.hit?.();
-  //     this.character.jump();
-  //     if (enemy.isDead?.()) enemy.die?.();
-  //   } else {
-  //     this.character.hit();
-  //     this.statusBar.setPercentage(this.character.energy);
-  //   }
-  // }
-//   characterColliding(enemy) {
-//   if (!this.character.isColliding(enemy)) return;
-
-//   const isAbove =
-//     this.character.y + this.character.height <= enemy.y + enemy.height * 0.25 &&
-//     this.character.speedY > 0;
-
-//   if (isAbove) {
-//     // 👇 Boss: 20 Schaden, Chicken: wie gehabt
-//     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-//       enemy.takeDamage?.(20);
-//     } else {
-//       enemy.hit?.();
-//     }
-//     this.character.jump();
-
-//     if (enemy.isDead?.()) enemy.die?.();
-//   } else {
-//     this.character.hit();
-//     this.statusBar.setPercentage(this.character.energy);
-//   }
-// }
-characterColliding(enemy) {
+  characterColliding(enemy) {
+    if (!this.character.isColliding(enemy)) return;
+    const isAbove =
+      this.character.y + this.character.height <=
+        enemy.y + enemy.height * 0.25 && this.character.speedY > 0;
+    if (isAbove) {
+      enemy.hit?.();
+      this.character.jump();
+      if (enemy.isDead?.()) enemy.die?.();
+    } else {
+      this.character.hit();
+      this.statusBar.setPercentage(this.character.energy);
+    }
+  }
+  characterColliding(enemy) {
   if (!this.character.isColliding(enemy)) return;
 
-  // 🧮 Check if the character is clearly above the enemy and currently falling
   const isAbove =
-    this.character.y + this.character.height <= enemy.y + enemy.height * 0.5 && // 0.5 = more forgiving stomp zone
-    this.character.speedY < 0; // falling down (gravity)
+    this.character.y + this.character.height <= enemy.y + enemy.height * 0.25 &&
+    this.character.speedY > 0;
 
   if (isAbove) {
-    // 💥 Damage logic:
-    // Endboss takes 20 HP, chickens use their normal hit() behavior
+    // 👇 Boss: 20 Schaden, Chicken: wie gehabt
     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
       enemy.takeDamage?.(20);
     } else {
       enemy.hit?.();
     }
+    this.character.jump();
 
-    // 🔁 Small bounce instead of a full jump (prevents "double jump in the air")
-    this.character.speedY = 15;
-
-    // ☠️ If enemy is dead after the hit, trigger its die() method
     if (enemy.isDead?.()) enemy.die?.();
   } else {
-    // 😵 Player gets hurt when colliding from the side or below
     this.character.hit();
     this.statusBar.setPercentage(this.character.energy);
   }
 }
+// characterColliding(enemy) {
+//   if (!this.character.isColliding(enemy)) return;
+
+//   // 🧮 Check if the character is clearly above the enemy and currently falling
+//   const isAbove =
+//     this.character.y + this.character.height <= enemy.y + enemy.height * 0.5 && // 0.5 = more forgiving stomp zone
+//     this.character.speedY < 0; // falling down (gravity)
+
+//   if (isAbove) {
+//     // 💥 Damage logic:
+//     // Endboss takes 20 HP, chickens use their normal hit() behavior
+//     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+//       enemy.takeDamage?.(20);
+//     } else {
+//       enemy.hit?.();
+//     }
+
+//     // 🔁 Small bounce instead of a full jump (prevents "double jump in the air")
+//     this.character.speedY = 15;
+
+//     // ☠️ If enemy is dead after the hit, trigger its die() method
+//     if (enemy.isDead?.()) enemy.die?.();
+//   } else {
+//     // 😵 Player gets hurt when colliding from the side or below
+//     this.character.hit();
+//     this.statusBar.setPercentage(this.character.energy);
+//   }
+// }
 
 
 
