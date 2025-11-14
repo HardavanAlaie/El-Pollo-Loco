@@ -56,23 +56,22 @@ class World {
   run() {
     this.gameInterval = setInterval(() => {
       if (this.levelEnded) return;
-
       this.checkCollisions();
       this.checkThrowableObjects();
       this.checkEndbossDefeated();
       this.removeOffscreenEnemies();
       this.checkEndboss1Hit();
-
-      // 💀 Check if player has died
       this.ifPlayerDead();
     }, 200);
   }
 
   // 💀 Check if player has died
   ifPlayerDead() {
-    if (this.character.energy <= 0 &&
+    if (
+      this.character.energy <= 0 &&
       !this.playerDied &&
-      !this.endbossDefeated) {
+      !this.endbossDefeated
+    ) {
       this.playerDied = true;
       this.stopGameLoopHard();
       this.showGameOverScreen();
@@ -105,7 +104,6 @@ class World {
       (e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2
     );
     if (!boss || this.character.energy <= 0) return;
-
     if (this.character.isColliding(boss) && !this.character.isHurtTimer) {
       this.character.hit();
       this.character.isHurtTimer = true;
@@ -114,56 +112,36 @@ class World {
   }
 
   /** 🧴 Manages all throwable objects and checks for enemy collisions. */
-  // checkThrowableObjects() {
-  //   this.throwableObjects = this.throwableObjects.filter((b) => !b.isDead?.());
-
-  //   this.throwableObjects.forEach((bottle) => {
-  //     this.level.enemies.forEach((enemy) => {
-  //       if (!enemy.isDead?.() && bottle.isColliding(enemy)) {
-  //         enemy.hit?.();
-  //         bottle.break?.();
-  //       }
-  //     });
-  //   });
-
-  //   this.throwableBottles();
-  // }
   checkThrowableObjects() {
-  this.throwableObjects = this.throwableObjects.filter((b) => !b.isDead?.());
-
-  this.throwableObjects.forEach((bottle) => {
-    if (bottle.isBroken) return; // safety
-
-    this.level.enemies.forEach((enemy) => {
-      if (bottle.isBroken) return; // wurde bereits an einem Gegner zerbrochen
-      if (!enemy.isDead?.() && bottle.isColliding(enemy)) {
-        // 👇 Boss: exakt 20 Schaden, Chicken: bestehende Logik (hit())
-        if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-          enemy.takeDamage?.(20);
-        } else {
-          enemy.hit?.();
+    this.throwableObjects = this.throwableObjects.filter((b) => !b.isDead?.());
+    this.throwableObjects.forEach((bottle) => {
+      if (bottle.isBroken) return;
+      this.level.enemies.forEach((enemy) => {
+        if (bottle.isBroken) return;
+        if (!enemy.isDead?.() && bottle.isColliding(enemy)) {
+          if (
+            enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+            enemy.takeDamage?.(20);
+          } else {
+            enemy.hit?.();
+          }
+          bottle.break?.();
         }
-        bottle.break?.();
-      }
+      });
     });
-  });
-
-  this.throwableBottles();
-}
-
+    this.throwableBottles();
+  }
 
   /** 🎯 Throws a new bottle when allowed and updates the bottle counter. */
   throwableBottles() {
     if (
-      this.keyboard.D && this.canThrow && this.statusBarBottle.availableBottles > 0
-    ) {
+      this.keyboard.D &&
+      this.canThrow &&
+      this.statusBarBottle.availableBottles > 0) {
       this.canThrow = false;
       this.statusBarBottle.availableBottles--;
       this.statusBarBottle.update?.();
-      const bottle = new ThrowableObject(
-        this.character.x + (this.character.otherDirection ? -30 : 30),
-        this.character.y + 100,
-        this.character.otherDirection);
+      const bottle = new ThrowableObject(this.character.x + (this.character.otherDirection ? -30 : 30), this.character.y + 100, this.character.otherDirection);
       bottle.world = this;
       this.throwableObjects.push(bottle);
       setTimeout(() => (this.canThrow = true), 400);
@@ -171,137 +149,45 @@ class World {
   }
 
   /** 🪙 Checks for player collisions with coins and updates the coin bar. */
-  // checkCoins() {
-  //   this.collectableCoins = this.collectableCoins.filter((coin) => {
-  //     if (this.character.isColliding(coin)) {
-  //       this.statusBarCoin.availableCoins++;
-  //       this.statusBarCoin.update();
-  //       if (soundEnabled) {
-  //         const s = new Audio("audio/coins.mp3");
-  //         s.volume = 0.5;
-  //         s.play().catch(() => {});
-  //       }
-  //       return false;
-  //     }
-  //     return true;
-  //   });
-  // }
-  // Coins einsammeln – TIGHT COLLISION
-checkCoins() {
-  const inset = 10; // feiner einstellen, z.B. 10–16
-  this.collectableCoins = this.collectableCoins.filter((coin) => {
-    if (this.character.isCollidingTight(coin, inset)) {
-      this.statusBarCoin.availableCoins++;
-      this.statusBarCoin.update();
-      if (soundEnabled) {
-        const s = new Audio("audio/coins.mp3");
-        s.volume = 0.5;
-        s.play().catch(() => {});
+  checkCoins() {
+    const inset = 10;
+    this.collectableCoins = this.collectableCoins.filter((coin) => {
+      if (this.character.isCollidingTight(coin, inset)) {
+        this.statusBarCoin.availableCoins++;
+        this.statusBarCoin.update();
+        if (soundEnabled) {
+          const s = new Audio("audio/coins.mp3");
+          s.volume = 0.5;
+          s.play().catch(() => {});
+        }
+        return false;
       }
-      return false; // aus Liste entfernen (eingesammelt)
-    }
-    return true;
-  });
-}
+      return true;
+    });
+  }
 
   /** 🐔 Handles player–enemy collision logic (jumping on enemies vs taking damage). */
-//   characterColliding(enemy) {
-//     if (!this.character.isColliding(enemy)) return;
-//     const isAbove =
-//       this.character.y + this.character.height <=
-//         enemy.y + enemy.height * 0.25 && this.character.speedY > 0;
-//     if (isAbove) {
-//       enemy.hit?.();
-//       this.character.jump();
-//       if (enemy.isDead?.()) enemy.die?.();
-//     } else {
-//       this.character.hit();
-//       this.statusBar.setPercentage(this.character.energy);
-//     }
-//   }
-//   characterColliding(enemy) {
-//   if (!this.character.isColliding(enemy)) return;
-
-//   const isAbove =
-//     this.character.y + this.character.height <= enemy.y + enemy.height * 0.25 &&
-//     this.character.speedY > 0;
-
-//   if (isAbove) {
-//     // 👇 Boss: 20 Schaden, Chicken: wie gehabt
-//     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-//       enemy.takeDamage?.(20);
-//     } else {
-//       enemy.hit?.();
-//     }
-//     this.character.jump();
-
-//     if (enemy.isDead?.()) enemy.die?.();
-//   } else {
-//     this.character.hit();
-//     this.statusBar.setPercentage(this.character.energy);
-//   }
-// }
-// characterColliding(enemy) {
-//   if (!this.character.isColliding(enemy)) return;
-
-//   const isAbove =
-//     this.character.y + this.character.height <=
-//       enemy.y + enemy.height * 0.25 &&
-//     this.character.speedY < 0;   // ⬅️ WICHTIG: jetzt FALLEN statt HOCHSPRINGEN
-
-//   if (isAbove) {
-//     // Boss: 20 Schaden, Chickens: wie bisher
-//     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-//       enemy.takeDamage?.(20);
-//     } else {
-//       enemy.hit?.();
-//     }
-
-//     // Dein altes Verhalten: normaler Sprung nach oben als "Bounce"
-//     this.character.jump();
-
-//     if (enemy.isDead?.()) enemy.die?.();
-//   } else {
-//     this.character.hit();
-//     this.statusBar.setPercentage(this.character.energy);
-//   }
-// }
-characterColliding(enemy) {
-  if (!this.character.isColliding(enemy)) return;
-
-  const charBottom = this.character.y + this.character.height;
-  // obere 40% des Gegners gelten als "Kopfbereich"
-  const enemyHeadZone = enemy.y + enemy.height * 0.4;
-
-  const isAbove = charBottom <= enemyHeadZone;
-
-  if (isAbove) {
-    // 🧠 Erst Charakter sauber auf den Gegner setzen
-    this.character.y = enemy.y - this.character.height;
-
-    // 🔥 Boss: 20 Schaden, Chickens wie bisher
-    if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-      enemy.takeDamage?.(20);
+  characterColliding(enemy) {
+    if (!this.character.isColliding(enemy)) return;
+    const charBottom = this.character.y + this.character.height;
+    const enemyHeadZone = enemy.y + enemy.height * 0.4;
+    const isAbove = charBottom <= enemyHeadZone;
+    if (isAbove) {
+      this.character.y = enemy.y - this.character.height;
+      if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+        enemy.takeDamage?.(20);
+      } else {
+        enemy.hit?.();
+      }
+      this.character.jump();
+      if (enemy.isDead?.()) {
+        enemy.die?.();
+      }
     } else {
-      enemy.hit?.();
+      this.character.hit();
+      this.statusBar.setPercentage(this.character.energy);
     }
-
-    // 🦘 Bounce nach oben
-    this.character.jump();
-
-    // ☠️ Gegner tot? Dann sterben lassen
-    if (enemy.isDead?.()) {
-      enemy.die?.();
-    }
-  } else {
-    // ❌ Seitlich getroffen → Charakter bekommt Schaden
-    this.character.hit();
-    this.statusBar.setPercentage(this.character.energy);
   }
-}
-
-
-
 
   /** 🧴 Handles collisions with collectible bottles. */
   characterCollidingBottle() {
@@ -316,28 +202,11 @@ characterColliding(enemy) {
       return true;
     });
   }
-  // Flaschen einsammeln – TIGHT COLLISION
-// characterCollidingBottle() {
-//   const inset = 12; // gleich wie oben oder separat einstellen
-//   this.collectableBottles = this.collectableBottles.filter((bottle) => {
-//     if (this.character.isCollidingTight(bottle, inset)) {
-//       if (this.statusBarBottle.availableBottles < 5) {
-//         this.statusBarBottle.availableBottles++;
-//         this.statusBarBottle.update();
-//       } else {
-//         this.showBottleLimitMessage();
-//       }
-//       return false; // eingesammelt -> entfernen
-//     }
-//     return true;
-//   });
-// }
 
   /** 🏆 Checks if the Endboss has been defeated. */
   checkEndbossDefeated() {
     const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
     if (!endboss || this.endbossDefeated || this.playerDied) return;
-
     if (endboss.isDead?.()) {
       this.endbossDefeated = true;
       this.stopGameLoopHard(true);
@@ -372,55 +241,29 @@ characterColliding(enemy) {
   }
 
   /** 🏁 Displays the victory screen and plays win music. */
-  // showWinScreen() {
-  //   if (this._winShown) return;
-  //   this._winShown = true;
-  //   this._gameOverPlayed = true;
-  //   this.stopGameLoopHard(true);
-  //   this.playSound("audio/win.mp3", true);
-  //   this.fadeOverlay(0.3);
-  //   this.drawEndScreen("img/You won, you lost/You win B.png", "#fca534ff");
-  // }
+  showWinScreen() {
+    if (this._winShown) return;
+    this._winShown = true;
+    this._gameOverPlayed = true;
+    this.stopGameLoopHard(true);
+    this.stopAllSounds(); // sicherstellen, dass vorher alles still ist
+    this.setBackgroundMusic("audio/win.mp3", true); // 🔁 loopend
+    this.fadeOverlay(0.3);
+    this.drawEndScreen("img/You won, you lost/You win B.png", "#fca534ff");
+  }
 
-  // /** ☠️ Displays the game over screen. */
-  // showGameOverScreen() {
-  //   if (this._gameOverPlayed) return;
-  //   this._gameOverPlayed = true;
-  //   this._winShown = true;
-  //   this.stopGameLoopHard(false);
-  //   this.playSound("audio/gameover.mp3", false);
-  //   this.fadeOverlay(0.8);
-  //   this.drawEndScreen("img/You won, you lost/Game Over.png", "#fca534ff");
-  // }
-  /** 🏁 Displays the victory screen and plays win music. */
-showWinScreen() {
-  if (this._winShown) return;
-  this._winShown = true;
-  this._gameOverPlayed = true;
-
-  this.stopGameLoopHard(true);
-  this.stopAllSounds(); // sicherstellen, dass vorher alles still ist
-  this.setBackgroundMusic("audio/win.mp3", true); // 🔁 loopend
-
-  this.fadeOverlay(0.3);
-  this.drawEndScreen("img/You won, you lost/You win B.png", "#fca534ff");
-}
-
-/** ☠️ Displays the game over screen. */
-showGameOverScreen() {
-  if (this._gameOverPlayed) return;
-  this._gameOverPlayed = true;
-  this._winShown = true;
-
-  this.stopGameLoopHard(false);
-  this.hardStopEnemyAudio();
-  this.stopAllSounds(); // sicherstellen, dass vorher alles still ist
-  this.setBackgroundMusic("audio/gameover.mp3", false); // ▶️ einmalig
-
-  this.fadeOverlay(0.8);
-  this.drawEndScreen("img/You won, you lost/Game Over.png", "#fca534ff");
-}
-
+  /** ☠️ Displays the game over screen. */
+  showGameOverScreen() {
+    if (this._gameOverPlayed) return;
+    this._gameOverPlayed = true;
+    this._winShown = true;
+    this.stopGameLoopHard(false);
+    this.hardStopEnemyAudio();
+    this.stopAllSounds(); // sicherstellen, dass vorher alles still ist
+    this.setBackgroundMusic("audio/gameover.mp3", false); // ▶️ einmalig
+    this.fadeOverlay(0.8);
+    this.drawEndScreen("img/You won, you lost/Game Over.png", "#fca534ff");
+  }
 
   /** 🌫️ Draws a transparent overlay to darken the screen. */
   fadeOverlay(alpha = 0.2) {
@@ -438,7 +281,6 @@ showGameOverScreen() {
     const ctx = this.ctx;
     const canvas = this.canvas;
     const img = new Image();
-
     img.src = imgSrc;
     this.imgOnload(img, canvas, ctx, btnColor);
   }
@@ -469,7 +311,7 @@ showGameOverScreen() {
     };
   }
 
-// 🎯 Center the image horizontally, slightly above the canvas center
+  // 🎯 Center the image horizontally, slightly above the canvas center
   drawImageMethod(ctx, img, canvas, w, h) {
     ctx.drawImage(
       img,
@@ -480,14 +322,15 @@ showGameOverScreen() {
     );
   }
 
-    /**
+  /**
    * 🔁 Draws and animates the restart button shown after win or game over.
    * @param {string} color - Button background color.
    */
   drawRestartButton(color) {
     const ctx = this.ctx;
     const canvas = this.canvas;
-    const w = 250, h = 60;
+    const w = 250,
+      h = 60;
     const x = canvas.width / 2 - w / 2;
     const y = canvas.height / 2;
 
@@ -514,7 +357,6 @@ showGameOverScreen() {
 
     // Save clickable area for restart detection
     this.restartButtonArea = { x, y, width: w, height: h };
-
     // Add click / touch listeners only once
     if (!this.canvasClickListenerAdded) {
       const boundHandler = this.handleRestartClick.bind(this);
@@ -579,26 +421,24 @@ showGameOverScreen() {
   }
 
   /**
- * 🔁 Restarts the game without reloading the page.
- */
- restartGame() {
-  // 🧹 Alte Welt vollständig entfernen
-  if (world) {
-    world.stopAllSounds();
-    world.stopGameLoopHard();
-    world = null;
+   * 🔁 Restarts the game without reloading the page.
+   */
+  restartGame() {
+    // 🧹 Alte Welt vollständig entfernen
+    if (world) {
+      world.stopAllSounds();
+      world.stopGameLoopHard();
+      world = null;
+    }
+
+    // 💡 Canvas zurücksetzen
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // 🕹️ Neues Spiel starten
+    startGame();
   }
-
-  // 💡 Canvas zurücksetzen
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // 🕹️ Neues Spiel starten
-  startGame();
-}
-
-
 
   /**
    * 🎨 Main render loop — draws background, entities, UI and controls.
@@ -644,21 +484,20 @@ showGameOverScreen() {
       this.animationFrame = requestAnimationFrame(() => this.draw());
 
     // --- Nach allen Zeichnungen ---
-if (this.bottleLimitMessage) {
-  this.ctx.save();
-  this.ctx.font = "26px Comic Sans MS";
-  this.ctx.fillStyle = "#fca534";
-  this.ctx.textAlign = "center";
-  this.ctx.shadowColor = "black";
-  this.ctx.shadowBlur = 6;
-  this.ctx.fillText(
-    this.bottleLimitMessage,
-    this.canvas.width / 2,
-    this.canvas.height - 50
-  );
-  this.ctx.restore();
-}
-
+    if (this.bottleLimitMessage) {
+      this.ctx.save();
+      this.ctx.font = "26px Comic Sans MS";
+      this.ctx.fillStyle = "#fca534";
+      this.ctx.textAlign = "center";
+      this.ctx.shadowColor = "black";
+      this.ctx.shadowBlur = 6;
+      this.ctx.fillText(
+        this.bottleLimitMessage,
+        this.canvas.width / 2,
+        this.canvas.height - 50
+      );
+      this.ctx.restore();
+    }
   }
 
   /** 🧩 Draws all objects from a given list to the canvas. */
@@ -756,7 +595,6 @@ if (this.bottleLimitMessage) {
     };
   }
 
-
   // 🔴 Optional: Debug indicator for tap location
   debugIndicatorMethod(x, y) {
     const ctx = this.ctx;
@@ -782,7 +620,8 @@ if (this.bottleLimitMessage) {
   getCanvasCoordinates(e) {
     if (!this.canvasRect) this.updateCanvasRect();
     const { clientX, y, x } = this.canvasCoordinatesMethod(e);
-    const { windowRatio, aspectRatio, pageHeight, pageWidth } = this.windowWidthHeightMethod();
+    const { windowRatio, aspectRatio, pageHeight, pageWidth } =
+      this.windowWidthHeightMethod();
     if (windowRatio > aspectRatio) {
       const displayedWidth = pageHeight * aspectRatio;
       const horizontalOffset = (pageWidth - displayedWidth) / 2;
@@ -836,7 +675,6 @@ if (this.bottleLimitMessage) {
 
     return { windowRatio, aspectRatio, pageHeight, pageWidth };
   }
-
 
   /**
    * 🎮 Draws on-screen circular control buttons for mobile users.
@@ -958,84 +796,81 @@ if (this.bottleLimitMessage) {
   }
 
   /** 🔇 Stops all sounds, both enemy and global audio elements. */
-//   stopAllSounds() {
-//     try {
-//       this.stopEnemySounds();
-//       document.querySelectorAll("audio").forEach((a) => {
-//         a.pause();
-//         a.currentTime = 0;
-//       });
-//     } catch (err) {}
-//   }
-// }
-/** 🔇 Stops all sounds, both enemy and global audio elements. */
-stopAllSounds() {
-  try {
-    this.stopEnemySounds();
-    // alle <audio>-Elemente im DOM stoppen
-    document.querySelectorAll("audio").forEach((a) => {
-      a.pause();
-      a.currentTime = 0;
-    });
-    // explizit hinterlegte Hintergrundmusik stoppen
-    this.stopBackgroundMusic?.();
-  } catch (err) {}
-}
-
-/** 🧨 Hartes Stoppen aller Gegner-Audios (v. a. Boss-Schrei) */
-hardStopEnemyAudio() {
-  try {
-    (this.level?.enemies || []).forEach((e) => {
-      // preferierte Methode
-      if (typeof e.stopScreamSound === 'function') {
-        e.stopScreamSound();
-      }
-      // fallback: direkt an der Audio-Instanz
-      if (e.screamSound) {
-        e.screamSound.pause();
-        e.screamSound.currentTime = 0;
-      }
-      // Flag sicher zurücksetzen
-      if ('isScreaming' in e) e.isScreaming = false;
-    });
-  } catch {}
-}
-
-
-
-/** 🎵 Start/ersetze Hintergrundmusik (z. B. Win/GameOver). */
-setBackgroundMusic(path, loop = false) {
-  try {
-    // evtl. laufende BG-Musik stoppen
-    if (this._bgMusic) {
-      this._bgMusic.pause();
-      this._bgMusic.currentTime = 0;
-    }
-    if (!soundEnabled) {
-      this._bgMusic = null;
-      return;
-    }
-    const a = new Audio(path);
-    a.volume = 0.7;
-    a.loop = loop;
-    this._bgMusic = a;
-    a.play().catch(() => {});
-  } catch (e) {
-    console.warn("setBackgroundMusic failed:", e);
+  //   stopAllSounds() {
+  //     try {
+  //       this.stopEnemySounds();
+  //       document.querySelectorAll("audio").forEach((a) => {
+  //         a.pause();
+  //         a.currentTime = 0;
+  //       });
+  //     } catch (err) {}
+  //   }
+  // }
+  /** 🔇 Stops all sounds, both enemy and global audio elements. */
+  stopAllSounds() {
+    try {
+      this.stopEnemySounds();
+      // alle <audio>-Elemente im DOM stoppen
+      document.querySelectorAll("audio").forEach((a) => {
+        a.pause();
+        a.currentTime = 0;
+      });
+      // explizit hinterlegte Hintergrundmusik stoppen
+      this.stopBackgroundMusic?.();
+    } catch (err) {}
   }
-}
 
-/** 🔇 Stoppt nur die hinterlegte Hintergrundmusik (Win/GameOver). */
-stopBackgroundMusic() {
-  try {
-    if (this._bgMusic) {
-      this._bgMusic.pause();
-      this._bgMusic.currentTime = 0;
-    }
-  } catch (e) {
-    console.warn("stopBackgroundMusic failed:", e);
+  /** 🧨 Hartes Stoppen aller Gegner-Audios (v. a. Boss-Schrei) */
+  hardStopEnemyAudio() {
+    try {
+      (this.level?.enemies || []).forEach((e) => {
+        // preferierte Methode
+        if (typeof e.stopScreamSound === "function") {
+          e.stopScreamSound();
+        }
+        // fallback: direkt an der Audio-Instanz
+        if (e.screamSound) {
+          e.screamSound.pause();
+          e.screamSound.currentTime = 0;
+        }
+        // Flag sicher zurücksetzen
+        if ("isScreaming" in e) e.isScreaming = false;
+      });
+    } catch {}
   }
-  this._bgMusic = null;
-}
 
+  /** 🎵 Start/ersetze Hintergrundmusik (z. B. Win/GameOver). */
+  setBackgroundMusic(path, loop = false) {
+    try {
+      // evtl. laufende BG-Musik stoppen
+      if (this._bgMusic) {
+        this._bgMusic.pause();
+        this._bgMusic.currentTime = 0;
+      }
+      if (!soundEnabled) {
+        this._bgMusic = null;
+        return;
+      }
+      const a = new Audio(path);
+      a.volume = 0.7;
+      a.loop = loop;
+      this._bgMusic = a;
+      a.play().catch(() => {});
+    } catch (e) {
+      console.warn("setBackgroundMusic failed:", e);
+    }
+  }
+
+  /** 🔇 Stoppt nur die hinterlegte Hintergrundmusik (Win/GameOver). */
+  stopBackgroundMusic() {
+    try {
+      if (this._bgMusic) {
+        this._bgMusic.pause();
+        this._bgMusic.currentTime = 0;
+      }
+    } catch (e) {
+      console.warn("stopBackgroundMusic failed:", e);
+    }
+    this._bgMusic = null;
+  }
 }
