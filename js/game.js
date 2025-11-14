@@ -7,9 +7,9 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 //let soundEnabled = true;
-let soundEnabled = localStorage.getItem("soundEnabled") === "false" ? false : true;
+let soundEnabled =
+  localStorage.getItem("soundEnabled") === "false" ? false : true;
 let isRestarting = false;
-
 
 /**
  * Starts the game by hiding the start screen and initializing the world.
@@ -22,38 +22,37 @@ function startGame() {
 /**
  * Initializes the canvas, world, and game environment.
  */
-// function init() {
-//   canvas = document.getElementById("canvas");
-//   canvas.width = 720;
-//   canvas.height = 480;
-//   world = new World(canvas, keyboard);
-//   resizeCanvas();
-//   world.updateCanvasRect?.(); // Ensure correct touch area mapping
-// }
 function init(options = {}) {
   canvas = document.getElementById("canvas");
   canvas.width = 720;
   canvas.height = 480;
-
   world = new World(canvas, keyboard);
-
   if (!options.skipResize) {
     resizeCanvas();
   }
   world.updateCanvasRect?.();
 }
 
-
 /**
  * Handles keyboard keydown events for player control.
  */
 window.addEventListener("keydown", (e) => {
   switch (e.keyCode) {
-    case 37: keyboard.LEFT = true; break;   // ← Move left
-    case 38: keyboard.UP = true; break;     // ↑ Jump
-    case 39: keyboard.RIGHT = true; break;  // → Move right
-    case 40: keyboard.DOWN = true; break;   // ↓ (unused but reserved)
-    case 68: keyboard.D = true; break;      // D = Throw bottle
+    case 37:
+      keyboard.LEFT = true;
+      break; // ← Move left
+    case 38:
+      keyboard.UP = true;
+      break; // ↑ Jump
+    case 39:
+      keyboard.RIGHT = true;
+      break; // → Move right
+    case 40:
+      keyboard.DOWN = true;
+      break; // ↓ (unused but reserved)
+    case 68:
+      keyboard.D = true;
+      break; // D = Throw bottle
   }
 });
 
@@ -62,11 +61,21 @@ window.addEventListener("keydown", (e) => {
  */
 window.addEventListener("keyup", (e) => {
   switch (e.keyCode) {
-    case 37: keyboard.LEFT = false; break;
-    case 38: keyboard.UP = false; break;
-    case 39: keyboard.RIGHT = false; break;
-    case 40: keyboard.DOWN = false; break;
-    case 68: keyboard.D = false; break;
+    case 37:
+      keyboard.LEFT = false;
+      break;
+    case 38:
+      keyboard.UP = false;
+      break;
+    case 39:
+      keyboard.RIGHT = false;
+      break;
+    case 40:
+      keyboard.DOWN = false;
+      break;
+    case 68:
+      keyboard.D = false;
+      break;
   }
 });
 
@@ -74,24 +83,6 @@ window.addEventListener("keyup", (e) => {
  * Dynamically resizes the canvas while keeping the 720x480 aspect ratio.
  * Also updates touch button positions after resizing.
  */
-// function resizeCanvas() {
-//   const canvas = document.getElementById("canvas");
-//   if (!canvas) return;
-//   const aspectRatio = 720 / 480;
-//   const windowRatio = window.innerWidth / window.innerHeight;
-//   let newWidth, newHeight;
-//   if (windowRatio > aspectRatio) {
-//     newHeight = window.innerHeight;
-//     newWidth = newHeight * aspectRatio;
-//   } else {
-//     newWidth = window.innerWidth;
-//     newHeight = newWidth / aspectRatio;
-//   }
-//   canvas.style.width = `${newWidth}px`;
-//   canvas.style.height = `${newHeight}px`;
-//   // Update canvas touch bounds for accurate input detection
-//   if (world?.updateCanvasRect) world.updateCanvasRect();
-// }
 function resizeCanvas() {
   if (isRestarting) return; // 👉 während Restart keine Layoutsprünge
 
@@ -104,115 +95,32 @@ function resizeCanvas() {
 
   if (windowRatio > aspectRatio) {
     newHeight = window.innerHeight;
-    newWidth  = newHeight * aspectRatio;
+    newWidth = newHeight * aspectRatio;
   } else {
-    newWidth  = window.innerWidth;
+    newWidth = window.innerWidth;
     newHeight = newWidth / aspectRatio;
   }
 
-  canvas.style.width  = `${newWidth}px`;
+  canvas.style.width = `${newWidth}px`;
   canvas.style.height = `${newHeight}px`;
   world?.updateCanvasRect?.();
 }
 
-
-/**
- * Toggles fullscreen mode for the canvas.
- */
-// function toggleFullscreen() {
-//   const canvas = document.getElementById("canvas");
-//   if (!canvas) return;
-
-//   if (!document.fullscreenElement) {
-//     canvas.requestFullscreen().catch((err) =>
-//       console.error(`Fullscreen error: ${err.message}`)
-//     );
-//   } else {
-//     document.exitFullscreen();
-//   }
-// }
-/**
- * Toggles fullscreen mode for the canvas.
- */
-// function toggleFullscreen() {
-//   const canvas = document.getElementById("canvas");
-//   if (!canvas) return;
-
-//   try {
-//     if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-//       // ✅ Use correct API depending on browser
-//       if (canvas.requestFullscreen) {
-//         canvas.requestFullscreen();
-//       } else if (canvas.webkitRequestFullscreen) {
-//         canvas.webkitRequestFullscreen(); // Safari fallback
-//       }
-//     } else {
-//       if (document.exitFullscreen) {
-//         document.exitFullscreen();
-//       } else if (document.webkitExitFullscreen) {
-//         document.webkitExitFullscreen(); // Safari fallback
-//       }
-//     }
-//   } catch (err) {
-//     console.warn("Fullscreen permission denied:", err);
-//   }
-// }
-/**
- * 🖥️ Safely toggles fullscreen mode for the canvas (with browser fallbacks).
- */
-// function toggleFullscreen() {
-//   const canvas = document.getElementById("canvas");
-//   if (!canvas) return;
-
-//   // Use vendor-prefixed APIs for Safari compatibility
-//   const doc = document;
-//   const isFullscreen = doc.fullscreenElement || doc.webkitFullscreenElement;
-
-//   try {
-//     if (!isFullscreen) {
-//       const requestFullscreen =
-//         canvas.requestFullscreen ||
-//         canvas.webkitRequestFullscreen ||
-//         canvas.msRequestFullscreen;
-
-//       if (requestFullscreen) {
-//         // ✅ Important: return the Promise to properly catch rejections
-//         return requestFullscreen.call(canvas).catch((err) => {
-//           console.warn("Fullscreen permission check failed:", err.message);
-//         });
-//       } else {
-//         console.warn("Fullscreen API not supported by this browser.");
-//       }
-//     } else {
-//       const exitFullscreen =
-//         doc.exitFullscreen ||
-//         doc.webkitExitFullscreen ||
-//         doc.msExitFullscreen;
-
-//       if (exitFullscreen) exitFullscreen.call(doc);
-//     }
-//   } catch (err) {
-//     console.warn("Fullscreen could not be activated:", err.message);
-//   }
-// }
 /**
  * 🖥️ Safely toggles fullscreen mode for the canvas (with icon auto-update)
  */
 function toggleFullscreen() {
   const canvas = document.getElementById("canvas");
   if (!canvas) return;
-
   const doc = document;
   const isFullscreen = doc.fullscreenElement || doc.webkitFullscreenElement;
   const fullBtn = document.getElementById("fullscreen-btn");
-
   if (!isFullscreen) {
     // 🟢 Enter fullscreen (desktop + Safari fallback)
     const requestFullscreen =
       canvas.requestFullscreen ||
       canvas.webkitRequestFullscreen ||
       canvas.msRequestFullscreen;
-
     if (requestFullscreen) {
       requestFullscreen.call(canvas).catch((err) => {
         console.warn("Fullscreen permission check failed:", err.message);
@@ -221,27 +129,12 @@ function toggleFullscreen() {
   } else {
     // 🔴 Exit fullscreen
     const exitFullscreen =
-      doc.exitFullscreen ||
-      doc.webkitExitFullscreen ||
-      doc.msExitFullscreen;
+      doc.exitFullscreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
 
     if (exitFullscreen) exitFullscreen.call(doc);
   }
 }
 
-
-
-
-/**
- * Toggles game sound on/off and updates the UI button.
- */
-// function toggleSound() {
-//   soundEnabled = !soundEnabled;
-//   if (world?.toggleSound) world.toggleSound(soundEnabled);
-
-//   const soundBtn = document.getElementById("sound-btn");
-//   if (soundBtn) soundBtn.textContent = soundEnabled ? "🔊" : "🔇";
-// }
 /**
  * 🔊 Toggles sound on/off and saves the preference in localStorage.
  */
@@ -259,19 +152,6 @@ function toggleSound() {
   if (soundBtn) soundBtn.textContent = soundEnabled ? "🔊" : "🔇";
 }
 
-// /**
-//  * Displays the instructions overlay.
-//  */
-// function showInstructions() {
-//   document.getElementById("instructions-overlay")?.classList.remove("hidden");
-// }
-
-// /**
-//  * Hides the instructions overlay.
-//  */
-// function hideInstructions() {
-//   document.getElementById("instructions-overlay")?.classList.add("hidden");
-// }
 /**
  * Displays the instructions overlay and darkens background.
  */
@@ -289,19 +169,24 @@ function hideInstructions() {
 }
 
 // 🧩 Event listener for open button
-document.getElementById("instructions-btn")?.addEventListener("click", showInstructions);
+document
+  .getElementById("instructions-btn")
+  ?.addEventListener("click", showInstructions);
 
 // 🧩 Event listener for close button inside overlay
-document.getElementById("close-instructions-btn")?.addEventListener("click", hideInstructions);
+document
+  .getElementById("close-instructions-btn")
+  ?.addEventListener("click", hideInstructions);
 
 // 🖱️ Close overlay when clicking anywhere outside the content box
-document.getElementById("instructions-overlay")?.addEventListener("click", (event) => {
-  // If the click target is NOT the content box → close
-  if (!event.target.closest("#instructions-content")) {
-    hideInstructions();
-  }
-});
-
+document
+  .getElementById("instructions-overlay")
+  ?.addEventListener("click", (event) => {
+    // If the click target is NOT the content box → close
+    if (!event.target.closest("#instructions-content")) {
+      hideInstructions();
+    }
+  });
 
 /**
  * Initializes the start menu, UI buttons, and listeners when the page loads.
@@ -359,7 +244,6 @@ document.addEventListener("fullscreenchange", () => {
   world?.updateCanvasRect?.();
 });
 
-
 /**
  * Handles window resize updates for responsive canvas scaling.
  */
@@ -371,9 +255,13 @@ window.addEventListener("resize", () => {
 /**
  * Fallback UI bindings (ensures buttons always work, even if reloaded).
  */
-document.getElementById("instructions-btn")?.addEventListener("click", showInstructions);
+document
+  .getElementById("instructions-btn")
+  ?.addEventListener("click", showInstructions);
 //document.getElementById("fullscreen-btn")?.addEventListener("click", () => toggleFullscreen(canvas));
-document.getElementById("fullscreen-btn")?.addEventListener("click", toggleFullscreen);
+document
+  .getElementById("fullscreen-btn")
+  ?.addEventListener("click", toggleFullscreen);
 document.getElementById("sound-btn")?.addEventListener("click", toggleSound);
 
 /**
@@ -398,125 +286,52 @@ window.addEventListener("resize", checkOrientation);
 window.addEventListener("orientationchange", checkOrientation);
 window.addEventListener("load", checkOrientation);
 
-// 🔁 Restart the game without reloading the page (global)
-// window.restartGame = function restartGame() {
-//   // Alte Welt sauber stoppen
-//   if (window.world) {
-//     try { world.stopAllSounds?.(); } catch(e) {}
-//     try { world.stopGameLoopHard?.(); } catch(e) {}
-//     window.world = null;
-//   }
-
-//   // Canvas zurücksetzen
-//   const canvas = document.getElementById("canvas");
-//   if (canvas) {
-//     const ctx = canvas.getContext("2d");
-//     ctx.setTransform(1, 0, 0, 1, 0, 0);
-//     ctx.clearRect(0, 0, canvas.width, canvas.height);
-//   }
-
-//   // Optional: Eingaben zurücksetzen
-//   if (!window.keyboard) window.keyboard = new Keyboard();
-
-//   // Neues Spiel direkt starten
-//   init();
-
-//   // 👉 Falls du stattdessen zurück zum Startscreen willst:
-//   // const ctx = canvas.getContext("2d");
-//   // new Menu(canvas, ctx);
-// };
-
 function ensureRestartOverlay() {
-  const el = document.getElementById('restart-fade');
+  const el = document.getElementById("restart-fade");
   return el;
 }
-
-// window.restartGame = function restartGame() {
-//   if (isRestarting) return;
-//   isRestarting = true;
-
-//   const overlay = ensureRestartOverlay();
-//   const canvas  = document.getElementById('canvas');
-
-//   // aktuelle Canvas-Displaygröße merken (damit wir sie beibehalten)
-//   const keepW = canvas.style.width;
-//   const keepH = canvas.style.height;
-
-//   // Fade-Out starten (frame abwarten für CSS-Transition)
-//   overlay.style.display = 'block';
-//   requestAnimationFrame(() => overlay.classList.add('show'));
-
-//   // erst nach kurzer Überblendung wirklich neustarten
-//   setTimeout(() => {
-//     try {
-//       // alte Welt sauber stoppen
-//       if (window.world) {
-//         world.stopAllSounds?.();
-//         world.stopGameLoopHard?.();
-//       }
-
-//       // Canvas resetten (ohne Layoutsprung)
-//       const ctx = canvas.getContext('2d');
-//       ctx.setTransform(1,0,0,1,0,0);
-//       ctx.clearRect(0,0,canvas.width,canvas.height);
-
-//       // init – aber ohne resize (keine Reflow-Jumps)
-//       init({ skipResize: true });
-
-//       // alte Displaygröße wiederherstellen
-//       canvas.style.width  = keepW;
-//       canvas.style.height = keepH;
-//       world.updateCanvasRect?.();
-//     } finally {
-//       // Fade-In
-//       overlay.classList.remove('show');
-//       overlay.addEventListener('transitionend', () => {
-//         overlay.style.display = 'none';
-//         isRestarting = false;
-//       }, { once: true });
-//     }
-//   }, 250); // Dauer des Fade-Outs (muss zur CSS-Transition passen)
-// };
 
 window.restartGame = function restartGame() {
   if (isRestarting) return;
   isRestarting = true;
 
   const overlay = ensureRestartOverlay();
-  const canvas  = document.getElementById('canvas');
+  const canvas = document.getElementById("canvas");
 
   const keepW = canvas.style.width;
   const keepH = canvas.style.height;
 
-  overlay.style.display = 'block';
-  requestAnimationFrame(() => overlay.classList.add('show'));
+  overlay.style.display = "block";
+  requestAnimationFrame(() => overlay.classList.add("show"));
 
   setTimeout(() => {
     try {
       if (window.world) {
         world.hardStopEnemyAudio?.();
         world.stopAllSounds?.();
-        world.stopBackgroundMusic?.();   // 👈 neu
+        world.stopBackgroundMusic?.(); // 👈 neu
         world.stopGameLoopHard?.();
       }
 
-      const ctx = canvas.getContext('2d');
-      ctx.setTransform(1,0,0,1,0,0);
-      ctx.clearRect(0,0,canvas.width,canvas.height);
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       init({ skipResize: true });
 
-      canvas.style.width  = keepW;
+      canvas.style.width = keepW;
       canvas.style.height = keepH;
       world.updateCanvasRect?.();
     } finally {
-      overlay.classList.remove('show');
-      overlay.addEventListener('transitionend', () => {
-        overlay.style.display = 'none';
-        isRestarting = false;
-      }, { once: true });
+      overlay.classList.remove("show");
+      overlay.addEventListener(
+        "transitionend",
+        () => {
+          overlay.style.display = "none";
+          isRestarting = false;
+        },
+        { once: true }
+      );
     }
   }, 250);
 };
-
-
