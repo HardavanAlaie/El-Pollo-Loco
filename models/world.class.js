@@ -241,60 +241,65 @@ checkCoins() {
 //     this.statusBar.setPercentage(this.character.energy);
 //   }
 // }
-characterColliding(enemy) {
-  if (!this.character.isColliding(enemy)) return;
-
-  const isAbove =
-    this.character.y + this.character.height <=
-      enemy.y + enemy.height * 0.25 &&
-    this.character.speedY < 0;   // ⬅️ WICHTIG: jetzt FALLEN statt HOCHSPRINGEN
-
-  if (isAbove) {
-    // Boss: 20 Schaden, Chickens: wie bisher
-    if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-      enemy.takeDamage?.(20);
-    } else {
-      enemy.hit?.();
-    }
-
-    // Dein altes Verhalten: normaler Sprung nach oben als "Bounce"
-    this.character.jump();
-
-    if (enemy.isDead?.()) enemy.die?.();
-  } else {
-    this.character.hit();
-    this.statusBar.setPercentage(this.character.energy);
-  }
-}
-
 // characterColliding(enemy) {
 //   if (!this.character.isColliding(enemy)) return;
 
-//   // 🧮 Check if the character is clearly above the enemy and currently falling
 //   const isAbove =
-//     this.character.y + this.character.height <= enemy.y + enemy.height * 0.5 && // 0.5 = more forgiving stomp zone
-//     this.character.speedY < 0; // falling down (gravity)
+//     this.character.y + this.character.height <=
+//       enemy.y + enemy.height * 0.25 &&
+//     this.character.speedY < 0;   // ⬅️ WICHTIG: jetzt FALLEN statt HOCHSPRINGEN
 
 //   if (isAbove) {
-//     // 💥 Damage logic:
-//     // Endboss takes 20 HP, chickens use their normal hit() behavior
+//     // Boss: 20 Schaden, Chickens: wie bisher
 //     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
 //       enemy.takeDamage?.(20);
 //     } else {
 //       enemy.hit?.();
 //     }
 
-//     // 🔁 Small bounce instead of a full jump (prevents "double jump in the air")
-//     this.character.speedY = 15;
+//     // Dein altes Verhalten: normaler Sprung nach oben als "Bounce"
+//     this.character.jump();
 
-//     // ☠️ If enemy is dead after the hit, trigger its die() method
 //     if (enemy.isDead?.()) enemy.die?.();
 //   } else {
-//     // 😵 Player gets hurt when colliding from the side or below
 //     this.character.hit();
 //     this.statusBar.setPercentage(this.character.energy);
 //   }
 // }
+characterColliding(enemy) {
+  if (!this.character.isColliding(enemy)) return;
+
+  const charBottom = this.character.y + this.character.height;
+  // obere 40% des Gegners gelten als "Kopfbereich"
+  const enemyHeadZone = enemy.y + enemy.height * 0.4;
+
+  const isAbove = charBottom <= enemyHeadZone;
+
+  if (isAbove) {
+    // 🧠 Erst Charakter sauber auf den Gegner setzen
+    this.character.y = enemy.y - this.character.height;
+
+    // 🔥 Boss: 20 Schaden, Chickens wie bisher
+    if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+      enemy.takeDamage?.(20);
+    } else {
+      enemy.hit?.();
+    }
+
+    // 🦘 Bounce nach oben
+    this.character.jump();
+
+    // ☠️ Gegner tot? Dann sterben lassen
+    if (enemy.isDead?.()) {
+      enemy.die?.();
+    }
+  } else {
+    // ❌ Seitlich getroffen → Charakter bekommt Schaden
+    this.character.hit();
+    this.statusBar.setPercentage(this.character.energy);
+  }
+}
+
 
 
 
