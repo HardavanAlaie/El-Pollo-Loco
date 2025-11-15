@@ -80,14 +80,12 @@ const level1 = (world) => {
 
     // --- Coins (collectables) ---
     [
-      //new CollectableCoin(100, 350),
-      //new CollectableCoin(150, 300),
       new CollectableCoin(200, 300),
-      new CollectableCoin(250, 300),
-      new CollectableCoin(200, 350),
-      new CollectableCoin(250, 350),
-      new CollectableCoin(400, 350),
-      new CollectableCoin(700, 350),
+      new CollectableCoin(300, 300),
+      new CollectableCoin(400, 300),
+      new CollectableCoin(500, 300),
+      new CollectableCoin(600, 300),
+      new CollectableCoin(700, 300),
     ],
 
     // --- Dynamic enemy spawn configuration ---
