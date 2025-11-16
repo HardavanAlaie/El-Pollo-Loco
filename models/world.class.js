@@ -206,6 +206,19 @@ class World {
     }
   }
 
+  stompEnemy(enemy) {
+  this.character.y = enemy.y - this.character.height;
+  this.character.speedY = 30; // bounce
+
+  if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+    enemy.takeDamage?.(20);
+  } else {
+    enemy.hit?.();
+    if (enemy.isDead?.()) enemy.die?.();
+  }
+}
+
+
   /** 🧴 Handles collisions with collectible bottles. */
   characterCollidingBottle() {
     this.collectableBottles = this.collectableBottles.filter((bottle) => {
