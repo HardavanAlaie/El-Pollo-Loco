@@ -168,7 +168,15 @@ class World {
 
   /** 🐔 Handles player–enemy collision logic (jumping on enemies vs taking damage). */
   characterColliding(enemy) {
-    if (!this.character.isColliding(enemy)) return;
+    //if (!this.character.isColliding(enemy)) return;
+    if (this.character.isColliding(enemy)) {
+    if (comingFromAbove) {
+        this.stompEnemy(enemy);
+    } else {
+        this.character.hit();
+    }
+    }
+
     // const charBottom = this.character.y + this.character.height;
     // const enemyHeadZone = enemy.y + enemy.height * 0.4;
     // const isAbove = charBottom <= enemyHeadZone;
