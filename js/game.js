@@ -216,14 +216,6 @@ window.addEventListener("load", () => {
 );
 
 /**
- * Ensures canvas input area updates correctly when entering/exiting fullscreen.
- */
-// document.addEventListener("fullscreenchange", () => {
-//   resizeCanvas();
-//   if (world) world.updateCanvasRect();
-//   setTimeout(() => world?.updateCanvasRect(), 100); // Small delay for layout adjustment
-// });
-/**
  * 🔁 Automatically update the fullscreen button icon
  * whenever the fullscreen state changes.
  */
