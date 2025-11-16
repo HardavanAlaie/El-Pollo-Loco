@@ -169,9 +169,18 @@ class World {
   /** 🐔 Handles player–enemy collision logic (jumping on enemies vs taking damage). */
   characterColliding(enemy) {
     if (!this.character.isColliding(enemy)) return;
+    // const charBottom = this.character.y + this.character.height;
+    // const enemyHeadZone = enemy.y + enemy.height * 0.4;
+    // const isAbove = charBottom <= enemyHeadZone;
     const charBottom = this.character.y + this.character.height;
-    const enemyHeadZone = enemy.y + enemy.height * 0.4;
-    const isAbove = charBottom <= enemyHeadZone;
+    const charOldBottom = this.character.y + this.character.height - this.character.speedY; // vorherige Position
+
+    // Gegner Kopfbereich
+    const enemyTop = enemy.y + enemy.height * 0.2; // enger! 20% statt 40%
+
+    // Spieler muss vorher ÜBER dem Gegner gewesen sein und von oben kommen
+    const comingFromAbove = charOldBottom <= enemyTop && this.character.speedY < 0;
+
     if (isAbove) {
       this.character.y = enemy.y - this.character.height;
       if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
