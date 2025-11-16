@@ -167,44 +167,72 @@ class World {
   }
 
   /** 🐔 Handles player–enemy collision logic (jumping on enemies vs taking damage). */
+  // characterColliding(enemy) {
+  //   //if (!this.character.isColliding(enemy)) return;
+  //   if (this.character.isColliding(enemy)) {
+  //   if (comingFromAbove) {
+  //       this.stompEnemy(enemy);
+  //   } else {
+  //       this.character.hit();
+  //   }
+  //   }
+
+  //   // const charBottom = this.character.y + this.character.height;
+  //   // const enemyHeadZone = enemy.y + enemy.height * 0.4;
+  //   // const isAbove = charBottom <= enemyHeadZone;
+  //   const charBottom = this.character.y + this.character.height;
+  //   const charOldBottom = this.character.y + this.character.height - this.character.speedY; // vorherige Position
+
+  //   // Gegner Kopfbereich
+  //   const enemyTop = enemy.y + enemy.height * 0.2; // enger! 20% statt 40%
+
+  //   // Spieler muss vorher ÜBER dem Gegner gewesen sein und von oben kommen
+  //   const comingFromAbove = charOldBottom <= enemyTop && this.character.speedY < 0;
+
+  //   if (isAbove) {
+  //     this.character.y = enemy.y - this.character.height;
+  //     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+  //       enemy.takeDamage?.(20);
+  //     } else {
+  //       enemy.hit?.();
+  //     }
+  //     this.character.jump();
+  //     if (enemy.isDead?.()) {
+  //       enemy.die?.();
+  //     }
+  //   } else {
+  //     this.character.hit();
+  //     this.statusBar.setPercentage(this.character.energy);
+  //   }
+  // }
   characterColliding(enemy) {
-    //if (!this.character.isColliding(enemy)) return;
-    if (this.character.isColliding(enemy)) {
-    if (comingFromAbove) {
-        this.stompEnemy(enemy);
+  if (!this.character.isColliding(enemy)) return;
+
+  const charBottom = this.character.y + this.character.height;
+  const enemyHeadZone = enemy.y + enemy.height * 0.25; // etwas kleinerer Kopfbereich
+  const isFalling = this.character.speedY < 0;          // Spieler muss fallen
+  const isAbove = charBottom <= enemyHeadZone && isFalling;
+
+  if (isAbove) {
+    // Spieler landet auf dem Gegner
+    this.character.y = enemy.y - this.character.height;
+    this.character.speedY = 30; // kleiner Bounce nach oben
+
+    if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+      enemy.takeDamage?.(20);
     } else {
-        this.character.hit();
-    }
-    }
-
-    // const charBottom = this.character.y + this.character.height;
-    // const enemyHeadZone = enemy.y + enemy.height * 0.4;
-    // const isAbove = charBottom <= enemyHeadZone;
-    const charBottom = this.character.y + this.character.height;
-    const charOldBottom = this.character.y + this.character.height - this.character.speedY; // vorherige Position
-
-    // Gegner Kopfbereich
-    const enemyTop = enemy.y + enemy.height * 0.2; // enger! 20% statt 40%
-
-    // Spieler muss vorher ÜBER dem Gegner gewesen sein und von oben kommen
-    const comingFromAbove = charOldBottom <= enemyTop && this.character.speedY < 0;
-
-    if (isAbove) {
-      this.character.y = enemy.y - this.character.height;
-      if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-        enemy.takeDamage?.(20);
-      } else {
-        enemy.hit?.();
-      }
-      this.character.jump();
+      enemy.hit?.();
       if (enemy.isDead?.()) {
         enemy.die?.();
       }
-    } else {
-      this.character.hit();
-      this.statusBar.setPercentage(this.character.energy);
     }
+  } else {
+    // Seitenkollision → Spieler bekommt Schaden
+    this.character.hit();
+    this.statusBar.setPercentage(this.character.energy);
   }
+}
+
 
   stompEnemy(enemy) {
   this.character.y = enemy.y - this.character.height;

@@ -180,4 +180,15 @@ class Character extends MovableObject {
       .play()
       .catch((e) => console.warn("Sound konnte nicht abgespielt werden:", e));
   }
+
+  applyGravity() {
+  setInterval(() => {
+    if (this.isAboveGround() || this.speedY > 0) {
+      this.y -= this.speedY;
+      this.speedY -= this.acceleration;
+    }
+  }, 1000 / 60);
 }
+
+}
+
