@@ -796,17 +796,6 @@ class World {
   }
 
   /** 🔇 Stops all sounds, both enemy and global audio elements. */
-  //   stopAllSounds() {
-  //     try {
-  //       this.stopEnemySounds();
-  //       document.querySelectorAll("audio").forEach((a) => {
-  //         a.pause();
-  //         a.currentTime = 0;
-  //       });
-  //     } catch (err) {}
-  //   }
-  // }
-  /** 🔇 Stops all sounds, both enemy and global audio elements. */
   stopAllSounds() {
     try {
       this.stopEnemySounds();
