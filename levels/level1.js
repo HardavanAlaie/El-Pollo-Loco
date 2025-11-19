@@ -30,19 +30,17 @@ const level1 = (world) => {
 
   // --- Return a fully configured level instance ---
   return new Level(
-    // --- Enemies ---
     [
       new ChickenSmall(),
       new ChickenSmall(),
       new ChickenNormal(),
       new ChickenNormal(),
-      boss, // Final boss
+      boss, 
     ],
 
     // --- Clouds ---
     [new Cloud(), new Cloud(), new Cloud()],
 
-    // --- Background layers ---
     [
       // Layer 1
       new BackgroundObject("img/5_background/layers/air.png", 0),
@@ -92,9 +90,9 @@ const level1 = (world) => {
     {
       spawnConfig: [
         {
-          type: ChickenSmall, // Enemy type
-          maxCount: 4,        // Maximum number allowed
-          interval: 3000,     // Spawn every 3 seconds
+          type: ChickenSmall, 
+          maxCount: 4,        
+          interval: 3000,     
           condition: (level) =>
             level.enemies.some((e) => e instanceof EndbossLevel1 && !e.isDead()), // Spawn only if boss alive
         },
