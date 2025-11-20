@@ -24,7 +24,6 @@ function generateRandomBottles(count, xMin, xMax, yMin, yMax) {
  * @returns {Level} Configured Level 1 instance.
  */
 const level1 = (world) => {
-  // --- Boss setup ---
   const boss = new EndbossLevel1();
   boss.world = world;
 
@@ -38,35 +37,25 @@ const level1 = (world) => {
       boss, 
     ],
 
-    // --- Clouds ---
     [new Cloud(), new Cloud(), new Cloud()],
 
     [
-      // Layer 1
       new BackgroundObject("img/5_background/layers/air.png", 0),
       new BackgroundObject("img/5_background/layers/3_third_layer/1.png", 0),
       new BackgroundObject("img/5_background/layers/2_second_layer/1.png", 0),
       new BackgroundObject("img/5_background/layers/1_first_layer/1.png", 0),
-
-      // Layer 2
       new BackgroundObject("img/5_background/layers/air.png", 719),
       new BackgroundObject("img/5_background/layers/3_third_layer/2.png", 719),
       new BackgroundObject("img/5_background/layers/2_second_layer/2.png", 719),
       new BackgroundObject("img/5_background/layers/1_first_layer/2.png", 719),
-
-      // Layer -1 (to left side)
       new BackgroundObject("img/5_background/layers/air.png", -720),
       new BackgroundObject("img/5_background/layers/3_third_layer/2.png", -720),
       new BackgroundObject("img/5_background/layers/2_second_layer/2.png", -720),
       new BackgroundObject("img/5_background/layers/1_first_layer/2.png", -720),
-
-      // Layer 3
       new BackgroundObject("img/5_background/layers/air.png", 719 * 2),
       new BackgroundObject("img/5_background/layers/3_third_layer/1.png", 719 * 2),
       new BackgroundObject("img/5_background/layers/2_second_layer/1.png", 719 * 2),
       new BackgroundObject("img/5_background/layers/1_first_layer/1.png", 719 * 2),
-
-      // Layer 4
       new BackgroundObject("img/5_background/layers/air.png", 719 * 3),
       new BackgroundObject("img/5_background/layers/3_third_layer/2.png", 719 * 3),
       new BackgroundObject("img/5_background/layers/2_second_layer/2.png", 719 * 3),
