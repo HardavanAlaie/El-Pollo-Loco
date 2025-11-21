@@ -677,6 +677,21 @@ class World {
   }
 
   /**
+   * 📱 Returns true on mobile/tablet (coarse pointer) or small viewports.
+   */
+  isMobileOrTablet() {
+    // Uses pointer type and viewport width as heuristic
+    const isCoarsePointer =
+      window.matchMedia &&
+      window.matchMedia("(pointer: coarse)").matches;
+
+    const isNarrowScreen = window.innerWidth <= 1024;
+
+    return isCoarsePointer || isNarrowScreen;
+  }
+
+
+  /**
    * 🎮 Draws on-screen circular control buttons for mobile users.
    * Includes movement, jump, and throw controls.
    */
