@@ -695,7 +695,83 @@ class World {
    * 🎮 Draws on-screen circular control buttons for mobile users.
    * Includes movement, jump, and throw controls.
    */
+  // drawMobileControls() {
+  //   const ctx = this.ctx;
+  //   const w = this.canvas.width;
+  //   const h = this.canvas.height;
+  //   const size = 60;
+  //   const margin = 20;
+
+  //   // Define button positions relative to canvas size
+  //   this.leftBtnArea = {
+  //     x: margin,
+  //     y: h - size - margin,
+  //     width: size,
+  //     height: size,
+  //     label: "⬅️",
+  //   };
+  //   this.rightBtnArea = {
+  //     x: margin + size + 20,
+  //     y: h - size - margin,
+  //     width: size,
+  //     height: size,
+  //     label: "➡️",
+  //   };
+  //   this.jumpBtnArea = {
+  //     x: w - size * 2 - 40,
+  //     y: h - size - margin,
+  //     width: size,
+  //     height: size,
+  //     label: "⤴️",
+  //   };
+  //   this.throwBtnArea = {
+  //     x: w - size - margin,
+  //     y: h - size - margin,
+  //     width: size,
+  //     height: size,
+  //     label: "🧴",
+  //   };
+
+  //   // Draw each button with consistent style
+  //   [
+  //     this.leftBtnArea,
+  //     this.rightBtnArea,
+  //     this.jumpBtnArea,
+  //     this.throwBtnArea,
+  //   ].forEach((b) => {
+  //     ctx.save();
+  //     ctx.fillStyle = "#fca534ff";
+  //     ctx.beginPath();
+  //     ctx.arc(
+  //       b.x + b.width / 2,
+  //       b.y + b.height / 2,
+  //       b.width / 2,
+  //       0,
+  //       Math.PI * 2
+  //     );
+  //     ctx.fill();
+  //     ctx.fillStyle = "white";
+  //     ctx.font = `${Math.floor(b.width / 2)}px Comic Sans MS`;
+  //     ctx.textAlign = "center";
+  //     ctx.textBaseline = "middle";
+  //     ctx.fillText(b.label, b.x + b.width / 2, b.y + b.height / 2);
+  //     ctx.restore();
+  //   });
+  // }
+    /**
+   * 🎮 Draws on-screen circular control buttons for mobile users.
+   * Includes movement, jump, and throw controls.
+   */
   drawMobileControls() {
+    // ❌ Desktop: don't draw mobile controls
+    if (!this.isMobileOrTablet()) {
+      this.leftBtnArea  = null;
+      this.rightBtnArea = null;
+      this.jumpBtnArea  = null;
+      this.throwBtnArea = null;
+      return;
+    }
+
     const ctx = this.ctx;
     const w = this.canvas.width;
     const h = this.canvas.height;
@@ -758,6 +834,7 @@ class World {
       ctx.restore();
     });
   }
+
 
   /**
    * 🧩 Utility: checks if a point (x,y) is inside a button’s area.
