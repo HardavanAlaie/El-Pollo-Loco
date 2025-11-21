@@ -8,9 +8,9 @@ class EndbossLevel1 extends MovableObject {
   y = 240;
   width = 200;
   height = 200;
-  alertDistance = 400; // Distance at which the boss detects the player
+  alertDistance = 550; // Distance at which the boss detects the player
   speed = 0.5;         // Normal walking speed
-  aggroSpeed = 1.5;    // Faster speed when aggressive
+  aggroSpeed = 2.1;    // Faster speed when aggressive
   isAggressive = false; // Whether the boss is in aggressive mode
   attackMode = false;   // Whether the boss is currently attacking
   isScreaming = false;  // Prevents multiple screams at once
