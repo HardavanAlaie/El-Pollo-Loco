@@ -99,6 +99,9 @@ class Menu {
 
     // Check if the click is inside a button hitbox
     this.buttonHitbox(finalX, finalY);
+
+        if (this.impressumBtnArea && this.isInsideButton(x, y, this.impressumBtnArea))
+        showImpressum();
   }
 
   handleClickVars(event) {
