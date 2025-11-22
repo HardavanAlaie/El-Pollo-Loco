@@ -194,4 +194,33 @@ handleHover(event) {
     this.buttons = {};
     this.canvas.removeEventListener("click", this.clickHandler);
   }
+
+
+drawImpressumButton() {
+    const ctx = this.ctx;
+    const w = this.canvas.width;
+    const h = this.canvas.height;
+
+    const btnWidth = 150;
+    const btnHeight = 40;
+
+    const x = (w - btnWidth) / 2; // zentriert
+    const y = h - btnHeight - 20; // 20px vom unteren Rand
+
+    // speichern für Klickerkennung
+    this.impressumBtnArea = { x, y, width: btnWidth, height: btnHeight };
+
+    // zeichnen
+    ctx.save();
+    ctx.fillStyle = "#fca534ff";
+    ctx.roundRect(x, y, btnWidth, btnHeight, 12);
+    ctx.fill();
+
+    ctx.fillStyle = "white";
+    ctx.font = "20px Comic Sans MS";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("Impressum", x + btnWidth / 2, y + btnHeight / 2);
+    ctx.restore();
+}
 }
