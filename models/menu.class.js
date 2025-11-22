@@ -39,6 +39,7 @@ class Menu {
         "start"
       );
       this.buttons = { startBtn };
+      this.drawImpressumButton();
     };
   }
 
