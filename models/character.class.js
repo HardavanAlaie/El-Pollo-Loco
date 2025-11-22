@@ -6,6 +6,7 @@ class Character extends MovableObject {
   energy = 100;
   otherDirection = false;
   isHurtTimer = false;
+  lastActionTime = Date.now();
 
   IMAGES_WALKING = Array.from({ length: 6 },(_, i) => `img/2_character_pepe/2_walk/W-2${i + 1}.png`);
   IMAGES_IDLE = Array.from({ length: 10 },(_, i) => `img/2_character_pepe/1_idle/idle/I-${i + 1}.png`);
