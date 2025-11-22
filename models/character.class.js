@@ -183,10 +183,10 @@ animationIntervalMethod() {
     } else if (isMoving) {
       // läuft
       this.playAnimation(this.IMAGES_WALKING);
-    } else if (inactiveMs >= 60000) {
+    } else if (inactiveMs >= 30000) {
       // 60 Sekunden nichts gemacht → Long Idle
       this.playAnimation(this.IMAGES_LONG_IDLE);
-    } else if (inactiveMs >= 5000) {
+    } else if (inactiveMs >= 10000) {
       // 5 Sekunden nichts gemacht → normale Idle-Animation
       this.playAnimation(this.IMAGES_IDLE);
     } else {
