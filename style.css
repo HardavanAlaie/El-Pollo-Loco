@@ -228,7 +228,7 @@ h1 {
 
 .rotate-message {
   background: #fca534;
-  padding: 20px 30px;
+  margin-right: 40px;
   border-radius: 15px;
   box-shadow: 0 0 20px #000;
   animation: pulse 1.5s infinite ease-in-out;
@@ -259,4 +259,8 @@ h1 {
 #restart-fade.show {
   opacity: .9;           /* leicht abdunkeln */
   pointer-events: auto;
+}
+
+#canvas.restart-hover {
+  cursor: pointer !important;
 }
