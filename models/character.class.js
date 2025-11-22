@@ -147,24 +147,55 @@ class Character extends MovableObject {
   //       );
   //   }, 80);
   // }
-  animationIntervalMethod() {
+//   animationIntervalMethod() {
+//   this.animationInterval = setInterval(() => {
+//     if (this.energy <= 0) {
+//       this.playAnimation(this.IMAGES_DEAD);
+//     } else if (this.isHurt()) {
+//       this.playAnimation(this.IMAGES_HURT);
+//     } 
+//     // 🔽 Nur beim Hochspringen Jump-Animation
+//     else if (this.isAboveGround() && this.speedY > 0) {
+//       this.playAnimation(this.IMAGES_JUMPING);
+//     } else {
+//       // ⬅️/➡️ gedrückt → laufen, sonst idle
+//       const kb = this.world?.keyboard;
+//       const isMoving = kb?.RIGHT || kb?.LEFT;
+//       this.playAnimation(isMoving ? this.IMAGES_WALKING : this.IMAGES_IDLE);
+//     }
+//   }, 80);
+// }
+animationIntervalMethod() {
   this.animationInterval = setInterval(() => {
+    const now = Date.now();
+    const inactiveMs = now - this.lastActionTime; // wie lange schon nichts gemacht?
+
+    const kb = this.world?.keyboard;
+    const isMoving = kb?.RIGHT || kb?.LEFT;
+
     if (this.energy <= 0) {
       this.playAnimation(this.IMAGES_DEAD);
     } else if (this.isHurt()) {
       this.playAnimation(this.IMAGES_HURT);
-    } 
-    // 🔽 Nur beim Hochspringen Jump-Animation
-    else if (this.isAboveGround() && this.speedY > 0) {
+    } else if (this.isAboveGround()) {
+      // ganz normal: solange er in der Luft ist → Jump-Animation
       this.playAnimation(this.IMAGES_JUMPING);
+    } else if (isMoving) {
+      // läuft
+      this.playAnimation(this.IMAGES_WALKING);
+    } else if (inactiveMs >= 60000) {
+      // 60 Sekunden nichts gemacht → Long Idle
+      this.playAnimation(this.IMAGES_LONG_IDLE);
+    } else if (inactiveMs >= 5000) {
+      // 5 Sekunden nichts gemacht → normale Idle-Animation
+      this.playAnimation(this.IMAGES_IDLE);
     } else {
-      // ⬅️/➡️ gedrückt → laufen, sonst idle
-      const kb = this.world?.keyboard;
-      const isMoving = kb?.RIGHT || kb?.LEFT;
-      this.playAnimation(isMoving ? this.IMAGES_WALKING : this.IMAGES_IDLE);
+      // < 5 Sekunden still: neutrales Standbild (erste Idle-Grafik)
+      this.img = this.imageCache[this.IMAGES_IDLE[0]];
     }
   }, 80);
 }
+
 
 
   /**
