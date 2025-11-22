@@ -46,26 +46,25 @@
   </head>
 
   <body>
-    
-      <div id="start-screen"></div>
+    <div id="start-screen"></div>
 
-      <div id="game-wrapper">
-        <canvas id="canvas" width="720" height="480"></canvas>
-        <div id="canvas-buttons">
-          <button id="instructions-btn" title="Anleitung">📖</button>
-          <button id="fullscreen-btn" title="Vollbild">🖥️</button>
-          <button id="sound-btn" title="Sound">🔊</button>
-        </div>
+    <div id="game-wrapper">
+      <canvas id="canvas" width="720" height="480"></canvas>
+      <div id="canvas-buttons">
+        <button id="instructions-btn" title="Anleitung">📖</button>
+        <button id="fullscreen-btn" title="Vollbild">🖥️</button>
+        <button id="sound-btn" title="Sound">🔊</button>
       </div>
+    </div>
 
-      <!-- 📱 Hinweis bei falscher Ausrichtung -->
-      <div id="rotate-overlay" class="hidden">
-        <div class="rotate-message">
-          🔄 Bitte drehe dein Gerät ins Querformat, um zu spielen!
-        </div>
+    <!-- 📱 Hinweis bei falscher Ausrichtung -->
+    <div id="rotate-overlay" class="hidden">
+      <div class="rotate-message">
+        🔄 Bitte drehe dein Gerät ins Querformat, um zu spielen!
       </div>
+    </div>
 
-      <!-- <div id="instructions-overlay" class="overlay hidden">
+    <!-- <div id="instructions-overlay" class="overlay hidden">
         <div class="overlay-content">
           <h2>📖 Anleitung</h2>
           <p>⬅️ / ➡️ – Bewegung</p>
@@ -76,19 +75,39 @@
           <button onclick="hideInstructions()">Schließen</button>
         </div>
       </div> -->
-      <div id="instructions-overlay" class="overlay hidden">
-        <div class="overlay-content" id="instructions-content">
-          <h2>📖 Anleitung</h2>
-          <p>⬅️ / ➡️ – Bewegung</p>
-          <p>⬆️ – Springen</p>
-          <p>D – Flasche werfen</p>
-          <p>🔊 – Sound ein/aus</p>
-          <p>🖥️ – Vollbild ein/aus</p>
-          <button id="close-instructions-btn">Schließen</button>
-        </div>
+    <div id="instructions-overlay" class="overlay hidden">
+      <div class="overlay-content" id="instructions-content">
+        <h2>📖 Anleitung</h2>
+        <p>⬅️ / ➡️ – Bewegung</p>
+        <p>⬆️ – Springen</p>
+        <p>D – Flasche werfen</p>
+        <p>🔊 – Sound ein/aus</p>
+        <p>🖥️ – Vollbild ein/aus</p>
+        <button id="close-instructions-btn">Schließen</button>
       </div>
-    
+    </div>
+
+    <!-- 📄 IMPRESSUM OVERLAY -->
+    <div id="impressum-overlay" class="overlay hidden">
+      <div class="overlay-content" id="impressum-content">
+        <h2>📄 Impressum</h2>
+
+        <p><strong>Verantwortlich nach § 5 TMG:</strong></p>
+        <p>
+          Vorname Nachname<br />
+          Musterstraße 1<br />
+          12345 Musterstadt<br />
+          Deutschland
+        </p>
+
+        <p>
+          <strong>Kontakt:</strong><br />
+          E-Mail: deine@mail.de
+        </p>
+
+        <button id="close-impressum-btn">Schließen</button>
+      </div>
+    </div>
   </body>
   <div id="restart-fade"></div>
-
 </html>
