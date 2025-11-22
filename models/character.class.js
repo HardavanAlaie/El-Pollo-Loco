@@ -72,22 +72,59 @@ class Character extends MovableObject {
    * - Updates the camera position to follow the character.
    * The interval runs at 60 frames per second.
    */
+  // moveIntervalMethod() {
+  //   this.moveInterval = setInterval(() => {
+  //     const kb = this.world?.keyboard;
+  //     if (kb?.RIGHT && this.x < this.world.level.level_end_x) {
+  //       this.moveRight();
+  //       this.otherDirection = false;
+  //     }
+  //     if (kb?.LEFT && this.x > 0) {
+  //       this.moveLeft();
+  //       this.otherDirection = true;
+  //     }
+  //     if (kb?.UP && !this.isAboveGround()) this.jump();
+  //     if (kb?.D) this.world.throwableBottles();
+  //     this.world.camera_x = -this.x + 100;
+  //   }, 1000 / 60);
+  // }
   moveIntervalMethod() {
-    this.moveInterval = setInterval(() => {
-      const kb = this.world?.keyboard;
-      if (kb?.RIGHT && this.x < this.world.level.level_end_x) {
-        this.moveRight();
-        this.otherDirection = false;
-      }
-      if (kb?.LEFT && this.x > 0) {
-        this.moveLeft();
-        this.otherDirection = true;
-      }
-      if (kb?.UP && !this.isAboveGround()) this.jump();
-      if (kb?.D) this.world.throwableBottles();
-      this.world.camera_x = -this.x + 100;
-    }, 1000 / 60);
-  }
+  this.moveInterval = setInterval(() => {
+    const kb = this.world?.keyboard;
+    let didAction = false;
+
+    if (kb?.RIGHT && this.x < this.world.level.level_end_x) {
+      this.moveRight();
+      this.otherDirection = false;
+      didAction = true;
+    }
+
+    if (kb?.LEFT && this.x > 0) {
+      this.moveLeft();
+      this.otherDirection = true;
+      didAction = true;
+    }
+
+    if (kb?.UP && !this.isAboveGround()) {
+      this.jump();
+      didAction = true;
+    }
+
+    if (kb?.D) {
+      this.world.throwableBottles();
+      didAction = true;
+    }
+
+    // 👉 Wenn irgendwas passiert ist, oder er gerade in der Luft / verletzt ist,
+    //    gilt das als "aktiv"
+    if (didAction || this.isAboveGround() || this.isHurt()) {
+      this.lastActionTime = Date.now();
+    }
+
+    this.world.camera_x = -this.x + 100;
+  }, 1000 / 60);
+}
+
 
   /**
    * Starts an interval that updates the character's animation based on its current state.
