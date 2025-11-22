@@ -10,7 +10,7 @@ class Character extends MovableObject {
 
   IMAGES_WALKING = Array.from({ length: 6 },(_, i) => `img/2_character_pepe/2_walk/W-2${i + 1}.png`);
   IMAGES_IDLE = Array.from({ length: 10 },(_, i) => `img/2_character_pepe/1_idle/idle/I-${i + 1}.png`);
-  IMAGES_LONG_IDLE = Array.from({ length: 10 },(_, i) => `img/2_character_pepe/1_idle/long_idle/I-1-${i + 1}.png`);
+  IMAGES_LONG_IDLE = Array.from({ length: 10 },(_, i) => `img/2_character_pepe/1_idle/long_idle/I-${i + 11}.png`);
   IMAGES_JUMPING = Array.from({ length: 9 },(_, i) => `img/2_character_pepe/3_jump/J-3${i + 1}.png`);
   IMAGES_HURT = Array.from({ length: 3 },(_, i) => `img/2_character_pepe/4_hurt/H-4${i + 1}.png`);
   IMAGES_DEAD = Array.from({ length: 7 },(_, i) => `img/2_character_pepe/5_dead/D-5${i + 1}.png`);
@@ -183,7 +183,7 @@ animationIntervalMethod() {
     } else if (isMoving) {
       // läuft
       this.playAnimation(this.IMAGES_WALKING);
-    } else if (inactiveMs >= 30000) {
+    } else if (inactiveMs >= 15000) {
       // 60 Sekunden nichts gemacht → Long Idle
       this.playAnimation(this.IMAGES_LONG_IDLE);
     } else if (inactiveMs >= 10000) {
