@@ -357,6 +357,11 @@ class World {
 
     // Save clickable area for restart detection
     this.restartButtonArea = { x, y, width: w, height: h };
+        if (!this.restartHoverListenerAdded) {
+      this.handleRestartHoverBound = this.handleRestartHover.bind(this);
+      canvas.addEventListener("mousemove", this.handleRestartHoverBound);
+      this.restartHoverListenerAdded = true;
+    }
     // Add click / touch listeners only once
     if (!this.canvasClickListenerAdded) {
       const boundHandler = this.handleRestartClick.bind(this);
