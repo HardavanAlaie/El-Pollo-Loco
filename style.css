@@ -261,6 +261,10 @@ h1 {
   pointer-events: auto;
 }
 
+#canvas {
+  cursor: default;
+}
+
 #canvas.restart-hover {
   cursor: pointer !important;
 }
