@@ -76,23 +76,23 @@ const level1 = (world) => {
     ],
 
     // --- Dynamic enemy spawn configuration ---
-    {
-      spawnConfig: [
-        {
-          type: ChickenSmall, 
-          maxCount: 4,        
-          interval: 3000,     
-          condition: (level) =>
-            level.enemies.some((e) => e instanceof EndbossLevel1 && !e.isDead()), // Spawn only if boss alive
-        },
-        {
-          type: ChickenNormal,
-          maxCount: 2,
-          interval: 4000,
-          condition: (level) =>
-            level.enemies.some((e) => e instanceof EndbossLevel1 && !e.isDead()),
-        },
-      ],
-    }
+    // {
+    //   spawnConfig: [
+    //     {
+    //       type: ChickenSmall, 
+    //       maxCount: 4,        
+    //       interval: 3000,     
+    //       condition: (level) =>
+    //         level.enemies.some((e) => e instanceof EndbossLevel1 && !e.isDead()), // Spawn only if boss alive
+    //     },
+    //     {
+    //       type: ChickenNormal,
+    //       maxCount: 2,
+    //       interval: 4000,
+    //       condition: (level) =>
+    //         level.enemies.some((e) => e instanceof EndbossLevel1 && !e.isDead()),
+    //     },
+    //   ],
+    // }
   );
 };
