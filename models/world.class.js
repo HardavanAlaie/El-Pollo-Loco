@@ -402,6 +402,36 @@ class World {
     this.stopSoundsMethod(inside);
   }
 
+    /**
+   * 🖱️ Sets pointer cursor when mouse is over the restart button.
+   */
+  handleRestartHover(e) {
+    if (!this.restartButtonArea || !this.levelEnded) {
+      this.canvas.classList.remove("restart-hover");
+      return;
+    }
+
+    const rect = this.canvas.getBoundingClientRect();
+    const scaleX = this.canvas.width / rect.width;
+    const scaleY = this.canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+
+    const btn = this.restartButtonArea;
+    const inside =
+      x >= btn.x &&
+      x <= btn.x + btn.width &&
+      y >= btn.y &&
+      y <= btn.y + btn.height;
+
+    if (inside) {
+      this.canvas.classList.add("restart-hover");
+    } else {
+      this.canvas.classList.remove("restart-hover");
+    }
+  }
+
+
   /**
    * 🔇 Stops all active sounds and resets the game state when the player
    * clicks inside the restart button area. Used to cleanly restart the game.
