@@ -119,8 +119,19 @@ class Menu {
     // Check if the click is inside a button hitbox
     this.buttonHitbox(finalX, finalY);
 
-        if (this.impressumBtnArea && this.isInsideButton(x, y, this.impressumBtnArea))
-        showImpressum();
+        // if (this.impressumBtnArea && this.isInsideButton(x, y, this.impressumBtnArea))
+        // showImpressum();
+          if (
+    this.impressumBtnArea &&
+    x >= this.impressumBtnArea.x &&
+    x <= this.impressumBtnArea.x + this.impressumBtnArea.width &&
+    y >= this.impressumBtnArea.y &&
+    y <= this.impressumBtnArea.y + this.impressumBtnArea.height
+  ) {
+    if (typeof showImpressum === "function") {
+      showImpressum();
+    }
+  }
   }
 
   handleClickVars(event) {
