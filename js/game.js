@@ -173,6 +173,29 @@ document
     }
   });
 
+function showImpressum() {
+  const overlay = document.getElementById("impressum-overlay");
+  overlay?.classList.remove("hidden");
+}
+
+function hideImpressum() {
+  const overlay = document.getElementById("impressum-overlay");
+  overlay?.classList.add("hidden");
+}
+
+// Close-Button im Overlay
+document.getElementById("close-impressum-btn")
+  ?.addEventListener("click", hideImpressum);
+
+// Klick außerhalb der Box schließt das Overlay
+document.getElementById("impressum-overlay")
+  ?.addEventListener("click", (event) => {
+    if (!event.target.closest("#impressum-content")) {
+      hideImpressum();
+    }
+  });
+
+
 /**
  * Initializes the start menu, UI buttons, and listeners when the page loads.
  */
