@@ -333,24 +333,24 @@ class Menu {
 }
 
 
-  handleImpressumHover(event) {
-    if (!this.impressumBtnArea) return;
+  // handleImpressumHover(event) {
+  //   if (!this.impressumBtnArea) return;
 
-    const rect = this.canvas.getBoundingClientRect();
-    const scaleX = this.canvas.width / rect.width;
-    const scaleY = this.canvas.height / rect.height;
+  //   const rect = this.canvas.getBoundingClientRect();
+  //   const scaleX = this.canvas.width / rect.width;
+  //   const scaleY = this.canvas.height / rect.height;
 
-    const x = (event.clientX - rect.left) * scaleX;
-    const y = (event.clientY - rect.top) * scaleY;
+  //   const x = (event.clientX - rect.left) * scaleX;
+  //   const y = (event.clientY - rect.top) * scaleY;
 
-    const inside =
-      x >= this.impressumBtnArea.x &&
-      x <= this.impressumBtnArea.x + this.impressumBtnArea.width &&
-      y >= this.impressumBtnArea.y &&
-      y <= this.impressumBtnArea.y + this.impressumBtnArea.height;
+  //   const inside =
+  //     x >= this.impressumBtnArea.x &&
+  //     x <= this.impressumBtnArea.x + this.impressumBtnArea.width &&
+  //     y >= this.impressumBtnArea.y &&
+  //     y <= this.impressumBtnArea.y + this.impressumBtnArea.height;
 
-    this.canvas.style.cursor = inside ? "pointer" : "default";
-  }
+  //   this.canvas.style.cursor = inside ? "pointer" : "default";
+  // }
 
   /**
    * 🧹 Clears the entire canvas area.
