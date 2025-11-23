@@ -272,32 +272,66 @@ class Menu {
   //   );
   //   this.canvas.style.cursor = hovering ? "pointer" : "default"; // 🎨 Cursor ändern
   // }
+  // handleHover(event) {
+  //   const rect = this.canvas.getBoundingClientRect();
+  //   const scaleX = this.canvas.width / rect.width;
+  //   const scaleY = this.canvas.height / rect.height;
+
+  //   const x = (event.clientX - rect.left) * scaleX;
+  //   const y = (event.clientY - rect.top) * scaleY;
+
+  //   const overStart =
+  //     this.startBtnArea &&
+  //     x >= this.startBtnArea.x &&
+  //     x <= this.startBtnArea.x + this.startBtnArea.width &&
+  //     y >= this.startBtnArea.y &&
+  //     y <= this.startBtnArea.y + this.startBtnArea.height;
+
+  //   const overImpressum =
+  //     this.impressumBtnArea &&
+  //     x >= this.impressumBtnArea.x &&
+  //     x <= this.impressumBtnArea.x + this.impressumBtnArea.width &&
+  //     y >= this.impressumBtnArea.y &&
+  //     y <= this.impressumBtnArea.y + this.impressumBtnArea.height;
+
+  //   // Wenn irgendein Button getroffen wird → pointer, sonst default
+  //   this.canvas.style.cursor =
+  //     overStart || overImpressum ? "pointer" : "default";
+  // }
   handleHover(event) {
-    const rect = this.canvas.getBoundingClientRect();
-    const scaleX = this.canvas.width / rect.width;
-    const scaleY = this.canvas.height / rect.height;
+  const rect = this.canvas.getBoundingClientRect();
+  const scaleX = this.canvas.width / rect.width;
+  const scaleY = this.canvas.height / rect.height;
 
-    const x = (event.clientX - rect.left) * scaleX;
-    const y = (event.clientY - rect.top) * scaleY;
+  const x = (event.clientX - rect.left) * scaleX;
+  const y = (event.clientY - rect.top) * scaleY;
 
-    const overStart =
-      this.startBtnArea &&
-      x >= this.startBtnArea.x &&
-      x <= this.startBtnArea.x + this.startBtnArea.width &&
-      y >= this.startBtnArea.y &&
-      y <= this.startBtnArea.y + this.startBtnArea.height;
+  let over = false;
 
-    const overImpressum =
-      this.impressumBtnArea &&
-      x >= this.impressumBtnArea.x &&
-      x <= this.impressumBtnArea.x + this.impressumBtnArea.width &&
-      y >= this.impressumBtnArea.y &&
-      y <= this.impressumBtnArea.y + this.impressumBtnArea.height;
-
-    // Wenn irgendein Button getroffen wird → pointer, sonst default
-    this.canvas.style.cursor =
-      overStart || overImpressum ? "pointer" : "default";
+  // 🔹 Erst alle "logischen" Buttons (z.B. Start) prüfen
+  if (this.buttons) {
+    over = Object.values(this.buttons).some(
+      (btn) =>
+        x >= btn.x &&
+        x <= btn.x + btn.width &&
+        y >= btn.y &&
+        y <= btn.y + btn.height
+    );
   }
+
+  // 🔹 Wenn noch kein Treffer: Impressum-Button checken
+  if (!over && this.impressumBtnArea) {
+    const b = this.impressumBtnArea;
+    over =
+      x >= b.x &&
+      x <= b.x + b.width &&
+      y >= b.y &&
+      y <= b.y + b.height;
+  }
+
+  this.canvas.style.cursor = over ? "pointer" : "default";
+}
+
 
   handleImpressumHover(event) {
     if (!this.impressumBtnArea) return;
