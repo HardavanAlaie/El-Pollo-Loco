@@ -27,20 +27,32 @@ class Menu {
    * @param {HTMLCanvasElement} canvas - The main game canvas.
    * @param {CanvasRenderingContext2D} ctx - The canvas 2D rendering context.
    */
+  // constructor(canvas, ctx) {
+  //   this.canvas = canvas;
+  //   this.ctx = ctx;
+  //   this.buttons = {};
+  //   this.clickHandler = this.handleClick.bind(this);
+  //   this.canvas.addEventListener("click", this.clickHandler);
+  //   // 🖱️ Cursor-Wechsel hinzufügen
+  //   this.canvas.addEventListener("mousemove", this.handleHover.bind(this));
+  //   this.canvas.addEventListener("mousemove", this.handleImpressumHover.bind(this));
+  //   this.drawStartScreen();
+  // }
   constructor(canvas, ctx) {
-    this.canvas = canvas;
-    this.ctx = ctx;
-    this.buttons = {};
-    this.clickHandler = this.handleClick.bind(this);
-    this.canvas.addEventListener("click", this.clickHandler);
-    // 🖱️ Cursor-Wechsel hinzufügen
-    this.canvas.addEventListener("mousemove", this.handleHover.bind(this));
-    this.canvas.addEventListener(
-      "mousemove",
-      this.handleImpressumHover.bind(this)
-    );
-    this.drawStartScreen();
-  }
+  this.canvas = canvas;
+  this.ctx = ctx;
+  this.buttons = {};
+
+  // 🔹 Handlers einmal binden, damit wir sie auch wieder entfernen können
+  this.clickHandler = this.handleClick.bind(this);
+  this.hoverHandler = this.handleHover.bind(this);
+
+  this.canvas.addEventListener("click", this.clickHandler);
+  this.canvas.addEventListener("mousemove", this.hoverHandler);
+
+  this.drawStartScreen();
+}
+
 
   /**
    * 🎨 Draws the start screen with background and start button.
