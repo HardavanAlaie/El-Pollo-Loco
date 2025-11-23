@@ -51,14 +51,22 @@ class Menu {
       // Draw background image
       this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
       // Create a "Start" button
-      const startBtn = this.drawButton(
-        "Start",
-        this.canvas.width / 13,
-        40,
-        "#fca534ff",
-        "start"
-      );
-      this.buttons = { startBtn };
+      // const startBtn = this.drawButton(
+      //   "Start",
+      //   this.canvas.width / 13,
+      //   40,
+      //   "#fca534ff",
+      //   "start"
+      // );
+      // this.buttons = { startBtn };
+      this.startBtnArea = this.drawButton(
+  "Start",
+  this.canvas.width / 13,
+  40,
+  "#fca534ff",
+  "start"
+);
+
       this.drawImpressumButton();
     };
   }
