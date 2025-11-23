@@ -36,6 +36,7 @@ class Menu {
     this.canvas.addEventListener("click", this.clickHandler);
     // 🖱️ Cursor-Wechsel hinzufügen
     this.canvas.addEventListener("mousemove", this.handleHover.bind(this));
+    this.canvas.addEventListener("mousemove", this.handleImpressumHover.bind(this));
     this.drawStartScreen();
   }
 
@@ -211,6 +212,26 @@ handleHover(event) {
   );  
   this.canvas.style.cursor = hovering ? "pointer" : "default"; // 🎨 Cursor ändern
 }
+
+handleImpressumHover(event) {
+  if (!this.impressumBtnArea) return;
+
+  const rect = this.canvas.getBoundingClientRect();
+  const scaleX = this.canvas.width / rect.width;
+  const scaleY = this.canvas.height / rect.height;
+
+  const x = (event.clientX - rect.left) * scaleX;
+  const y = (event.clientY - rect.top) * scaleY;
+
+  const inside =
+    x >= this.impressumBtnArea.x &&
+    x <= this.impressumBtnArea.x + this.impressumBtnArea.width &&
+    y >= this.impressumBtnArea.y &&
+    y <= this.impressumBtnArea.y + this.impressumBtnArea.height;
+
+  this.canvas.style.cursor = inside ? "pointer" : "default";
+}
+
 
 
   /**
