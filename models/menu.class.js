@@ -362,11 +362,19 @@ class Menu {
   /**
    * 🗑️ Removes menu event listeners and clears buttons.
    */
+  // destroy() {
+  //   this.clear();
+  //   this.buttons = {};
+  //   this.canvas.removeEventListener("click", this.clickHandler);
+  // }
   destroy() {
-    this.clear();
-    this.buttons = {};
-    this.canvas.removeEventListener("click", this.clickHandler);
-  }
+  this.clear();
+  this.buttons = {};
+  this.canvas.removeEventListener("click", this.clickHandler);
+  this.canvas.removeEventListener("mousemove", this.hoverHandler);
+  this.canvas.style.cursor = "default";
+}
+
 
   drawImpressumButton() {
     const ctx = this.ctx;
