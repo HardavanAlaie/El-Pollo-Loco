@@ -484,6 +484,8 @@ class World {
     if (this.playerDied) return this.showGameOverScreen();
     if (this.endbossDefeated) return this.showWinScreen();
 
+    this.restartButtonArea = null;
+
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.updateCanvasRect();
 
