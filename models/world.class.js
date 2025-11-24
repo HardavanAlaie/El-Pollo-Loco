@@ -326,51 +326,107 @@ class World {
    * 🔁 Draws and animates the restart button shown after win or game over.
    * @param {string} color - Button background color.
    */
+  // drawRestartButton(color) {
+  //   const ctx = this.ctx;
+  //   const canvas = this.canvas;
+  //   const w = 250,
+  //     h = 60;
+  //   const x = canvas.width / 2 - w / 2;
+  //   const y = canvas.height / 2;
+
+  //   // 🌟 Pulsating glow animation for better visibility
+  //   let pulse = 0;
+  //   const animatePulse = () => {
+  //     if (this.levelEnded) {
+  //       ctx.save();
+  //       ctx.globalAlpha = 0.2 + Math.sin(Date.now() / 400) * 0.2;
+  //       ctx.fillStyle = "#c07512ff";
+  //       ctx.beginPath();
+  //       ctx.roundRect(x - 5, y - 5, w + 10, h + 10, 10);
+  //       ctx.fill();
+  //       ctx.restore();
+  //       // 🔳 Main restart button
+  //       this.mainRestartButtonMethod(ctx, color, x, y, w, h, canvas);
+  //       pulse = requestAnimationFrame(animatePulse);
+  //     } else {
+  //       cancelAnimationFrame(pulse);
+  //     }
+  //   };
+
+  //   animatePulse(); // Initial draw
+
+  //   // Save clickable area for restart detection
+  //   this.restartButtonArea = { x, y, width: w, height: h };
+  //       if (!this.restartHoverListenerAdded) {
+  //     this.handleRestartHoverBound = this.handleRestartHover.bind(this);
+  //     canvas.addEventListener("mousemove", this.handleRestartHoverBound);
+  //     this.restartHoverListenerAdded = true;
+  //   }
+  //   // Add click / touch listeners only once
+  //   if (!this.canvasClickListenerAdded) {
+  //     const boundHandler = this.handleRestartClick.bind(this);
+  //     canvas.addEventListener("click", boundHandler);
+  //     canvas.addEventListener("touchstart", boundHandler, { passive: false });
+  //     canvas.addEventListener("pointerdown", boundHandler);
+  //     this.canvasClickListenerAdded = true;
+  //   }
+  // }
   drawRestartButton(color) {
-    const ctx = this.ctx;
-    const canvas = this.canvas;
-    const w = 250,
-      h = 60;
-    const x = canvas.width / 2 - w / 2;
-    const y = canvas.height / 2;
+  const ctx = this.ctx;
+  const canvas = this.canvas;
+  const w = 250,
+    h = 60;
+  const x = canvas.width / 2 - w / 2;
+  const y = canvas.height / 2;
 
-    // 🌟 Pulsating glow animation for better visibility
-    let pulse = 0;
-    const animatePulse = () => {
-      if (this.levelEnded) {
-        ctx.save();
-        ctx.globalAlpha = 0.2 + Math.sin(Date.now() / 400) * 0.2;
-        ctx.fillStyle = "#c07512ff";
-        ctx.beginPath();
-        ctx.roundRect(x - 5, y - 5, w + 10, h + 10, 10);
-        ctx.fill();
-        ctx.restore();
-        // 🔳 Main restart button
-        this.mainRestartButtonMethod(ctx, color, x, y, w, h, canvas);
-        pulse = requestAnimationFrame(animatePulse);
-      } else {
-        cancelAnimationFrame(pulse);
+  // 🌟 Pulsating glow animation for better visibility
+  const animatePulse = () => {
+    if (this.levelEnded) {
+      ctx.save();
+      ctx.globalAlpha = 0.2 + Math.sin(Date.now() / 400) * 0.2;
+      ctx.fillStyle = "#c07512ff";
+      ctx.beginPath();
+      ctx.roundRect(x - 5, y - 5, w + 10, h + 10, 10);
+      ctx.fill();
+      ctx.restore();
+
+      // 🔳 Main restart button
+      this.mainRestartButtonMethod(ctx, color, x, y, w, h, canvas);
+
+      // 🔁 Frame-Loop merken, damit wir ihn später stoppen können
+      this.restartPulseId = requestAnimationFrame(animatePulse);
+    } else {
+      // ❌ Wenn levelEnded wieder false wäre, Sicherheitshalber stoppen
+      if (this.restartPulseId) {
+        cancelAnimationFrame(this.restartPulseId);
+        this.restartPulseId = null;
       }
-    };
-
-    animatePulse(); // Initial draw
-
-    // Save clickable area for restart detection
-    this.restartButtonArea = { x, y, width: w, height: h };
-        if (!this.restartHoverListenerAdded) {
-      this.handleRestartHoverBound = this.handleRestartHover.bind(this);
-      canvas.addEventListener("mousemove", this.handleRestartHoverBound);
-      this.restartHoverListenerAdded = true;
     }
-    // Add click / touch listeners only once
-    if (!this.canvasClickListenerAdded) {
-      const boundHandler = this.handleRestartClick.bind(this);
-      canvas.addEventListener("click", boundHandler);
-      canvas.addEventListener("touchstart", boundHandler, { passive: false });
-      canvas.addEventListener("pointerdown", boundHandler);
-      this.canvasClickListenerAdded = true;
-    }
+  };
+
+  // Erste Zeichnung starten
+  animatePulse();
+
+  // Klickbare Fläche merken
+  this.restartButtonArea = { x, y, width: w, height: h };
+
+  // Hover-Listener nur einmal registrieren
+  if (!this.restartHoverListenerAdded) {
+    this.handleRestartHoverBound = this.handleRestartHover.bind(this);
+    canvas.addEventListener("mousemove", this.handleRestartHoverBound);
+    this.restartHoverListenerAdded = true;
   }
+
+  // Klick-/Touch-Handler nur einmal registrieren
+  if (!this.canvasClickListenerAdded) {
+    const boundHandler = this.handleRestartClick.bind(this);
+    canvas.addEventListener("click", boundHandler);
+    canvas.addEventListener("touchstart", boundHandler, { passive: false });
+    canvas.addEventListener("pointerdown", boundHandler);
+    this.canvasClickListenerAdded = true;
+  }
+}
+
 
   // 🔳 Main restart button
   mainRestartButtonMethod(ctx, color, x, y, w, h, canvas) {
