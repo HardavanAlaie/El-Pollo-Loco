@@ -996,6 +996,28 @@ class World {
     } catch (err) {}
   }
 
+  /**
+ * 🔁 Stops the restart button animation and removes hover state.
+ * Called before restarting the game to avoid the button staying visible.
+ */
+stopRestartButtonAnimation() {
+  // Animations-Loop abbrechen
+  if (this.restartPulseId) {
+    cancelAnimationFrame(this.restartPulseId);
+    this.restartPulseId = null;
+  }
+
+  // Klickfläche deaktivieren
+  this.restartButtonArea = null;
+
+  // Hover-Listener entfernen
+  if (this.restartHoverListenerAdded && this.handleRestartHoverBound) {
+    this.canvas.removeEventListener("mousemove", this.handleRestartHoverBound);
+    this.restartHoverListenerAdded = false;
+  }
+}
+
+
   /** 🧨 Hartes Stoppen aller Gegner-Audios (v. a. Boss-Schrei) */
   hardStopEnemyAudio() {
     try {
