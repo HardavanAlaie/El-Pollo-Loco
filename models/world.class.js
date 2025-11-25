@@ -571,7 +571,7 @@ class World {
     // 🧹 Alte Welt vollständig entfernen
     if (world) {
       this.canvas?.classList.remove("restart-hover");
-
+      world.stopRestartButtonUI?.();
       world.stopAllSounds();
       world.stopGameLoopHard();
       world = null;
