@@ -442,21 +442,51 @@ class World {
    * 🖱️ Handles clicks on the restart button and reloads the game.
    * @param {MouseEvent|TouchEvent} e
    */
+  // handleRestartClick(e) {
+  //   const rect = this.canvas.getBoundingClientRect();
+  //   const scaleX = this.canvas.width / rect.width;
+  //   const scaleY = this.canvas.height / rect.height;
+  //   const x = (e.clientX - rect.left) * scaleX;
+  //   const y = (e.clientY - rect.top) * scaleY;
+  //   const btn = this.restartButtonArea;
+  //   if (!btn) return;
+  //   const inside =
+  //     x >= btn.x &&
+  //     x <= btn.x + btn.width &&
+  //     y >= btn.y &&
+  //     y <= btn.y + btn.height;
+  //   this.stopSoundsMethod(inside);
+  // }
   handleRestartClick(e) {
-    const rect = this.canvas.getBoundingClientRect();
-    const scaleX = this.canvas.width / rect.width;
-    const scaleY = this.canvas.height / rect.height;
-    const x = (e.clientX - rect.left) * scaleX;
-    const y = (e.clientY - rect.top) * scaleY;
-    const btn = this.restartButtonArea;
-    if (!btn) return;
-    const inside =
-      x >= btn.x &&
-      x <= btn.x + btn.width &&
-      y >= btn.y &&
-      y <= btn.y + btn.height;
-    this.stopSoundsMethod(inside);
+  const rect = this.canvas.getBoundingClientRect();
+  const scaleX = this.canvas.width / rect.width;
+  const scaleY = this.canvas.height / rect.height;
+  const x = (e.clientX - rect.left) * scaleX;
+  const y = (e.clientY - rect.top) * scaleY;
+
+  const btn = this.restartButtonArea;
+  if (!btn) return;
+
+  const inside =
+    x >= btn.x &&
+    x <= btn.x + btn.width &&
+    y >= btn.y &&
+    y <= btn.y + btn.height;
+
+  if (inside) {
+    // 🧨 Sofort die alte Restart-UI abschalten
+    this.stopRestartButtonUI();
+
+    // dann dein bisheriger Restart-Flow:
+    this.stopAllSounds();
+    this.stopGameLoopHard();
+    this._winShown = false;
+    this._gameOverPlayed = false;
+
+    setTimeout(() => restartGame(), 300);
   }
+}
+
 
     /**
    * 🖱️ Sets pointer cursor when mouse is over the restart button.
