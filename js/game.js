@@ -296,7 +296,8 @@ window.restartGame = function restartGame() {
       if (window.world) {
         world.hardStopEnemyAudio?.();
         world.stopAllSounds?.();
-        world.stopBackgroundMusic?.(); // 👈 neu
+        world.stopBackgroundMusic?.();
+        world.stopRestartButtonAnimation?.(); 
         world.stopGameLoopHard?.();
       }
       const ctx = canvas.getContext("2d");
