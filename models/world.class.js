@@ -1017,6 +1017,33 @@ stopRestartButtonAnimation() {
   }
 }
 
+/**
+ * 🧯 Stops the restart button hover/animation and disables its hitbox.
+ * Called before restarting the game so the old button cannot be hovered/clicked anymore.
+ */
+stopRestartButtonUI() {
+  // 🔁 Puls-Animation abbrechen, falls aktiv
+  if (this.restartPulseId) {
+    cancelAnimationFrame(this.restartPulseId);
+    this.restartPulseId = null;
+  }
+
+  // ❌ Klickbereich deaktivieren
+  this.restartButtonArea = null;
+
+  // 🖱️ Hover-Listener entfernen
+  if (this.restartHoverListenerAdded && this.handleRestartHoverBound) {
+    this.canvas.removeEventListener("mousemove", this.handleRestartHoverBound);
+    this.restartHoverListenerAdded = false;
+  }
+
+  // Cursor zurücksetzen
+  if (this.canvas) {
+    this.canvas.style.cursor = "default";
+  }
+}
+
+
 
   /** 🧨 Hartes Stoppen aller Gegner-Audios (v. a. Boss-Schrei) */
   hardStopEnemyAudio() {
