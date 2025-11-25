@@ -688,8 +688,8 @@ class World {
       const { x, y } = this.getCanvasCoordinates(e);
 
       // 🔴 Optional: Debug indicator for tap location
-      this.debugIndicatorMethod(x, y);
-      this.keyboardInsidebuttonMethod(x, y);
+      // this.debugIndicatorMethod(x, y);
+      // this.keyboardInsidebuttonMethod(x, y);
     };
     const handleUp = this.handleUpMethod();
     this.touchButtonsMethod(handleDown, handleUp);
