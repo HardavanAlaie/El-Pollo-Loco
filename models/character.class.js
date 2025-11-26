@@ -147,24 +147,7 @@ class Character extends MovableObject {
   //       );
   //   }, 80);
   // }
-//   animationIntervalMethod() {
-//   this.animationInterval = setInterval(() => {
-//     if (this.energy <= 0) {
-//       this.playAnimation(this.IMAGES_DEAD);
-//     } else if (this.isHurt()) {
-//       this.playAnimation(this.IMAGES_HURT);
-//     } 
-//     // 🔽 Nur beim Hochspringen Jump-Animation
-//     else if (this.isAboveGround() && this.speedY > 0) {
-//       this.playAnimation(this.IMAGES_JUMPING);
-//     } else {
-//       // ⬅️/➡️ gedrückt → laufen, sonst idle
-//       const kb = this.world?.keyboard;
-//       const isMoving = kb?.RIGHT || kb?.LEFT;
-//       this.playAnimation(isMoving ? this.IMAGES_WALKING : this.IMAGES_IDLE);
-//     }
-//   }, 80);
-// }
+
 animationIntervalMethod() {
   this.animationInterval = setInterval(() => {
     const now = Date.now();
