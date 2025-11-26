@@ -134,20 +134,6 @@ class Character extends MovableObject {
    * @method
    * @returns {void}
    */
-  // animationIntervalMethod() {
-  //   this.animationInterval = setInterval(() => {
-  //     if (this.energy <= 0) this.playAnimation(this.IMAGES_DEAD);
-  //     else if (this.isHurt()) this.playAnimation(this.IMAGES_HURT);
-  //     else if (this.isAboveGround()) this.playAnimation(this.IMAGES_JUMPING);
-  //     else
-  //       this.playAnimation(
-  //         this.world?.keyboard?.RIGHT || this.world?.keyboard?.LEFT
-  //           ? this.IMAGES_WALKING
-  //           : this.IMAGES_IDLE
-  //       );
-  //   }, 80);
-  // }
-
 animationIntervalMethod() {
   this.animationInterval = setInterval(() => {
     const now = Date.now();
