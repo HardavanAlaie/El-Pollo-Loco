@@ -13,8 +13,8 @@ class CollectableCoin extends MovableObject {
     this.loadImages(this.IMAGES);
     this.x = x;
     this.y = y;
-    this.width = 40;
-    this.height = 40;
+    this.width = 45;
+    this.height = 45;
     this.animate();
   }
 
