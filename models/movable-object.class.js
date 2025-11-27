@@ -15,14 +15,33 @@ class MovableObject extends DrawableObject {
    * 🪂 Applies gravity to the object.
    * Continuously updates Y position and vertical speed to simulate gravity.
    */
+  // applyGravity() {
+  //   setInterval(() => {
+  //     if (this.isAboveGround() || this.speedY > 0) {
+  //       this.y -= this.speedY;
+  //       this.speedY -= this.acceleration;
+  //     }
+  //   }, 1000 / 25);
+  // }
   applyGravity() {
-    setInterval(() => {
-      if (this.isAboveGround() || this.speedY > 0) {
-        this.y -= this.speedY;
-        this.speedY -= this.acceleration;
+  setInterval(() => {
+    if (this.isAboveGround() || this.speedY > 0) {
+      this.y -= this.speedY;
+      this.speedY -= this.acceleration;
+
+      // ✅ Snap Pepe back to ground level once he lands
+      if (
+        this instanceof Character &&
+        !this.isAboveGround() &&
+        this.speedY <= 0
+      ) {
+        this.y = 185;   // your ground Y for Character
+        this.speedY = 0;
       }
-    }, 1000 / 25);
-  }
+    }
+  }, 1000 / 25);
+}
+
 
   /**
    * ⬆️ Checks whether the object is above the ground.
