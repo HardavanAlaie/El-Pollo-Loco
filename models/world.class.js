@@ -337,36 +337,68 @@ isCoinCollected(coin) {
 //     this.statusBar.setPercentage(c.energy);
 //   }
 // }
+// characterColliding(enemy) {
+//   const c = this.character;
+//   if (!c.isColliding(enemy)) return;
+
+//   const charBottom = c.y + c.height;
+//   const enemyCenterY = enemy.y + enemy.height / 2;
+
+//   // ✅ Stomp-Bedingung: Charakter kommt von oben und fällt
+//   const isStomp =
+//     charBottom <= enemyCenterY &&
+//     c.speedY > 0;
+
+//   if (isStomp) {
+//     // 🧨 Boss Schaden anders als bei normalen Gegnern
+//     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+//       enemy.takeDamage?.(20);
+//     } else {
+//       enemy.hit?.();
+//     }
+
+//     // kleiner Bounce
+//     c.jump();
+
+//     if (enemy.isDead?.()) enemy.die?.();
+//   } else {
+//     // ❌ kein Stomp → der Spieler bekommt Schaden
+//     c.hit();
+//     this.statusBar.setPercentage(c.energy);
+//   }
+// }
 characterColliding(enemy) {
   const c = this.character;
   if (!c.isColliding(enemy)) return;
 
-  const charBottom = c.y + c.height;
+  const charBottom   = c.y + c.height;
   const enemyCenterY = enemy.y + enemy.height / 2;
 
-  // ✅ Stomp-Bedingung: Charakter kommt von oben und fällt
+  // ✅ Stomp: Charakter kommt von oben UND fällt (speedY < 0)
   const isStomp =
     charBottom <= enemyCenterY &&
-    c.speedY > 0;
+    c.speedY < 0; // <-- WICHTIG: fällt nach unten
 
   if (isStomp) {
-    // 🧨 Boss Schaden anders als bei normalen Gegnern
+    // Boss bekommt nur 20 Schaden, normale Gegner wie bisher
     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
       enemy.takeDamage?.(20);
     } else {
       enemy.hit?.();
     }
 
-    // kleiner Bounce
-    c.jump();
+    // kleiner Bounce nach oben
+    c.speedY = 25;                 // nach oben schießen
+    c.y      = enemy.y - c.height; // sauber auf Gegner-Oberseite setzen
 
     if (enemy.isDead?.()) enemy.die?.();
   } else {
-    // ❌ kein Stomp → der Spieler bekommt Schaden
+    // Kein Stomp → Spieler bekommt Schaden
     c.hit();
     this.statusBar.setPercentage(c.energy);
   }
 }
+
 
 
 
