@@ -306,37 +306,68 @@ isCoinCollected(coin) {
   //     this.statusBar.setPercentage(this.character.energy);
   //   }
   // }
-  characterColliding(enemy) {
+//   characterColliding(enemy) {
+//   const c = this.character;
+//   if (!c.isColliding(enemy)) return;
+
+//   const charBottom = c.y + c.height;
+//   //const enemyTop = enemy.y;
+//   const enemyCenterY = enemy.y + enemy.height / 2;
+
+//   // ✅ Stomp-Logik: Charakter muss VON OBEN kommen und fallend sein
+//   const isStomp =
+//     charBottom <= enemyCenterY &&   // bottom of character above enemy center
+//     c.speedY > 0;                   // falling down (jump phase)
+
+//   if (isStomp) {
+//     // 🧨 Boss: 20 damage, Chickens wie bisher
+//     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+//       enemy.takeDamage?.(20);
+//     } else {
+//       enemy.hit?.();
+//     }
+
+//     // kleiner Bounce nach oben
+//     c.jump();
+
+//     if (enemy.isDead?.()) enemy.die?.();
+//   } else {
+//     // ❌ kein Stomp → Spieler bekommt Schaden
+//     c.hit();
+//     this.statusBar.setPercentage(c.energy);
+//   }
+// }
+characterColliding(enemy) {
   const c = this.character;
   if (!c.isColliding(enemy)) return;
 
   const charBottom = c.y + c.height;
-  //const enemyTop = enemy.y;
   const enemyCenterY = enemy.y + enemy.height / 2;
 
-  // ✅ Stomp-Logik: Charakter muss VON OBEN kommen und fallend sein
+  // ✅ Stomp-Bedingung: Charakter kommt von oben und fällt
   const isStomp =
-    charBottom <= enemyCenterY &&   // bottom of character above enemy center
-    c.speedY > 0;                   // falling down (jump phase)
+    charBottom <= enemyCenterY &&
+    c.speedY > 0;
 
   if (isStomp) {
-    // 🧨 Boss: 20 damage, Chickens wie bisher
+    // 🧨 Boss Schaden anders als bei normalen Gegnern
     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
       enemy.takeDamage?.(20);
     } else {
       enemy.hit?.();
     }
 
-    // kleiner Bounce nach oben
+    // kleiner Bounce
     c.jump();
 
     if (enemy.isDead?.()) enemy.die?.();
   } else {
-    // ❌ kein Stomp → Spieler bekommt Schaden
+    // ❌ kein Stomp → der Spieler bekommt Schaden
     c.hit();
     this.statusBar.setPercentage(c.energy);
   }
 }
+
 
 
   /** 🧴 Handles collisions with collectible bottles. */
