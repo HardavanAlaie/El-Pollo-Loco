@@ -285,27 +285,59 @@ isCoinCollected(coin) {
 
 
   /** 🐔 Handles player–enemy collision logic (jumping on enemies vs taking damage). */
+  // characterColliding(enemy) {
+  //   if (!this.character.isColliding(enemy)) return;
+  //   const charBottom = this.character.y + this.character.height;
+  //   const enemyHeadZone = enemy.y + enemy.height * 0.4;
+  //   const isAbove = charBottom <= enemyHeadZone;
+  //   if (isAbove) {
+  //     this.character.y = enemy.y - this.character.height;
+  //     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+  //       enemy.takeDamage?.(20);
+  //     } else {
+  //       enemy.hit?.();
+  //     }
+  //     this.character.jump();
+  //     if (enemy.isDead?.()) {
+  //       enemy.die?.();
+  //     }
+  //   } else {
+  //     this.character.hit();
+  //     this.statusBar.setPercentage(this.character.energy);
+  //   }
+  // }
   characterColliding(enemy) {
-    if (!this.character.isColliding(enemy)) return;
-    const charBottom = this.character.y + this.character.height;
-    const enemyHeadZone = enemy.y + enemy.height * 0.4;
-    const isAbove = charBottom <= enemyHeadZone;
-    if (isAbove) {
-      this.character.y = enemy.y - this.character.height;
-      if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-        enemy.takeDamage?.(20);
-      } else {
-        enemy.hit?.();
-      }
-      this.character.jump();
-      if (enemy.isDead?.()) {
-        enemy.die?.();
-      }
+  const c = this.character;
+  if (!c.isColliding(enemy)) return;
+
+  const charBottom = c.y + c.height;
+  const enemyTop = enemy.y;
+  const enemyCenterY = enemy.y + enemy.height / 2;
+
+  // ✅ Stomp-Logik: Charakter muss VON OBEN kommen und fallend sein
+  const isStomp =
+    charBottom <= enemyCenterY &&   // bottom of character above enemy center
+    c.speedY > 0;                   // falling down (jump phase)
+
+  if (isStomp) {
+    // 🧨 Boss: 20 damage, Chickens wie bisher
+    if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+      enemy.takeDamage?.(20);
     } else {
-      this.character.hit();
-      this.statusBar.setPercentage(this.character.energy);
+      enemy.hit?.();
     }
+
+    // kleiner Bounce nach oben
+    c.jump();
+
+    if (enemy.isDead?.()) enemy.die?.();
+  } else {
+    // ❌ kein Stomp → Spieler bekommt Schaden
+    c.hit();
+    this.statusBar.setPercentage(c.energy);
   }
+}
+
 
   /** 🧴 Handles collisions with collectible bottles. */
   characterCollidingBottle() {
