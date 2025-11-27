@@ -166,6 +166,31 @@ class World {
     });
   }
 
+  /**
+ * 👣 Sehr kleine Hitbox nur für Coin-Einsammeln.
+ * Nutzt die Zentren von Charakter und Coin, damit es optisch passt.
+ */
+coinPickupCollision(coin) {
+  // Mittelpunkt Charakter
+  const cx = this.character.x + this.character.width / 2;
+  const cy = this.character.y + this.character.height / 2;
+
+  // Mittelpunkt Coin
+  const kx = coin.x + coin.width / 2;
+  const ky = coin.y + coin.height / 2;
+
+  // Abstand in X/Y
+  const dx = Math.abs(cx - kx);
+  const dy = Math.abs(cy - ky);
+
+  // Wie "eng" die Einsammel-Zone sein soll:
+  const pickupRadiusX = coin.width * 0.3;   // 30% der Coin-Breite
+  const pickupRadiusY = coin.height * 0.3;  // 30% der Coin-Höhe
+
+  return dx < pickupRadiusX && dy < pickupRadiusY;
+}
+
+
   /** 🐔 Handles player–enemy collision logic (jumping on enemies vs taking damage). */
   characterColliding(enemy) {
     if (!this.character.isColliding(enemy)) return;
