@@ -311,7 +311,7 @@ isCoinCollected(coin) {
   if (!c.isColliding(enemy)) return;
 
   const charBottom = c.y + c.height;
-  const enemyTop = enemy.y;
+  //const enemyTop = enemy.y;
   const enemyCenterY = enemy.y + enemy.height / 2;
 
   // ✅ Stomp-Logik: Charakter muss VON OBEN kommen und fallend sein
