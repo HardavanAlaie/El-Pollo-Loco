@@ -234,7 +234,7 @@ coinPickupCollision(coin) {
 isCoinCollected(coin) {
   if (!coin || !this.character) return false;
 
-  const inset = 8; // etwas Puffer, kannst du bei Bedarf anpassen (5–12)
+  const inset = 12; // etwas Puffer, kannst du bei Bedarf anpassen (5–12)
 
   // Charakter-Box (leicht kleiner)
   const ax1 = this.character.x + inset;
