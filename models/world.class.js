@@ -208,6 +208,32 @@ coinPickupCollision(coin) {
   return dx < pickupRadiusX && dy < pickupRadiusY;
 }
 
+/**
+ * 👣 Kollision für Coins:
+ * - Charakter-Hitbox leicht verkleinert (inset)
+ * - Coin-Hitbox bleibt normal
+ */
+isCoinCollected(coin) {
+  if (!coin || !this.character) return false;
+
+  const inset = 8; // etwas Puffer, kannst du bei Bedarf anpassen (5–12)
+
+  // Charakter-Box (leicht kleiner)
+  const ax1 = this.character.x + inset;
+  const ay1 = this.character.y + inset;
+  const ax2 = this.character.x + this.character.width - inset;
+  const ay2 = this.character.y + this.character.height - inset;
+
+  // Coin-Box (volle Größe)
+  const bx1 = coin.x;
+  const by1 = coin.y;
+  const bx2 = coin.x + coin.width;
+  const by2 = coin.y + coin.height;
+
+  return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
+}
+
+
 
   /** 🐔 Handles player–enemy collision logic (jumping on enemies vs taking damage). */
   characterColliding(enemy) {
