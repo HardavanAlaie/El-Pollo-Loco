@@ -149,22 +149,40 @@ class World {
   }
 
   /** 🪙 Checks for player collisions with coins and updates the coin bar. */
+  // checkCoins() {
+  //   const inset = 10;
+  //   this.collectableCoins = this.collectableCoins.filter((coin) => {
+  //     if (this.character.isCollidingTight(coin, inset)) {
+  //       this.statusBarCoin.availableCoins++;
+  //       this.statusBarCoin.update();
+  //       if (soundEnabled) {
+  //         const s = new Audio("audio/coins.mp3");
+  //         s.volume = 0.5;
+  //         s.play().catch(() => {});
+  //       }
+  //       return false;
+  //     }
+  //     return true;
+  //   });
+  // }
   checkCoins() {
-    const inset = 10;
-    this.collectableCoins = this.collectableCoins.filter((coin) => {
-      if (this.character.isCollidingTight(coin, inset)) {
-        this.statusBarCoin.availableCoins++;
-        this.statusBarCoin.update();
-        if (soundEnabled) {
-          const s = new Audio("audio/coins.mp3");
-          s.volume = 0.5;
-          s.play().catch(() => {});
-        }
-        return false;
+  this.collectableCoins = this.collectableCoins.filter((coin) => {
+    if (this.coinPickupCollision(coin)) {
+      this.statusBarCoin.availableCoins++;
+      this.statusBarCoin.update();
+
+      if (soundEnabled) {
+        const s = new Audio("audio/coins.mp3");
+        s.volume = 0.5;
+        s.play().catch(() => {});
       }
-      return true;
-    });
-  }
+
+      return false; // Coin wurde eingesammelt → aus Liste entfernen
+    }
+    return true;
+  });
+}
+
 
   /**
  * 👣 Sehr kleine Hitbox nur für Coin-Einsammeln.
