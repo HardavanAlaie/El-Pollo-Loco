@@ -231,25 +231,56 @@ coinPickupCollision(coin) {
  * - Charakter-Hitbox leicht verkleinert (inset)
  * - Coin-Hitbox bleibt normal
  */
+// isCoinCollected(coin) {
+//   if (!coin || !this.character) return false;
+
+//   const inset = 12; // etwas Puffer, kannst du bei Bedarf anpassen (5–12)
+
+//   // Charakter-Box (leicht kleiner)
+//   const ax1 = this.character.x + inset;
+//   const ay1 = this.character.y + inset;
+//   const ax2 = this.character.x + this.character.width - inset;
+//   const ay2 = this.character.y + this.character.height - inset;
+
+//   // Coin-Box (volle Größe)
+//   const bx1 = coin.x;
+//   const by1 = coin.y;
+//   const bx2 = coin.x + coin.width;
+//   const by2 = coin.y + coin.height;
+
+//   return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
+// }
+/**
+ * 👣 Coin collision:
+ * - Strongly reduced character hitbox (body only)
+ * - Slightly reduced coin hitbox
+ */
 isCoinCollected(coin) {
   if (!coin || !this.character) return false;
 
-  const inset = 12; // etwas Puffer, kannst du bei Bedarf anpassen (5–12)
+  const c = this.character;
 
-  // Charakter-Box (leicht kleiner)
-  const ax1 = this.character.x + inset;
-  const ay1 = this.character.y + inset;
-  const ax2 = this.character.x + this.character.width - inset;
-  const ay2 = this.character.y + this.character.height - inset;
+  // 🔹 Charakter-Hitbox stark verkleinern (nur Körper, nicht die volle Sprite-Breite)
+  const charPaddingX = c.width * 0.3;      // links & rechts ca. 30% abziehen
+  const charPaddingTop = c.height * 0.2;   // oben etwas weg
+  const charPaddingBottom = c.height * 0.1; // unten ein bisschen weg
 
-  // Coin-Box (volle Größe)
-  const bx1 = coin.x;
-  const by1 = coin.y;
-  const bx2 = coin.x + coin.width;
-  const by2 = coin.y + coin.height;
+  const ax1 = c.x + charPaddingX;
+  const ax2 = c.x + c.width - charPaddingX;
+  const ay1 = c.y + charPaddingTop;
+  const ay2 = c.y + c.height - charPaddingBottom;
 
+  // 🔹 Coin-Hitbox leicht verkleinern
+  const coinPadding = 8; // kannst du z.B. 5–12 testen
+  const bx1 = coin.x + coinPadding;
+  const bx2 = coin.x + coin.width - coinPadding;
+  const by1 = coin.y + coinPadding;
+  const by2 = coin.y + coin.height - coinPadding;
+
+  // Standard-Rect-Kollision
   return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
 }
+
 
 
 
