@@ -165,9 +165,26 @@ class World {
   //     return true;
   //   });
   // }
-  checkCoins() {
+//   checkCoins() {
+//   this.collectableCoins = this.collectableCoins.filter((coin) => {
+//     if (this.coinPickupCollision(coin)) {
+//       this.statusBarCoin.availableCoins++;
+//       this.statusBarCoin.update();
+
+//       if (soundEnabled) {
+//         const s = new Audio("audio/coins.mp3");
+//         s.volume = 0.5;
+//         s.play().catch(() => {});
+//       }
+
+//       return false; // Coin wurde eingesammelt → aus Liste entfernen
+//     }
+//     return true;
+//   });
+// }
+checkCoins() {
   this.collectableCoins = this.collectableCoins.filter((coin) => {
-    if (this.coinPickupCollision(coin)) {
+    if (this.isCoinCollected(coin)) {
       this.statusBarCoin.availableCoins++;
       this.statusBarCoin.update();
 
@@ -177,11 +194,12 @@ class World {
         s.play().catch(() => {});
       }
 
-      return false; // Coin wurde eingesammelt → aus Liste entfernen
+      return false; // Coin einsammeln → aus Array entfernen
     }
     return true;
   });
 }
+
 
 
   /**
