@@ -27,7 +27,6 @@ const level1 = (world) => {
   const boss = new EndbossLevel1();
   boss.world = world;
 
-  // --- Return a fully configured level instance ---
   return new Level(
     [
       new ChickenSmall(),
@@ -66,10 +65,8 @@ const level1 = (world) => {
       new BackgroundObject("img/5_background/layers/1_first_layer/2.png", 719 * 3),
     ],
 
-    // --- Bottles (collectables) ---
     generateRandomBottles(15, 300, 2000, 380, 380),
 
-    // --- Coins (collectables) ---
     [
       new CollectableCoin(200, 300),
       new CollectableCoin(300, 300),
@@ -78,25 +75,5 @@ const level1 = (world) => {
       new CollectableCoin(600, 300),
       new CollectableCoin(700, 300),
     ],
-
-    // --- Dynamic enemy spawn configuration ---
-    // {
-    //   spawnConfig: [
-    //     {
-    //       type: ChickenSmall, 
-    //       maxCount: 4,        
-    //       interval: 3000,     
-    //       condition: (level) =>
-    //         level.enemies.some((e) => e instanceof EndbossLevel1 && !e.isDead()), // Spawn only if boss alive
-    //     },
-    //     {
-    //       type: ChickenNormal,
-    //       maxCount: 2,
-    //       interval: 4000,
-    //       condition: (level) =>
-    //         level.enemies.some((e) => e instanceof EndbossLevel1 && !e.isDead()),
-    //     },
-    //   ],
-    // }
   );
 };

@@ -2,7 +2,6 @@
  * Main game script
  * Handles game initialization, keyboard input, fullscreen, sound, and UI overlays.
  */
-
 let canvas;
 let world;
 let keyboard = new Keyboard();
@@ -39,19 +38,19 @@ window.addEventListener("keydown", (e) => {
   switch (e.keyCode) {
     case 37:
       keyboard.LEFT = true;
-      break; 
+      break;
     case 38:
       keyboard.UP = true;
-      break; 
+      break;
     case 39:
       keyboard.RIGHT = true;
-      break; 
+      break;
     case 40:
       keyboard.DOWN = true;
-      break; 
+      break;
     case 68:
       keyboard.D = true;
-      break; 
+      break;
   }
 });
 
@@ -83,7 +82,7 @@ window.addEventListener("keyup", (e) => {
  * Also updates touch button positions after resizing.
  */
 function resizeCanvas() {
-  if (isRestarting) return; 
+  if (isRestarting) return;
   const canvas = document.getElementById("canvas");
   if (!canvas) return;
   const aspectRatio = 720 / 480;
@@ -184,17 +183,18 @@ function hideImpressum() {
 }
 
 // Close-Button im Overlay
-document.getElementById("close-impressum-btn")
+document
+  .getElementById("close-impressum-btn")
   ?.addEventListener("click", hideImpressum);
 
 // Klick außerhalb der Box schließt das Overlay
-document.getElementById("impressum-overlay")
+document
+  .getElementById("impressum-overlay")
   ?.addEventListener("click", (event) => {
     if (!event.target.closest("#impressum-content")) {
       hideImpressum();
     }
   });
-
 
 /**
  * Initializes the start menu, UI buttons, and listeners when the page loads.
@@ -203,7 +203,7 @@ window.addEventListener("load", () => {
   resizeCanvas();
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
-  new Menu(canvas, ctx); 
+  new Menu(canvas, ctx);
   const instrBtn = document.getElementById("instructions-btn");
   const fullBtn = document.getElementById("fullscreen-btn");
   const soundBtn = document.getElementById("sound-btn");
@@ -228,10 +228,10 @@ document.addEventListener("fullscreenchange", () => {
   const fullBtn = document.getElementById("fullscreen-btn");
   if (!fullBtn) return;
   if (document.fullscreenElement || document.webkitFullscreenElement) {
-    fullBtn.textContent = "🗗"; 
+    fullBtn.textContent = "🗗";
     fullBtn.title = "Vollbild verlassen";
   } else {
-    fullBtn.textContent = "🖥️"; 
+    fullBtn.textContent = "🖥️";
     fullBtn.title = "Vollbild aktivieren";
   }
   resizeCanvas();
@@ -249,8 +249,12 @@ window.addEventListener("resize", () => {
 /**
  * Fallback UI bindings (ensures buttons always work, even if reloaded).
  */
-document.getElementById("instructions-btn")?.addEventListener("click", showInstructions);
-document.getElementById("fullscreen-btn")?.addEventListener("click", toggleFullscreen);
+document
+  .getElementById("instructions-btn")
+  ?.addEventListener("click", showInstructions);
+document
+  .getElementById("fullscreen-btn")
+  ?.addEventListener("click", toggleFullscreen);
 document.getElementById("sound-btn")?.addEventListener("click", toggleSound);
 
 /**
@@ -297,7 +301,7 @@ window.restartGame = function restartGame() {
         world.hardStopEnemyAudio?.();
         world.stopAllSounds?.();
         world.stopBackgroundMusic?.();
-        world.stopRestartButtonAnimation?.(); 
+        world.stopRestartButtonAnimation?.();
         world.stopGameLoopHard?.();
       }
       const ctx = canvas.getContext("2d");

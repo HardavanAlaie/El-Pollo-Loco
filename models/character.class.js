@@ -8,16 +8,34 @@ class Character extends MovableObject {
   isHurtTimer = false;
   lastActionTime = Date.now();
 
-  IMAGES_WALKING = Array.from({ length: 6 },(_, i) => `img/2_character_pepe/2_walk/W-2${i + 1}.png`);
-  IMAGES_IDLE = Array.from({ length: 10 },(_, i) => `img/2_character_pepe/1_idle/idle/I-${i + 1}.png`);
-  IMAGES_LONG_IDLE = Array.from({ length: 10 },(_, i) => `img/2_character_pepe/1_idle/long_idle/I-${i + 11}.png`);
-  IMAGES_JUMPING = Array.from({ length: 9 },(_, i) => `img/2_character_pepe/3_jump/J-3${i + 1}.png`);
-  IMAGES_HURT = Array.from({ length: 3 },(_, i) => `img/2_character_pepe/4_hurt/H-4${i + 1}.png`);
-  IMAGES_DEAD = Array.from({ length: 7 },(_, i) => `img/2_character_pepe/5_dead/D-5${i + 1}.png`);
+  IMAGES_WALKING = Array.from(
+    { length: 6 },
+    (_, i) => `img/2_character_pepe/2_walk/W-2${i + 1}.png`
+  );
+  IMAGES_IDLE = Array.from(
+    { length: 10 },
+    (_, i) => `img/2_character_pepe/1_idle/idle/I-${i + 1}.png`
+  );
+  IMAGES_LONG_IDLE = Array.from(
+    { length: 10 },
+    (_, i) => `img/2_character_pepe/1_idle/long_idle/I-${i + 11}.png`
+  );
+  IMAGES_JUMPING = Array.from(
+    { length: 9 },
+    (_, i) => `img/2_character_pepe/3_jump/J-3${i + 1}.png`
+  );
+  IMAGES_HURT = Array.from(
+    { length: 3 },
+    (_, i) => `img/2_character_pepe/4_hurt/H-4${i + 1}.png`
+  );
+  IMAGES_DEAD = Array.from(
+    { length: 7 },
+    (_, i) => `img/2_character_pepe/5_dead/D-5${i + 1}.png`
+  );
 
   /**
    * Creates an instance of the character and initializes its assets, sounds, and physics.
-   * 
+   *
    * @param {World} world - The game world instance to which the character belongs.
    *
    * @constructor
@@ -39,7 +57,6 @@ class Character extends MovableObject {
     this.coinSound = this.initSound("audio/coins.mp3", 0.5);
   }
 
-  
   /**
    * Initializes and returns an Audio object with the specified source and volume.
    *
@@ -72,59 +89,40 @@ class Character extends MovableObject {
    * - Updates the camera position to follow the character.
    * The interval runs at 60 frames per second.
    */
-  // moveIntervalMethod() {
-  //   this.moveInterval = setInterval(() => {
-  //     const kb = this.world?.keyboard;
-  //     if (kb?.RIGHT && this.x < this.world.level.level_end_x) {
-  //       this.moveRight();
-  //       this.otherDirection = false;
-  //     }
-  //     if (kb?.LEFT && this.x > 0) {
-  //       this.moveLeft();
-  //       this.otherDirection = true;
-  //     }
-  //     if (kb?.UP && !this.isAboveGround()) this.jump();
-  //     if (kb?.D) this.world.throwableBottles();
-  //     this.world.camera_x = -this.x + 100;
-  //   }, 1000 / 60);
-  // }
   moveIntervalMethod() {
-  this.moveInterval = setInterval(() => {
-    const kb = this.world?.keyboard;
-    let didAction = false;
+    this.moveInterval = setInterval(() => {
+      const kb = this.world?.keyboard;
+      let didAction = false;
 
-    if (kb?.RIGHT && this.x < this.world.level.level_end_x) {
-      this.moveRight();
-      this.otherDirection = false;
-      didAction = true;
-    }
+      if (kb?.RIGHT && this.x < this.world.level.level_end_x) {
+        this.moveRight();
+        this.otherDirection = false;
+        didAction = true;
+      }
 
-    if (kb?.LEFT && this.x > 0) {
-      this.moveLeft();
-      this.otherDirection = true;
-      didAction = true;
-    }
+      if (kb?.LEFT && this.x > 0) {
+        this.moveLeft();
+        this.otherDirection = true;
+        didAction = true;
+      }
 
-    if (kb?.UP && !this.isAboveGround()) {
-      this.jump();
-      didAction = true;
-    }
+      if (kb?.UP && !this.isAboveGround()) {
+        this.jump();
+        didAction = true;
+      }
 
-    if (kb?.D) {
-      this.world.throwableBottles();
-      didAction = true;
-    }
+      if (kb?.D) {
+        this.world.throwableBottles();
+        didAction = true;
+      }
 
-    // 👉 Wenn irgendwas passiert ist, oder er gerade in der Luft / verletzt ist,
-    //    gilt das als "aktiv"
-    if (didAction || this.isAboveGround() || this.isHurt()) {
-      this.lastActionTime = Date.now();
-    }
+      if (didAction || this.isAboveGround() || this.isHurt()) {
+        this.lastActionTime = Date.now();
+      }
 
-    this.world.camera_x = -this.x + 100;
-  }, 1000 / 60);
-}
-
+      this.world.camera_x = -this.x + 100;
+    }, 1000 / 60);
+  }
 
   /**
    * Starts an interval that updates the character's animation based on its current state.
@@ -134,38 +132,31 @@ class Character extends MovableObject {
    * @method
    * @returns {void}
    */
-animationIntervalMethod() {
-  this.animationInterval = setInterval(() => {
-    const now = Date.now();
-    const inactiveMs = now - this.lastActionTime; // wie lange schon nichts gemacht?
+  animationIntervalMethod() {
+    this.animationInterval = setInterval(() => {
+      const now = Date.now();
+      const inactiveMs = now - this.lastActionTime; // wie lange schon nichts gemacht?
 
-    const kb = this.world?.keyboard;
-    const isMoving = kb?.RIGHT || kb?.LEFT;
+      const kb = this.world?.keyboard;
+      const isMoving = kb?.RIGHT || kb?.LEFT;
 
-    if (this.energy <= 0) {
-      this.playAnimation(this.IMAGES_DEAD);
-    } else if (this.isHurt()) {
-      this.playAnimation(this.IMAGES_HURT);
-    } else if (this.isAboveGround()) {
-      // ganz normal: solange er in der Luft ist → Jump-Animation
-      this.playAnimation(this.IMAGES_JUMPING);
-    } else if (isMoving) {
-      // läuft
-      this.playAnimation(this.IMAGES_WALKING);
-    } else if (inactiveMs >= 15000) {
-      // 60 Sekunden nichts gemacht → Long Idle
-      this.playAnimation(this.IMAGES_LONG_IDLE);
-    } else if (inactiveMs >= 10000) {
-      // 5 Sekunden nichts gemacht → normale Idle-Animation
-      this.playAnimation(this.IMAGES_IDLE);
-    } else {
-      // < 5 Sekunden still: neutrales Standbild (erste Idle-Grafik)
-      this.img = this.imageCache[this.IMAGES_IDLE[0]];
-    }
-  }, 80);
-}
-
-
+      if (this.energy <= 0) {
+        this.playAnimation(this.IMAGES_DEAD);
+      } else if (this.isHurt()) {
+        this.playAnimation(this.IMAGES_HURT);
+      } else if (this.isAboveGround()) {
+        this.playAnimation(this.IMAGES_JUMPING);
+      } else if (isMoving) {
+        this.playAnimation(this.IMAGES_WALKING);
+      } else if (inactiveMs >= 15000) {
+        this.playAnimation(this.IMAGES_LONG_IDLE);
+      } else if (inactiveMs >= 10000) {
+        this.playAnimation(this.IMAGES_IDLE);
+      } else {
+        this.img = this.imageCache[this.IMAGES_IDLE[0]];
+      }
+    }, 80);
+  }
 
   /**
    * Stops the character's movement and animation by clearing their respective intervals.
@@ -213,38 +204,26 @@ animationIntervalMethod() {
    * updates the status bar, removes the collected bottle from the world,
    * and spawns a new bottle.
    */
-  // collectBottle() {
-  //   const bar = this.world.statusBarBottle;
-  //   if (bar.availableBottles < 5) {
-  //     bar.availableBottles++;
-  //     bar.update();
-  //     this.world.collectableBottles = this.world.collectableBottles.filter(
-  //       (b) => !this.isColliding(b)
-  //     );
-  //     this.world.spawnNewBottle();
-  //   }
-  // }
   collectBottle() {
-  const bar = this.world.statusBarBottle;
-  if (bar.availableBottles < 5) {
-    this.world.collectableBottles = this.world.collectableBottles.filter(
-      (bottle) => {
-        if (this.isCollidingTight(bottle, 14)) {
-          bar.availableBottles++;
-          bar.update();
-          this.world.spawnNewBottle();
-          return false;
+    const bar = this.world.statusBarBottle;
+    if (bar.availableBottles < 5) {
+      this.world.collectableBottles = this.world.collectableBottles.filter(
+        (bottle) => {
+          if (this.isCollidingTight(bottle, 14)) {
+            bar.availableBottles++;
+            bar.update();
+            this.world.spawnNewBottle();
+            return false;
+          }
+          return true;
         }
-        return true;
-      }
-    );
+      );
+    }
   }
-}
-
 
   /**
    * Plays a sound from the specified file path if sound is enabled.
-   * 
+   *
    * @param {string} path - The path to the audio file to play.
    * @returns {void}
    */
