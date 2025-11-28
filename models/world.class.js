@@ -611,8 +611,8 @@ characterCollidingBottle() {
 
   this.collectableBottles = this.collectableBottles.filter((bottle) => {
     // 🔹 horizontale Hitbox leicht verkleinern
-    const insetXChar = 12;
-    const insetXBottle = 10;
+    const insetXChar = 15;
+    const insetXBottle = 13;
 
     const charLeft   = c.x + insetXChar;
     const charRight  = c.x + c.width - insetXChar;
