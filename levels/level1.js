@@ -32,6 +32,10 @@ const level1 = (world) => {
     [
       new ChickenSmall(),
       new ChickenSmall(),
+      new ChickenSmall(),
+      new ChickenSmall(),
+      new ChickenNormal(),
+      new ChickenNormal(),
       new ChickenNormal(),
       new ChickenNormal(),
       boss, 
