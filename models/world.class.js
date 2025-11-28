@@ -583,29 +583,70 @@ characterColliding(enemy) {
   //     return true;
   //   });
   // }
-  characterCollidingBottle() {
-  const inset = 14; // ähnlich wie bei Coins – kannst du fein-tunen
+//   characterCollidingBottle() {
+//   const inset = 14; // ähnlich wie bei Coins – kannst du fein-tunen
+
+//   this.collectableBottles = this.collectableBottles.filter((bottle) => {
+//     if (this.character.isCollidingTight(bottle, inset)) {
+//       if (this.statusBarBottle.availableBottles < 5) {
+//         this.statusBarBottle.availableBottles++;
+//         this.statusBarBottle.update();
+
+//         // optional: Flaschen-Sound
+//         if (soundEnabled) {
+//           const s = new Audio("audio/bottle.mp3");
+//           s.volume = 0.5;
+//           s.play().catch(() => {});
+//         }
+//       } else {
+//         this.showBottleLimitMessage();
+//       }
+//       return false; // Bottle wird eingesammelt → aus Array entfernen
+//     }
+//     return true;
+//   });
+// }
+characterCollidingBottle() {
+  const c = this.character;
 
   this.collectableBottles = this.collectableBottles.filter((bottle) => {
-    if (this.character.isCollidingTight(bottle, inset)) {
+    // 🔹 horizontale Hitbox leicht verkleinern
+    const insetXChar = 12;
+    const insetXBottle = 10;
+
+    const charLeft   = c.x + insetXChar;
+    const charRight  = c.x + c.width - insetXChar;
+
+    const bottleLeft  = bottle.x + insetXBottle;
+    const bottleRight = bottle.x + bottle.width - insetXBottle;
+
+    const horizontalOverlap =
+      charRight > bottleLeft && charLeft < bottleRight;
+
+    // 🔹 vertikal: nur einsammeln, wenn Pepe mit den Füßen in Bodennähe der Flasche ist
+    const charBottom  = c.y + c.height;
+    const bottleTop   = bottle.y;
+    const bottleBottom = bottle.y + bottle.height;
+
+    // Pepe muss mit den Füßen im oberen Bereich der Flasche sein
+    const verticallyOnBottle =
+      charBottom >= bottleTop &&      // Füße unter/auf dem oberen Rand
+      charBottom <= bottleBottom + 5; // kleiner Spielraum
+
+    if (horizontalOverlap && verticallyOnBottle) {
       if (this.statusBarBottle.availableBottles < 5) {
         this.statusBarBottle.availableBottles++;
         this.statusBarBottle.update();
-
-        // optional: Flaschen-Sound
-        if (soundEnabled) {
-          const s = new Audio("audio/bottle.mp3");
-          s.volume = 0.5;
-          s.play().catch(() => {});
-        }
       } else {
         this.showBottleLimitMessage();
       }
-      return false; // Bottle wird eingesammelt → aus Array entfernen
+      return false; // aus Liste entfernen → eingesammelt
     }
+
     return true;
   });
 }
+
 
 
   /** 🏆 Checks if the Endboss has been defeated. */
