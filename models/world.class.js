@@ -53,17 +53,39 @@ class World {
   }
 
   /** ♻️ Main game loop — checks collisions, spawns, and victory/defeat conditions. */
+  // run() {
+  //   this.gameInterval = setInterval(() => {
+  //     if (this.levelEnded) return;
+  //     this.checkCollisions();
+  //     this.checkThrowableObjects();
+  //     this.checkEndbossDefeated();
+  //     this.removeOffscreenEnemies();
+  //     this.checkEndboss1Hit();
+  //     this.ifPlayerDead();
+  //   }, 200);
+  // }
   run() {
-    this.gameInterval = setInterval(() => {
-      if (this.levelEnded) return;
-      this.checkCollisions();
-      this.checkThrowableObjects();
-      this.checkEndbossDefeated();
-      this.removeOffscreenEnemies();
-      this.checkEndboss1Hit();
-      this.ifPlayerDead();
-    }, 200);
-  }
+  this.gameInterval = setInterval(() => {
+    if (this.levelEnded) return;
+
+    this.checkCollisions();        // Kollisionen (Gegner, Items)
+    this.checkThrowableObjects();  // Flaschen
+    this.checkEndbossDefeated();   // Boss tot?
+    this.removeOffscreenEnemies(); // Gegner aufräumen
+    this.checkEndboss1Hit();       // Boss trifft Spieler?
+
+    if (
+      this.character.energy <= 0 &&
+      !this.playerDied &&
+      !this.endbossDefeated
+    ) {
+      this.playerDied = true;
+      this.stopGameLoopHard();
+      this.showGameOverScreen();
+    }
+  }, 1000 / 60); // 👈 vorher 200, jetzt 60x pro Sekunde
+}
+
 
   // 💀 Check if player has died
   ifPlayerDead() {
