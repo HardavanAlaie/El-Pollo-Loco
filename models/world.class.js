@@ -420,6 +420,53 @@ isCoinCollected(coin) {
 //     this.statusBar.setPercentage(c.energy);
 //   }
 // }
+// characterColliding(enemy) {
+//   const c = this.character;
+//   if (!c || !enemy) return;
+
+//   // Erstmal grob prüfen, ob überhaupt eine Kollision vorliegt
+//   if (!c.isColliding(enemy)) return;
+
+//   // Werte vorbereiten
+//   const charBottom = c.y + c.height;
+//   const enemyTop   = enemy.y;
+//   const enemyMidY  = enemy.y + enemy.height / 2;
+
+//   // 🔽 Wichtig: In deiner Physik gilt:
+//   //  - speedY > 0  → nach oben
+//   //  - speedY < 0  → fällt nach unten
+//   const isFalling = c.speedY < 0;
+
+//   // 🦶 Stomp-Bedingung:
+//   //  - Charakter fällt
+//   //  - Charakter-Unterkante ist oberhalb der Gegner-Mitte
+//   //  - UND nicht weit unterhalb des Gegner-Kopfes
+//   const isStomp =
+//     isFalling &&
+//     charBottom <= enemyMidY &&
+//     charBottom >= enemyTop - 10; // Toleranz nach oben
+
+//   if (isStomp) {
+//     // 🧨 Boss: 20 Schaden pro Treffer, Rest wie gehabt
+//     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+//       enemy.takeDamage?.(20);
+//     } else {
+//       enemy.hit?.();
+//     }
+
+//     // 🟰 Charakter sauber auf Gegnerkopf setzen + Bounce nach oben
+//     c.y = enemyTop - c.height;
+//     c.speedY = 25; // kleiner Rücksprung nach oben
+
+//     if (enemy.isDead?.()) {
+//       enemy.die?.();
+//     }
+//   } else {
+//     // ❌ Kein Stomp → Spieler bekommt Schaden
+//     c.hit();
+//     this.statusBar.setPercentage(c.energy);
+//   }
+// }
 characterColliding(enemy) {
   const c = this.character;
   if (!c || !enemy) return;
@@ -427,49 +474,40 @@ characterColliding(enemy) {
   // Erstmal grob prüfen, ob überhaupt eine Kollision vorliegt
   if (!c.isColliding(enemy)) return;
 
-  // Werte vorbereiten
   const charBottom = c.y + c.height;
   const enemyTop   = enemy.y;
-  const enemyMidY  = enemy.y + enemy.height / 2;
+  const enemyHeight = enemy.height;
 
-  // 🔽 Wichtig: In deiner Physik gilt:
-  //  - speedY > 0  → nach oben
-  //  - speedY < 0  → fällt nach unten
+  // In deiner Physik: speedY < 0 = fällt nach unten
   const isFalling = c.speedY < 0;
 
-  // 🦶 Stomp-Bedingung:
-  //  - Charakter fällt
-  //  - Charakter-Unterkante ist oberhalb der Gegner-Mitte
-  //  - UND nicht weit unterhalb des Gegner-Kopfes
+  // 🦶 Stomp:
+  // - Charakter fällt
+  // - Unterkante ist im oberen Drittel des Gegners
   const isStomp =
     isFalling &&
-    charBottom <= enemyMidY &&
-    charBottom >= enemyTop - 10; // Toleranz nach oben
+    charBottom <= enemyTop + enemyHeight * 0.5 && // obere Hälfte
+    charBottom >= enemyTop - 5;                    // kleiner Toleranzbereich drüber
 
   if (isStomp) {
-    // 🧨 Boss: 20 Schaden pro Treffer, Rest wie gehabt
+    // Boss bekommt 20 Schaden, normale Chickens sterben wie bisher
     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
       enemy.takeDamage?.(20);
     } else {
       enemy.hit?.();
     }
 
-    // 🟰 Charakter sauber auf Gegnerkopf setzen + Bounce nach oben
-    c.y = enemyTop - c.height;
-    c.speedY = 25; // kleiner Rücksprung nach oben
+    // Pepe sauber auf den Gegner setzen + kleinen Bounce
+    c.y      = enemyTop - c.height;
+    c.speedY = 25;
 
-    if (enemy.isDead?.()) {
-      enemy.die?.();
-    }
+    if (enemy.isDead?.()) enemy.die?.();
   } else {
-    // ❌ Kein Stomp → Spieler bekommt Schaden
+    // kein Stomp → Spieler kassiert
     c.hit();
     this.statusBar.setPercentage(c.energy);
   }
 }
-
-
-
 
 
   /** 🧴 Handles collisions with collectible bottles. */
