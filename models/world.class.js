@@ -501,14 +501,18 @@ characterColliding(enemy) {
     c.y      = enemyTop - c.height;
     c.speedY = 25;
 
+    c.lastHit = 0;
+
     if (enemy.isDead?.()) enemy.die?.();
   } else {
     // kein Stomp → Spieler kassiert
-    c.hit();
-    this.statusBar.setPercentage(c.energy);
+    if (!c.isHurtTimer) {
+      c.hit();
+      this.statusBar.setPercentage(c.energy);
 
-          c.isHurtTimer = true;
+      c.isHurtTimer = true;
       setTimeout(() => (c.isHurtTimer = false), 1000); // 1 Sekunde Schutz
+    }
   }
 }
 
