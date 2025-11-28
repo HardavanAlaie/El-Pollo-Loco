@@ -467,54 +467,107 @@ isCoinCollected(coin) {
 //     this.statusBar.setPercentage(c.energy);
 //   }
 // }
+// characterColliding(enemy) {
+//   const c = this.character;
+//   if (!c || !enemy) return;
+
+//   // Erstmal grob prüfen, ob überhaupt eine Kollision vorliegt
+//   if (!c.isColliding(enemy)) return;
+
+//   const charBottom = c.y + c.height;
+//   const enemyTop   = enemy.y;
+//   const enemyHeight = enemy.height;
+
+//   // In deiner Physik: speedY < 0 = fällt nach unten
+//   const isFalling = c.speedY < 0;
+
+//   // 🦶 Stomp:
+//   // - Charakter fällt
+//   // - Unterkante ist im oberen Drittel des Gegners
+//   const isStomp =
+//     isFalling &&
+//     charBottom <= enemyTop + enemyHeight * 0.5 && // obere Hälfte
+//     charBottom >= enemyTop - 5;                    // kleiner Toleranzbereich drüber
+
+//   if (isStomp) {
+//     // Boss bekommt 20 Schaden, normale Chickens sterben wie bisher
+//     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+//       enemy.takeDamage?.(20);
+//     } else {
+//       enemy.hit?.();
+//     }
+
+//     // Pepe sauber auf den Gegner setzen + kleinen Bounce
+//     c.y      = enemyTop - c.height;
+//     c.speedY = 25;
+
+//     c.lastHit = 0;
+
+//     if (enemy.isDead?.()) enemy.die?.();
+//   } else {
+//     // kein Stomp → Spieler kassiert
+//     if (!c.isHurtTimer) {
+//       c.hit();
+//       this.statusBar.setPercentage(c.energy);
+
+//       c.isHurtTimer = true;
+//       setTimeout(() => (c.isHurtTimer = false), 1000); // 1 Sekunde Schutz
+//     }
+//   }
+// }
 characterColliding(enemy) {
   const c = this.character;
   if (!c || !enemy) return;
 
-  // Erstmal grob prüfen, ob überhaupt eine Kollision vorliegt
+  // 🚫 WICHTIG: Tote Gegner komplett ignorieren
+  if (enemy.isDead?.() || enemy.dead) return;
+
+  // Erst prüfen, ob überhaupt Kollision
   if (!c.isColliding(enemy)) return;
 
-  const charBottom = c.y + c.height;
-  const enemyTop   = enemy.y;
-  const enemyHeight = enemy.height;
+  const charBottom   = c.y + c.height;
+  const enemyCenterY = enemy.y + enemy.height / 2;
 
-  // In deiner Physik: speedY < 0 = fällt nach unten
-  const isFalling = c.speedY < 0;
-
-  // 🦶 Stomp:
-  // - Charakter fällt
-  // - Unterkante ist im oberen Drittel des Gegners
+  // ✅ Stomp-Bedingung:
+  // - Pepe ist mit den Füßen eher über der Mitte des Gegners
+  // - und bewegt sich nach unten / ist am Fallen (speedY <= 0)
   const isStomp =
-    isFalling &&
-    charBottom <= enemyTop + enemyHeight * 0.5 && // obere Hälfte
-    charBottom >= enemyTop - 5;                    // kleiner Toleranzbereich drüber
+    charBottom <= enemyCenterY &&
+    c.speedY <= 0;
 
   if (isStomp) {
-    // Boss bekommt 20 Schaden, normale Chickens sterben wie bisher
+    // 🧨 Boss bekommt nur 20 Schaden, normale Gegner wie bisher
     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
       enemy.takeDamage?.(20);
     } else {
       enemy.hit?.();
     }
 
-    // Pepe sauber auf den Gegner setzen + kleinen Bounce
-    c.y      = enemyTop - c.height;
+    // 🦘 kleiner Bounce nach oben + sauber auf Gegneroberseite setzen
     c.speedY = 25;
+    c.y      = enemy.y - c.height;
 
+    // ❌ sicherstellen, dass keine Hurt-Animation durch alten Treffer aktiv bleibt
     c.lastHit = 0;
 
+    // Wenn der Gegner jetzt tot ist → Todesequenz
     if (enemy.isDead?.()) enemy.die?.();
-  } else {
-    // kein Stomp → Spieler kassiert
-    if (!c.isHurtTimer) {
-      c.hit();
-      this.statusBar.setPercentage(c.energy);
 
-      c.isHurtTimer = true;
-      setTimeout(() => (c.isHurtTimer = false), 1000); // 1 Sekunde Schutz
-    }
+    // ⛔ GANZ WICHTIG:
+    // Nach einem Stomp KEIN weiterer Schaden mehr in diesem Frame!
+    return;
+  }
+
+  // ❌ Kein Stomp → Pepe bekommt Schaden (aber nur, wenn er nicht kurz invincible ist)
+  if (!c.isHurtTimer) {
+    c.hit();
+    this.statusBar.setPercentage(c.energy);
+
+    c.isHurtTimer = true;
+    setTimeout(() => (c.isHurtTimer = false), 700);
   }
 }
+
 
 
   /** 🧴 Handles collisions with collectible bottles. */
