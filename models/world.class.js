@@ -506,6 +506,9 @@ characterColliding(enemy) {
     // kein Stomp → Spieler kassiert
     c.hit();
     this.statusBar.setPercentage(c.energy);
+
+          c.isHurtTimer = true;
+      setTimeout(() => (c.isHurtTimer = false), 1000); // 1 Sekunde Schutz
   }
 }
 
