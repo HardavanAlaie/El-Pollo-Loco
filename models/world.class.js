@@ -571,18 +571,42 @@ characterColliding(enemy) {
 
 
   /** 🧴 Handles collisions with collectible bottles. */
+  // characterCollidingBottle() {
+  //   this.collectableBottles = this.collectableBottles.filter((bottle) => {
+  //     if (this.character.isColliding(bottle)) {
+  //       if (this.statusBarBottle.availableBottles < 5) {
+  //         this.statusBarBottle.availableBottles++;
+  //         this.statusBarBottle.update();
+  //       } else this.showBottleLimitMessage();
+  //       return false;
+  //     }
+  //     return true;
+  //   });
+  // }
   characterCollidingBottle() {
-    this.collectableBottles = this.collectableBottles.filter((bottle) => {
-      if (this.character.isColliding(bottle)) {
-        if (this.statusBarBottle.availableBottles < 5) {
-          this.statusBarBottle.availableBottles++;
-          this.statusBarBottle.update();
-        } else this.showBottleLimitMessage();
-        return false;
+  const inset = 14; // ähnlich wie bei Coins – kannst du fein-tunen
+
+  this.collectableBottles = this.collectableBottles.filter((bottle) => {
+    if (this.character.isCollidingTight(bottle, inset)) {
+      if (this.statusBarBottle.availableBottles < 5) {
+        this.statusBarBottle.availableBottles++;
+        this.statusBarBottle.update();
+
+        // optional: Flaschen-Sound
+        if (soundEnabled) {
+          const s = new Audio("audio/bottle.mp3");
+          s.volume = 0.5;
+          s.play().catch(() => {});
+        }
+      } else {
+        this.showBottleLimitMessage();
       }
-      return true;
-    });
-  }
+      return false; // Bottle wird eingesammelt → aus Array entfernen
+    }
+    return true;
+  });
+}
+
 
   /** 🏆 Checks if the Endboss has been defeated. */
   checkEndbossDefeated() {
