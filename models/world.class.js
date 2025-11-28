@@ -367,37 +367,85 @@ isCoinCollected(coin) {
 //     this.statusBar.setPercentage(c.energy);
 //   }
 // }
+// characterColliding(enemy) {
+//   const c = this.character;
+//   if (!c.isColliding(enemy)) return;
+
+//   const charBottom   = c.y + c.height;
+//   const enemyCenterY = enemy.y + enemy.height / 2;
+
+//   // ✅ Stomp: Charakter kommt von oben UND fällt (speedY < 0)
+//   const isStomp =
+//     charBottom <= enemyCenterY &&
+//     c.speedY < 0; // <-- WICHTIG: fällt nach unten
+
+//   if (isStomp) {
+//     // Boss bekommt nur 20 Schaden, normale Gegner wie bisher
+//     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+//       enemy.takeDamage?.(20);
+//     } else {
+//       enemy.hit?.();
+//     }
+
+//     // kleiner Bounce nach oben
+//     c.speedY = 25;                 // nach oben schießen
+//     c.y      = enemy.y - c.height; // sauber auf Gegner-Oberseite setzen
+
+//     if (enemy.isDead?.()) enemy.die?.();
+//   } else {
+//     // Kein Stomp → Spieler bekommt Schaden
+//     c.hit();
+//     this.statusBar.setPercentage(c.energy);
+//   }
+// }
 characterColliding(enemy) {
   const c = this.character;
+  if (!c || !enemy) return;
+
+  // Erstmal grob prüfen, ob überhaupt eine Kollision vorliegt
   if (!c.isColliding(enemy)) return;
 
-  const charBottom   = c.y + c.height;
-  const enemyCenterY = enemy.y + enemy.height / 2;
+  // Werte vorbereiten
+  const charBottom = c.y + c.height;
+  const enemyTop   = enemy.y;
+  const enemyMidY  = enemy.y + enemy.height / 2;
 
-  // ✅ Stomp: Charakter kommt von oben UND fällt (speedY < 0)
+  // 🔽 Wichtig: In deiner Physik gilt:
+  //  - speedY > 0  → nach oben
+  //  - speedY < 0  → fällt nach unten
+  const isFalling = c.speedY < 0;
+
+  // 🦶 Stomp-Bedingung:
+  //  - Charakter fällt
+  //  - Charakter-Unterkante ist oberhalb der Gegner-Mitte
+  //  - UND nicht weit unterhalb des Gegner-Kopfes
   const isStomp =
-    charBottom <= enemyCenterY &&
-    c.speedY < 0; // <-- WICHTIG: fällt nach unten
+    isFalling &&
+    charBottom <= enemyMidY &&
+    charBottom >= enemyTop - 10; // Toleranz nach oben
 
   if (isStomp) {
-    // Boss bekommt nur 20 Schaden, normale Gegner wie bisher
+    // 🧨 Boss: 20 Schaden pro Treffer, Rest wie gehabt
     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
       enemy.takeDamage?.(20);
     } else {
       enemy.hit?.();
     }
 
-    // kleiner Bounce nach oben
-    c.speedY = 25;                 // nach oben schießen
-    c.y      = enemy.y - c.height; // sauber auf Gegner-Oberseite setzen
+    // 🟰 Charakter sauber auf Gegnerkopf setzen + Bounce nach oben
+    c.y = enemyTop - c.height;
+    c.speedY = 25; // kleiner Rücksprung nach oben
 
-    if (enemy.isDead?.()) enemy.die?.();
+    if (enemy.isDead?.()) {
+      enemy.die?.();
+    }
   } else {
-    // Kein Stomp → Spieler bekommt Schaden
+    // ❌ Kein Stomp → Spieler bekommt Schaden
     c.hit();
     this.statusBar.setPercentage(c.energy);
   }
 }
+
 
 
 
