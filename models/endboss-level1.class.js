@@ -1,23 +1,21 @@
 /**
- * 🐔 Class: EndbossLevel1
+ * Class: EndbossLevel1
  * Represents the first boss enemy in the game.
  * Becomes aggressive when the player approaches and attacks.
  */
 class EndbossLevel1 extends MovableObject {
-  // --- Properties ---
   y = 240;
   width = 200;
   height = 200;
-  alertDistance = 550; // Distance at which the boss detects the player
-  speed = 0.5;         // Normal walking speed
-  aggroSpeed = 2.1;    // Faster speed when aggressive
-  isAggressive = false; // Whether the boss is in aggressive mode
-  attackMode = false;   // Whether the boss is currently attacking
-  isScreaming = false;  // Prevents multiple screams at once
-  damageCooldownMs = 250;   // verhindert Mehrfachtreffer im selben Moment
+  alertDistance = 550; 
+  speed = 0.5;         
+  aggroSpeed = 2.1;    
+  isAggressive = false; 
+  attackMode = false;   
+  isScreaming = false;  
+  damageCooldownMs = 250;   
   _lastDamageAt = 0;
 
-  // --- Sprite image sets ---
   IMAGES_ALERT = this.makeImgList("img/4_enemie_boss_chicken/2_alert/", 5, 12);
   IMAGES_ATTACK = this.makeImgList("img/4_enemie_boss_chicken/3_attack/", 13, 20);
   IMAGES_HURT = this.makeImgList("img/4_enemie_boss_chicken/4_hurt/", 21, 23);
@@ -29,7 +27,7 @@ class EndbossLevel1 extends MovableObject {
   constructor() {
     super().loadImage(this.IMAGES_ALERT[0]);
     this.loadAllImages();
-    this.x = 2000; // Starting position
+    this.x = 2000; 
     this.energy = 100;
     this.statusBar = new StatusBarEnemy(this);
     this.screamSound = this.initSound("audio/chicken.mp3", 0.6);
@@ -75,27 +73,6 @@ class EndbossLevel1 extends MovableObject {
     this.screamSound.play().catch((e) => console.warn("Failed to play scream:", e));
     setTimeout(() => (this.isScreaming = false), 1500);
   }
-
-  /**
-   * Called when the boss gets hit by a throwable object.
-   */
-  // hit() {
-  //   if (this.isDead()) return;
-
-  //   // Reduce energy
-  //   this.energy = Math.max(this.energy - 20, 0);
-  //   this.statusBar.setPercentage(this.energy);
-
-  //   // Becomes aggressive after first hit
-  //   if (!this.isAggressive) {
-  //     this.isAggressive = true;
-  //     this.attackMode = true;
-  //   }
-
-  //   // Either scream or die depending on energy level
-  //   if (this.energy > 0) this.scream();
-  //   else this.die();
-  // }
 
   /**
    * Handles the boss death animation and logic stop.
@@ -159,11 +136,7 @@ class EndbossLevel1 extends MovableObject {
     if (distance < this.alertDistance) {
       this.scream();
       this.attackMode = this.isAggressive = true;
-
-      // Movement speed depends on aggression state
       const v = this.isAggressive ? this.aggroSpeed : this.speed;
-
-      // Move in player direction
       this.x += this.x > player.x ? -v : v;
       this.otherDirection = this.x < player.x;
     } else {
@@ -177,24 +150,19 @@ class EndbossLevel1 extends MovableObject {
    */
   takeDamage(amount = 20) {
     if (this.isDead()) return;
-
     const now = Date.now();
-    if (now - this._lastDamageAt < this.damageCooldownMs) return; // ignore double-hit
+    if (now - this._lastDamageAt < this.damageCooldownMs) return; 
     this._lastDamageAt = now;
-
     this.energy = Math.max(0, this.energy - amount);
     this.statusBar?.setPercentage?.(this.energy);
-
     if (!this.isAggressive) {
       this.isAggressive = true;
       this.attackMode = true;
     }
-
     if (this.energy > 0) this.scream();
     else this.die();
   }
-
-  // Bestehende hit() NICHT löschen; nur so umbauen, dass es obigen Pfad nutzt:
+  
   hit() {
     this.takeDamage(20);
   }

@@ -1,10 +1,9 @@
 /**
- * 🧴 Class: ThrowableObject
+ * Class: ThrowableObject
  * Represents a throwable salsa bottle that rotates in the air and breaks upon impact.
  * Extends `MovableObject` to inherit movement, gravity, and collision behavior.
  */
 class ThrowableObject extends MovableObject {
-  /** 🔁 Rotation animation frames for the flying bottle */
   IMAGES_ROTATE = [
     "img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
     "img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png",
@@ -12,7 +11,6 @@ class ThrowableObject extends MovableObject {
     "img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png",
   ];
 
-  /** 💥 Splash animation frames for the bottle breaking */
   IMAGES_SPLASH = [
     "img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png",
     "img/6_salsa_bottle/bottle_rotation/bottle_splash/2_bottle_splash.png",
@@ -42,13 +40,12 @@ class ThrowableObject extends MovableObject {
   }
 
   /**
-   * 🚀 Starts the throwing movement with gravity and horizontal velocity.
+   * Starts the throwing movement with gravity and horizontal velocity.
    * The bottle flies in the direction the character is facing.
    */
   throw() {
     this.speedY = 30;
     this.applyGravity();
-
     this.throwInterval = setInterval(() => {
       if (!this.isBroken) {
         this.x += this.directionLeft ? -10 : 10;
@@ -57,7 +54,7 @@ class ThrowableObject extends MovableObject {
   }
 
   /**
-   * 🔄 Plays the rotation animation while the bottle is in flight.
+   * Plays the rotation animation while the bottle is in flight.
    */
   animate() {
     this.animationInterval = setInterval(() => {
@@ -66,7 +63,7 @@ class ThrowableObject extends MovableObject {
   }
 
   /**
-   * 💥 Triggers the breaking sequence of the bottle (splash animation).
+   * Triggers the breaking sequence of the bottle (splash animation).
    * Stops movement and marks the object for removal after a short delay.
    */
   break() {
@@ -75,12 +72,11 @@ class ThrowableObject extends MovableObject {
     clearInterval(this.throwInterval);
     this.loadImages(this.IMAGES_SPLASH);
     this.playAnimation(this.IMAGES_SPLASH);
-
     setTimeout(() => (this.markedForRemoval = true), 400);
   }
 
   /**
-   * 🗑️ Removes the bottle from the world and stops animations.
+   * Removes the bottle from the world and stops animations.
    */
   remove() {
     const index = this.world?.throwableObjects.indexOf(this);
@@ -89,7 +85,7 @@ class ThrowableObject extends MovableObject {
   }
 
   /**
-   * ❌ Determines whether the bottle should be removed from the game.
+   * Determines whether the bottle should be removed from the game.
    * @returns {boolean} True if the bottle is below the screen or already broken.
    */
   isDead() {

@@ -1,5 +1,5 @@
 /**
- * 🌍 Class: World
+ * Class: World
  * The main game controller — handles the entire gameplay logic, rendering, physics,
  * collisions, input, UI updates, and sound effects.
  */
@@ -10,27 +10,18 @@ class World {
    * @param {Keyboard} keyboard - The keyboard input handler.
    */
   constructor(canvas, keyboard) {
-    /** --- 🧱 Core Setup --- */
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.keyboard = keyboard;
     this.canThrow = true;
-
-    /** --- ⚙️ Game State Flags --- */
     this.levelEnded = false;
     this.playerDied = false;
     this.endbossDefeated = false;
     this.uiScreen = null;
-
-    /** --- 🧩 UI Elements --- */
     this.statusBar = new StatusBar();
     this.statusBarBottle = new StatusBarBottle();
     this.statusBarCoin = new StatusBarCoin();
-
-    /** --- 📦 Object Containers --- */
     this.throwableObjects = [];
-
-    /** --- 🌄 Level Setup --- */
     this.level = level1(this);
     this.character = new Character(this);
     this.enemies = this.level.enemies;
@@ -38,56 +29,43 @@ class World {
     this.backgroundObjects = this.level.backgroundObjects;
     this.collectableBottles = this.level.collectableObjects || [];
     this.collectableCoins = this.level.collectableCoins || [];
-
-    /** --- 🚀 Initialization --- */
     this.setWorld();
     this.setupCanvasControls();
     this.draw();
     this.run();
   }
 
-  /** 🔧 Links character to world and starts enemy spawn loops. */
+  /** Links character to world and starts enemy spawn loops. */
   setWorld() {
     this.character.world = this;
     this.spawnEnemyLoop();
   }
 
-  /** ♻️ Main game loop — checks collisions, spawns, and victory/defeat conditions. */
-  // run() {
-  //   this.gameInterval = setInterval(() => {
-  //     if (this.levelEnded) return;
-  //     this.checkCollisions();
-  //     this.checkThrowableObjects();
-  //     this.checkEndbossDefeated();
-  //     this.removeOffscreenEnemies();
-  //     this.checkEndboss1Hit();
-  //     this.ifPlayerDead();
-  //   }, 200);
-  // }
+  /** Main game loop — checks collisions, spawns, and victory/defeat conditions. */
+
   run() {
-  this.gameInterval = setInterval(() => {
-    if (this.levelEnded) return;
+    this.gameInterval = setInterval(() => {
+      if (this.levelEnded) return;
+      this.checkCollisions(); 
+      this.checkThrowableObjects(); 
+      this.checkEndbossDefeated(); 
+      this.removeOffscreenEnemies(); 
+      this.checkEndboss1Hit(); 
+      this.characterEnergyMethod();
+    }, 1000 / 60); 
+  }
 
-    this.checkCollisions();        // Kollisionen (Gegner, Items)
-    this.checkThrowableObjects();  // Flaschen
-    this.checkEndbossDefeated();   // Boss tot?
-    this.removeOffscreenEnemies(); // Gegner aufräumen
-    this.checkEndboss1Hit();       // Boss trifft Spieler?
-
-    if (
-      this.character.energy <= 0 &&
+  characterEnergyMethod() {
+    if (this.character.energy <= 0 &&
       !this.playerDied &&
-      !this.endbossDefeated
-    ) {
+      !this.endbossDefeated) {
       this.playerDied = true;
       this.stopGameLoopHard();
       this.showGameOverScreen();
     }
-  }, 1000 / 60); // 👈 vorher 200, jetzt 60x pro Sekunde
-}
+  }
 
-
-  // 💀 Check if player has died
+  // Check if player has died
   ifPlayerDead() {
     if (
       this.character.energy <= 0 &&
@@ -101,7 +79,7 @@ class World {
   }
 
   /**
-   * 🛑 Completely stops the game — halts all intervals and animations.
+   * Completely stops the game — halts all intervals and animations.
    * @param {boolean} [isWin=false] - Whether the stop was triggered by a win.
    */
   stopGameLoopHard(isWin = false) {
@@ -112,7 +90,7 @@ class World {
     this.gameOver = !isWin;
   }
 
-  /** ⚔️ Handles all types of collisions in the world. */
+  /** Handles all types of collisions in the world. */
   checkCollisions() {
     this.level.enemies.forEach((e) => this.characterColliding(e));
     this.checkThrowableObjects();
@@ -120,7 +98,7 @@ class World {
     this.checkCoins();
   }
 
-  /** 🦅 Checks if the Endboss collides with the player (causes damage). */
+  /** Checks if the Endboss collides with the player (causes damage). */
   checkEndboss1Hit() {
     const boss = this.level.enemies.find(
       (e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2
@@ -133,523 +111,186 @@ class World {
     }
   }
 
-  /** 🧴 Manages all throwable objects and checks for enemy collisions. */
+  /** Manages all throwable objects and checks for enemy collisions. */
   checkThrowableObjects() {
     this.throwableObjects = this.throwableObjects.filter((b) => !b.isDead?.());
     this.throwableObjects.forEach((bottle) => {
       if (bottle.isBroken) return;
       this.level.enemies.forEach((enemy) => {
         if (bottle.isBroken) return;
-        if (!enemy.isDead?.() && bottle.isColliding(enemy)) {
-          if (
-            enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-            enemy.takeDamage?.(20);
-          } else {
-            enemy.hit?.();
-          }
-          bottle.break?.();
-        }
+        this.ifDeadIfCollidingMethod(enemy, bottle);
       });
     });
     this.throwableBottles();
   }
 
-  /** 🎯 Throws a new bottle when allowed and updates the bottle counter. */
+  ifDeadIfCollidingMethod(enemy, bottle) {
+    if (!enemy.isDead?.() && bottle.isColliding(enemy)) {
+      if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+        enemy.takeDamage?.(20);
+      } else {
+        enemy.hit?.();
+      }
+      bottle.break?.();
+    }
+  }
+
+  /** Throws a new bottle when allowed and updates the bottle counter. */
   throwableBottles() {
     if (
       this.keyboard.D &&
       this.canThrow &&
-      this.statusBarBottle.availableBottles > 0) {
-      this.canThrow = false;
-      this.statusBarBottle.availableBottles--;
-      this.statusBarBottle.update?.();
-      const bottle = new ThrowableObject(this.character.x + (this.character.otherDirection ? -30 : 30), this.character.y + 100, this.character.otherDirection);
-      bottle.world = this;
-      this.throwableObjects.push(bottle);
-      setTimeout(() => (this.canThrow = true), 400);
+      this.statusBarBottle.availableBottles > 0
+    ) {
+      this.ifThrowableBottlesMethod();
     }
   }
 
-  /** 🪙 Checks for player collisions with coins and updates the coin bar. */
-  // checkCoins() {
-  //   const inset = 10;
-  //   this.collectableCoins = this.collectableCoins.filter((coin) => {
-  //     if (this.character.isCollidingTight(coin, inset)) {
-  //       this.statusBarCoin.availableCoins++;
-  //       this.statusBarCoin.update();
-  //       if (soundEnabled) {
-  //         const s = new Audio("audio/coins.mp3");
-  //         s.volume = 0.5;
-  //         s.play().catch(() => {});
-  //       }
-  //       return false;
-  //     }
-  //     return true;
-  //   });
-  // }
-//   checkCoins() {
-//   this.collectableCoins = this.collectableCoins.filter((coin) => {
-//     if (this.coinPickupCollision(coin)) {
-//       this.statusBarCoin.availableCoins++;
-//       this.statusBarCoin.update();
+  ifThrowableBottlesMethod() {
+    this.canThrow = false;
+    this.statusBarBottle.availableBottles--;
+    this.statusBarBottle.update?.();
+    const bottle = new ThrowableObject(
+      this.character.x + (this.character.otherDirection ? -30 : 30),
+      this.character.y + 100,
+      this.character.otherDirection
+    );
+    bottle.world = this;
+    this.throwableObjects.push(bottle);
+    setTimeout(() => (this.canThrow = true), 400);
+  }
 
-//       if (soundEnabled) {
-//         const s = new Audio("audio/coins.mp3");
-//         s.volume = 0.5;
-//         s.play().catch(() => {});
-//       }
-
-//       return false; // Coin wurde eingesammelt → aus Liste entfernen
-//     }
-//     return true;
-//   });
-// }
-checkCoins() {
-  this.collectableCoins = this.collectableCoins.filter((coin) => {
-    if (this.isCoinCollected(coin)) {
-      this.statusBarCoin.availableCoins++;
-      this.statusBarCoin.update();
-
-      if (soundEnabled) {
-        const s = new Audio("audio/coins.mp3");
-        s.volume = 0.5;
-        s.play().catch(() => {});
+  /** Checks for player collisions with coins and updates the coin bar. */
+  checkCoins() {
+    this.collectableCoins = this.collectableCoins.filter((coin) => {
+      if (this.isCoinCollected(coin)) {
+        this.statusBarCoin.availableCoins++;
+        this.statusBarCoin.update();
+        if (soundEnabled) {
+          const s = new Audio("audio/coins.mp3");
+          s.volume = 0.5;
+          s.play().catch(() => {});
+        }
+        return false; 
       }
-
-      return false; // Coin einsammeln → aus Array entfernen
-    }
-    return true;
-  });
-}
-
-
+      return true;
+    });
+  }
 
   /**
- * 👣 Sehr kleine Hitbox nur für Coin-Einsammeln.
- * Nutzt die Zentren von Charakter und Coin, damit es optisch passt.
- */
-coinPickupCollision(coin) {
-  // Mittelpunkt Charakter
-  const cx = this.character.x + this.character.width / 2;
-  const cy = this.character.y + this.character.height / 2;
+   * Sehr kleine Hitbox nur für Coin-Einsammeln.
+   * Nutzt die Zentren von Charakter und Coin, damit es optisch passt.
+   */
+  coinPickupCollision(coin) {
+    const cx = this.character.x + this.character.width / 2;
+    const cy = this.character.y + this.character.height / 2;
+    const kx = coin.x + coin.width / 2;
+    const ky = coin.y + coin.height / 2;
+    const dx = Math.abs(cx - kx);
+    const dy = Math.abs(cy - ky);
+    const pickupRadiusX = coin.width * 0.3; 
+    const pickupRadiusY = coin.height * 0.3; 
+    return dx < pickupRadiusX && dy < pickupRadiusY;
+  }
 
-  // Mittelpunkt Coin
-  const kx = coin.x + coin.width / 2;
-  const ky = coin.y + coin.height / 2;
+  /**
+   * Coin collision:
+   * - Strongly reduced character hitbox (body only)
+   * - Slightly reduced coin hitbox
+   */
+  isCoinCollected(coin) {
+    if (!coin || !this.character) return false;
+    const c = this.character;
+    const charPaddingX = c.width * 0.3; 
+    const charPaddingTop = c.height * 0.2; 
+    const charPaddingBottom = c.height * 0.1; 
+    const ax1 = c.x + charPaddingX;
+    const ax2 = c.x + c.width - charPaddingX;
+    const ay1 = c.y + charPaddingTop;
+    const ay2 = c.y + c.height - charPaddingBottom;
+    const { bx1, bx2, by1, by2 } = this.coinPaddingMethod(coin);
+    return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
+  }
 
-  // Abstand in X/Y
-  const dx = Math.abs(cx - kx);
-  const dy = Math.abs(cy - ky);
+  coinPaddingMethod(coin) {
+    const coinPadding = 8;
+    const bx1 = coin.x + coinPadding;
+    const bx2 = coin.x + coin.width - coinPadding;
+    const by1 = coin.y + coinPadding;
+    const by2 = coin.y + coin.height - coinPadding;
+    return { bx1, bx2, by1, by2 };
+  }
 
-  // Wie "eng" die Einsammel-Zone sein soll:
-  const pickupRadiusX = coin.width * 0.3;   // 30% der Coin-Breite
-  const pickupRadiusY = coin.height * 0.3;  // 30% der Coin-Höhe
+  /** Handles player–enemy collision logic (jumping on enemies vs taking damage). */
+  characterColliding(enemy) {
+    const c = this.character;
+    if (!c || !enemy) return;
+    if (enemy.isDead?.() || enemy.dead) return;
+    if (!c.isColliding(enemy)) return;
+    const charBottom = c.y + c.height;
+    const enemyCenterY = enemy.y + enemy.height / 2;
+    const isStomp = charBottom <= enemyCenterY && c.speedY <= 0;
+    if (isStomp) {
+      return this.ifIsStompMethod(enemy, c);
+    }
+    if (!c.isHurtTimer) {
+      this.ifIsHurtTimerMethod(c);
+    }
+  }
 
-  return dx < pickupRadiusX && dy < pickupRadiusY;
-}
+  ifIsHurtTimerMethod(c) {
+    c.hit();
+    this.statusBar.setPercentage(c.energy);
+    c.isHurtTimer = true;
+    setTimeout(() => (c.isHurtTimer = false), 700);
+  }
 
-/**
- * 👣 Kollision für Coins:
- * - Charakter-Hitbox leicht verkleinert (inset)
- * - Coin-Hitbox bleibt normal
- */
-// isCoinCollected(coin) {
-//   if (!coin || !this.character) return false;
-
-//   const inset = 12; // etwas Puffer, kannst du bei Bedarf anpassen (5–12)
-
-//   // Charakter-Box (leicht kleiner)
-//   const ax1 = this.character.x + inset;
-//   const ay1 = this.character.y + inset;
-//   const ax2 = this.character.x + this.character.width - inset;
-//   const ay2 = this.character.y + this.character.height - inset;
-
-//   // Coin-Box (volle Größe)
-//   const bx1 = coin.x;
-//   const by1 = coin.y;
-//   const bx2 = coin.x + coin.width;
-//   const by2 = coin.y + coin.height;
-
-//   return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
-// }
-/**
- * 👣 Coin collision:
- * - Strongly reduced character hitbox (body only)
- * - Slightly reduced coin hitbox
- */
-isCoinCollected(coin) {
-  if (!coin || !this.character) return false;
-
-  const c = this.character;
-
-  // 🔹 Charakter-Hitbox stark verkleinern (nur Körper, nicht die volle Sprite-Breite)
-  const charPaddingX = c.width * 0.3;      // links & rechts ca. 30% abziehen
-  const charPaddingTop = c.height * 0.2;   // oben etwas weg
-  const charPaddingBottom = c.height * 0.1; // unten ein bisschen weg
-
-  const ax1 = c.x + charPaddingX;
-  const ax2 = c.x + c.width - charPaddingX;
-  const ay1 = c.y + charPaddingTop;
-  const ay2 = c.y + c.height - charPaddingBottom;
-
-  // 🔹 Coin-Hitbox leicht verkleinern
-  const coinPadding = 8; // kannst du z.B. 5–12 testen
-  const bx1 = coin.x + coinPadding;
-  const bx2 = coin.x + coin.width - coinPadding;
-  const by1 = coin.y + coinPadding;
-  const by2 = coin.y + coin.height - coinPadding;
-
-  // Standard-Rect-Kollision
-  return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
-}
-
-
-
-
-  /** 🐔 Handles player–enemy collision logic (jumping on enemies vs taking damage). */
-  // characterColliding(enemy) {
-  //   if (!this.character.isColliding(enemy)) return;
-  //   const charBottom = this.character.y + this.character.height;
-  //   const enemyHeadZone = enemy.y + enemy.height * 0.4;
-  //   const isAbove = charBottom <= enemyHeadZone;
-  //   if (isAbove) {
-  //     this.character.y = enemy.y - this.character.height;
-  //     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-  //       enemy.takeDamage?.(20);
-  //     } else {
-  //       enemy.hit?.();
-  //     }
-  //     this.character.jump();
-  //     if (enemy.isDead?.()) {
-  //       enemy.die?.();
-  //     }
-  //   } else {
-  //     this.character.hit();
-  //     this.statusBar.setPercentage(this.character.energy);
-  //   }
-  // }
-//   characterColliding(enemy) {
-//   const c = this.character;
-//   if (!c.isColliding(enemy)) return;
-
-//   const charBottom = c.y + c.height;
-//   //const enemyTop = enemy.y;
-//   const enemyCenterY = enemy.y + enemy.height / 2;
-
-//   // ✅ Stomp-Logik: Charakter muss VON OBEN kommen und fallend sein
-//   const isStomp =
-//     charBottom <= enemyCenterY &&   // bottom of character above enemy center
-//     c.speedY > 0;                   // falling down (jump phase)
-
-//   if (isStomp) {
-//     // 🧨 Boss: 20 damage, Chickens wie bisher
-//     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-//       enemy.takeDamage?.(20);
-//     } else {
-//       enemy.hit?.();
-//     }
-
-//     // kleiner Bounce nach oben
-//     c.jump();
-
-//     if (enemy.isDead?.()) enemy.die?.();
-//   } else {
-//     // ❌ kein Stomp → Spieler bekommt Schaden
-//     c.hit();
-//     this.statusBar.setPercentage(c.energy);
-//   }
-// }
-// characterColliding(enemy) {
-//   const c = this.character;
-//   if (!c.isColliding(enemy)) return;
-
-//   const charBottom = c.y + c.height;
-//   const enemyCenterY = enemy.y + enemy.height / 2;
-
-//   // ✅ Stomp-Bedingung: Charakter kommt von oben und fällt
-//   const isStomp =
-//     charBottom <= enemyCenterY &&
-//     c.speedY > 0;
-
-//   if (isStomp) {
-//     // 🧨 Boss Schaden anders als bei normalen Gegnern
-//     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-//       enemy.takeDamage?.(20);
-//     } else {
-//       enemy.hit?.();
-//     }
-
-//     // kleiner Bounce
-//     c.jump();
-
-//     if (enemy.isDead?.()) enemy.die?.();
-//   } else {
-//     // ❌ kein Stomp → der Spieler bekommt Schaden
-//     c.hit();
-//     this.statusBar.setPercentage(c.energy);
-//   }
-// }
-// characterColliding(enemy) {
-//   const c = this.character;
-//   if (!c.isColliding(enemy)) return;
-
-//   const charBottom   = c.y + c.height;
-//   const enemyCenterY = enemy.y + enemy.height / 2;
-
-//   // ✅ Stomp: Charakter kommt von oben UND fällt (speedY < 0)
-//   const isStomp =
-//     charBottom <= enemyCenterY &&
-//     c.speedY < 0; // <-- WICHTIG: fällt nach unten
-
-//   if (isStomp) {
-//     // Boss bekommt nur 20 Schaden, normale Gegner wie bisher
-//     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-//       enemy.takeDamage?.(20);
-//     } else {
-//       enemy.hit?.();
-//     }
-
-//     // kleiner Bounce nach oben
-//     c.speedY = 25;                 // nach oben schießen
-//     c.y      = enemy.y - c.height; // sauber auf Gegner-Oberseite setzen
-
-//     if (enemy.isDead?.()) enemy.die?.();
-//   } else {
-//     // Kein Stomp → Spieler bekommt Schaden
-//     c.hit();
-//     this.statusBar.setPercentage(c.energy);
-//   }
-// }
-// characterColliding(enemy) {
-//   const c = this.character;
-//   if (!c || !enemy) return;
-
-//   // Erstmal grob prüfen, ob überhaupt eine Kollision vorliegt
-//   if (!c.isColliding(enemy)) return;
-
-//   // Werte vorbereiten
-//   const charBottom = c.y + c.height;
-//   const enemyTop   = enemy.y;
-//   const enemyMidY  = enemy.y + enemy.height / 2;
-
-//   // 🔽 Wichtig: In deiner Physik gilt:
-//   //  - speedY > 0  → nach oben
-//   //  - speedY < 0  → fällt nach unten
-//   const isFalling = c.speedY < 0;
-
-//   // 🦶 Stomp-Bedingung:
-//   //  - Charakter fällt
-//   //  - Charakter-Unterkante ist oberhalb der Gegner-Mitte
-//   //  - UND nicht weit unterhalb des Gegner-Kopfes
-//   const isStomp =
-//     isFalling &&
-//     charBottom <= enemyMidY &&
-//     charBottom >= enemyTop - 10; // Toleranz nach oben
-
-//   if (isStomp) {
-//     // 🧨 Boss: 20 Schaden pro Treffer, Rest wie gehabt
-//     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-//       enemy.takeDamage?.(20);
-//     } else {
-//       enemy.hit?.();
-//     }
-
-//     // 🟰 Charakter sauber auf Gegnerkopf setzen + Bounce nach oben
-//     c.y = enemyTop - c.height;
-//     c.speedY = 25; // kleiner Rücksprung nach oben
-
-//     if (enemy.isDead?.()) {
-//       enemy.die?.();
-//     }
-//   } else {
-//     // ❌ Kein Stomp → Spieler bekommt Schaden
-//     c.hit();
-//     this.statusBar.setPercentage(c.energy);
-//   }
-// }
-// characterColliding(enemy) {
-//   const c = this.character;
-//   if (!c || !enemy) return;
-
-//   // Erstmal grob prüfen, ob überhaupt eine Kollision vorliegt
-//   if (!c.isColliding(enemy)) return;
-
-//   const charBottom = c.y + c.height;
-//   const enemyTop   = enemy.y;
-//   const enemyHeight = enemy.height;
-
-//   // In deiner Physik: speedY < 0 = fällt nach unten
-//   const isFalling = c.speedY < 0;
-
-//   // 🦶 Stomp:
-//   // - Charakter fällt
-//   // - Unterkante ist im oberen Drittel des Gegners
-//   const isStomp =
-//     isFalling &&
-//     charBottom <= enemyTop + enemyHeight * 0.5 && // obere Hälfte
-//     charBottom >= enemyTop - 5;                    // kleiner Toleranzbereich drüber
-
-//   if (isStomp) {
-//     // Boss bekommt 20 Schaden, normale Chickens sterben wie bisher
-//     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-//       enemy.takeDamage?.(20);
-//     } else {
-//       enemy.hit?.();
-//     }
-
-//     // Pepe sauber auf den Gegner setzen + kleinen Bounce
-//     c.y      = enemyTop - c.height;
-//     c.speedY = 25;
-
-//     c.lastHit = 0;
-
-//     if (enemy.isDead?.()) enemy.die?.();
-//   } else {
-//     // kein Stomp → Spieler kassiert
-//     if (!c.isHurtTimer) {
-//       c.hit();
-//       this.statusBar.setPercentage(c.energy);
-
-//       c.isHurtTimer = true;
-//       setTimeout(() => (c.isHurtTimer = false), 1000); // 1 Sekunde Schutz
-//     }
-//   }
-// }
-characterColliding(enemy) {
-  const c = this.character;
-  if (!c || !enemy) return;
-
-  // 🚫 WICHTIG: Tote Gegner komplett ignorieren
-  if (enemy.isDead?.() || enemy.dead) return;
-
-  // Erst prüfen, ob überhaupt Kollision
-  if (!c.isColliding(enemy)) return;
-
-  const charBottom   = c.y + c.height;
-  const enemyCenterY = enemy.y + enemy.height / 2;
-
-  // ✅ Stomp-Bedingung:
-  // - Pepe ist mit den Füßen eher über der Mitte des Gegners
-  // - und bewegt sich nach unten / ist am Fallen (speedY <= 0)
-  const isStomp =
-    charBottom <= enemyCenterY &&
-    c.speedY <= 0;
-
-  if (isStomp) {
-    // 🧨 Boss bekommt nur 20 Schaden, normale Gegner wie bisher
+  ifIsStompMethod(enemy, c) {
     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
       enemy.takeDamage?.(20);
     } else {
       enemy.hit?.();
     }
-
-    // 🦘 kleiner Bounce nach oben + sauber auf Gegneroberseite setzen
     c.speedY = 25;
-    c.y      = enemy.y - c.height;
-
-    // ❌ sicherstellen, dass keine Hurt-Animation durch alten Treffer aktiv bleibt
+    c.y = enemy.y - c.height;
     c.lastHit = 0;
-
-    // Wenn der Gegner jetzt tot ist → Todesequenz
     if (enemy.isDead?.()) enemy.die?.();
-
-    // ⛔ GANZ WICHTIG:
-    // Nach einem Stomp KEIN weiterer Schaden mehr in diesem Frame!
     return;
   }
 
-  // ❌ Kein Stomp → Pepe bekommt Schaden (aber nur, wenn er nicht kurz invincible ist)
-  if (!c.isHurtTimer) {
-    c.hit();
-    this.statusBar.setPercentage(c.energy);
-
-    c.isHurtTimer = true;
-    setTimeout(() => (c.isHurtTimer = false), 700);
+  /** Handles collisions with collectible bottles. */
+  characterCollidingBottle() {
+    const c = this.character;
+    this.collectableBottles = this.collectableBottles.filter((bottle) => {
+      const { horizontalOverlap, verticallyOnBottle } = this.characterCollidingBottleConstsMethod(c, bottle); 
+      if (horizontalOverlap && verticallyOnBottle) {
+        if (this.statusBarBottle.availableBottles < 5) {
+          this.statusBarBottle.availableBottles++;
+          this.statusBarBottle.update();
+        } else {
+          this.showBottleLimitMessage();
+        }
+        return false; 
+      }
+      return true;});
   }
-}
 
-
-
-  /** 🧴 Handles collisions with collectible bottles. */
-  // characterCollidingBottle() {
-  //   this.collectableBottles = this.collectableBottles.filter((bottle) => {
-  //     if (this.character.isColliding(bottle)) {
-  //       if (this.statusBarBottle.availableBottles < 5) {
-  //         this.statusBarBottle.availableBottles++;
-  //         this.statusBarBottle.update();
-  //       } else this.showBottleLimitMessage();
-  //       return false;
-  //     }
-  //     return true;
-  //   });
-  // }
-//   characterCollidingBottle() {
-//   const inset = 14; // ähnlich wie bei Coins – kannst du fein-tunen
-
-//   this.collectableBottles = this.collectableBottles.filter((bottle) => {
-//     if (this.character.isCollidingTight(bottle, inset)) {
-//       if (this.statusBarBottle.availableBottles < 5) {
-//         this.statusBarBottle.availableBottles++;
-//         this.statusBarBottle.update();
-
-//         // optional: Flaschen-Sound
-//         if (soundEnabled) {
-//           const s = new Audio("audio/bottle.mp3");
-//           s.volume = 0.5;
-//           s.play().catch(() => {});
-//         }
-//       } else {
-//         this.showBottleLimitMessage();
-//       }
-//       return false; // Bottle wird eingesammelt → aus Array entfernen
-//     }
-//     return true;
-//   });
-// }
-characterCollidingBottle() {
-  const c = this.character;
-
-  this.collectableBottles = this.collectableBottles.filter((bottle) => {
-    // 🔹 horizontale Hitbox leicht verkleinern
+  characterCollidingBottleConstsMethod(c, bottle) {
     const insetXChar = 15;
     const insetXBottle = 13;
-
-    const charLeft   = c.x + insetXChar;
-    const charRight  = c.x + c.width - insetXChar;
-
-    const bottleLeft  = bottle.x + insetXBottle;
+    const charLeft = c.x + insetXChar;
+    const charRight = c.x + c.width - insetXChar;
+    const bottleLeft = bottle.x + insetXBottle;
     const bottleRight = bottle.x + bottle.width - insetXBottle;
-
-    const horizontalOverlap =
-      charRight > bottleLeft && charLeft < bottleRight;
-
-    // 🔹 vertikal: nur einsammeln, wenn Pepe mit den Füßen in Bodennähe der Flasche ist
-    const charBottom  = c.y + c.height;
-    const bottleTop   = bottle.y;
+    const horizontalOverlap = charRight > bottleLeft && charLeft < bottleRight;
+    const charBottom = c.y + c.height;
+    const bottleTop = bottle.y;
     const bottleBottom = bottle.y + bottle.height;
+    const verticallyOnBottle = charBottom >= bottleTop && charBottom <= bottleBottom + 5;
+    return { horizontalOverlap, verticallyOnBottle };
+  }
 
-    // Pepe muss mit den Füßen im oberen Bereich der Flasche sein
-    const verticallyOnBottle =
-      charBottom >= bottleTop &&      // Füße unter/auf dem oberen Rand
-      charBottom <= bottleBottom + 5; // kleiner Spielraum
-
-    if (horizontalOverlap && verticallyOnBottle) {
-      if (this.statusBarBottle.availableBottles < 5) {
-        this.statusBarBottle.availableBottles++;
-        this.statusBarBottle.update();
-      } else {
-        this.showBottleLimitMessage();
-      }
-      return false; // aus Liste entfernen → eingesammelt
-    }
-
-    return true;
-  });
-}
-
-
-
-  /** 🏆 Checks if the Endboss has been defeated. */
+  /** Checks if the Endboss has been defeated. */
   checkEndbossDefeated() {
     const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
     if (!endboss || this.endbossDefeated || this.playerDied) return;
@@ -660,16 +301,15 @@ characterCollidingBottle() {
     }
   }
 
-  /** 🧩 Stops all sounds and displays the game over screen. */
+  /** Stops all sounds and displays the game over screen. */
   endGame() {
     this.stopGameLoopHard();
     this.stopEnemySounds();
-    //this.playSound("audio/gameover.mp3");
     this.showGameOverScreen();
   }
 
   /**
-   * 🎵 Plays a sound if sound is enabled.
+   * Plays a sound if sound is enabled.
    * @param {string} path - Audio file path.
    * @param {boolean} [loop=false] - Whether the sound should loop.
    */
@@ -681,37 +321,37 @@ characterCollidingBottle() {
     s.play().catch(() => {});
   }
 
-  /** 🔇 Stops all enemy sounds. */
+  /** Stops all enemy sounds. */
   stopEnemySounds() {
     this.level.enemies.forEach((e) => e.stopScreamSound?.());
   }
 
-  /** 🏁 Displays the victory screen and plays win music. */
+  /** Displays the victory screen and plays win music. */
   showWinScreen() {
     if (this._winShown) return;
     this._winShown = true;
     this._gameOverPlayed = true;
     this.stopGameLoopHard(true);
-    this.stopAllSounds(); // sicherstellen, dass vorher alles still ist
-    this.setBackgroundMusic("audio/win.mp3", true); // 🔁 loopend
+    this.stopAllSounds(); 
+    this.setBackgroundMusic("audio/win.mp3", true); 
     this.fadeOverlay(0.3);
     this.drawEndScreen("img/You won, you lost/You win B.png", "#fca534ff");
   }
 
-  /** ☠️ Displays the game over screen. */
+  /** Displays the game over screen. */
   showGameOverScreen() {
     if (this._gameOverPlayed) return;
     this._gameOverPlayed = true;
     this._winShown = true;
     this.stopGameLoopHard(false);
     this.hardStopEnemyAudio();
-    this.stopAllSounds(); // sicherstellen, dass vorher alles still ist
-    this.setBackgroundMusic("audio/gameover.mp3", false); // ▶️ einmalig
+    this.stopAllSounds(); 
+    this.setBackgroundMusic("audio/gameover.mp3", false); 
     this.fadeOverlay(0.8);
     this.drawEndScreen("img/You won, you lost/Game Over.png", "#fca534ff");
   }
 
-  /** 🌫️ Draws a transparent overlay to darken the screen. */
+  /** Draws a transparent overlay to darken the screen. */
   fadeOverlay(alpha = 0.2) {
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.fillStyle = `rgba(0,0,0,${alpha})`;
@@ -719,7 +359,7 @@ characterCollidingBottle() {
   }
 
   /**
-   * 🖼️ Draws either the win or game-over screen with a restart button.
+   * Draws either the win or game-over screen with a restart button.
    * @param {string} imgSrc - Path to the end screen image.
    * @param {string} btnColor - Color for the restart button.
    */
@@ -732,7 +372,7 @@ characterCollidingBottle() {
   }
 
   /**
-   * 🖼️ Handles image loading and scaling for end screens (win/game over).
+   * Handles image loading and scaling for end screens (win/game over).
    * Once the image is fully loaded, it is drawn centered on the canvas,
    * and the restart button is rendered below it.
    *
@@ -743,21 +383,18 @@ characterCollidingBottle() {
    */
   imgOnload(img, canvas, ctx, btnColor) {
     img.onload = () => {
-      // 📏 Dynamically scale image to fit ~60% of canvas width, 30% of height
       const scale = Math.min(
         (canvas.width * 0.6) / img.width,
         (canvas.height * 0.3) / img.height
       );
       const w = img.width * scale;
       const h = img.height * scale;
-      // 🎯 Center the image horizontally, slightly above the canvas center
       this.drawImageMethod(ctx, img, canvas, w, h);
-      // 🔘 Draw restart button after image appears
       this.drawRestartButton(btnColor);
     };
   }
 
-  // 🎯 Center the image horizontally, slightly above the canvas center
+  // Center the image horizontally, slightly above the canvas center
   drawImageMethod(ctx, img, canvas, w, h) {
     ctx.drawImage(
       img,
@@ -769,112 +406,71 @@ characterCollidingBottle() {
   }
 
   /**
-   * 🔁 Draws and animates the restart button shown after win or game over.
+   * Draws and animates the restart button shown after win or game over.
    * @param {string} color - Button background color.
    */
-  // drawRestartButton(color) {
-  //   const ctx = this.ctx;
-  //   const canvas = this.canvas;
-  //   const w = 250,
-  //     h = 60;
-  //   const x = canvas.width / 2 - w / 2;
-  //   const y = canvas.height / 2;
-
-  //   // 🌟 Pulsating glow animation for better visibility
-  //   let pulse = 0;
-  //   const animatePulse = () => {
-  //     if (this.levelEnded) {
-  //       ctx.save();
-  //       ctx.globalAlpha = 0.2 + Math.sin(Date.now() / 400) * 0.2;
-  //       ctx.fillStyle = "#c07512ff";
-  //       ctx.beginPath();
-  //       ctx.roundRect(x - 5, y - 5, w + 10, h + 10, 10);
-  //       ctx.fill();
-  //       ctx.restore();
-  //       // 🔳 Main restart button
-  //       this.mainRestartButtonMethod(ctx, color, x, y, w, h, canvas);
-  //       pulse = requestAnimationFrame(animatePulse);
-  //     } else {
-  //       cancelAnimationFrame(pulse);
-  //     }
-  //   };
-
-  //   animatePulse(); // Initial draw
-
-  //   // Save clickable area for restart detection
-  //   this.restartButtonArea = { x, y, width: w, height: h };
-  //       if (!this.restartHoverListenerAdded) {
-  //     this.handleRestartHoverBound = this.handleRestartHover.bind(this);
-  //     canvas.addEventListener("mousemove", this.handleRestartHoverBound);
-  //     this.restartHoverListenerAdded = true;
-  //   }
-  //   // Add click / touch listeners only once
-  //   if (!this.canvasClickListenerAdded) {
-  //     const boundHandler = this.handleRestartClick.bind(this);
-  //     canvas.addEventListener("click", boundHandler);
-  //     canvas.addEventListener("touchstart", boundHandler, { passive: false });
-  //     canvas.addEventListener("pointerdown", boundHandler);
-  //     this.canvasClickListenerAdded = true;
-  //   }
-  // }
   drawRestartButton(color) {
-  const ctx = this.ctx;
-  const canvas = this.canvas;
-  const w = 250,
-    h = 60;
-  const x = canvas.width / 2 - w / 2;
-  const y = canvas.height / 2;
-
-  // 🌟 Pulsating glow animation for better visibility
-  const animatePulse = () => {
-    if (this.levelEnded) {
-      ctx.save();
-      ctx.globalAlpha = 0.2 + Math.sin(Date.now() / 400) * 0.2;
-      ctx.fillStyle = "#c07512ff";
-      ctx.beginPath();
-      ctx.roundRect(x - 5, y - 5, w + 10, h + 10, 10);
-      ctx.fill();
-      ctx.restore();
-
-      // 🔳 Main restart button
-      this.mainRestartButtonMethod(ctx, color, x, y, w, h, canvas);
-
-      // 🔁 Frame-Loop merken, damit wir ihn später stoppen können
-      this.restartPulseId = requestAnimationFrame(animatePulse);
-    } else {
-      // ❌ Wenn levelEnded wieder false wäre, Sicherheitshalber stoppen
-      if (this.restartPulseId) {
-        cancelAnimationFrame(this.restartPulseId);
-        this.restartPulseId = null;
-      }
+    const { ctx, x, y, w, h, canvas } = this.drawRestartButtonConstsMethod();
+    const animatePulse = () => {
+      this.ifLevelEndedMethod(ctx, x, y, w, h, color, canvas, animatePulse);
+    };
+    animatePulse();
+    this.restartButtonArea = { x, y, width: w, height: h };
+    if (!this.restartHoverListenerAdded) {
+      this.ifRestartHoverListenerAddedMethod(canvas);
     }
-  };
-
-  // Erste Zeichnung starten
-  animatePulse();
-
-  // Klickbare Fläche merken
-  this.restartButtonArea = { x, y, width: w, height: h };
-
-  // Hover-Listener nur einmal registrieren
-  if (!this.restartHoverListenerAdded) {
-    this.handleRestartHoverBound = this.handleRestartHover.bind(this);
-    canvas.addEventListener("mousemove", this.handleRestartHoverBound);
-    this.restartHoverListenerAdded = true;
+    if (!this.canvasClickListenerAdded) {
+      this.ifCanvasClickListenerAddedMethod(canvas);
+    }
   }
 
-  // Klick-/Touch-Handler nur einmal registrieren
-  if (!this.canvasClickListenerAdded) {
+  drawRestartButtonConstsMethod() {
+    const ctx = this.ctx;
+    const canvas = this.canvas;
+    const w = 250, h = 60;
+    const x = canvas.width / 2 - w / 2;
+    const y = canvas.height / 2;
+    return { ctx, x, y, w, h, canvas };
+  }
+
+  ifCanvasClickListenerAddedMethod(canvas) {
     const boundHandler = this.handleRestartClick.bind(this);
     canvas.addEventListener("click", boundHandler);
     canvas.addEventListener("touchstart", boundHandler, { passive: false });
     canvas.addEventListener("pointerdown", boundHandler);
     this.canvasClickListenerAdded = true;
   }
-}
 
+  ifRestartHoverListenerAddedMethod(canvas) {
+    this.handleRestartHoverBound = this.handleRestartHover.bind(this);
+    canvas.addEventListener("mousemove", this.handleRestartHoverBound);
+    this.restartHoverListenerAdded = true;
+  }
 
-  // 🔳 Main restart button
+  ifLevelEndedMethod(ctx, x, y, w, h, color, canvas, animatePulse) {
+    if (this.levelEnded) {
+      this.ifLevelEndedCtxMethod(ctx, x, y, w, h);
+      this.mainRestartButtonMethod(ctx, color, x, y, w, h, canvas);
+      this.restartPulseId = requestAnimationFrame(animatePulse);
+    } else {
+      if (this.restartPulseId) {
+        cancelAnimationFrame(this.restartPulseId);
+        this.restartPulseId = null;
+      }
+    }
+  }
+
+  ifLevelEndedCtxMethod(ctx, x, y, w, h) {
+    ctx.save();
+    ctx.globalAlpha = 0.2 + Math.sin(Date.now() / 400) * 0.2;
+    ctx.fillStyle = "#c07512ff";
+    ctx.beginPath();
+    ctx.roundRect(x - 5, y - 5, w + 10, h + 10, 10);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Main restart button
   mainRestartButtonMethod(ctx, color, x, y, w, h, canvas) {
     ctx.fillStyle = color;
     ctx.fillRect(x, y, w, h);
@@ -885,136 +481,88 @@ characterCollidingBottle() {
   }
 
   /**
-   * 🖱️ Handles clicks on the restart button and reloads the game.
+   * Handles clicks on the restart button and reloads the game.
    * @param {MouseEvent|TouchEvent} e
    */
-  // handleRestartClick(e) {
-  //   const rect = this.canvas.getBoundingClientRect();
-  //   const scaleX = this.canvas.width / rect.width;
-  //   const scaleY = this.canvas.height / rect.height;
-  //   const x = (e.clientX - rect.left) * scaleX;
-  //   const y = (e.clientY - rect.top) * scaleY;
-  //   const btn = this.restartButtonArea;
-  //   if (!btn) return;
-  //   const inside =
-  //     x >= btn.x &&
-  //     x <= btn.x + btn.width &&
-  //     y >= btn.y &&
-  //     y <= btn.y + btn.height;
-  //   this.stopSoundsMethod(inside);
-  // }
   handleRestartClick(e) {
-  const rect = this.canvas.getBoundingClientRect();
-  const scaleX = this.canvas.width / rect.width;
-  const scaleY = this.canvas.height / rect.height;
-  const x = (e.clientX - rect.left) * scaleX;
-  const y = (e.clientY - rect.top) * scaleY;
+    const rect = this.canvas.getBoundingClientRect();
+    const { btn, x, y } = this.handleRestartClickConstsMethod(rect, e);
+    if (!btn) return;
+    const inside =
+      x >= btn.x &&
+      x <= btn.x + btn.width &&
+      y >= btn.y &&
+      y <= btn.y + btn.height;
+    if (inside) {
+      this.ifInsideMethod();
+    }
+  }
 
-  const btn = this.restartButtonArea;
-  if (!btn) return;
-
-  const inside =
-    x >= btn.x &&
-    x <= btn.x + btn.width &&
-    y >= btn.y &&
-    y <= btn.y + btn.height;
-
-  if (inside) {
-    // 🧨 Sofort die alte Restart-UI abschalten
+  ifInsideMethod() {
     this.stopRestartButtonUI();
-
-    // dann dein bisheriger Restart-Flow:
     this.stopAllSounds();
     this.stopGameLoopHard();
     this._winShown = false;
     this._gameOverPlayed = false;
-
     setTimeout(() => restartGame(), 300);
   }
-}
 
-
-    /**
-   * 🖱️ Sets pointer cursor when mouse is over the restart button.
-   */
-  // handleRestartHover(e) {
-  //   if (!this.restartButtonArea || !this.levelEnded) {
-  //     this.canvas.classList.remove("restart-hover");
-  //     return;
-  //   }
-
-  //   const rect = this.canvas.getBoundingClientRect();
-  //   const scaleX = this.canvas.width / rect.width;
-  //   const scaleY = this.canvas.height / rect.height;
-  //   const x = (e.clientX - rect.left) * scaleX;
-  //   const y = (e.clientY - rect.top) * scaleY;
-
-  //   const btn = this.restartButtonArea;
-  //   const inside =
-  //     x >= btn.x &&
-  //     x <= btn.x + btn.width &&
-  //     y >= btn.y &&
-  //     y <= btn.y + btn.height;
-
-  //   if (inside) {
-  //     this.canvas.classList.add("restart-hover");
-  //   } else {
-  //     this.canvas.classList.remove("restart-hover");
-  //   }
-  // }
-  handleRestartHover(event) {
-  // Wenn kein Restart-Button existiert → nichts tun & Cursor resetten
-  if (!this.restartButtonArea) {
-    this.canvas.style.cursor = "default";
-    return;
+  handleRestartClickConstsMethod(rect, e) {
+    const scaleX = this.canvas.width / rect.width;
+    const scaleY = this.canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+    const btn = this.restartButtonArea;
+    return { btn, x, y };
   }
 
-  const rect = this.canvas.getBoundingClientRect();
-  const scaleX = this.canvas.width / rect.width;
-  const scaleY = this.canvas.height / rect.height;
+  /**
+   * Sets pointer cursor when mouse is over the restart button.
+   */
+  handleRestartHover(event) {
+    if (!this.restartButtonArea) {
+      this.canvas.style.cursor = "default";
+      return;
+    }
+    const rect = this.canvas.getBoundingClientRect();
+    const { x, y } = this.scaleXYMethod(rect, event);
+    const inside =
+      x >= this.restartButtonArea.x &&
+      x <= this.restartButtonArea.x + this.restartButtonArea.width &&
+      y >= this.restartButtonArea.y &&
+      y <= this.restartButtonArea.y + this.restartButtonArea.height
+    this.canvas.style.cursor = inside ? "pointer" : "default";
+  }
 
-  const x = (event.clientX - rect.left) * scaleX;
-  const y = (event.clientY - rect.top) * scaleY;
-
-  const inside =
-    x >= this.restartButtonArea.x &&
-    x <= this.restartButtonArea.x + this.restartButtonArea.width &&
-    y >= this.restartButtonArea.y &&
-    y <= this.restartButtonArea.y + this.restartButtonArea.height;
-
-  this.canvas.style.cursor = inside ? "pointer" : "default";
-}
-
-
+  scaleXYMethod(rect, event) {
+    const scaleX = this.canvas.width / rect.width;
+    const scaleY = this.canvas.height / rect.height;
+    const x = (event.clientX - rect.left) * scaleX;
+    const y = (event.clientY - rect.top) * scaleY;
+    return { x, y };
+  }
 
   /**
-   * 🔇 Stops all active sounds and resets the game state when the player
+   * Stops all active sounds and resets the game state when the player
    * clicks inside the restart button area. Used to cleanly restart the game.
    *
    * @param {boolean} inside - Indicates whether the click occurred inside the restart button area.
    */
   stopSoundsMethod(inside) {
     if (inside) {
-      // 🧹 Stop all currently playing sounds and clear game intervals
       this.hardStopEnemyAudio();
       this.stopAllSounds();
       this.stopGameLoopHard();
-
-      // ♻️ Reset internal flags for proper restart
       this._winShown = false;
       this._gameOverPlayed = false;
-
-      // ⏳ Small delay before reloading for smoother UX
-      //setTimeout(() => location.reload(), 300);
       setTimeout(() => restartGame(), 300);
     }
   }
 
   /**
-   * 🔁 Restarts the game without reloading the page.
+   * Restarts the game without reloading the page.
    */
   restartGame() {
-    // 🧹 Alte Welt vollständig entfernen
     if (world) {
       this.canvas?.classList.remove("restart-hover");
       world.stopRestartButtonUI?.();
@@ -1022,62 +570,40 @@ characterCollidingBottle() {
       world.stopGameLoopHard();
       world = null;
     }
-
-    // 💡 Canvas zurücksetzen
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // 🕹️ Neues Spiel starten
     startGame();
   }
 
   /**
-   * 🎨 Main render loop — draws background, entities, UI and controls.
+   * Main render loop — draws background, entities, UI and controls.
    */
   draw() {
     if (this.playerDied) return this.showGameOverScreen();
     if (this.endbossDefeated) return this.showWinScreen();
-
     this.restartButtonArea = null;
-
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.updateCanvasRect();
-
-    // --- Background & camera movement ---
     this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.backgroundObjects);
     this.ctx.translate(-this.camera_x, 0);
-
-    // --- HUD elements ---
     [this.statusBar, this.statusBarBottle, this.statusBarCoin].forEach((bar) =>
       this.addToMap(bar)
     );
-
-    // --- Character and enemies ---
     this.ctx.translate(this.camera_x, 0);
     this.addToMap(this.character);
-
     this.level.enemies.forEach((enemy) => {
       this.addToMap(enemy);
       if (enemy.statusBar) this.addToMap(enemy.statusBar);
     });
-
-    // --- Collectibles & projectiles ---
     this.addObjectsToMap(this.collectableBottles);
     this.addObjectsToMap(this.collectableCoins);
     this.addObjectsToMap(this.throwableObjects);
-
-    // --- Reset camera ---
     this.ctx.translate(-this.camera_x, 0);
-
-    // --- On-screen mobile controls ---
     this.drawMobileControls();
-
     if (!this.levelEnded)
       this.animationFrame = requestAnimationFrame(() => this.draw());
-
-    // --- Nach allen Zeichnungen ---
     if (this.bottleLimitMessage) {
       this.ctx.save();
       this.ctx.font = "26px Comic Sans MS";
@@ -1094,12 +620,12 @@ characterCollidingBottle() {
     }
   }
 
-  /** 🧩 Draws all objects from a given list to the canvas. */
+  /** Draws all objects from a given list to the canvas. */
   addObjectsToMap(objects = []) {
     objects.forEach((o) => this.addToMap(o));
   }
 
-  /** 🧱 Draws a single movable object, handling horizontal flipping if needed. */
+  /** Draws a single movable object, handling horizontal flipping if needed. */
   addToMap(mo) {
     if (!mo) return;
     if (mo.otherDirection) this.flipImage(mo);
@@ -1107,7 +633,7 @@ characterCollidingBottle() {
     if (mo.otherDirection) this.flipImageBack(mo);
   }
 
-  /** ↔️ Flips an image horizontally (used for left-facing movement). */
+  /** Flips an image horizontally (used for left-facing movement). */
   flipImage(mo) {
     this.ctx.save();
     this.ctx.translate(mo.width, 0);
@@ -1115,26 +641,22 @@ characterCollidingBottle() {
     mo.x *= -1;
   }
 
-  /** ↩️ Restores the original image orientation after drawing. */
+  /** Restores the original image orientation after drawing. */
   flipImageBack(mo) {
     this.ctx.restore();
     mo.x *= -1;
   }
 
   /**
-   * 📱 Sets up touch / pointer controls for mobile gameplay.
+   * Sets up touch / pointer controls for mobile gameplay.
    * Converts screen coordinates into logical canvas coordinates.
    */
   setupCanvasControls() {
     if (this.uiClickListenerAdded) return;
     this.uiClickListenerAdded = true;
-
     const handleDown = (e) => {
       if (e.cancelable) e.preventDefault();
       const { x, y } = this.getCanvasCoordinates(e);
-
-      // 🔴 Optional: Debug indicator for tap location
-      // this.debugIndicatorMethod(x, y);
       this.keyboardInsidebuttonMethod(x, y);
     };
     const handleUp = this.handleUpMethod();
@@ -1142,26 +664,23 @@ characterCollidingBottle() {
   }
 
   /**
-   * 📱 Attaches touch, pointer, and mouse event listeners to the canvas
+   * Attaches touch, pointer, and mouse event listeners to the canvas
    * for handling on-screen control buttons (mobile-friendly input).
    *
    * @param {Function} handleDown - Function to call when a control button is pressed.
    * @param {Function} handleUp - Function to call when a control button is released.
    */
   touchButtonsMethod(handleDown, handleUp) {
-    // Add "press" events for mobile and desktop input types
     ["pointerdown", "touchstart", "mousedown"].forEach((t) =>
       this.canvas.addEventListener(t, handleDown, { passive: false })
     );
-
-    // Add "release" events to reset input state
     ["pointerup", "touchend", "mouseup", "touchcancel"].forEach((t) =>
       this.canvas.addEventListener(t, handleUp)
     );
   }
 
   /**
-   * 🎮 Checks if a given touch or click position is inside one of the on-screen
+   * Checks if a given touch or click position is inside one of the on-screen
    * control buttons and updates keyboard state accordingly.
    *
    * @param {number} x - X coordinate on the canvas.
@@ -1175,7 +694,7 @@ characterCollidingBottle() {
   }
 
   /**
-   * ⬆️ Returns a reusable function that resets all virtual key states
+   * Returns a reusable function that resets all virtual key states
    * (used for mobile button release handling).
    *
    * @returns {Function} A function that, when executed, clears all keyboard inputs.
@@ -1189,7 +708,6 @@ characterCollidingBottle() {
     };
   }
 
-  // 🔴 Optional: Debug indicator for tap location
   debugIndicatorMethod(x, y) {
     const ctx = this.ctx;
     ctx.save();
@@ -1200,13 +718,13 @@ characterCollidingBottle() {
     ctx.restore();
   }
 
-  /** 🧭 Updates cached canvas bounding box for accurate input scaling. */
+  /** Updates cached canvas bounding box for accurate input scaling. */
   updateCanvasRect() {
     this.canvasRect = this.canvas.getBoundingClientRect();
   }
 
   /**
-   * 🔍 Converts click or touch event into logical canvas coordinates,
+   * Converts click or touch event into logical canvas coordinates,
    * accounting for scaling and fullscreen offsets.
    * @param {Event} e
    * @returns {{x:number,y:number}} Position on canvas
@@ -1228,7 +746,7 @@ characterCollidingBottle() {
   }
 
   /**
-   * 🎯 Converts a touch or mouse event position to accurate canvas coordinates.
+   * Converts a touch or mouse event position to accurate canvas coordinates.
    * This ensures that input positions are correctly mapped even when the canvas
    * is scaled or centered in fullscreen or responsive layouts.
    *
@@ -1236,25 +754,20 @@ characterCollidingBottle() {
    * @returns {{ clientX: number, x: number, y: number }} The calculated canvas coordinates.
    */
   canvasCoordinatesMethod(e) {
-    // Get current canvas position and size relative to the viewport
     const rect = this.canvasRect;
-    // Calculate scaling ratio between actual canvas resolution and displayed size
     const scaleX = this.canvas.width / rect.width;
     const scaleY = this.canvas.height / rect.height;
-    // Detect touch or mouse coordinates
     const clientX = e.touches?.[0]?.clientX ?? e.clientX;
     const clientY = e.touches?.[0]?.clientY ?? e.clientY;
-    // Subtract offsets (canvas position on screen)
     const offsetX = rect.left;
     const offsetY = rect.top;
-    // Convert to logical canvas coordinates
     const x = (clientX - offsetX) * scaleX;
     const y = (clientY - offsetY) * scaleY;
     return { clientX, y, x };
   }
 
   /**
-   * 📏 Retrieves and returns the current window and canvas aspect ratio information.
+   * Retrieves and returns the current window and canvas aspect ratio information.
    * This helps determine how the canvas should be scaled or centered
    * when resizing or entering fullscreen mode.
    *
@@ -1266,172 +779,89 @@ characterCollidingBottle() {
     const pageHeight = window.innerHeight;
     const aspectRatio = this.canvas.width / this.canvas.height;
     const windowRatio = pageWidth / pageHeight;
-
     return { windowRatio, aspectRatio, pageHeight, pageWidth };
   }
 
   /**
-   * 📱 Returns true on mobile/tablet (coarse pointer) or small viewports.
+   * Returns true on mobile/tablet (coarse pointer) or small viewports.
    */
   isMobileOrTablet() {
-    // Uses pointer type and viewport width as heuristic
     const isCoarsePointer =
-      window.matchMedia &&
-      window.matchMedia("(pointer: coarse)").matches;
-
+      window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
     const isNarrowScreen = window.innerWidth <= 1024;
-
     return isCoarsePointer || isNarrowScreen;
   }
 
-
   /**
-   * 🎮 Draws on-screen circular control buttons for mobile users.
-   * Includes movement, jump, and throw controls.
-   */
-  // drawMobileControls() {
-  //   const ctx = this.ctx;
-  //   const w = this.canvas.width;
-  //   const h = this.canvas.height;
-  //   const size = 60;
-  //   const margin = 20;
-
-  //   // Define button positions relative to canvas size
-  //   this.leftBtnArea = {
-  //     x: margin,
-  //     y: h - size - margin,
-  //     width: size,
-  //     height: size,
-  //     label: "⬅️",
-  //   };
-  //   this.rightBtnArea = {
-  //     x: margin + size + 20,
-  //     y: h - size - margin,
-  //     width: size,
-  //     height: size,
-  //     label: "➡️",
-  //   };
-  //   this.jumpBtnArea = {
-  //     x: w - size * 2 - 40,
-  //     y: h - size - margin,
-  //     width: size,
-  //     height: size,
-  //     label: "⤴️",
-  //   };
-  //   this.throwBtnArea = {
-  //     x: w - size - margin,
-  //     y: h - size - margin,
-  //     width: size,
-  //     height: size,
-  //     label: "🧴",
-  //   };
-
-  //   // Draw each button with consistent style
-  //   [
-  //     this.leftBtnArea,
-  //     this.rightBtnArea,
-  //     this.jumpBtnArea,
-  //     this.throwBtnArea,
-  //   ].forEach((b) => {
-  //     ctx.save();
-  //     ctx.fillStyle = "#fca534ff";
-  //     ctx.beginPath();
-  //     ctx.arc(
-  //       b.x + b.width / 2,
-  //       b.y + b.height / 2,
-  //       b.width / 2,
-  //       0,
-  //       Math.PI * 2
-  //     );
-  //     ctx.fill();
-  //     ctx.fillStyle = "white";
-  //     ctx.font = `${Math.floor(b.width / 2)}px Comic Sans MS`;
-  //     ctx.textAlign = "center";
-  //     ctx.textBaseline = "middle";
-  //     ctx.fillText(b.label, b.x + b.width / 2, b.y + b.height / 2);
-  //     ctx.restore();
-  //   });
-  // }
-    /**
-   * 🎮 Draws on-screen circular control buttons for mobile users.
+   *  Draws on-screen circular control buttons for mobile users.
    * Includes movement, jump, and throw controls.
    */
   drawMobileControls() {
-    // ❌ Desktop: don't draw mobile controls
     if (!this.isMobileOrTablet()) {
-      this.leftBtnArea  = null;
-      this.rightBtnArea = null;
-      this.jumpBtnArea  = null;
-      this.throwBtnArea = null;
-      return;
+      return this.ifIsMobileOrTabletMethod();
     }
-
-    const ctx = this.ctx;
-    const w = this.canvas.width;
-    const h = this.canvas.height;
-    const size = 60;
-    const margin = 20;
-
-    // Define button positions relative to canvas size
-    this.leftBtnArea = {
-      x: margin,
-      y: h - size - margin,
-      width: size,
-      height: size,
-      label: "⬅️",
-    };
-    this.rightBtnArea = {
-      x: margin + size + 20,
-      y: h - size - margin,
-      width: size,
-      height: size,
-      label: "➡️",
-    };
-    this.jumpBtnArea = {
-      x: w - size * 2 - 40,
-      y: h - size - margin,
-      width: size,
-      height: size,
-      label: "⤴️",
-    };
-    this.throwBtnArea = {
-      x: w - size - margin,
-      y: h - size - margin,
-      width: size,
-      height: size,
-      label: "🧴",
-    };
-
-    // Draw each button with consistent style
+    const { margin, h, size, w, ctx } = this.drawMobileControlsConstsMethod();
+    this.drawMobileControlsBtnAreaMethod(margin, h, size, w);
     [
       this.leftBtnArea,
       this.rightBtnArea,
       this.jumpBtnArea,
       this.throwBtnArea,
     ].forEach((b) => {
-      ctx.save();
-      ctx.fillStyle = "#fca534ff";
-      ctx.beginPath();
-      ctx.arc(
-        b.x + b.width / 2,
-        b.y + b.height / 2,
-        b.width / 2,
-        0,
-        Math.PI * 2
-      );
-      ctx.fill();
-      ctx.fillStyle = "white";
-      ctx.font = `${Math.floor(b.width / 2)}px Comic Sans MS`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(b.label, b.x + b.width / 2, b.y + b.height / 2);
-      ctx.restore();
+      this.forEachMethod(ctx, b);
     });
   }
 
+  forEachMethod(ctx, b) {
+    ctx.save();
+    ctx.fillStyle = "#fca534ff";
+    ctx.beginPath();
+    ctx.arc(
+      b.x + b.width / 2,
+      b.y + b.height / 2,
+      b.width / 2,
+      0,
+      Math.PI * 2
+    );
+    this.forEachMethodCtxMethod(ctx, b);
+  }
+
+  forEachMethodCtxMethod(ctx, b) {
+    ctx.fill();
+    ctx.fillStyle = "white";
+    ctx.font = `${Math.floor(b.width / 2)}px Comic Sans MS`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(b.label, b.x + b.width / 2, b.y + b.height / 2);
+    ctx.restore();
+  }
+
+  drawMobileControlsBtnAreaMethod(margin, h, size, w) {
+    this.leftBtnArea = { x: margin, y: h - size - margin, width: size, height: size, label: "⬅️", };
+    this.rightBtnArea = { x: margin + size + 20, y: h - size - margin, width: size, height: size, label: "➡️", };
+    this.jumpBtnArea = { x: w - size * 2 - 40, y: h - size - margin, width: size, height: size, label: "⤴️", };
+    this.throwBtnArea = { x: w - size - margin, y: h - size - margin, width: size, height: size, label: "🧴", };
+  }
+
+  drawMobileControlsConstsMethod() {
+    const ctx = this.ctx;
+    const w = this.canvas.width;
+    const h = this.canvas.height;
+    const size = 60;
+    const margin = 20;
+    return { margin, h, size, w, ctx };
+  }
+
+  ifIsMobileOrTabletMethod() {
+    this.leftBtnArea = null;
+    this.rightBtnArea = null;
+    this.jumpBtnArea = null;
+    this.throwBtnArea = null;
+    return;
+  }
 
   /**
-   * 🧩 Utility: checks if a point (x,y) is inside a button’s area.
+   * Utility: checks if a point (x,y) is inside a button’s area.
    */
   isInsideButton(x, y, b) {
     return (
@@ -1440,7 +870,7 @@ characterCollidingBottle() {
   }
 
   /**
-   * 🚫 Shows a short message if the player tries to collect more bottles than allowed.
+   * Shows a short message if the player tries to collect more bottles than allowed.
    */
   showBottleLimitMessage() {
     this.bottleLimitMessage = "Bottle limit reached!";
@@ -1452,28 +882,32 @@ characterCollidingBottle() {
   }
 
   /**
-   * 🐣 Spawns enemies dynamically based on level configuration.
+   * Spawns enemies dynamically based on level configuration.
    * Uses the `spawnConfig` defined inside each level.
    */
   spawnEnemyLoop() {
     const configs = this.level.config?.spawnConfig || [];
     this.spawnIntervals = [];
     configs.forEach((cfg) => {
-      const id = setInterval(() => {
-        if (typeof cfg.condition === "function" && !cfg.condition(this.level))
-          return;
-        const current = this.level.enemies.filter((e) => e instanceof cfg.type);
-        if (current.length < cfg.maxCount) {
-          const newEnemy = new cfg.type();
-          newEnemy.x = 900 + Math.random() * 400;
-          this.level.enemies.push(newEnemy);
-        }
-      }, cfg.interval);
-      this.spawnIntervals.push(id);
+      this.spawnEnemyLoopSetIntervalMethod(cfg);
     });
   }
 
-  /** 🧹 Removes enemies that have moved off-screen to optimize performance. */
+  spawnEnemyLoopSetIntervalMethod(cfg) {
+    const id = setInterval(() => {
+      if (typeof cfg.condition === "function" && !cfg.condition(this.level))
+        return;
+      const current = this.level.enemies.filter((e) => e instanceof cfg.type);
+      if (current.length < cfg.maxCount) {
+        const newEnemy = new cfg.type();
+        newEnemy.x = 900 + Math.random() * 400;
+        this.level.enemies.push(newEnemy);
+      }
+    }, cfg.interval);
+    this.spawnIntervals.push(id);
+  }
+
+  /** Removes enemies that have moved off-screen to optimize performance. */
   removeOffscreenEnemies() {
     this.level.enemies = this.level.enemies.filter(
       (e) =>
@@ -1481,111 +915,100 @@ characterCollidingBottle() {
     );
   }
 
-  /** 🔇 Stops all sounds, both enemy and global audio elements. */
+  /** Stops all sounds, both enemy and global audio elements. */
   stopAllSounds() {
     try {
       this.stopEnemySounds();
-      // alle <audio>-Elemente im DOM stoppen
       document.querySelectorAll("audio").forEach((a) => {
         a.pause();
         a.currentTime = 0;
       });
-      // explizit hinterlegte Hintergrundmusik stoppen
       this.stopBackgroundMusic?.();
     } catch (err) {}
   }
 
   /**
- * 🔁 Stops the restart button animation and removes hover state.
- * Called before restarting the game to avoid the button staying visible.
- */
-stopRestartButtonAnimation() {
-  // Animations-Loop abbrechen
-  if (this.restartPulseId) {
-    cancelAnimationFrame(this.restartPulseId);
-    this.restartPulseId = null;
+   * Stops the restart button animation and removes hover state.
+   * Called before restarting the game to avoid the button staying visible.
+   */
+  stopRestartButtonAnimation() {
+    if (this.restartPulseId) {
+      cancelAnimationFrame(this.restartPulseId);
+      this.restartPulseId = null;
+    }
+    this.restartButtonArea = null;
+    if (this.restartHoverListenerAdded && this.handleRestartHoverBound) {
+      this.canvas.removeEventListener(
+        "mousemove",
+        this.handleRestartHoverBound
+      );
+      this.restartHoverListenerAdded = false;
+    }
   }
 
-  // Klickfläche deaktivieren
-  this.restartButtonArea = null;
-
-  // Hover-Listener entfernen
-  if (this.restartHoverListenerAdded && this.handleRestartHoverBound) {
-    this.canvas.removeEventListener("mousemove", this.handleRestartHoverBound);
-    this.restartHoverListenerAdded = false;
-  }
-}
-
-/**
- * 🧯 Stops the restart button hover/animation and disables its hitbox.
- * Called before restarting the game so the old button cannot be hovered/clicked anymore.
- */
-stopRestartButtonUI() {
-  // 🔁 Puls-Animation abbrechen, falls aktiv
-  if (this.restartPulseId) {
-    cancelAnimationFrame(this.restartPulseId);
-    this.restartPulseId = null;
+  /**
+   * Stops the restart button hover/animation and disables its hitbox.
+   * Called before restarting the game so the old button cannot be hovered/clicked anymore.
+   */
+  stopRestartButtonUI() {
+    if (this.restartPulseId) {
+      cancelAnimationFrame(this.restartPulseId);
+      this.restartPulseId = null;
+    }
+    this.restartButtonArea = null;
+    if (this.restartHoverListenerAdded && this.handleRestartHoverBound) {
+      this.canvas.removeEventListener("mousemove", this.handleRestartHoverBound);
+      this.restartHoverListenerAdded = false;
+    }
+    if (this.canvas) {
+      this.canvas.style.cursor = "default";
+    }
   }
 
-  // ❌ Klickbereich deaktivieren
-  this.restartButtonArea = null;
-
-  // 🖱️ Hover-Listener entfernen
-  if (this.restartHoverListenerAdded && this.handleRestartHoverBound) {
-    this.canvas.removeEventListener("mousemove", this.handleRestartHoverBound);
-    this.restartHoverListenerAdded = false;
-  }
-
-  // Cursor zurücksetzen
-  if (this.canvas) {
-    this.canvas.style.cursor = "default";
-  }
-}
-
-
-
-  /** 🧨 Hartes Stoppen aller Gegner-Audios (v. a. Boss-Schrei) */
+  /** Hartes Stoppen aller Gegner-Audios (v. a. Boss-Schrei) */
   hardStopEnemyAudio() {
     try {
       (this.level?.enemies || []).forEach((e) => {
-        // preferierte Methode
         if (typeof e.stopScreamSound === "function") {
           e.stopScreamSound();
         }
-        // fallback: direkt an der Audio-Instanz
         if (e.screamSound) {
           e.screamSound.pause();
           e.screamSound.currentTime = 0;
         }
-        // Flag sicher zurücksetzen
         if ("isScreaming" in e) e.isScreaming = false;
       });
     } catch {}
   }
 
-  /** 🎵 Start/ersetze Hintergrundmusik (z. B. Win/GameOver). */
+  /** Start/ersetze Hintergrundmusik (z. B. Win/GameOver). */
   setBackgroundMusic(path, loop = false) {
     try {
-      // evtl. laufende BG-Musik stoppen
       if (this._bgMusic) {
-        this._bgMusic.pause();
-        this._bgMusic.currentTime = 0;
+        this.if_bgMusicMethod();
       }
       if (!soundEnabled) {
-        this._bgMusic = null;
-        return;
+        return this.ifSoundEnabledMethod();
       }
       const a = new Audio(path);
       a.volume = 0.7;
       a.loop = loop;
       this._bgMusic = a;
       a.play().catch(() => {});
-    } catch (e) {
-      console.warn("setBackgroundMusic failed:", e);
-    }
+    } catch (e) {console.warn("setBackgroundMusic failed:", e);}
   }
 
-  /** 🔇 Stoppt nur die hinterlegte Hintergrundmusik (Win/GameOver). */
+  ifSoundEnabledMethod() {
+    this._bgMusic = null;
+    return;
+  }
+
+  if_bgMusicMethod() {
+    this._bgMusic.pause();
+    this._bgMusic.currentTime = 0;
+  }
+
+  /**Stoppt nur die hinterlegte Hintergrundmusik (Win/GameOver). */
   stopBackgroundMusic() {
     try {
       if (this._bgMusic) {

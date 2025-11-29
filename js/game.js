@@ -88,6 +88,13 @@ function resizeCanvas() {
   const aspectRatio = 720 / 480;
   const windowRatio = window.innerWidth / window.innerHeight;
   let newWidth, newHeight;
+  ({ newHeight, newWidth } = ifWindowRatioAspectRatioMethod(windowRatio, aspectRatio, newHeight, newWidth));
+  canvas.style.width = `${newWidth}px`;
+  canvas.style.height = `${newHeight}px`;
+  world?.updateCanvasRect?.();
+}
+
+function ifWindowRatioAspectRatioMethod(windowRatio, aspectRatio, newHeight, newWidth) {
   if (windowRatio > aspectRatio) {
     newHeight = window.innerHeight;
     newWidth = newHeight * aspectRatio;
@@ -95,9 +102,7 @@ function resizeCanvas() {
     newWidth = window.innerWidth;
     newHeight = newWidth / aspectRatio;
   }
-  canvas.style.width = `${newWidth}px`;
-  canvas.style.height = `${newHeight}px`;
-  world?.updateCanvasRect?.();
+  return { newHeight, newWidth };
 }
 
 /**
@@ -109,9 +114,12 @@ function toggleFullscreen() {
   const doc = document;
   const isFullscreen = doc.fullscreenElement || doc.webkitFullscreenElement;
   const fullBtn = document.getElementById("fullscreen-btn");
+  isFullscreenMethod(isFullscreen, canvas, doc);
+}
+
+function isFullscreenMethod(isFullscreen, canvas, doc) {
   if (!isFullscreen) {
-    const requestFullscreen =
-      canvas.requestFullscreen ||
+    const requestFullscreen = canvas.requestFullscreen ||
       canvas.webkitRequestFullscreen ||
       canvas.msRequestFullscreen;
     if (requestFullscreen) {
@@ -120,8 +128,7 @@ function toggleFullscreen() {
       });
     }
   } else {
-    const exitFullscreen =
-      doc.exitFullscreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+    const exitFullscreen = doc.exitFullscreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
     if (exitFullscreen) exitFullscreen.call(doc);
   }
 }
@@ -285,32 +292,20 @@ function ensureRestartOverlay() {
 window.restartGame = function restartGame() {
   if (isRestarting) return;
   isRestarting = true;
-
   const overlay = ensureRestartOverlay();
   const canvas = document.getElementById("canvas");
-
   const keepW = canvas.style.width;
   const keepH = canvas.style.height;
-
   overlay.style.display = "block";
   requestAnimationFrame(() => overlay.classList.add("show"));
+  setTimeoutMethod(canvas, keepW, keepH, overlay);
+}
 
+function setTimeoutMethod(canvas, keepW, keepH, overlay) {
   setTimeout(() => {
     try {
-      if (window.world) {
-        world.hardStopEnemyAudio?.();
-        world.stopAllSounds?.();
-        world.stopBackgroundMusic?.();
-        world.stopRestartButtonAnimation?.();
-        world.stopGameLoopHard?.();
-      }
-      const ctx = canvas.getContext("2d");
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      init({ skipResize: true });
-      canvas.style.width = keepW;
-      canvas.style.height = keepH;
-      world.updateCanvasRect?.();
+      tryWindowWorldMethod();
+      ctxCanvasMethod(canvas, keepW, keepH);
     } finally {
       overlay.classList.remove("show");
       overlay.addEventListener(
@@ -318,9 +313,28 @@ window.restartGame = function restartGame() {
         () => {
           overlay.style.display = "none";
           isRestarting = false;
-        },
-        { once: true }
-      );
+        },{ once: true });
     }
   }, 250);
-};
+}
+
+function ctxCanvasMethod(canvas, keepW, keepH) {
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  init({ skipResize: true });
+  canvas.style.width = keepW;
+  canvas.style.height = keepH;
+  world.updateCanvasRect?.();
+}
+
+function tryWindowWorldMethod() {
+  if (window.world) {
+    world.hardStopEnemyAudio?.();
+    world.stopAllSounds?.();
+    world.stopBackgroundMusic?.();
+    world.stopRestartButtonAnimation?.();
+    world.stopGameLoopHard?.();
+  }
+}
+

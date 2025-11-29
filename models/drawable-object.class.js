@@ -1,19 +1,19 @@
 /**
- * 🎨 Class: DrawableObject
+ * Class: DrawableObject
  * Base class for all visible game objects.
  * Handles image loading, caching, and rendering on the canvas.
  */
 class DrawableObject {
-  img;                       // 🖼️ The current image of the object
-  imageCache = {};            // 🗂️ Cache storing preloaded images
-  currentImage = 0;           // 🔢 Animation frame index
-  x = 120;                    // 🧭 X position on canvas
-  y = 280;                    // 🧭 Y position on canvas
-  height = 150;               // 📏 Object height
-  width = 100;                // 📏 Object width
+  img;                      
+  imageCache = {};            
+  currentImage = 0;           
+  x = 120;                    
+  y = 280;                    
+  height = 150;               
+  width = 100;                
 
   /**
-   * 📥 Loads a single image from a specified path and assigns it to `this.img`.
+   * Loads a single image from a specified path and assigns it to `this.img`.
    * @param {string} path - The path to the image file.
    */
   loadImage(path) {
@@ -22,7 +22,7 @@ class DrawableObject {
   }
 
   /**
-   * 🖼️ Draws the current image on the provided canvas context.
+   * Draws the current image on the provided canvas context.
    * @param {CanvasRenderingContext2D} ctx - The drawing context of the canvas.
    */
   draw(ctx) {
@@ -31,7 +31,7 @@ class DrawableObject {
   }
 
   /**
-   * 🧩 Draws an outline around certain classes (for debugging/visibility).
+   * Draws an outline around certain classes (for debugging/visibility).
    * Only applies to main character and enemies.
    * @param {CanvasRenderingContext2D} ctx - The drawing context.
    */
@@ -45,12 +45,11 @@ class DrawableObject {
     if (highlightClasses.some((cls) => this instanceof cls)) {
       ctx.beginPath();
       ctx.lineWidth = 2;
-      // (Optional: could add strokeRect for debugging)
     }
   }
 
   /**
-   * 🧾 Loads and caches multiple images for animation or state transitions.
+   * Loads and caches multiple images for animation or state transitions.
    * @param {string[]} arr - Array of image paths to preload.
    */
   loadImages(arr) {

@@ -93,35 +93,49 @@ class Character extends MovableObject {
     this.moveInterval = setInterval(() => {
       const kb = this.world?.keyboard;
       let didAction = false;
-
-      if (kb?.RIGHT && this.x < this.world.level.level_end_x) {
-        this.moveRight();
-        this.otherDirection = false;
-        didAction = true;
-      }
-
-      if (kb?.LEFT && this.x > 0) {
-        this.moveLeft();
-        this.otherDirection = true;
-        didAction = true;
-      }
-
-      if (kb?.UP && !this.isAboveGround()) {
-        this.jump();
-        didAction = true;
-      }
-
-      if (kb?.D) {
-        this.world.throwableBottles();
-        didAction = true;
-      }
-
+      didAction = this.rightMethod(kb, didAction);
+      didAction = this.leftMethod(kb, didAction);
+      didAction = this.upMethod(kb, didAction);
+      didAction = this.dMethod(kb, didAction);
       if (didAction || this.isAboveGround() || this.isHurt()) {
         this.lastActionTime = Date.now();
       }
-
       this.world.camera_x = -this.x + 100;
     }, 1000 / 60);
+  }
+
+  dMethod(kb, didAction) {
+    if (kb?.D) {
+      this.world.throwableBottles();
+      didAction = true;
+    }
+    return didAction;
+  }
+
+  upMethod(kb, didAction) {
+    if (kb?.UP && !this.isAboveGround()) {
+      this.jump();
+      didAction = true;
+    }
+    return didAction;
+  }
+
+  leftMethod(kb, didAction) {
+    if (kb?.LEFT && this.x > 0) {
+      this.moveLeft();
+      this.otherDirection = true;
+      didAction = true;
+    }
+    return didAction;
+  }
+
+  rightMethod(kb, didAction) {
+    if (kb?.RIGHT && this.x < this.world.level.level_end_x) {
+      this.moveRight();
+      this.otherDirection = false;
+      didAction = true;
+    }
+    return didAction;
   }
 
   /**
@@ -134,12 +148,7 @@ class Character extends MovableObject {
    */
   animationIntervalMethod() {
     this.animationInterval = setInterval(() => {
-      const now = Date.now();
-      const inactiveMs = now - this.lastActionTime; // wie lange schon nichts gemacht?
-
-      const kb = this.world?.keyboard;
-      const isMoving = kb?.RIGHT || kb?.LEFT;
-
+      const { isMoving, inactiveMs } = this.animationIntervalConstsMethod();
       if (this.energy <= 0) {
         this.playAnimation(this.IMAGES_DEAD);
       } else if (this.isHurt()) {
@@ -156,6 +165,14 @@ class Character extends MovableObject {
         this.img = this.imageCache[this.IMAGES_IDLE[0]];
       }
     }, 80);
+  }
+
+  animationIntervalConstsMethod() {
+    const now = Date.now();
+    const inactiveMs = now - this.lastActionTime; // wie lange schon nichts gemacht?
+    const kb = this.world?.keyboard;
+    const isMoving = kb?.RIGHT || kb?.LEFT;
+    return { isMoving, inactiveMs };
   }
 
   /**
@@ -216,8 +233,7 @@ class Character extends MovableObject {
             return false;
           }
           return true;
-        }
-      );
+        });
     }
   }
 

@@ -1,10 +1,9 @@
 /**
- * ❤️ Class: StatusBar
+ * Class: StatusBar
  * Base class for displaying health or resource bars in the game.
  * Can be extended by other classes like `StatusBarBottle`, `StatusBarCoin`, or `StatusBarEnemy`.
  */
 class StatusBar extends DrawableObject {
-  /** 🖼️ Image paths for different health levels (0–100%) */
   IMAGES = [
     "img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png",
     "img/7_statusbars/1_statusbar/2_statusbar_health/blue/20.png",
@@ -14,7 +13,7 @@ class StatusBar extends DrawableObject {
     "img/7_statusbars/1_statusbar/2_statusbar_health/blue/100.png",
   ];
 
-  percentage = 100; // 💯 Current health percentage
+  percentage = 100; 
 
   /**
    * Initializes the status bar with default position and image set.
@@ -23,15 +22,15 @@ class StatusBar extends DrawableObject {
   constructor() {
     super();
     this.loadImages(this.IMAGES);
-    this.x = 40;     // Horizontal position
-    this.y = 0;      // Vertical position
+    this.x = 40; 
+    this.y = 0; 
     this.width = 120;
     this.height = 40;
     this.setPercentage(100);
   }
 
   /**
-   * 🧮 Updates the current bar image according to the given percentage.
+   * Updates the current bar image according to the given percentage.
    * @param {number} percentage - The health or resource value (0–100).
    */
   setPercentage(percentage) {
@@ -41,7 +40,7 @@ class StatusBar extends DrawableObject {
   }
 
   /**
-   * 🔢 Determines which image index corresponds to the current percentage.
+   * Determines which image index corresponds to the current percentage.
    * @returns {number} The index of the correct image in `IMAGES`.
    */
   resolveImageIndex() {

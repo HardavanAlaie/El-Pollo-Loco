@@ -1,5 +1,5 @@
 /**
- * 🧴 Generates an array of randomly positioned bottle objects.
+ * Generates an array of randomly positioned bottle objects.
  * @param {number} count - Number of bottles to generate.
  * @param {number} xMin - Minimum X coordinate.
  * @param {number} xMax - Maximum X coordinate.
@@ -18,7 +18,7 @@ function generateRandomBottles(count, xMin, xMax, yMin, yMax) {
 }
 
 /**
- * 🌵 Level 1 Configuration
+ * Level 1 Configuration
  * Creates and returns a new level instance with enemies, background, collectibles, and spawn logic.
  * @param {World} world - The current game world instance.
  * @returns {Level} Configured Level 1 instance.
@@ -31,10 +31,6 @@ const level1 = (world) => {
     [
       new ChickenSmall(),
       new ChickenSmall(),
-      new ChickenSmall(),
-      new ChickenSmall(),
-      new ChickenNormal(),
-      new ChickenNormal(),
       new ChickenNormal(),
       new ChickenNormal(),
       boss, 

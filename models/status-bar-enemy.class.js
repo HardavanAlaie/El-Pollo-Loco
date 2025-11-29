@@ -1,11 +1,11 @@
 /**
- * 🧱 Class: StatusBarEnemy
+ * Class: StatusBarEnemy
  * Displays a health bar above each enemy or boss.
  * The bar color changes depending on whether the target is a normal enemy (blue)
  * or a boss enemy (red/orange).
  */
 class StatusBarEnemy extends DrawableObject {
-  /** 🔵 Blue health bar images for normal enemies */
+  /** Blue health bar images for normal enemies */
   IMAGES_BLUE = [
     "img/7_statusbars/2_statusbar_endboss/blue/blue100.png",
     "img/7_statusbars/2_statusbar_endboss/blue/blue80.png",
@@ -15,7 +15,7 @@ class StatusBarEnemy extends DrawableObject {
     "img/7_statusbars/2_statusbar_endboss/blue/blue0.png",
   ];
 
-  /** 🔴 Red/orange health bar images for boss enemies */
+  /** Red/orange health bar images for boss enemies */
   IMAGES_RED = [
     "img/7_statusbars/2_statusbar_endboss/orange/orange100.png",
     "img/7_statusbars/2_statusbar_endboss/orange/orange80.png",
@@ -34,17 +34,14 @@ class StatusBarEnemy extends DrawableObject {
     this.enemy = enemy;
     this.width = 60;
     this.height = 15;
-
-    // 🔥 Determine which color scheme to use
-    const isBoss =
-      enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2;
+    const isBoss = enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2;
     this.IMAGES = isBoss ? this.IMAGES_RED : this.IMAGES_BLUE;
     this.loadImages(this.IMAGES);
     this.setPercentage(enemy.energy);
   }
 
   /**
-   * 🔋 Updates the displayed image based on the current energy percentage.
+   * Updates the displayed image based on the current energy percentage.
    * @param {number} percentage - The current enemy energy (0–100).
    */
   setPercentage(percentage) {
@@ -55,7 +52,7 @@ class StatusBarEnemy extends DrawableObject {
   }
 
   /**
-   * 🎯 Updates the position so that the bar stays centered above the enemy.
+   * Updates the position so that the bar stays centered above the enemy.
    */
   updatePosition() {
     if (!this.enemy) return;
@@ -64,7 +61,7 @@ class StatusBarEnemy extends DrawableObject {
   }
 
   /**
-   * 🧱 Automatically updates and draws the bar each frame.
+   * Automatically updates and draws the bar each frame.
    * @param {CanvasRenderingContext2D} ctx - The drawing context of the canvas.
    */
   draw(ctx) {

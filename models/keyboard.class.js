@@ -4,11 +4,11 @@
  * Each property corresponds to a key used for controlling the character.
  */
 class Keyboard {
-  LEFT = false;   // ← Move left
-  RIGHT = false;  // → Move right
-  UP = false;     // ↑ Jump
-  DOWN = false;   // ↓ (optional / reserved)
-  SPACE = false;  // Spacebar (unused, can be added for actions)
-  D = false;      // 'D' key → Throw bottle
+  LEFT = false;   
+  RIGHT = false;  
+  UP = false;     
+  DOWN = false;  
+  SPACE = false;  
+  D = false;      
 }
 

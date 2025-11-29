@@ -1,11 +1,11 @@
 /**
- * 💰 Class: StatusBarCoin
+ * Class: StatusBarCoin
  * Displays the coin collection progress in the user interface.
  * Extends the base StatusBar class and updates according to collected coins.
  */
 class StatusBarCoin extends StatusBar {
   /**
-   * 🖼️ Image paths representing different fill levels of the coin bar.
+   * Image paths representing different fill levels of the coin bar.
    */
   IMAGES = [
     "img/7_statusbars/1_statusbar/1_statusbar_coin/blue/0.png",
@@ -16,7 +16,7 @@ class StatusBarCoin extends StatusBar {
     "img/7_statusbars/1_statusbar/1_statusbar_coin/blue/100.png",
   ];
 
-  availableCoins = 0; // 🪙 Number of coins collected so far
+  availableCoins = 0; 
 
   /**
    * Initializes the coin status bar by loading all level images.
@@ -28,14 +28,14 @@ class StatusBarCoin extends StatusBar {
     this.percentage = 0;
     this.img = this.imageCache[this.IMAGES[0]];
     this.setPercentage(0);
-    this.x = 40;     // Horizontal screen position
-    this.y = 30;     // Vertical screen position
+    this.x = 40;     
+    this.y = 30;     
     this.width = 120;
     this.height = 40;
   }
 
   /**
-   * 🔄 Updates the bar based on how many coins are collected.
+   * Updates the bar based on how many coins are collected.
    * Each coin increases the bar by 20%, up to 100%.
    */
   update() {
