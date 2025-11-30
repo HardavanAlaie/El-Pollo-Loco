@@ -82,6 +82,7 @@ class EndbossLevel1 extends MovableObject {
     // clearInterval(this.bossAnimationInterval);
     clearInterval(this.bossMoveInterval);
     this.stopScreamSound();
+    this.deathTime = Date.now();
   }
 
   /**
