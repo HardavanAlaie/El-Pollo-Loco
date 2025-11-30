@@ -113,13 +113,21 @@ class Character extends MovableObject {
     return didAction;
   }
 
+  // upMethod(kb, didAction) {
+  //   if (kb?.UP && !this.isAboveGround()) {
+  //     this.jump();
+  //     didAction = true;
+  //   }
+  //   return didAction;
+  // }
   upMethod(kb, didAction) {
-    if (kb?.UP && !this.isAboveGround()) {
-      this.jump();
-      didAction = true;
-    }
-    return didAction;
+  if (kb?.UP && !this.isAboveGround() && this.speedY === 0) {
+    this.jump();
+    didAction = true;
   }
+  return didAction;
+}
+
 
   leftMethod(kb, didAction) {
     if (kb?.LEFT && this.x > 0) {
