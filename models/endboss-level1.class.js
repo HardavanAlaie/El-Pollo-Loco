@@ -85,11 +85,19 @@ class EndbossLevel1 extends MovableObject {
   //   this.deathTime = Date.now();
   // }
   die() {
-  this.playAnimation(this.IMAGES_DEAD);
-  clearInterval(this.bossAnimationInterval);
+  // Doppel-Aufruf verhindern
+  if (this.alreadyDead) return;
+  this.alreadyDead = true;
+
+  // Bewegung stoppen, aber NICHT die Animation!
   clearInterval(this.bossMoveInterval);
   this.stopScreamSound();
+
+  // Zeitpunkt merken, ab wann er "tot" ist
+  this.deathStartTime = Date.now();
 }
+
+
 
 
   /**
