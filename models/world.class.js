@@ -100,9 +100,7 @@ class World {
 
   /** Checks if the Endboss collides with the player (causes damage). */
   checkEndboss1Hit() {
-    const boss = this.level.enemies.find(
-      (e) => e instanceof EndbossLevel1 || e instanceof EndbossLevel2
-    );
+    const boss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
     if (!boss || this.character.energy <= 0) return;
     if (this.character.isColliding(boss) && !this.character.isHurtTimer) {
       this.character.hit();
@@ -126,7 +124,7 @@ class World {
 
   ifDeadIfCollidingMethod(enemy, bottle) {
     if (!enemy.isDead?.() && bottle.isColliding(enemy)) {
-      if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+      if (enemy instanceof EndbossLevel1) {
         enemy.takeDamage?.(20);
       } else {
         enemy.hit?.();
@@ -246,7 +244,7 @@ class World {
   }
 
   ifIsStompMethod(enemy, c) {
-    if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+    if (enemy instanceof EndbossLevel1) {
       enemy.takeDamage?.(20);
     } else {
       enemy.hit?.();
@@ -257,6 +255,110 @@ class World {
     if (enemy.isDead?.()) enemy.die?.();
     return;
   }
+  //----------------------------------------------------------------------------------------------
+//   characterColliding(enemy) {
+//   const c = this.character;
+//   if (!enemy || !c) return;
+
+//   // 🔲 Etwas engere Hitbox (wie bei Coins/Bottles)
+//   const inset = 10;
+
+//   const ax1 = c.x + inset;
+//   const ay1 = c.y + inset;
+//   const ax2 = c.x + c.width - inset;
+//   const ay2 = c.y + c.height - inset;
+
+//   const bx1 = enemy.x + inset;
+//   const by1 = enemy.y + inset;
+//   const bx2 = enemy.x + enemy.width - inset;
+//   const by2 = enemy.y + enemy.height - inset;
+
+//   // ❌ Keine Überlappung → keine Kollision
+//   const overlaps =
+//     ax2 > bx1 && ax1 < bx2 &&
+//     ay2 > by1 && ay1 < by2;
+
+//   if (!overlaps) return;
+
+//   // 🧮 Für Stomp-Logik nur obere Kante des Gegners & untere des Charakters
+//   const charBottom = ay2; // untere Kante (mit inset)
+//   const enemyTop   = by1; // obere Kante (mit inset)
+
+//   // ✅ Stomp: Charakter kommt von oben und fällt (speedY < 0)
+//   const isStomp = charBottom <= enemyTop && c.speedY < 0;
+
+//   if (isStomp) {
+//     // Boss = 20 Schaden, sonst wie gehabt
+//     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+//       enemy.takeDamage?.(20);
+//     } else {
+//       enemy.hit?.();
+//     }
+
+//     // kleiner Bounce nach oben + sauber auf Gegner-Oberkante setzen
+//     c.speedY = 25;
+//     c.y = enemy.y - c.height;
+
+//     if (enemy.isDead?.()) enemy.die?.();
+//   } else {
+//     // ❌ Kein Stomp → Spieler bekommt Schaden
+//     c.hit();
+//     this.statusBar.setPercentage(c.energy);
+//   }
+// }
+//----------------------------------------------------------------------------------------------
+// characterColliding(enemy) {
+//   const c = this.character;
+//   if (!enemy || !c) return;
+
+//   const inset = 10;
+
+//   // 🔲 Engere Hitbox wie bei Coins/Bottles
+//   const ax1 = c.x + inset;
+//   const ay1 = c.y + inset;
+//   const ax2 = c.x + c.width - inset;
+//   const ay2 = c.y + c.height - inset;
+
+//   const bx1 = enemy.x + inset;
+//   const by1 = enemy.y + inset;
+//   const bx2 = enemy.x + enemy.width - inset;
+//   const by2 = enemy.y + enemy.height - inset;
+
+//   const overlaps =
+//     ax2 > bx1 && ax1 < bx2 &&
+//     ay2 > by1 && ay1 < by2;
+
+//   if (!overlaps) return;
+
+//   const charBottom = ay2;
+//   const enemyTop   = by1;
+
+//   // ✅ Stomp: von oben UND fallend
+//   const isStomp = charBottom <= enemyTop && c.speedY < 0;
+
+//   if (isStomp) {
+//     // Boss = 20 Schaden, sonst wie gehabt
+//     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
+//       enemy.takeDamage?.(20);
+//     } else {
+//       enemy.hit?.();
+//     }
+
+//     // kleiner Bounce + sauber oben drauf setzen
+//     c.speedY = 25;
+//     c.y = enemy.y - c.height;
+
+//     if (enemy.isDead?.()) enemy.die?.();
+//   } else {
+//     // ❌ Nur Schaden, wenn Pepe gerade NICHT im Hurt-Status ist
+//     if (!c.isHurt()) {
+//       c.hit();
+//       this.statusBar.setPercentage(c.energy);
+//     }
+//   }
+// }
+
+
 
   /** Handles collisions with collectible bottles. */
   characterCollidingBottle() {

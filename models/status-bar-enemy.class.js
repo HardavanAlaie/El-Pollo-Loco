@@ -34,7 +34,7 @@ class StatusBarEnemy extends DrawableObject {
     this.enemy = enemy;
     this.width = 60;
     this.height = 15;
-    const isBoss = enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2;
+    const isBoss = enemy instanceof EndbossLevel1;
     this.IMAGES = isBoss ? this.IMAGES_RED : this.IMAGES_BLUE;
     this.loadImages(this.IMAGES);
     this.setPercentage(enemy.energy);
