@@ -369,20 +369,41 @@ class World {
   //     this.showWinScreen();
   //   }
   // }
-  checkEndbossDefeated() {
+//   checkEndbossDefeated() {
+//   const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
+//   if (!endboss || this.endbossDefeated || this.playerDied) return;
+
+//   if (endboss.isDead?.()) {
+//     this.endbossDefeated = true;
+
+//     // ⏳ kleine Pause für die Todes-Animation (z.B. 1200ms)
+//     setTimeout(() => {
+//       this.stopGameLoopHard(true);
+//       this.showWinScreen();
+//     }, 1200);
+//   }
+// }
+ checkEndbossDefeated() {
   const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
   if (!endboss || this.endbossDefeated || this.playerDied) return;
 
   if (endboss.isDead?.()) {
-    this.endbossDefeated = true;
+    // Falls der Boss die Zeit noch nicht gesetzt hat (Safety)
+    if (!endboss.deathStartTime) {
+      endboss.deathStartTime = Date.now();
+    }
 
-    // ⏳ kleine Pause für die Todes-Animation (z.B. 1200ms)
-    setTimeout(() => {
+    const elapsed = Date.now() - endboss.deathStartTime;
+
+    // z.B. 1000 ms (1 Sekunde) Death-Animation zeigen
+    if (elapsed >= 1000) {
+      this.endbossDefeated = true;
       this.stopGameLoopHard(true);
       this.showWinScreen();
-    }, 1200);
+    }
   }
 }
+
 
 
   /** Stops all sounds and displays the game over screen. */
