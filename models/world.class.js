@@ -220,21 +220,50 @@ class World {
   }
 
   /** Handles player–enemy collision logic (jumping on enemies vs taking damage). */
-  characterColliding(enemy) {
-    const c = this.character;
-    if (!c || !enemy) return;
-    if (enemy.isDead?.() || enemy.dead) return;
-    if (!c.isColliding(enemy)) return;
-    const charBottom = c.y + c.height;
-    const enemyCenterY = enemy.y + enemy.height / 2;
-    const isStomp = charBottom <= enemyCenterY && c.speedY <= 0;
-    if (isStomp) {
-      return this.ifIsStompMethod(enemy, c);
-    }
-    if (!c.isHurtTimer) {
-      this.ifIsHurtTimerMethod(c);
-    }
+//   characterColliding(enemy) {
+//     const c = this.character;
+//     if (!c || !enemy) return;
+//     if (enemy.isDead?.() || enemy.dead) return;
+//     const isCloseEnough = c.isCollidingTight(enemy, 20);
+// if (!isCloseEnough) return;
+
+//     //if (!c.isColliding(enemy)) return;
+//     const charBottom = c.y + c.height;
+//     const enemyCenterY = enemy.y + enemy.height / 2;
+//     const isStomp = charBottom <= enemyCenterY && c.speedY <= 0;
+//     if (isStomp) {
+//       return this.ifIsStompMethod(enemy, c);
+//     }
+//     if (!c.isHurtTimer) {
+//       this.ifIsHurtTimerMethod(c);
+//     }
+//   }
+characterColliding(enemy) {
+  const c = this.character;
+  if (!c || !enemy) return;
+  if (enemy.isDead?.() || enemy.dead) return;
+
+  // 1. Grober Check mit normaler Collision (wie früher)
+  if (!c.isColliding(enemy)) return;
+
+  const charBottom = c.y + c.height;
+  const enemyCenterY = enemy.y + enemy.height / 2;
+  const isStomp = charBottom <= enemyCenterY && c.speedY <= 0;
+
+  // 2. Wenn Stomp → direkt behandeln (wie vorher)
+  if (isStomp) {
+    return this.ifIsStompMethod(enemy, c);
   }
+
+  // 3. Für Schaden/Nicht-Stomp → enge Hitbox verwenden
+  const isCloseEnough = c.isCollidingTight(enemy, 20); // ggf. 18–22 anpassen
+  if (!isCloseEnough) return;
+
+  if (!c.isHurtTimer) {
+    this.ifIsHurtTimerMethod(c);
+  }
+}
+
 
   ifIsHurtTimerMethod(c) {
     c.hit();
