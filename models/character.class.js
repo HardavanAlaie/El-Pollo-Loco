@@ -7,6 +7,7 @@ class Character extends MovableObject {
   otherDirection = false;
   isHurtTimer = false;
   lastActionTime = Date.now();
+  MAX_BOTTLES = 5;
 
   IMAGES_WALKING = Array.from(
     { length: 6 },
@@ -236,6 +237,45 @@ class Character extends MovableObject {
   //       });
   //   }
   // }
+    collectBottle() {
+    const world = this.world;
+    if (!world) return;
+
+    const bar = world.statusBarBottle;
+    const bottles = world.collectableBottles;
+
+    // Nichts zu tun, wenn kein HUD oder keine Flaschen vorhanden
+    if (!bar || !Array.isArray(bottles) || bottles.length === 0) return;
+
+    // Wenn schon am Limit → nur Info anzeigen, aber nichts entfernen
+    if (bar.availableBottles >= this.MAX_BOTTLES) {
+      world.showBottleLimitMessage?.();
+      return;
+    }
+
+    world.collectableBottles = bottles.filter((bottle) => {
+      const collides = this.isCollidingTight(bottle, 14);
+
+      // keine Kollision → Flasche bleibt liegen
+      if (!collides) return true;
+
+      // Kollision + noch Platz im Inventar → einsammeln
+      if (bar.availableBottles < this.MAX_BOTTLES) {
+        bar.availableBottles++;
+        bar.update?.();
+
+        // optional: neue Flasche spawnen, wenn du das so willst
+        world.spawnNewBottle?.();
+
+        // Flasche aus der Welt entfernen
+        return false;
+      }
+
+      // Fallback: falls während der Schleife das Limit erreicht wird
+      world.showBottleLimitMessage?.();
+      return true;
+    });
+  }
 
   /**
    * Plays a sound from the specified file path if sound is enabled.
