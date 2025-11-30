@@ -277,6 +277,31 @@ class Character extends MovableObject {
     });
   }
 
+    isTouchingBottle(bottle) {
+    const insetXChar = 15;   // Wie „eng“ seitlich am Charakter
+    const insetXBottle = 13; // Wie eng an der Flasche
+
+    const charLeft = this.x + insetXChar;
+    const charRight = this.x + this.width - insetXChar;
+
+    const bottleLeft = bottle.x + insetXBottle;
+    const bottleRight = bottle.x + bottle.width - insetXBottle;
+
+    const horizontalOverlap = charRight > bottleLeft && charLeft < bottleRight;
+
+    const charBottom = this.y + this.height;
+    const bottleTop = bottle.y;
+    const bottleBottom = bottle.y + bottle.height;
+
+    // Wie „großzügig“ nach unten/hinten die Füße noch zählen sollen:
+    const verticalMargin = 2; // war vorher 5 – jetzt enger
+
+    const verticallyOnBottle =
+      charBottom >= bottleTop && charBottom <= bottleBottom + verticalMargin;
+
+    return horizontalOverlap && verticallyOnBottle;
+  }
+
   /**
    * Plays a sound from the specified file path if sound is enabled.
    *
