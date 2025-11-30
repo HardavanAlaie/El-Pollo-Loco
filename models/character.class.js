@@ -222,21 +222,7 @@ class Character extends MovableObject {
    * updates the status bar, removes the collected bottle from the world,
    * and spawns a new bottle.
    */
-  // collectBottle() {
-  //   const bar = this.world.statusBarBottle;
-  //   if (bar.availableBottles < 5) {
-  //     this.world.collectableBottles = this.world.collectableBottles.filter(
-  //       (bottle) => {
-  //         if (this.isCollidingTight(bottle, 14)) {
-  //           bar.availableBottles++;
-  //           bar.update();
-  //           this.world.spawnNewBottle();
-  //           return false;
-  //         }
-  //         return true;
-  //       });
-  //   }
-  // }
+
     collectBottle() {
     const world = this.world;
     if (!world) return;
@@ -253,8 +239,10 @@ class Character extends MovableObject {
       return;
     }
 
-    world.collectableBottles = bottles.filter((bottle) => {
-      const collides = this.isCollidingTight(bottle, 14);
+    // world.collectableBottles = bottles.filter((bottle) => {
+    //   const collides = this.isCollidingTight(bottle, 14);
+        world.collectableBottles = bottles.filter((bottle) => {
+      const collides = this.isTouchingBottle(bottle);
 
       // keine Kollision → Flasche bleibt liegen
       if (!collides) return true;
