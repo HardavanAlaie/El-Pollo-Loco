@@ -38,7 +38,7 @@ class MovableObject extends DrawableObject {
    * @returns {boolean} True if object is in the air.
    */
   isAboveGround() {
-    return this instanceof ThrowableObject ? true : this.y < 180;
+    return this instanceof ThrowableObject ? true : this.y < 185;
   }
 
   /** Standard-Kollision (mit leichtem Padding) */
