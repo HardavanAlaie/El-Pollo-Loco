@@ -361,21 +361,49 @@ class World {
 
 
   /** Handles collisions with collectible bottles. */
+  // characterCollidingBottle() {
+  //   const c = this.character;
+  //   this.collectableBottles = this.collectableBottles.filter((bottle) => {
+  //     const { horizontalOverlap, verticallyOnBottle } = this.characterCollidingBottleConstsMethod(c, bottle); 
+  //     if (horizontalOverlap && verticallyOnBottle) {
+  //       if (this.statusBarBottle.availableBottles < 5) {
+  //         this.statusBarBottle.availableBottles++;
+  //         this.statusBarBottle.update();
+  //       } else {
+  //         this.showBottleLimitMessage();
+  //       }
+  //       return false; 
+  //     }
+  //     return true;});
+  // }
   characterCollidingBottle() {
-    const c = this.character;
-    this.collectableBottles = this.collectableBottles.filter((bottle) => {
-      const { horizontalOverlap, verticallyOnBottle } = this.characterCollidingBottleConstsMethod(c, bottle); 
-      if (horizontalOverlap && verticallyOnBottle) {
-        if (this.statusBarBottle.availableBottles < 5) {
-          this.statusBarBottle.availableBottles++;
-          this.statusBarBottle.update();
-        } else {
-          this.showBottleLimitMessage();
-        }
-        return false; 
-      }
-      return true;});
-  }
+  const c = this.character;
+
+  this.collectableBottles = this.collectableBottles.filter((bottle) => {
+    const { horizontalOverlap, verticallyOnBottle } =
+      this.characterCollidingBottleConstsMethod(c, bottle);
+
+    // Keine Kollision → Flasche bleibt
+    if (!horizontalOverlap || !verticallyOnBottle) {
+      return true;
+    }
+
+    // Es KOLLIDIERT:
+    if (this.statusBarBottle.availableBottles < 5) {
+      // ✅ Es ist noch Platz → Flasche einsammeln
+      this.statusBarBottle.availableBottles++;
+      this.statusBarBottle.update();
+      // optional: neue Flasche spawnen wie in collectBottle():
+      // this.spawnNewBottle();
+      return false; // Flasche aus dem Array entfernen
+    } else {
+      // ❌ Kein Platz → Flasche NICHT einsammeln
+      this.showBottleLimitMessage();
+      return true; // Flasche bleibt im Array liegen
+    }
+  });
+}
+
 
   characterCollidingBottleConstsMethod(c, bottle) {
     const insetXChar = 15;

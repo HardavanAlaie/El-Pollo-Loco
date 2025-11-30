@@ -221,21 +221,21 @@ class Character extends MovableObject {
    * updates the status bar, removes the collected bottle from the world,
    * and spawns a new bottle.
    */
-  collectBottle() {
-    const bar = this.world.statusBarBottle;
-    if (bar.availableBottles < 5) {
-      this.world.collectableBottles = this.world.collectableBottles.filter(
-        (bottle) => {
-          if (this.isCollidingTight(bottle, 14)) {
-            bar.availableBottles++;
-            bar.update();
-            this.world.spawnNewBottle();
-            return false;
-          }
-          return true;
-        });
-    }
-  }
+  // collectBottle() {
+  //   const bar = this.world.statusBarBottle;
+  //   if (bar.availableBottles < 5) {
+  //     this.world.collectableBottles = this.world.collectableBottles.filter(
+  //       (bottle) => {
+  //         if (this.isCollidingTight(bottle, 14)) {
+  //           bar.availableBottles++;
+  //           bar.update();
+  //           this.world.spawnNewBottle();
+  //           return false;
+  //         }
+  //         return true;
+  //       });
+  //   }
+  // }
 
   /**
    * Plays a sound from the specified file path if sound is enabled.
