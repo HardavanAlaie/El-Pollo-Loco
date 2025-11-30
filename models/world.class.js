@@ -360,15 +360,30 @@ class World {
 
 
   /** Checks if the Endboss has been defeated. */
+  // checkEndbossDefeated() {
+  //   const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
+  //   if (!endboss || this.endbossDefeated || this.playerDied) return;
+  //   if (endboss.isDead?.()) {
+  //     this.endbossDefeated = true;
+  //     this.stopGameLoopHard(true);
+  //     this.showWinScreen();
+  //   }
+  // }
   checkEndbossDefeated() {
-    const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
-    if (!endboss || this.endbossDefeated || this.playerDied) return;
-    if (endboss.isDead?.()) {
-      this.endbossDefeated = true;
+  const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
+  if (!endboss || this.endbossDefeated || this.playerDied) return;
+
+  if (endboss.isDead?.()) {
+    this.endbossDefeated = true;
+
+    // ⏳ kleine Pause für die Todes-Animation (z.B. 1200ms)
+    setTimeout(() => {
       this.stopGameLoopHard(true);
       this.showWinScreen();
-    }
+    }, 1200);
   }
+}
+
 
   /** Stops all sounds and displays the game over screen. */
   endGame() {
