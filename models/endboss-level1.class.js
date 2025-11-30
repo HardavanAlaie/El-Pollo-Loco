@@ -77,13 +77,20 @@ class EndbossLevel1 extends MovableObject {
   /**
    * Handles the boss death animation and logic stop.
    */
+  // die() {
+  //   // this.playAnimation(this.IMAGES_DEAD);
+  //   // clearInterval(this.bossAnimationInterval);
+  //   clearInterval(this.bossMoveInterval);
+  //   this.stopScreamSound();
+  //   this.deathTime = Date.now();
+  // }
   die() {
-    // this.playAnimation(this.IMAGES_DEAD);
-    // clearInterval(this.bossAnimationInterval);
-    clearInterval(this.bossMoveInterval);
-    this.stopScreamSound();
-    this.deathTime = Date.now();
-  }
+  this.playAnimation(this.IMAGES_DEAD);
+  clearInterval(this.bossAnimationInterval);
+  clearInterval(this.bossMoveInterval);
+  this.stopScreamSound();
+}
+
 
   /**
    * Stops any playing scream sound.
