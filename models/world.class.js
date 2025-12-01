@@ -269,7 +269,7 @@ class World {
     }
     const isCloseEnough = c.isCollidingTight(enemy, 20); 
     if (!isCloseEnough) return;
-    if (!c.isHutTimer) {
+    if (!c.isHurtTimer) {
       this.ifIsHurtTimerMethod(c);
     }
   }
