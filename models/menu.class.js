@@ -1,3 +1,18 @@
+/**
+ * ------------------------------------------------------------
+ * Adds a polyfill for CanvasRenderingContext2D.roundRect if the
+ * method does not exist. Creates a rounded rectangle path using
+ * quadratic curves while clamping the radius to valid limits.
+ *
+ * @function CanvasRenderingContext2D.roundRect
+ * @param {number} x - The x-coordinate of the rectangle.
+ * @param {number} y - The y-coordinate of the rectangle.
+ * @param {number} w - Width of the rectangle.
+ * @param {number} h - Height of the rectangle.
+ * @param {number} r - Corner radius for all corners.
+ * @returns {CanvasRenderingContext2D} Context for chaining.
+ * ------------------------------------------------------------
+ */
 if (!CanvasRenderingContext2D.prototype.roundRect) {
   CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
     r = Math.min(r, w / 2, h / 2);
@@ -17,7 +32,7 @@ if (!CanvasRenderingContext2D.prototype.roundRect) {
 }
 
 /**
- * 🧭 Class: Menu
+ * Class: Menu
  * Handles the game's start menu screen, including rendering,
  * button creation, and click handling (supports fullscreen scaling).
  */
@@ -112,6 +127,16 @@ class Menu {
     this.impressumBtnAreaMethod(x, y);
   }
 
+/**
+ * ------------------------------------------------------------
+ * Checks whether the user clicked inside the Impressum button
+ * hitbox and triggers the Impressum overlay if available.
+ *
+ * @function impressumBtnAreaMethod
+ * @param {number} x - Scaled x-coordinate of the click.
+ * @param {number} y - Scaled y-coordinate of the click.
+ * ------------------------------------------------------------
+ */
   impressumBtnAreaMethod(x, y) {
     if (this.impressumBtnArea &&
       x >= this.impressumBtnArea.x &&
@@ -124,6 +149,16 @@ class Menu {
     }
   }
 
+/**
+ * ------------------------------------------------------------
+ * Extracts and returns click-related variables required for
+ * coordinate scaling and button interaction handling.
+ *
+ * @function handleClickVars
+ * @param {MouseEvent|TouchEvent} event
+ * @returns {object}
+ * ------------------------------------------------------------
+ */
   handleClickVars(event) {
     const { x, y, windowRatio, aspectRatio, pageHeight, pageWidth, clientX, clientY } = this.handleClickVarsConstsMethod(event);
     return {
@@ -138,6 +173,16 @@ class Menu {
     };
   }
 
+/**
+ * ------------------------------------------------------------
+ * Computes raw and scaled click coordinates from mouse or touch
+ * events, including canvas scaling factors and window ratios.
+ *
+ * @function handleClickVarsConstsMethod
+ * @param {MouseEvent|TouchEvent} event
+ * @returns {object}
+ * ------------------------------------------------------------
+ */
   handleClickVarsConstsMethod(event) {
     const rect = this.canvas.getBoundingClientRect();
     const clientX = event.touches?.[0]?.clientX ?? event.clientX;
@@ -153,6 +198,16 @@ class Menu {
     return { x, y, windowRatio, aspectRatio, pageHeight, pageWidth, clientX, clientY };
   }
 
+ /**
+ * ------------------------------------------------------------
+ * Checks whether the clicked position intersects with any
+ * button hitbox and triggers the associated button action.
+ *
+ * @function buttonHitbox
+ * @param {number} finalX - Adjusted x-coordinate of the click.
+ * @param {number} finalY - Adjusted y-coordinate of the click.
+ * ------------------------------------------------------------
+ */
   buttonHitbox(finalX, finalY) {
     Object.values(this.buttons).forEach((btn) => {
       if (
@@ -166,6 +221,23 @@ class Menu {
     });
   }
 
+/**
+ * ------------------------------------------------------------
+ * Adjusts click coordinates for horizontal or vertical letterboxing
+ * depending on the window-to-canvas aspect ratio mismatch.
+ *
+ * @function horizontalVerticalOffset
+ * @param {number} windowRatio
+ * @param {number} aspectRatio
+ * @param {number} pageHeight
+ * @param {number} pageWidth
+ * @param {number} finalX - Current x coordinate (will be recalculated).
+ * @param {number} clientX - Raw clientX from the event.
+ * @param {number} finalY - Current y coordinate (will be recalculated).
+ * @param {number} clientY - Raw clientY from the event.
+ * @returns {{ finalX: number, finalY: number }}
+ * ------------------------------------------------------------
+ */
   horizontalVerticalOffset(windowRatio, aspectRatio, pageHeight, pageWidth, finalX, clientX, finalY, clientY) {
     if (windowRatio > aspectRatio) {
       const displayedWidth = pageHeight * aspectRatio;
@@ -182,7 +254,7 @@ class Menu {
   }
 
   /**
-   * ▶️ Executes the action assigned to a button.
+   * Executes the action assigned to a button.
    * @param {string} action - The button's action identifier.
    */
   handleButtonClick(action) {
@@ -193,31 +265,59 @@ class Menu {
   }
 
   /**
-   * 🖱️ Changes the mouse cursor to a pointer when hovering over the start button.
+   * Changes the mouse cursor to a pointer when hovering over the start button.
    */
   handleHover(event) {
-    const rect = this.canvas.getBoundingClientRect();
-    const scaleX = this.canvas.width / rect.width;
-    const scaleY = this.canvas.height / rect.height;
-    const x = (event.clientX - rect.left) * scaleX;
-    const y = (event.clientY - rect.top) * scaleY;
+    const { x, y } = this.handleHoverConstsMethod(event);
     let over = false;
     if (this.buttons) {
-      over = Object.values(this.buttons).some(
-        (btn) =>
-          x >= btn.x &&
-          x <= btn.x + btn.width &&
-          y >= btn.y &&
-          y <= btn.y + btn.height
-      );
+      over = this.ifHandleHoverMethod(over, x, y);
     }
-
-    // Wenn noch kein Treffer: Impressum-Button checken
     if (!over && this.impressumBtnArea) {
       const b = this.impressumBtnArea;
       over = x >= b.x && x <= b.x + b.width && y >= b.y && y <= b.y + b.height;
     }
     this.canvas.style.cursor = over ? "pointer" : "default";
+  }
+
+/**
+ * ------------------------------------------------------------
+ * Determines whether the mouse cursor is hovering over any
+ * registered button based on scaled canvas coordinates.
+ *
+ * @function ifHandleHoverMethod
+ * @param {boolean} over - Previous hover state.
+ * @param {number} x - Scaled x-coordinate of the pointer.
+ * @param {number} y - Scaled y-coordinate of the pointer.
+ * @returns {boolean}
+ * ------------------------------------------------------------
+ */
+  ifHandleHoverMethod(over, x, y) {
+    over = Object.values(this.buttons).some((btn) => x >= btn.x &&
+      x <= btn.x + btn.width &&
+      y >= btn.y &&
+      y <= btn.y + btn.height
+    );
+    return over;
+  }
+
+/**
+ * ------------------------------------------------------------
+ * Converts raw mouse event coordinates into canvas-scaled
+ * coordinates for hover detection.
+ *
+ * @function handleHoverConstsMethod
+ * @param {MouseEvent} event
+ * @returns {{ x: number, y: number }}
+ * ------------------------------------------------------------
+ */
+  handleHoverConstsMethod(event) {
+    const rect = this.canvas.getBoundingClientRect();
+    const scaleX = this.canvas.width / rect.width;
+    const scaleY = this.canvas.height / rect.height;
+    const x = (event.clientX - rect.left) * scaleX;
+    const y = (event.clientY - rect.top) * scaleY;
+    return { x, y };
   }
 
   /**
@@ -238,6 +338,14 @@ class Menu {
     this.canvas.style.cursor = "default";
   }
 
+/**
+ * ------------------------------------------------------------
+ * Draws the Impressum button on the canvas and stores its
+ * active hitbox area for click interaction.
+ *
+ * @function drawImpressumButton
+ * ------------------------------------------------------------
+ */
   drawImpressumButton() {
     const { x, y, btnWidth, btnHeight, ctx } = this.drawImpressumButtonConstsMethod(); 
     this.impressumBtnArea = { x, y, width: btnWidth, height: btnHeight };
@@ -253,6 +361,15 @@ class Menu {
     ctx.restore();
   }
 
+/**
+ * ------------------------------------------------------------
+ * Provides layout values and rendering context required
+ * to draw the Impressum button on the canvas.
+ *
+ * @function drawImpressumButtonConstsMethod
+ * @returns {{ x: number, y: number, btnWidth: number, btnHeight: number, ctx: CanvasRenderingContext2D }}
+ * ------------------------------------------------------------
+ */
   drawImpressumButtonConstsMethod() {
     const ctx = this.ctx;
     const w = this.canvas.width;

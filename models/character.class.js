@@ -113,21 +113,13 @@ class Character extends MovableObject {
     return didAction;
   }
 
-  // upMethod(kb, didAction) {
-  //   if (kb?.UP && !this.isAboveGround()) {
-  //     this.jump();
-  //     didAction = true;
-  //   }
-  //   return didAction;
-  // }
   upMethod(kb, didAction) {
-  if (kb?.UP && !this.isAboveGround() && this.speedY === 0) {
-    this.jump();
-    didAction = true;
+    if (kb?.UP && !this.isAboveGround() && this.speedY === 0) {
+      this.jump();
+      didAction = true;
+    }
+    return didAction;
   }
-  return didAction;
-}
-
 
   leftMethod(kb, didAction) {
     if (kb?.LEFT && this.x > 0) {
@@ -176,9 +168,18 @@ class Character extends MovableObject {
     }, 80);
   }
 
+ /**
+ * ------------------------------------------------------------
+ * Provides animation-related state values such as whether
+ * the character is moving and how long it has been inactive.
+ *
+ * @function animationIntervalConstsMethod
+ * @returns {{ isMoving: boolean, inactiveMs: number }}
+ * ------------------------------------------------------------
+ */
   animationIntervalConstsMethod() {
     const now = Date.now();
-    const inactiveMs = now - this.lastActionTime; // wie lange schon nichts gemacht?
+    const inactiveMs = now - this.lastActionTime;
     const kb = this.world?.keyboard;
     const isMoving = kb?.RIGHT || kb?.LEFT;
     return { isMoving, inactiveMs };
@@ -230,71 +231,70 @@ class Character extends MovableObject {
    * updates the status bar, removes the collected bottle from the world,
    * and spawns a new bottle.
    */
-
-    collectBottle() {
+  collectBottle() {
     const world = this.world;
     if (!world) return;
-
     const bar = world.statusBarBottle;
     const bottles = world.collectableBottles;
-
-    // Nichts zu tun, wenn kein HUD oder keine Flaschen vorhanden
     if (!bar || !Array.isArray(bottles) || bottles.length === 0) return;
-
-    // Wenn schon am Limit → nur Info anzeigen, aber nichts entfernen
     if (bar.availableBottles >= this.MAX_BOTTLES) {
       world.showBottleLimitMessage?.();
       return;
     }
+    this.collectableBottlesMethod(world, bottles, bar);
+  }
 
-    // world.collectableBottles = bottles.filter((bottle) => {
-    //   const collides = this.isCollidingTight(bottle, 14);
-        world.collectableBottles = bottles.filter((bottle) => {
+ /**
+ * ------------------------------------------------------------
+ * Handles bottle collection logic by checking collisions,
+ * updating the bottle counter, and removing or keeping bottles
+ * depending on available inventory capacity.
+ *
+ * @function collectableBottlesMethod
+ * @param {object} world - The current game world instance.
+ * @param {Array} bottles - Array of bottle objects to check.
+ * @param {object} bar - The bottle status bar object.
+ * ------------------------------------------------------------
+ */
+  collectableBottlesMethod(world, bottles, bar) {
+    world.collectableBottles = bottles.filter((bottle) => {
       const collides = this.isTouchingBottle(bottle);
-
-      // keine Kollision → Flasche bleibt liegen
       if (!collides) return true;
-
-      // Kollision + noch Platz im Inventar → einsammeln
       if (bar.availableBottles < this.MAX_BOTTLES) {
         bar.availableBottles++;
         bar.update?.();
-
-        // optional: neue Flasche spawnen, wenn du das so willst
         world.spawnNewBottle?.();
-
-        // Flasche aus der Welt entfernen
         return false;
       }
-
-      // Fallback: falls während der Schleife das Limit erreicht wird
       world.showBottleLimitMessage?.();
       return true;
     });
   }
 
-    isTouchingBottle(bottle) {
-    const insetXChar = 15;   // Wie „eng“ seitlich am Charakter
-    const insetXBottle = 13; // Wie eng an der Flasche
-
+/**
+ * ------------------------------------------------------------
+ * Performs a precise collision check between the character
+ * and a bottle by using inset boundaries and a small vertical
+ * tolerance to detect collection proximity.
+ *
+ * @function isTouchingBottle
+ * @param {object} bottle - The bottle object to test against.
+ * @returns {boolean}
+ * ------------------------------------------------------------
+ */
+  isTouchingBottle(bottle) {
+    const insetXChar = 15; 
+    const insetXBottle = 13; 
     const charLeft = this.x + insetXChar;
     const charRight = this.x + this.width - insetXChar;
-
     const bottleLeft = bottle.x + insetXBottle;
     const bottleRight = bottle.x + bottle.width - insetXBottle;
-
     const horizontalOverlap = charRight > bottleLeft && charLeft < bottleRight;
-
     const charBottom = this.y + this.height;
     const bottleTop = bottle.y;
     const bottleBottom = bottle.y + bottle.height;
-
-    // Wie „großzügig“ nach unten/hinten die Füße noch zählen sollen:
-    const verticalMargin = 2; // war vorher 5 – jetzt enger
-
-    const verticallyOnBottle =
-      charBottom >= bottleTop && charBottom <= bottleBottom + verticalMargin;
-
+    const verticalMargin = 2;
+    const verticallyOnBottle = charBottom >= bottleTop && charBottom <= bottleBottom + verticalMargin;
     return horizontalOverlap && verticallyOnBottle;
   }
 

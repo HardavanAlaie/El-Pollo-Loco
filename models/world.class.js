@@ -42,23 +42,32 @@ class World {
   }
 
   /** Main game loop — checks collisions, spawns, and victory/defeat conditions. */
-
   run() {
     this.gameInterval = setInterval(() => {
       if (this.levelEnded) return;
-      this.checkCollisions(); 
-      this.checkThrowableObjects(); 
-      this.checkEndbossDefeated(); 
-      this.removeOffscreenEnemies(); 
-      this.checkEndboss1Hit(); 
+      this.checkCollisions();
+      this.checkThrowableObjects();
+      this.checkEndbossDefeated();
+      this.removeOffscreenEnemies();
+      this.checkEndboss1Hit();
       this.characterEnergyMethod();
-    }, 1000 / 60); 
+    }, 1000 / 60);
   }
 
+/**
+ * ------------------------------------------------------------
+ * Handles character death when energy reaches zero and triggers
+ * the game over flow if the player has not already died or won.
+ *
+ * @function characterEnergyMethod
+ * ------------------------------------------------------------
+ */
   characterEnergyMethod() {
-    if (this.character.energy <= 0 &&
+    if (
+      this.character.energy <= 0 &&
       !this.playerDied &&
-      !this.endbossDefeated) {
+      !this.endbossDefeated
+    ) {
       this.playerDied = true;
       this.stopGameLoopHard();
       this.showGameOverScreen();
@@ -122,6 +131,16 @@ class World {
     this.throwableBottles();
   }
 
+/**
+ * ------------------------------------------------------------
+ * Applies damage to an enemy when hit by a bottle if they are
+ * colliding and the enemy is still alive, and breaks the bottle.
+ *
+ * @function ifDeadIfCollidingMethod
+ * @param {object} enemy - The enemy object being checked.
+ * @param {object} bottle - The throwable bottle object.
+ * ------------------------------------------------------------
+ */
   ifDeadIfCollidingMethod(enemy, bottle) {
     if (!enemy.isDead?.() && bottle.isColliding(enemy)) {
       if (enemy instanceof EndbossLevel1) {
@@ -144,6 +163,15 @@ class World {
     }
   }
 
+/**
+ * ------------------------------------------------------------
+ * Handles the logic for throwing a bottle, including cooldown,
+ * reducing available bottles, spawning the throwable object,
+ * and re-enabling throwing after a delay.
+ *
+ * @function ifThrowableBottlesMethod
+ * ------------------------------------------------------------
+ */
   ifThrowableBottlesMethod() {
     this.canThrow = false;
     this.statusBarBottle.availableBottles--;
@@ -169,7 +197,7 @@ class World {
           s.volume = 0.5;
           s.play().catch(() => {});
         }
-        return false; 
+        return false;
       }
       return true;
     });
@@ -186,8 +214,8 @@ class World {
     const ky = coin.y + coin.height / 2;
     const dx = Math.abs(cx - kx);
     const dy = Math.abs(cy - ky);
-    const pickupRadiusX = coin.width * 0.3; 
-    const pickupRadiusY = coin.height * 0.3; 
+    const pickupRadiusX = coin.width * 0.3;
+    const pickupRadiusY = coin.height * 0.3;
     return dx < pickupRadiusX && dy < pickupRadiusY;
   }
 
@@ -199,9 +227,9 @@ class World {
   isCoinCollected(coin) {
     if (!coin || !this.character) return false;
     const c = this.character;
-    const charPaddingX = c.width * 0.3; 
-    const charPaddingTop = c.height * 0.2; 
-    const charPaddingBottom = c.height * 0.1; 
+    const charPaddingX = c.width * 0.3;
+    const charPaddingTop = c.height * 0.2;
+    const charPaddingBottom = c.height * 0.1;
     const ax1 = c.x + charPaddingX;
     const ax2 = c.x + c.width - charPaddingX;
     const ay1 = c.y + charPaddingTop;
@@ -210,6 +238,16 @@ class World {
     return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
   }
 
+/**
+ * ------------------------------------------------------------
+ * Calculates an inner padded hitbox for a coin to make
+ * collision detection slightly less sensitive at the edges.
+ *
+ * @function coinPaddingMethod
+ * @param {object} coin - The coin object.
+ * @returns {{ bx1: number, bx2: number, by1: number, by2: number }}
+ * ------------------------------------------------------------
+ */
   coinPaddingMethod(coin) {
     const coinPadding = 8;
     const bx1 = coin.x + coinPadding;
@@ -220,51 +258,50 @@ class World {
   }
 
   /** Handles player–enemy collision logic (jumping on enemies vs taking damage). */
-//   characterColliding(enemy) {
-//     const c = this.character;
-//     if (!c || !enemy) return;
-//     if (enemy.isDead?.() || enemy.dead) return;
-//     const isCloseEnough = c.isCollidingTight(enemy, 20);
-// if (!isCloseEnough) return;
-
-//     //if (!c.isColliding(enemy)) return;
-//     const charBottom = c.y + c.height;
-//     const enemyCenterY = enemy.y + enemy.height / 2;
-//     const isStomp = charBottom <= enemyCenterY && c.speedY <= 0;
-//     if (isStomp) {
-//       return this.ifIsStompMethod(enemy, c);
-//     }
-//     if (!c.isHurtTimer) {
-//       this.ifIsHurtTimerMethod(c);
-//     }
-//   }
-characterColliding(enemy) {
-  const c = this.character;
-  if (!c || !enemy) return;
-  if (enemy.isDead?.() || enemy.dead) return;
-
-  // 1. Grober Check mit normaler Collision (wie früher)
-  if (!c.isColliding(enemy)) return;
-
-  const charBottom = c.y + c.height;
-  const enemyCenterY = enemy.y + enemy.height / 2;
-  const isStomp = charBottom <= enemyCenterY && c.speedY <= 0;
-
-  // 2. Wenn Stomp → direkt behandeln (wie vorher)
-  if (isStomp) {
-    return this.ifIsStompMethod(enemy, c);
+  characterColliding(enemy) {
+    const c = this.character;
+    if (!c || !enemy) return;
+    if (enemy.isDead?.() || enemy.dead) return;
+    if (!c.isColliding(enemy)) return;
+    const isStomp = this.characterCollidingConstsMethod(c, enemy);
+    if (isStomp) {
+      return this.ifIsStompMethod(enemy, c);
+    }
+    const isCloseEnough = c.isCollidingTight(enemy, 20); 
+    if (!isCloseEnough) return;
+    if (!c.isHutTimer) {
+      this.ifIsHurtTimerMethod(c);
+    }
   }
 
-  // 3. Für Schaden/Nicht-Stomp → enge Hitbox verwenden
-  const isCloseEnough = c.isCollidingTight(enemy, 20); // ggf. 18–22 anpassen
-  if (!isCloseEnough) return;
-
-  if (!c.isHurtTimer) {
-    this.ifIsHurtTimerMethod(c);
+/**
+ * ------------------------------------------------------------
+ * Determines whether a collision between the character and an
+ * enemy should be treated as a stomp based on vertical positions
+ * and the character's vertical speed.
+ *
+ * @function characterCollidingConstsMethod
+ * @param {object} c - The character object.
+ * @param {object} enemy - The enemy object.
+ * @returns {boolean}
+ * ------------------------------------------------------------
+ */
+  characterCollidingConstsMethod(c, enemy) {
+    const charBottom = c.y + c.height;
+    const enemyCenterY = enemy.y + enemy.height / 2;
+    const isStomp = charBottom <= enemyCenterY && c.speedY <= 0;
+    return isStomp;
   }
-}
 
-
+/**
+ * ------------------------------------------------------------
+ * Applies damage to the character, updates the status bar, and
+ * activates a temporary hurt timer to prevent repeated hits.
+ *
+ * @function ifIsHurtTimerMethod
+ * @param {object} c - The character object.
+ * ------------------------------------------------------------
+ */
   ifIsHurtTimerMethod(c) {
     c.hit();
     this.statusBar.setPercentage(c.energy);
@@ -272,6 +309,17 @@ characterColliding(enemy) {
     setTimeout(() => (c.isHurtTimer = false), 700);
   }
 
+/**
+ * ------------------------------------------------------------
+ * Handles stomp interactions where the character jumps on an
+ * enemy, dealing damage and bouncing the character upward. If
+ * the enemy dies, its death logic is triggered.
+ *
+ * @function ifIsStompMethod
+ * @param {object} enemy - The enemy being stomped.
+ * @param {object} c - The character object.
+ * ------------------------------------------------------------
+ */
   ifIsStompMethod(enemy, c) {
     if (enemy instanceof EndbossLevel1) {
       enemy.takeDamage?.(20);
@@ -284,156 +332,23 @@ characterColliding(enemy) {
     if (enemy.isDead?.()) enemy.die?.();
     return;
   }
-  //----------------------------------------------------------------------------------------------
-//   characterColliding(enemy) {
-//   const c = this.character;
-//   if (!enemy || !c) return;
-
-//   // 🔲 Etwas engere Hitbox (wie bei Coins/Bottles)
-//   const inset = 10;
-
-//   const ax1 = c.x + inset;
-//   const ay1 = c.y + inset;
-//   const ax2 = c.x + c.width - inset;
-//   const ay2 = c.y + c.height - inset;
-
-//   const bx1 = enemy.x + inset;
-//   const by1 = enemy.y + inset;
-//   const bx2 = enemy.x + enemy.width - inset;
-//   const by2 = enemy.y + enemy.height - inset;
-
-//   // ❌ Keine Überlappung → keine Kollision
-//   const overlaps =
-//     ax2 > bx1 && ax1 < bx2 &&
-//     ay2 > by1 && ay1 < by2;
-
-//   if (!overlaps) return;
-
-//   // 🧮 Für Stomp-Logik nur obere Kante des Gegners & untere des Charakters
-//   const charBottom = ay2; // untere Kante (mit inset)
-//   const enemyTop   = by1; // obere Kante (mit inset)
-
-//   // ✅ Stomp: Charakter kommt von oben und fällt (speedY < 0)
-//   const isStomp = charBottom <= enemyTop && c.speedY < 0;
-
-//   if (isStomp) {
-//     // Boss = 20 Schaden, sonst wie gehabt
-//     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-//       enemy.takeDamage?.(20);
-//     } else {
-//       enemy.hit?.();
-//     }
-
-//     // kleiner Bounce nach oben + sauber auf Gegner-Oberkante setzen
-//     c.speedY = 25;
-//     c.y = enemy.y - c.height;
-
-//     if (enemy.isDead?.()) enemy.die?.();
-//   } else {
-//     // ❌ Kein Stomp → Spieler bekommt Schaden
-//     c.hit();
-//     this.statusBar.setPercentage(c.energy);
-//   }
-// }
-//----------------------------------------------------------------------------------------------
-// characterColliding(enemy) {
-//   const c = this.character;
-//   if (!enemy || !c) return;
-
-//   const inset = 10;
-
-//   // 🔲 Engere Hitbox wie bei Coins/Bottles
-//   const ax1 = c.x + inset;
-//   const ay1 = c.y + inset;
-//   const ax2 = c.x + c.width - inset;
-//   const ay2 = c.y + c.height - inset;
-
-//   const bx1 = enemy.x + inset;
-//   const by1 = enemy.y + inset;
-//   const bx2 = enemy.x + enemy.width - inset;
-//   const by2 = enemy.y + enemy.height - inset;
-
-//   const overlaps =
-//     ax2 > bx1 && ax1 < bx2 &&
-//     ay2 > by1 && ay1 < by2;
-
-//   if (!overlaps) return;
-
-//   const charBottom = ay2;
-//   const enemyTop   = by1;
-
-//   // ✅ Stomp: von oben UND fallend
-//   const isStomp = charBottom <= enemyTop && c.speedY < 0;
-
-//   if (isStomp) {
-//     // Boss = 20 Schaden, sonst wie gehabt
-//     if (enemy instanceof EndbossLevel1 || enemy instanceof EndbossLevel2) {
-//       enemy.takeDamage?.(20);
-//     } else {
-//       enemy.hit?.();
-//     }
-
-//     // kleiner Bounce + sauber oben drauf setzen
-//     c.speedY = 25;
-//     c.y = enemy.y - c.height;
-
-//     if (enemy.isDead?.()) enemy.die?.();
-//   } else {
-//     // ❌ Nur Schaden, wenn Pepe gerade NICHT im Hurt-Status ist
-//     if (!c.isHurt()) {
-//       c.hit();
-//       this.statusBar.setPercentage(c.energy);
-//     }
-//   }
-// }
-
 
   /** Checks if the Endboss has been defeated. */
-  // checkEndbossDefeated() {
-  //   const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
-  //   if (!endboss || this.endbossDefeated || this.playerDied) return;
-  //   if (endboss.isDead?.()) {
-  //     this.endbossDefeated = true;
-  //     this.stopGameLoopHard(true);
-  //     this.showWinScreen();
-  //   }
-  // }
-//   checkEndbossDefeated() {
-//   const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
-//   if (!endboss || this.endbossDefeated || this.playerDied) return;
-
-//   if (endboss.isDead?.()) {
-//     this.endbossDefeated = true;
-
-//     // ⏳ kleine Pause für die Todes-Animation (z.B. 1200ms)
-//     setTimeout(() => {
-//       this.stopGameLoopHard(true);
-//       this.showWinScreen();
-//     }, 1200);
-//   }
-// }
- checkEndbossDefeated() {
-  const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
-  if (!endboss || this.endbossDefeated || this.playerDied) return;
-
-  if (endboss.isDead?.()) {
-    // Falls der Boss die Zeit noch nicht gesetzt hat (Safety)
-    if (!endboss.deathStartTime) {
-      endboss.deathStartTime = Date.now();
-    }
-
-    const elapsed = Date.now() - endboss.deathStartTime;
-
-    // z.B. 1000 ms (1 Sekunde) Death-Animation zeigen
-    if (elapsed >= 1000) {
-      this.endbossDefeated = true;
-      this.stopGameLoopHard(true);
-      this.showWinScreen();
+  checkEndbossDefeated() {
+    const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
+    if (!endboss || this.endbossDefeated || this.playerDied) return;
+    if (endboss.isDead?.()) {
+      if (!endboss.deathStartTime) {
+        endboss.deathStartTime = Date.now();
+      }
+      const elapsed = Date.now() - endboss.deathStartTime;
+      if (elapsed >= 1000) {
+        this.endbossDefeated = true;
+        this.stopGameLoopHard(true);
+        this.showWinScreen();
+      }
     }
   }
-}
-
-
 
   /** Stops all sounds and displays the game over screen. */
   endGame() {
@@ -466,8 +381,8 @@ characterColliding(enemy) {
     this._winShown = true;
     this._gameOverPlayed = true;
     this.stopGameLoopHard(true);
-    this.stopAllSounds(); 
-    this.setBackgroundMusic("audio/win.mp3", true); 
+    this.stopAllSounds();
+    this.setBackgroundMusic("audio/win.mp3", true);
     this.fadeOverlay(0.3);
     this.drawEndScreen("img/You won, you lost/You win B.png", "#fca534ff");
   }
@@ -479,8 +394,8 @@ characterColliding(enemy) {
     this._winShown = true;
     this.stopGameLoopHard(false);
     this.hardStopEnemyAudio();
-    this.stopAllSounds(); 
-    this.setBackgroundMusic("audio/gameover.mp3", false); 
+    this.stopAllSounds();
+    this.setBackgroundMusic("audio/gameover.mp3", false);
     this.fadeOverlay(0.8);
     this.drawEndScreen("img/You won, you lost/Game Over.png", "#fca534ff");
   }
@@ -561,7 +476,8 @@ characterColliding(enemy) {
   drawRestartButtonConstsMethod() {
     const ctx = this.ctx;
     const canvas = this.canvas;
-    const w = 250, h = 60;
+    const w = 250,
+      h = 60;
     const x = canvas.width / 2 - w / 2;
     const y = canvas.height / 2;
     return { ctx, x, y, w, h, canvas };
@@ -664,7 +580,7 @@ characterColliding(enemy) {
       x >= this.restartButtonArea.x &&
       x <= this.restartButtonArea.x + this.restartButtonArea.width &&
       y >= this.restartButtonArea.y &&
-      y <= this.restartButtonArea.y + this.restartButtonArea.height
+      y <= this.restartButtonArea.y + this.restartButtonArea.height;
     this.canvas.style.cursor = inside ? "pointer" : "default";
   }
 
@@ -842,6 +758,16 @@ characterColliding(enemy) {
     };
   }
 
+/**
+ * ------------------------------------------------------------
+ * Draws a visual debug indicator as a red semi-transparent circle
+ * at the specified canvas coordinates.
+ *
+ * @function debugIndicatorMethod
+ * @param {number} x - X position where the indicator is drawn.
+ * @param {number} y - Y position where the indicator is drawn.
+ * ------------------------------------------------------------
+ */
   debugIndicatorMethod(x, y) {
     const ctx = this.ctx;
     ctx.save();
@@ -950,13 +876,7 @@ characterColliding(enemy) {
     ctx.save();
     ctx.fillStyle = "#fca534ff";
     ctx.beginPath();
-    ctx.arc(
-      b.x + b.width / 2,
-      b.y + b.height / 2,
-      b.width / 2,
-      0,
-      Math.PI * 2
-    );
+    ctx.arc(b.x + b.width / 2, b.y + b.height / 2, b.width / 2, 0, Math.PI * 2);
     this.forEachMethodCtxMethod(ctx, b);
   }
 
@@ -971,10 +891,34 @@ characterColliding(enemy) {
   }
 
   drawMobileControlsBtnAreaMethod(margin, h, size, w) {
-    this.leftBtnArea = { x: margin, y: h - size - margin, width: size, height: size, label: "⬅️", };
-    this.rightBtnArea = { x: margin + size + 20, y: h - size - margin, width: size, height: size, label: "➡️", };
-    this.jumpBtnArea = { x: w - size * 2 - 40, y: h - size - margin, width: size, height: size, label: "⤴️", };
-    this.throwBtnArea = { x: w - size - margin, y: h - size - margin, width: size, height: size, label: "🧴", };
+    this.leftBtnArea = {
+      x: margin,
+      y: h - size - margin,
+      width: size,
+      height: size,
+      label: "⬅️",
+    };
+    this.rightBtnArea = {
+      x: margin + size + 20,
+      y: h - size - margin,
+      width: size,
+      height: size,
+      label: "➡️",
+    };
+    this.jumpBtnArea = {
+      x: w - size * 2 - 40,
+      y: h - size - margin,
+      width: size,
+      height: size,
+      label: "⤴️",
+    };
+    this.throwBtnArea = {
+      x: w - size - margin,
+      y: h - size - margin,
+      width: size,
+      height: size,
+      label: "🧴",
+    };
   }
 
   drawMobileControlsConstsMethod() {
@@ -1091,7 +1035,10 @@ characterColliding(enemy) {
     }
     this.restartButtonArea = null;
     if (this.restartHoverListenerAdded && this.handleRestartHoverBound) {
-      this.canvas.removeEventListener("mousemove", this.handleRestartHoverBound);
+      this.canvas.removeEventListener(
+        "mousemove",
+        this.handleRestartHoverBound
+      );
       this.restartHoverListenerAdded = false;
     }
     if (this.canvas) {
@@ -1129,7 +1076,9 @@ characterColliding(enemy) {
       a.loop = loop;
       this._bgMusic = a;
       a.play().catch(() => {});
-    } catch (e) {console.warn("setBackgroundMusic failed:", e);}
+    } catch (e) {
+      console.warn("setBackgroundMusic failed:", e);
+    }
   }
 
   ifSoundEnabledMethod() {

@@ -94,6 +94,25 @@ function resizeCanvas() {
   world?.updateCanvasRect?.();
 }
 
+/**
+ * ------------------------------------------------------------
+ * Calculates the optimal canvas size based on window ratio
+ * and a fixed game aspect ratio.
+ *
+ * @function ifWindowRatioAspectRatioMethod
+ * @param {number} windowRatio - The current window width/height ratio.
+ * @param {number} aspectRatio - The fixed desired aspect ratio of the game.
+ * @param {number} newHeight - Initial height value (will be recalculated).
+ * @param {number} newWidth - Initial width value (will be recalculated).
+ *
+ * @returns {{ newHeight: number, newWidth: number }}
+ * Returns the adjusted width and height ensuring the aspect ratio is preserved.
+ *
+ * Behavior:
+ * - If the window is wider than the desired ratio → height fits, width adjusts.
+ * - If the window is taller/narrower → width fits, height adjusts.
+ * ------------------------------------------------------------
+ */
 function ifWindowRatioAspectRatioMethod(windowRatio, aspectRatio, newHeight, newWidth) {
   if (windowRatio > aspectRatio) {
     newHeight = window.innerHeight;
@@ -117,6 +136,22 @@ function toggleFullscreen() {
   isFullscreenMethod(isFullscreen, canvas, doc);
 }
 
+/**
+ * ------------------------------------------------------------
+ * Toggles fullscreen mode for the game canvas.
+ * 
+ * @function isFullscreenMethod
+ * @param {boolean} isFullscreen - Indicates whether fullscreen is currently active.
+ * @param {HTMLCanvasElement} canvas - The canvas element that should enter fullscreen.
+ * @param {Document} doc - The document object used to exit fullscreen.
+ *
+ * Behavior:
+ * - If not in fullscreen → requests fullscreen on the canvas.
+ * - If already in fullscreen → exits fullscreen mode.
+ * - Includes vendor-prefixed fallbacks for browser compatibility.
+ * - Handles fullscreen permission errors gracefully.
+ * ------------------------------------------------------------
+ */
 function isFullscreenMethod(isFullscreen, canvas, doc) {
   if (!isFullscreen) {
     const requestFullscreen = canvas.requestFullscreen ||
@@ -179,11 +214,25 @@ document
     }
   });
 
+/**
+ * ------------------------------------------------------------
+ * Displays the Impressum overlay by removing the "hidden" class.
+ *
+ * @function showImpressum
+ * ------------------------------------------------------------
+ */
 function showImpressum() {
   const overlay = document.getElementById("impressum-overlay");
   overlay?.classList.remove("hidden");
 }
 
+/**
+ * ------------------------------------------------------------
+ * Hides the Impressum overlay by adding the "hidden" class.
+ *
+ * @function hideImpressum
+ * ------------------------------------------------------------
+ */
 function hideImpressum() {
   const overlay = document.getElementById("impressum-overlay");
   overlay?.classList.add("hidden");
@@ -284,11 +333,27 @@ window.addEventListener("resize", checkOrientation);
 window.addEventListener("orientationchange", checkOrientation);
 window.addEventListener("load", checkOrientation);
 
+/**
+ * ------------------------------------------------------------
+ * Returns the restart overlay element used for the fade animation.
+ *
+ * @function ensureRestartOverlay
+ * @returns {HTMLElement|null}
+ * ------------------------------------------------------------
+ */
 function ensureRestartOverlay() {
   const el = document.getElementById("restart-fade");
   return el;
 }
 
+/**
+ * ------------------------------------------------------------
+ * Initiates the game restart sequence with a fade-out animation,
+ * prevents double restarts, and preserves canvas size.
+ *
+ * @function restartGame
+ * ------------------------------------------------------------
+ */
 window.restartGame = function restartGame() {
   if (isRestarting) return;
   isRestarting = true;
@@ -301,6 +366,18 @@ window.restartGame = function restartGame() {
   setTimeoutMethod(canvas, keepW, keepH, overlay);
 }
 
+/**
+ * ------------------------------------------------------------
+ * Handles the delayed restart logic including cleanup,
+ * canvas reset, and overlay fade-out transition.
+ *
+ * @function setTimeoutMethod
+ * @param {HTMLCanvasElement} canvas
+ * @param {string} keepW - Previous canvas width (CSS)
+ * @param {string} keepH - Previous canvas height (CSS)
+ * @param {HTMLElement} overlay
+ * ------------------------------------------------------------
+ */
 function setTimeoutMethod(canvas, keepW, keepH, overlay) {
   setTimeout(() => {
     try {
@@ -318,6 +395,17 @@ function setTimeoutMethod(canvas, keepW, keepH, overlay) {
   }, 250);
 }
 
+/**
+ * ------------------------------------------------------------
+ * Resets canvas state, clears context, reinitializes the game,
+ * restores canvas display size, and updates world canvas rect.
+ *
+ * @function ctxCanvasMethod
+ * @param {HTMLCanvasElement} canvas
+ * @param {string} keepW - Previous width from CSS
+ * @param {string} keepH - Previous height from CSS
+ * ------------------------------------------------------------
+ */
 function ctxCanvasMethod(canvas, keepW, keepH) {
   const ctx = canvas.getContext("2d");
   ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -328,6 +416,14 @@ function ctxCanvasMethod(canvas, keepW, keepH) {
   world.updateCanvasRect?.();
 }
 
+/**
+ * ------------------------------------------------------------
+ * Safely stops all world processes before restarting the game:
+ * enemy audio, background sounds, the game loop, and animations.
+ *
+ * @function tryWindowWorldMethod
+ * ------------------------------------------------------------
+ */
 function tryWindowWorldMethod() {
   if (window.world) {
     world.hardStopEnemyAudio?.();

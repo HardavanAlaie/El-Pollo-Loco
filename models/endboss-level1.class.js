@@ -7,13 +7,13 @@ class EndbossLevel1 extends MovableObject {
   y = 240;
   width = 200;
   height = 200;
-  alertDistance = 550; 
-  speed = 0.5;         
-  aggroSpeed = 2.1;    
-  isAggressive = false; 
-  attackMode = false;   
-  isScreaming = false;  
-  damageCooldownMs = 250;   
+  alertDistance = 550;
+  speed = 0.5;
+  aggroSpeed = 2.1;
+  isAggressive = false;
+  attackMode = false;
+  isScreaming = false;
+  damageCooldownMs = 250;
   _lastDamageAt = 0;
 
   IMAGES_ALERT = this.makeImgList("img/4_enemie_boss_chicken/2_alert/", 5, 12);
@@ -27,7 +27,7 @@ class EndbossLevel1 extends MovableObject {
   constructor() {
     super().loadImage(this.IMAGES_ALERT[0]);
     this.loadAllImages();
-    this.x = 2000; 
+    this.x = 2000;
     this.energy = 100;
     this.statusBar = new StatusBarEnemy(this);
     this.screamSound = this.initSound("audio/chicken.mp3", 0.6);
@@ -39,16 +39,22 @@ class EndbossLevel1 extends MovableObject {
    * Utility: creates a list of image paths between given index range.
    */
   makeImgList(base, start, end) {
-    return Array.from({ length: end - start + 1 }, (_, i) => `${base}G${start + i}.png`);
+    return Array.from(
+      { length: end - start + 1 },
+      (_, i) => `${base}G${start + i}.png`
+    );
   }
 
   /**
    * Loads all animation image sets.
    */
   loadAllImages() {
-    [this.IMAGES_ALERT, this.IMAGES_ATTACK, this.IMAGES_HURT, this.IMAGES_DEAD].forEach((imgs) =>
-      this.loadImages(imgs)
-    );
+    [
+      this.IMAGES_ALERT,
+      this.IMAGES_ATTACK,
+      this.IMAGES_HURT,
+      this.IMAGES_DEAD,
+    ].forEach((imgs) => this.loadImages(imgs));
   }
 
   /**
@@ -66,39 +72,31 @@ class EndbossLevel1 extends MovableObject {
    * Plays a scream sound if not already playing.
    */
   scream() {
-    if (this.world?.levelEnded || this.world?._gameOverPlayed || this.world?._winShown) return;
+    if (
+      this.world?.levelEnded ||
+      this.world?._gameOverPlayed ||
+      this.world?._winShown
+    )
+      return;
     if (this.isDead() || !soundEnabled || !this.screamSound.paused) return;
     this.isScreaming = true;
     this.screamSound.currentTime = 0;
-    this.screamSound.play().catch((e) => console.warn("Failed to play scream:", e));
+    this.screamSound
+      .play()
+      .catch((e) => console.warn("Failed to play scream:", e));
     setTimeout(() => (this.isScreaming = false), 1500);
   }
 
   /**
    * Handles the boss death animation and logic stop.
    */
-  // die() {
-  //   // this.playAnimation(this.IMAGES_DEAD);
-  //   // clearInterval(this.bossAnimationInterval);
-  //   clearInterval(this.bossMoveInterval);
-  //   this.stopScreamSound();
-  //   this.deathTime = Date.now();
-  // }
   die() {
-  // Doppel-Aufruf verhindern
-  if (this.alreadyDead) return;
-  this.alreadyDead = true;
-
-  // Bewegung stoppen, aber NICHT die Animation!
-  clearInterval(this.bossMoveInterval);
-  this.stopScreamSound();
-
-  // Zeitpunkt merken, ab wann er "tot" ist
-  this.deathStartTime = Date.now();
-}
-
-
-
+    if (this.alreadyDead) return;
+    this.alreadyDead = true;
+    clearInterval(this.bossMoveInterval);
+    this.stopScreamSound();
+    this.deathStartTime = Date.now();
+  }
 
   /**
    * Stops any playing scream sound.
@@ -160,14 +158,14 @@ class EndbossLevel1 extends MovableObject {
     }
   }
 
-    /**
+  /**
    * Apply a single packet of damage (default 20) with cooldown.
    * Keeps existing .hit() behavior intact (hit() calls this).
    */
   takeDamage(amount = 20) {
     if (this.isDead()) return;
     const now = Date.now();
-    if (now - this._lastDamageAt < this.damageCooldownMs) return; 
+    if (now - this._lastDamageAt < this.damageCooldownMs) return;
     this._lastDamageAt = now;
     this.energy = Math.max(0, this.energy - amount);
     this.statusBar?.setPercentage?.(this.energy);
@@ -178,7 +176,15 @@ class EndbossLevel1 extends MovableObject {
     if (this.energy > 0) this.scream();
     else this.die();
   }
-  
+
+/**
+ * ------------------------------------------------------------
+ * Applies a fixed amount of damage to the character by calling
+ * the internal damage handler with a default value of 20.
+ *
+ * @function hit
+ * ------------------------------------------------------------
+ */
   hit() {
     this.takeDamage(20);
   }
