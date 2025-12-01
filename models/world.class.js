@@ -872,6 +872,16 @@ class World {
     });
   }
 
+/**
+ * ------------------------------------------------------------
+ * Draws a circular button background on the canvas and delegates
+ * the label rendering to the helper method.
+ *
+ * @function forEachMethod
+ * @param {CanvasRenderingContext2D} ctx - The canvas drawing context.
+ * @param {object} b - Button object containing position, size, and label.
+ * ------------------------------------------------------------
+ */
   forEachMethod(ctx, b) {
     ctx.save();
     ctx.fillStyle = "#fca534ff";
@@ -880,6 +890,16 @@ class World {
     this.forEachMethodCtxMethod(ctx, b);
   }
 
+/**
+ * ------------------------------------------------------------
+ * Completes the drawing of a circular button by filling the shape
+ * and rendering the button label centered within the circle.
+ *
+ * @function forEachMethodCtxMethod
+ * @param {CanvasRenderingContext2D} ctx - The canvas drawing context.
+ * @param {object} b - Button object containing label and dimensions.
+ * ------------------------------------------------------------
+ */
   forEachMethodCtxMethod(ctx, b) {
     ctx.fill();
     ctx.fillStyle = "white";
@@ -890,37 +910,34 @@ class World {
     ctx.restore();
   }
 
+/**
+ * ------------------------------------------------------------
+ * Defines the interactive button areas for mobile controls,
+ * including left, right, jump, and throw buttons.
+ *
+ * @function drawMobileControlsBtnAreaMethod
+ * @param {number} margin - Outer spacing around the buttons.
+ * @param {number} h - Canvas height.
+ * @param {number} size - Button size in pixels.
+ * @param {number} w - Canvas width.
+ * ------------------------------------------------------------
+ */
   drawMobileControlsBtnAreaMethod(margin, h, size, w) {
-    this.leftBtnArea = {
-      x: margin,
-      y: h - size - margin,
-      width: size,
-      height: size,
-      label: "⬅️",
-    };
-    this.rightBtnArea = {
-      x: margin + size + 20,
-      y: h - size - margin,
-      width: size,
-      height: size,
-      label: "➡️",
-    };
-    this.jumpBtnArea = {
-      x: w - size * 2 - 40,
-      y: h - size - margin,
-      width: size,
-      height: size,
-      label: "⤴️",
-    };
-    this.throwBtnArea = {
-      x: w - size - margin,
-      y: h - size - margin,
-      width: size,
-      height: size,
-      label: "🧴",
-    };
+    this.leftBtnArea = {x: margin, y: h - size - margin, width: size, height: size, label: "⬅️",};
+    this.rightBtnArea = {x: margin + size + 20, y: h - size - margin, width: size, height: size, label: "➡️", };
+    this.jumpBtnArea = {x: w - size * 2 - 40, y: h - size - margin, width: size, height: size, label: "⤴️", };
+    this.throwBtnArea = {x: w - size - margin, y: h - size - margin, width: size, height: size, label: "🧴", };
   }
 
+/**
+ * ------------------------------------------------------------
+ * Provides constants and layout information required to draw
+ * mobile control buttons on the canvas.
+ *
+ * @function drawMobileControlsConstsMethod
+ * @returns {{ margin: number, h: number, size: number, w: number, ctx: CanvasRenderingContext2D }}
+ * ------------------------------------------------------------
+ */
   drawMobileControlsConstsMethod() {
     const ctx = this.ctx;
     const w = this.canvas.width;
@@ -930,6 +947,14 @@ class World {
     return { margin, h, size, w, ctx };
   }
 
+/**
+ * ------------------------------------------------------------
+ * Disables mobile control areas by clearing all button hitboxes,
+ * used when the device is not a mobile or tablet.
+ *
+ * @function ifIsMobileOrTabletMethod
+ * ------------------------------------------------------------
+ */
   ifIsMobileOrTabletMethod() {
     this.leftBtnArea = null;
     this.rightBtnArea = null;
@@ -969,20 +994,6 @@ class World {
     configs.forEach((cfg) => {
       this.spawnEnemyLoopSetIntervalMethod(cfg);
     });
-  }
-
-  spawnEnemyLoopSetIntervalMethod(cfg) {
-    const id = setInterval(() => {
-      if (typeof cfg.condition === "function" && !cfg.condition(this.level))
-        return;
-      const current = this.level.enemies.filter((e) => e instanceof cfg.type);
-      if (current.length < cfg.maxCount) {
-        const newEnemy = new cfg.type();
-        newEnemy.x = 900 + Math.random() * 400;
-        this.level.enemies.push(newEnemy);
-      }
-    }, cfg.interval);
-    this.spawnIntervals.push(id);
   }
 
   /** Removes enemies that have moved off-screen to optimize performance. */
@@ -1035,10 +1046,7 @@ class World {
     }
     this.restartButtonArea = null;
     if (this.restartHoverListenerAdded && this.handleRestartHoverBound) {
-      this.canvas.removeEventListener(
-        "mousemove",
-        this.handleRestartHoverBound
-      );
+      this.canvas.removeEventListener("mousemove", this.handleRestartHoverBound);
       this.restartHoverListenerAdded = false;
     }
     if (this.canvas) {
@@ -1062,7 +1070,16 @@ class World {
     } catch {}
   }
 
-  /** Start/ersetze Hintergrundmusik (z. B. Win/GameOver). */
+/**
+ * ------------------------------------------------------------
+ * Sets and plays background music, stopping previous music if
+ * necessary and respecting global sound settings.
+ *
+ * @function setBackgroundMusic
+ * @param {string} path - Path to the audio file.
+ * @param {boolean} [loop=false] - Whether the music should loop.
+ * ------------------------------------------------------------
+ */
   setBackgroundMusic(path, loop = false) {
     try {
       if (this._bgMusic) {
@@ -1081,11 +1098,27 @@ class World {
     }
   }
 
+ /**
+ * ------------------------------------------------------------
+ * Clears the stored background music reference when sound
+ * is globally disabled.
+ *
+ * @function ifSoundEnabledMethod
+ * ------------------------------------------------------------
+ */
   ifSoundEnabledMethod() {
     this._bgMusic = null;
     return;
   }
 
+ /**
+ * ------------------------------------------------------------
+ * Stops and resets the previously active background music before
+ * loading and playing a new one.
+ *
+ * @function if_bgMusicMethod
+ * ------------------------------------------------------------
+ */
   if_bgMusicMethod() {
     this._bgMusic.pause();
     this._bgMusic.currentTime = 0;
