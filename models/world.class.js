@@ -29,6 +29,9 @@ class World {
     this.backgroundObjects = this.level.backgroundObjects;
     this.collectableBottles = this.level.collectableObjects || [];
     this.collectableCoins = this.level.collectableCoins || [];
+
+    this.collisionManager = new CollisionManager(this);
+
     this.setWorld();
     this.setupCanvasControls();
     this.draw();
@@ -45,12 +48,15 @@ class World {
   run() {
     this.gameInterval = setInterval(() => {
       if (this.levelEnded) return;
-      this.checkCollisions();
-      this.checkThrowableObjects();
-      this.checkEndbossDefeated();
-      this.removeOffscreenEnemies();
-      this.checkEndboss1Hit();
-      this.characterEnergyMethod();
+      // this.checkCollisions();
+      // this.checkThrowableObjects();
+      // this.checkEndbossDefeated();
+      // this.removeOffscreenEnemies();
+      // this.checkEndboss1Hit();
+      // this.characterEnergyMethod();
+
+      this.collisionManager.update();
+
     }, 1000 / 60);
   }
 
@@ -62,30 +68,30 @@ class World {
  * @function characterEnergyMethod
  * ------------------------------------------------------------
  */
-  characterEnergyMethod() {
-    if (
-      this.character.energy <= 0 &&
-      !this.playerDied &&
-      !this.endbossDefeated
-    ) {
-      this.playerDied = true;
-      this.stopGameLoopHard();
-      this.showGameOverScreen();
-    }
-  }
+  // characterEnergyMethod() {
+  //   if (
+  //     this.character.energy <= 0 &&
+  //     !this.playerDied &&
+  //     !this.endbossDefeated
+  //   ) {
+  //     this.playerDied = true;
+  //     this.stopGameLoopHard();
+  //     this.showGameOverScreen();
+  //   }
+  // }
 
   // Check if player has died
-  ifPlayerDead() {
-    if (
-      this.character.energy <= 0 &&
-      !this.playerDied &&
-      !this.endbossDefeated
-    ) {
-      this.playerDied = true;
-      this.stopGameLoopHard();
-      this.showGameOverScreen();
-    }
-  }
+  // ifPlayerDead() {
+  //   if (
+  //     this.character.energy <= 0 &&
+  //     !this.playerDied &&
+  //     !this.endbossDefeated
+  //   ) {
+  //     this.playerDied = true;
+  //     this.stopGameLoopHard();
+  //     this.showGameOverScreen();
+  //   }
+  // }
 
   /**
    * Completely stops the game — halts all intervals and animations.
@@ -100,36 +106,36 @@ class World {
   }
 
   /** Handles all types of collisions in the world. */
-  checkCollisions() {
-    this.level.enemies.forEach((e) => this.characterColliding(e));
-    this.checkThrowableObjects();
-    this.character.collectBottle();
-    this.checkCoins();
-  }
+  // checkCollisions() {
+  //   this.level.enemies.forEach((e) => this.characterColliding(e));
+  //   this.checkThrowableObjects();
+  //   this.character.collectBottle();
+  //   this.checkCoins();
+  // }
 
   /** Checks if the Endboss collides with the player (causes damage). */
-  checkEndboss1Hit() {
-    const boss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
-    if (!boss || this.character.energy <= 0) return;
-    if (this.character.isColliding(boss) && !this.character.isHurtTimer) {
-      this.character.hit();
-      this.character.isHurtTimer = true;
-      setTimeout(() => (this.character.isHurtTimer = false), 1000);
-    }
-  }
+  // checkEndboss1Hit() {
+  //   const boss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
+  //   if (!boss || this.character.energy <= 0) return;
+  //   if (this.character.isColliding(boss) && !this.character.isHurtTimer) {
+  //     this.character.hit();
+  //     this.character.isHurtTimer = true;
+  //     setTimeout(() => (this.character.isHurtTimer = false), 1000);
+  //   }
+  // }
 
   /** Manages all throwable objects and checks for enemy collisions. */
-  checkThrowableObjects() {
-    this.throwableObjects = this.throwableObjects.filter((b) => !b.isDead?.());
-    this.throwableObjects.forEach((bottle) => {
-      if (bottle.isBroken) return;
-      this.level.enemies.forEach((enemy) => {
-        if (bottle.isBroken) return;
-        this.ifDeadIfCollidingMethod(enemy, bottle);
-      });
-    });
-    this.throwableBottles();
-  }
+  // checkThrowableObjects() {
+  //   this.throwableObjects = this.throwableObjects.filter((b) => !b.isDead?.());
+  //   this.throwableObjects.forEach((bottle) => {
+  //     if (bottle.isBroken) return;
+  //     this.level.enemies.forEach((enemy) => {
+  //       if (bottle.isBroken) return;
+  //       this.ifDeadIfCollidingMethod(enemy, bottle);
+  //     });
+  //   });
+  //   this.throwableBottles();
+  // }
 
 /**
  * ------------------------------------------------------------
@@ -141,16 +147,16 @@ class World {
  * @param {object} bottle - The throwable bottle object.
  * ------------------------------------------------------------
  */
-  ifDeadIfCollidingMethod(enemy, bottle) {
-    if (!enemy.isDead?.() && bottle.isColliding(enemy)) {
-      if (enemy instanceof EndbossLevel1) {
-        enemy.takeDamage?.(20);
-      } else {
-        enemy.hit?.();
-      }
-      bottle.break?.();
-    }
-  }
+  // ifDeadIfCollidingMethod(enemy, bottle) {
+  //   if (!enemy.isDead?.() && bottle.isColliding(enemy)) {
+  //     if (enemy instanceof EndbossLevel1) {
+  //       enemy.takeDamage?.(20);
+  //     } else {
+  //       enemy.hit?.();
+  //     }
+  //     bottle.break?.();
+  //   }
+  // }
 
   /** Throws a new bottle when allowed and updates the bottle counter. */
   throwableBottles() {
@@ -187,21 +193,21 @@ class World {
   }
 
   /** Checks for player collisions with coins and updates the coin bar. */
-  checkCoins() {
-    this.collectableCoins = this.collectableCoins.filter((coin) => {
-      if (this.isCoinCollected(coin)) {
-        this.statusBarCoin.availableCoins++;
-        this.statusBarCoin.update();
-        if (soundEnabled) {
-          const s = new Audio("audio/coins.mp3");
-          s.volume = 0.5;
-          s.play().catch(() => {});
-        }
-        return false;
-      }
-      return true;
-    });
-  }
+  // checkCoins() {
+  //   this.collectableCoins = this.collectableCoins.filter((coin) => {
+  //     if (this.isCoinCollected(coin)) {
+  //       this.statusBarCoin.availableCoins++;
+  //       this.statusBarCoin.update();
+  //       if (soundEnabled) {
+  //         const s = new Audio("audio/coins.mp3");
+  //         s.volume = 0.5;
+  //         s.play().catch(() => {});
+  //       }
+  //       return false;
+  //     }
+  //     return true;
+  //   });
+  // }
 
   /**
    * Sehr kleine Hitbox nur für Coin-Einsammeln.
@@ -258,21 +264,21 @@ class World {
   }
 
   /** Handles player–enemy collision logic (jumping on enemies vs taking damage). */
-  characterColliding(enemy) {
-    const c = this.character;
-    if (!c || !enemy) return;
-    if (enemy.isDead?.() || enemy.dead) return;
-    if (!c.isColliding(enemy)) return;
-    const isStomp = this.characterCollidingConstsMethod(c, enemy);
-    if (isStomp) {
-      return this.ifIsStompMethod(enemy, c);
-    }
-    const isCloseEnough = c.isCollidingTight(enemy, 20); 
-    if (!isCloseEnough) return;
-    if (!c.isHurtTimer) {
-      this.ifIsHurtTimerMethod(c);
-    }
-  }
+  // characterColliding(enemy) {
+  //   const c = this.character;
+  //   if (!c || !enemy) return;
+  //   if (enemy.isDead?.() || enemy.dead) return;
+  //   if (!c.isColliding(enemy)) return;
+  //   const isStomp = this.characterCollidingConstsMethod(c, enemy);
+  //   if (isStomp) {
+  //     return this.ifIsStompMethod(enemy, c);
+  //   }
+  //   const isCloseEnough = c.isCollidingTight(enemy, 20); 
+  //   if (!isCloseEnough) return;
+  //   if (!c.isHurtTimer) {
+  //     this.ifIsHurtTimerMethod(c);
+  //   }
+  // }
 
 /**
  * ------------------------------------------------------------
@@ -286,12 +292,12 @@ class World {
  * @returns {boolean}
  * ------------------------------------------------------------
  */
-  characterCollidingConstsMethod(c, enemy) {
-    const charBottom = c.y + c.height;
-    const enemyCenterY = enemy.y + enemy.height / 2;
-    const isStomp = charBottom <= enemyCenterY && c.speedY <= 0;
-    return isStomp;
-  }
+  // characterCollidingConstsMethod(c, enemy) {
+  //   const charBottom = c.y + c.height;
+  //   const enemyCenterY = enemy.y + enemy.height / 2;
+  //   const isStomp = charBottom <= enemyCenterY && c.speedY <= 0;
+  //   return isStomp;
+  // }
 
 /**
  * ------------------------------------------------------------
@@ -302,12 +308,12 @@ class World {
  * @param {object} c - The character object.
  * ------------------------------------------------------------
  */
-  ifIsHurtTimerMethod(c) {
-    c.hit();
-    this.statusBar.setPercentage(c.energy);
-    c.isHurtTimer = true;
-    setTimeout(() => (c.isHurtTimer = false), 700);
-  }
+  // ifIsHurtTimerMethod(c) {
+  //   c.hit();
+  //   this.statusBar.setPercentage(c.energy);
+  //   c.isHurtTimer = true;
+  //   setTimeout(() => (c.isHurtTimer = false), 700);
+  // }
 
 /**
  * ------------------------------------------------------------
@@ -320,35 +326,35 @@ class World {
  * @param {object} c - The character object.
  * ------------------------------------------------------------
  */
-  ifIsStompMethod(enemy, c) {
-    if (enemy instanceof EndbossLevel1) {
-      enemy.takeDamage?.(20);
-    } else {
-      enemy.hit?.();
-    }
-    c.speedY = 25;
-    c.y = enemy.y - c.height;
-    c.lastHit = 0;
-    if (enemy.isDead?.()) enemy.die?.();
-    return;
-  }
+  // ifIsStompMethod(enemy, c) {
+  //   if (enemy instanceof EndbossLevel1) {
+  //     enemy.takeDamage?.(20);
+  //   } else {
+  //     enemy.hit?.();
+  //   }
+  //   c.speedY = 25;
+  //   c.y = enemy.y - c.height;
+  //   c.lastHit = 0;
+  //   if (enemy.isDead?.()) enemy.die?.();
+  //   return;
+  // }
 
   /** Checks if the Endboss has been defeated. */
-  checkEndbossDefeated() {
-    const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
-    if (!endboss || this.endbossDefeated || this.playerDied) return;
-    if (endboss.isDead?.()) {
-      if (!endboss.deathStartTime) {
-        endboss.deathStartTime = Date.now();
-      }
-      const elapsed = Date.now() - endboss.deathStartTime;
-      if (elapsed >= 1000) {
-        this.endbossDefeated = true;
-        this.stopGameLoopHard(true);
-        this.showWinScreen();
-      }
-    }
-  }
+  // checkEndbossDefeated() {
+  //   const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
+  //   if (!endboss || this.endbossDefeated || this.playerDied) return;
+  //   if (endboss.isDead?.()) {
+  //     if (!endboss.deathStartTime) {
+  //       endboss.deathStartTime = Date.now();
+  //     }
+  //     const elapsed = Date.now() - endboss.deathStartTime;
+  //     if (elapsed >= 1000) {
+  //       this.endbossDefeated = true;
+  //       this.stopGameLoopHard(true);
+  //       this.showWinScreen();
+  //     }
+  //   }
+  // }
 
   /** Stops all sounds and displays the game over screen. */
   endGame() {
@@ -997,12 +1003,12 @@ class World {
   }
 
   /** Removes enemies that have moved off-screen to optimize performance. */
-  removeOffscreenEnemies() {
-    this.level.enemies = this.level.enemies.filter(
-      (e) =>
-        !(e instanceof ChickenSmall || e instanceof ChickenNormal) || e.x > -50
-    );
-  }
+  // removeOffscreenEnemies() {
+  //   this.level.enemies = this.level.enemies.filter(
+  //     (e) =>
+  //       !(e instanceof ChickenSmall || e instanceof ChickenNormal) || e.x > -50
+  //   );
+  // }
 
   /** Stops all sounds, both enemy and global audio elements. */
   stopAllSounds() {
