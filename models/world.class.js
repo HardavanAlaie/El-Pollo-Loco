@@ -116,15 +116,15 @@ class World {
   // }
 
   /** Checks if the Endboss collides with the player (causes damage). */
-  checkEndboss1Hit() {
-    const boss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
-    if (!boss || this.character.energy <= 0) return;
-    if (this.character.isColliding(boss) && !this.character.isHurtTimer) {
-      this.character.hit();
-      this.character.isHurtTimer = true;
-      setTimeout(() => (this.character.isHurtTimer = false), 1000);
-    }
-  }
+  // checkEndboss1Hit() {
+  //   const boss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
+  //   if (!boss || this.character.energy <= 0) return;
+  //   if (this.character.isColliding(boss) && !this.character.isHurtTimer) {
+  //     this.character.hit();
+  //     this.character.isHurtTimer = true;
+  //     setTimeout(() => (this.character.isHurtTimer = false), 1000);
+  //   }
+  // }
 
   /** Manages all throwable objects and checks for enemy collisions. */
   checkThrowableObjects() {
