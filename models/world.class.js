@@ -43,17 +43,24 @@ class World {
   }
 
   /** Main game loop — checks collisions, spawns, and victory/defeat conditions. */
-  run() {
+  // run() {
+  //   this.gameInterval = setInterval(() => {
+  //     if (this.levelEnded) return;
+  //     this.checkCollisions();
+  //     this.checkThrowableObjects();
+  //     this.checkEndbossDefeated();
+  //     this.removeOffscreenEnemies();
+  //     this.checkEndboss1Hit();
+  //     this.characterEnergyMethod();
+  //   }, 1000 / 60);
+  // }
+    run() {
     this.gameInterval = setInterval(() => {
       if (this.levelEnded) return;
-      this.checkCollisions();
-      this.checkThrowableObjects();
-      this.checkEndbossDefeated();
-      this.removeOffscreenEnemies();
-      this.checkEndboss1Hit();
-      this.characterEnergyMethod();
+      this.collisionManager.update();
     }, 1000 / 60);
   }
+
 
 /**
  * ------------------------------------------------------------
