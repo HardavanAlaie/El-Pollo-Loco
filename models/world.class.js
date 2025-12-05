@@ -108,12 +108,12 @@ class World {
   }
 
   /** Handles all types of collisions in the world. */
-  checkCollisions() {
-    this.level.enemies.forEach((e) => this.characterColliding(e));
-    this.checkThrowableObjects();
-    this.character.collectBottle();
-    this.checkCoins();
-  }
+  // checkCollisions() {
+  //   this.level.enemies.forEach((e) => this.characterColliding(e));
+  //   this.checkThrowableObjects();
+  //   this.character.collectBottle();
+  //   this.checkCoins();
+  // }
 
   /** Checks if the Endboss collides with the player (causes damage). */
   checkEndboss1Hit() {
