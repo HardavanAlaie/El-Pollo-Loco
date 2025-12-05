@@ -127,17 +127,17 @@ class World {
   // }
 
   /** Manages all throwable objects and checks for enemy collisions. */
-  checkThrowableObjects() {
-    this.throwableObjects = this.throwableObjects.filter((b) => !b.isDead?.());
-    this.throwableObjects.forEach((bottle) => {
-      if (bottle.isBroken) return;
-      this.level.enemies.forEach((enemy) => {
-        if (bottle.isBroken) return;
-        this.ifDeadIfCollidingMethod(enemy, bottle);
-      });
-    });
-    this.throwableBottles();
-  }
+  // checkThrowableObjects() {
+  //   this.throwableObjects = this.throwableObjects.filter((b) => !b.isDead?.());
+  //   this.throwableObjects.forEach((bottle) => {
+  //     if (bottle.isBroken) return;
+  //     this.level.enemies.forEach((enemy) => {
+  //       if (bottle.isBroken) return;
+  //       this.ifDeadIfCollidingMethod(enemy, bottle);
+  //     });
+  //   });
+  //   this.throwableBottles();
+  // }
 
 /**
  * ------------------------------------------------------------
