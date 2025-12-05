@@ -161,15 +161,15 @@ class World {
   // }
 
   /** Throws a new bottle when allowed and updates the bottle counter. */
-  throwableBottles() {
-    if (
-      this.keyboard.D &&
-      this.canThrow &&
-      this.statusBarBottle.availableBottles > 0
-    ) {
-      this.ifThrowableBottlesMethod();
-    }
-  }
+  // throwableBottles() {
+  //   if (
+  //     this.keyboard.D &&
+  //     this.canThrow &&
+  //     this.statusBarBottle.availableBottles > 0
+  //   ) {
+  //     this.ifThrowableBottlesMethod();
+  //   }
+  // }
 
 /**
  * ------------------------------------------------------------
