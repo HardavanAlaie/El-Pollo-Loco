@@ -70,30 +70,30 @@ class World {
  * @function characterEnergyMethod
  * ------------------------------------------------------------
  */
-  characterEnergyMethod() {
-    if (
-      this.character.energy <= 0 &&
-      !this.playerDied &&
-      !this.endbossDefeated
-    ) {
-      this.playerDied = true;
-      this.stopGameLoopHard();
-      this.showGameOverScreen();
-    }
-  }
+  // characterEnergyMethod() {
+  //   if (
+  //     this.character.energy <= 0 &&
+  //     !this.playerDied &&
+  //     !this.endbossDefeated
+  //   ) {
+  //     this.playerDied = true;
+  //     this.stopGameLoopHard();
+  //     this.showGameOverScreen();
+  //   }
+  // }
 
   // Check if player has died
-  ifPlayerDead() {
-    if (
-      this.character.energy <= 0 &&
-      !this.playerDied &&
-      !this.endbossDefeated
-    ) {
-      this.playerDied = true;
-      this.stopGameLoopHard();
-      this.showGameOverScreen();
-    }
-  }
+  // ifPlayerDead() {
+  //   if (
+  //     this.character.energy <= 0 &&
+  //     !this.playerDied &&
+  //     !this.endbossDefeated
+  //   ) {
+  //     this.playerDied = true;
+  //     this.stopGameLoopHard();
+  //     this.showGameOverScreen();
+  //   }
+  // }
 
   /**
    * Completely stops the game — halts all intervals and animations.
