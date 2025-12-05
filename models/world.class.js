@@ -195,56 +195,56 @@ class World {
   // }
 
   /** Checks for player collisions with coins and updates the coin bar. */
-  checkCoins() {
-    this.collectableCoins = this.collectableCoins.filter((coin) => {
-      if (this.isCoinCollected(coin)) {
-        this.statusBarCoin.availableCoins++;
-        this.statusBarCoin.update();
-        if (soundEnabled) {
-          const s = new Audio("audio/coins.mp3");
-          s.volume = 0.5;
-          s.play().catch(() => {});
-        }
-        return false;
-      }
-      return true;
-    });
-  }
+  // checkCoins() {
+  //   this.collectableCoins = this.collectableCoins.filter((coin) => {
+  //     if (this.isCoinCollected(coin)) {
+  //       this.statusBarCoin.availableCoins++;
+  //       this.statusBarCoin.update();
+  //       if (soundEnabled) {
+  //         const s = new Audio("audio/coins.mp3");
+  //         s.volume = 0.5;
+  //         s.play().catch(() => {});
+  //       }
+  //       return false;
+  //     }
+  //     return true;
+  //   });
+  // }
 
   /**
    * Sehr kleine Hitbox nur für Coin-Einsammeln.
    * Nutzt die Zentren von Charakter und Coin, damit es optisch passt.
    */
-  coinPickupCollision(coin) {
-    const cx = this.character.x + this.character.width / 2;
-    const cy = this.character.y + this.character.height / 2;
-    const kx = coin.x + coin.width / 2;
-    const ky = coin.y + coin.height / 2;
-    const dx = Math.abs(cx - kx);
-    const dy = Math.abs(cy - ky);
-    const pickupRadiusX = coin.width * 0.3;
-    const pickupRadiusY = coin.height * 0.3;
-    return dx < pickupRadiusX && dy < pickupRadiusY;
-  }
+  // coinPickupCollision(coin) {
+  //   const cx = this.character.x + this.character.width / 2;
+  //   const cy = this.character.y + this.character.height / 2;
+  //   const kx = coin.x + coin.width / 2;
+  //   const ky = coin.y + coin.height / 2;
+  //   const dx = Math.abs(cx - kx);
+  //   const dy = Math.abs(cy - ky);
+  //   const pickupRadiusX = coin.width * 0.3;
+  //   const pickupRadiusY = coin.height * 0.3;
+  //   return dx < pickupRadiusX && dy < pickupRadiusY;
+  // }
 
   /**
    * Coin collision:
    * - Strongly reduced character hitbox (body only)
    * - Slightly reduced coin hitbox
    */
-  isCoinCollected(coin) {
-    if (!coin || !this.character) return false;
-    const c = this.character;
-    const charPaddingX = c.width * 0.3;
-    const charPaddingTop = c.height * 0.2;
-    const charPaddingBottom = c.height * 0.1;
-    const ax1 = c.x + charPaddingX;
-    const ax2 = c.x + c.width - charPaddingX;
-    const ay1 = c.y + charPaddingTop;
-    const ay2 = c.y + c.height - charPaddingBottom;
-    const { bx1, bx2, by1, by2 } = this.coinPaddingMethod(coin);
-    return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
-  }
+  // isCoinCollected(coin) {
+  //   if (!coin || !this.character) return false;
+  //   const c = this.character;
+  //   const charPaddingX = c.width * 0.3;
+  //   const charPaddingTop = c.height * 0.2;
+  //   const charPaddingBottom = c.height * 0.1;
+  //   const ax1 = c.x + charPaddingX;
+  //   const ax2 = c.x + c.width - charPaddingX;
+  //   const ay1 = c.y + charPaddingTop;
+  //   const ay2 = c.y + c.height - charPaddingBottom;
+  //   const { bx1, bx2, by1, by2 } = this.coinPaddingMethod(coin);
+  //   return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
+  // }
 
 /**
  * ------------------------------------------------------------
@@ -256,31 +256,31 @@ class World {
  * @returns {{ bx1: number, bx2: number, by1: number, by2: number }}
  * ------------------------------------------------------------
  */
-  coinPaddingMethod(coin) {
-    const coinPadding = 8;
-    const bx1 = coin.x + coinPadding;
-    const bx2 = coin.x + coin.width - coinPadding;
-    const by1 = coin.y + coinPadding;
-    const by2 = coin.y + coin.height - coinPadding;
-    return { bx1, bx2, by1, by2 };
-  }
+  // coinPaddingMethod(coin) {
+  //   const coinPadding = 8;
+  //   const bx1 = coin.x + coinPadding;
+  //   const bx2 = coin.x + coin.width - coinPadding;
+  //   const by1 = coin.y + coinPadding;
+  //   const by2 = coin.y + coin.height - coinPadding;
+  //   return { bx1, bx2, by1, by2 };
+  // }
 
   /** Handles player–enemy collision logic (jumping on enemies vs taking damage). */
-  characterColliding(enemy) {
-    const c = this.character;
-    if (!c || !enemy) return;
-    if (enemy.isDead?.() || enemy.dead) return;
-    if (!c.isColliding(enemy)) return;
-    const isStomp = this.characterCollidingConstsMethod(c, enemy);
-    if (isStomp) {
-      return this.ifIsStompMethod(enemy, c);
-    }
-    const isCloseEnough = c.isCollidingTight(enemy, 20); 
-    if (!isCloseEnough) return;
-    if (!c.isHurtTimer) {
-      this.ifIsHurtTimerMethod(c);
-    }
-  }
+  // characterColliding(enemy) {
+  //   const c = this.character;
+  //   if (!c || !enemy) return;
+  //   if (enemy.isDead?.() || enemy.dead) return;
+  //   if (!c.isColliding(enemy)) return;
+  //   const isStomp = this.characterCollidingConstsMethod(c, enemy);
+  //   if (isStomp) {
+  //     return this.ifIsStompMethod(enemy, c);
+  //   }
+  //   const isCloseEnough = c.isCollidingTight(enemy, 20); 
+  //   if (!isCloseEnough) return;
+  //   if (!c.isHurtTimer) {
+  //     this.ifIsHurtTimerMethod(c);
+  //   }
+  // }
 
 /**
  * ------------------------------------------------------------
@@ -294,12 +294,12 @@ class World {
  * @returns {boolean}
  * ------------------------------------------------------------
  */
-  characterCollidingConstsMethod(c, enemy) {
-    const charBottom = c.y + c.height;
-    const enemyCenterY = enemy.y + enemy.height / 2;
-    const isStomp = charBottom <= enemyCenterY && c.speedY <= 0;
-    return isStomp;
-  }
+  // characterCollidingConstsMethod(c, enemy) {
+  //   const charBottom = c.y + c.height;
+  //   const enemyCenterY = enemy.y + enemy.height / 2;
+  //   const isStomp = charBottom <= enemyCenterY && c.speedY <= 0;
+  //   return isStomp;
+  // }
 
 /**
  * ------------------------------------------------------------
@@ -310,12 +310,12 @@ class World {
  * @param {object} c - The character object.
  * ------------------------------------------------------------
  */
-  ifIsHurtTimerMethod(c) {
-    c.hit();
-    this.statusBar.setPercentage(c.energy);
-    c.isHurtTimer = true;
-    setTimeout(() => (c.isHurtTimer = false), 700);
-  }
+  // ifIsHurtTimerMethod(c) {
+  //   c.hit();
+  //   this.statusBar.setPercentage(c.energy);
+  //   c.isHurtTimer = true;
+  //   setTimeout(() => (c.isHurtTimer = false), 700);
+  // }
 
 /**
  * ------------------------------------------------------------
@@ -328,35 +328,35 @@ class World {
  * @param {object} c - The character object.
  * ------------------------------------------------------------
  */
-  ifIsStompMethod(enemy, c) {
-    if (enemy instanceof EndbossLevel1) {
-      enemy.takeDamage?.(20);
-    } else {
-      enemy.hit?.();
-    }
-    c.speedY = 25;
-    c.y = enemy.y - c.height;
-    c.lastHit = 0;
-    if (enemy.isDead?.()) enemy.die?.();
-    return;
-  }
+  // ifIsStompMethod(enemy, c) {
+  //   if (enemy instanceof EndbossLevel1) {
+  //     enemy.takeDamage?.(20);
+  //   } else {
+  //     enemy.hit?.();
+  //   }
+  //   c.speedY = 25;
+  //   c.y = enemy.y - c.height;
+  //   c.lastHit = 0;
+  //   if (enemy.isDead?.()) enemy.die?.();
+  //   return;
+  // }
 
   /** Checks if the Endboss has been defeated. */
-  checkEndbossDefeated() {
-    const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
-    if (!endboss || this.endbossDefeated || this.playerDied) return;
-    if (endboss.isDead?.()) {
-      if (!endboss.deathStartTime) {
-        endboss.deathStartTime = Date.now();
-      }
-      const elapsed = Date.now() - endboss.deathStartTime;
-      if (elapsed >= 1000) {
-        this.endbossDefeated = true;
-        this.stopGameLoopHard(true);
-        this.showWinScreen();
-      }
-    }
-  }
+  // checkEndbossDefeated() {
+  //   const endboss = this.level.enemies.find((e) => e instanceof EndbossLevel1);
+  //   if (!endboss || this.endbossDefeated || this.playerDied) return;
+  //   if (endboss.isDead?.()) {
+  //     if (!endboss.deathStartTime) {
+  //       endboss.deathStartTime = Date.now();
+  //     }
+  //     const elapsed = Date.now() - endboss.deathStartTime;
+  //     if (elapsed >= 1000) {
+  //       this.endbossDefeated = true;
+  //       this.stopGameLoopHard(true);
+  //       this.showWinScreen();
+  //     }
+  //   }
+  // }
 
   /** Stops all sounds and displays the game over screen. */
   endGame() {
@@ -1005,12 +1005,12 @@ class World {
   }
 
   /** Removes enemies that have moved off-screen to optimize performance. */
-  removeOffscreenEnemies() {
-    this.level.enemies = this.level.enemies.filter(
-      (e) =>
-        !(e instanceof ChickenSmall || e instanceof ChickenNormal) || e.x > -50
-    );
-  }
+  // removeOffscreenEnemies() {
+  //   this.level.enemies = this.level.enemies.filter(
+  //     (e) =>
+  //       !(e instanceof ChickenSmall || e instanceof ChickenNormal) || e.x > -50
+  //   );
+  // }
 
   /** Stops all sounds, both enemy and global audio elements. */
   stopAllSounds() {
