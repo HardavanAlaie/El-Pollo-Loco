@@ -16,12 +16,28 @@ class AudioManager {
   }
 
   /**
+   * Hilfsfunktion: liest die globale soundEnabled-Variable sicher aus.
+   * Falls sie nicht existiert, wird so getan, als wäre Sound AN.
+   */
+  isSoundEnabled() {
+    try {
+      // soundEnabled global (wie in deinem restlichen Code)
+      if (typeof soundEnabled !== "undefined") {
+        return !!soundEnabled;
+      }
+    } catch (e) {
+      // falls irgendwas schief geht: lieber Sound erlauben als alles blocken
+    }
+    return true;
+  }
+
+  /**
    * Plays a simple sound effect if sound is enabled.
    * @param {string} path - Audio file path.
    * @param {boolean} [loop=false] - Whether the sound should loop.
    */
   playSound(path, loop = false) {
-    if (!window.soundEnabled) return;
+    if (!this.isSoundEnabled()) return;
     const s = new Audio(path);
     s.volume = 0.7;
     s.loop = loop;
@@ -50,7 +66,7 @@ class AudioManager {
     } catch {}
   }
 
-  /**Stoppt nur die hinterlegte Hintergrundmusik (Win/GameOver). */
+  /** Stoppt nur die hinterlegte Hintergrundmusik (Win/GameOver). */
   stopBackgroundMusic() {
     try {
       if (this._bgMusic) {
@@ -89,7 +105,7 @@ class AudioManager {
       if (this._bgMusic) {
         this._stopCurrentBgMusic();
       }
-      if (!window.soundEnabled) {
+      if (!this.isSoundEnabled()) {
         this._bgMusic = null;
         return;
       }
