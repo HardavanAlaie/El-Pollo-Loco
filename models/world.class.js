@@ -149,16 +149,16 @@ class World {
  * @param {object} bottle - The throwable bottle object.
  * ------------------------------------------------------------
  */
-  ifDeadIfCollidingMethod(enemy, bottle) {
-    if (!enemy.isDead?.() && bottle.isColliding(enemy)) {
-      if (enemy instanceof EndbossLevel1) {
-        enemy.takeDamage?.(20);
-      } else {
-        enemy.hit?.();
-      }
-      bottle.break?.();
-    }
-  }
+  // ifDeadIfCollidingMethod(enemy, bottle) {
+  //   if (!enemy.isDead?.() && bottle.isColliding(enemy)) {
+  //     if (enemy instanceof EndbossLevel1) {
+  //       enemy.takeDamage?.(20);
+  //     } else {
+  //       enemy.hit?.();
+  //     }
+  //     bottle.break?.();
+  //   }
+  // }
 
   /** Throws a new bottle when allowed and updates the bottle counter. */
   throwableBottles() {
