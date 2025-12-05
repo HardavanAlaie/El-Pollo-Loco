@@ -107,7 +107,6 @@ class Character extends MovableObject {
 
   dMethod(kb, didAction) {
     if (kb?.D) {
-      //this.world.throwableBottles();
       this.world.collisionManager?.throwableBottles?.();
       didAction = true;
     }

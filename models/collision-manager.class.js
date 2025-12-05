@@ -123,9 +123,7 @@ class CollisionManager {
           const s = new Audio("audio/coins.mp3");
           s.volume = 0.5;
           s.play().catch(() => {});
-        }
-        return false;
-      }
+        } return false;}
       return true;
     });
   }
@@ -250,10 +248,7 @@ class CollisionManager {
         endboss.deathStartTime = Date.now();
       }
       const elapsed = Date.now() - endboss.deathStartTime;
-      if (elapsed >= 1000) {
-        w.endbossDefeated = true;
-        w.stopGameLoopHard(true);
-        w.showWinScreen();
+      if (elapsed >= 1000) {w.endbossDefeated = true; w.stopGameLoopHard(true); w.showWinScreen();
       }
     }
   }

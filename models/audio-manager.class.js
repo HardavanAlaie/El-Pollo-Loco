@@ -21,12 +21,10 @@ class AudioManager {
    */
   isSoundEnabled() {
     try {
-      // soundEnabled global (wie in deinem restlichen Code)
       if (typeof soundEnabled !== "undefined") {
         return !!soundEnabled;
       }
     } catch (e) {
-      // falls irgendwas schief geht: lieber Sound erlauben als alles blocken
     }
     return true;
   }
@@ -102,13 +100,8 @@ class AudioManager {
    */
   setBackgroundMusic(path, loop = false) {
     try {
-      if (this._bgMusic) {
-        this._stopCurrentBgMusic();
-      }
-      if (!this.isSoundEnabled()) {
-        this._bgMusic = null;
-        return;
-      }
+      if (this._bgMusic) {this._stopCurrentBgMusic();}
+      if (!this.isSoundEnabled()) {this._bgMusic = null; return;}
       const a = new Audio(path);
       a.volume = 0.7;
       a.loop = loop;
@@ -119,6 +112,9 @@ class AudioManager {
     }
   }
 
+/**
+ * Stops the currently playing background music and resets its playback position.
+ */
   _stopCurrentBgMusic() {
     this._bgMusic.pause();
     this._bgMusic.currentTime = 0;

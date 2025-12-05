@@ -98,8 +98,7 @@ class UiInputManager {
     const w = this.world;
     if (!w.canvasRect) this.updateCanvasRect();
     const { clientX, y, x } = this.canvasCoordinatesMethod(e);
-    const { windowRatio, aspectRatio, pageHeight, pageWidth } =
-      this.windowWidthHeightMethod();
+    const { windowRatio, aspectRatio, pageHeight, pageWidth } = this.windowWidthHeightMethod();
     if (windowRatio > aspectRatio) {
       const displayedWidth = pageHeight * aspectRatio;
       const horizontalOffset = (pageWidth - displayedWidth) / 2;
@@ -206,34 +205,10 @@ class UiInputManager {
    */
   drawMobileControlsBtnAreaMethod(margin, h, size, w) {
     const world = this.world;
-    world.leftBtnArea = {
-      x: margin,
-      y: h - size - margin,
-      width: size,
-      height: size,
-      label: "⬅️",
-    };
-    world.rightBtnArea = {
-      x: margin + size + 20,
-      y: h - size - margin,
-      width: size,
-      height: size,
-      label: "➡️",
-    };
-    world.jumpBtnArea = {
-      x: w - size * 2 - 40,
-      y: h - size - margin,
-      width: size,
-      height: size,
-      label: "⤴️",
-    };
-    world.throwBtnArea = {
-      x: w - size - margin,
-      y: h - size - margin,
-      width: size,
-      height: size,
-      label: "🧴",
-    };
+    world.leftBtnArea = {x: margin, y: h - size - margin, width: size, height: size, label: "⬅️",};
+    world.rightBtnArea = {x: margin + size + 20, y: h - size - margin, width: size, height: size, label: "➡️",};
+    world.jumpBtnArea = {x: w - size * 2 - 40, y: h - size - margin, width: size, height: size, label: "⤴️",};
+    world.throwBtnArea = {x: w - size - margin, y: h - size - margin, width: size, height: size, label: "🧴",};
   }
 
   /**

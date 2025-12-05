@@ -64,6 +64,10 @@ class EndScreenManager {
     this.imgOnload(img, canvas, ctx, btnColor);
   }
 
+ /**
+ * Loads the end-screen image and draws it once available,
+ * then triggers rendering of the restart button.
+ */
   imgOnload(img, canvas, ctx, btnColor) {
     img.onload = () => {
       const scale = Math.min(
@@ -77,7 +81,10 @@ class EndScreenManager {
     };
   }
 
-  // Center the image horizontally, slightly above the canvas center
+ /**
+ * Draws the end-screen image centered on the canvas,
+ * slightly above the vertical midpoint.
+ */
   drawImageMethod(ctx, img, canvas, w, h) {
     ctx.drawImage(
       img,
@@ -94,8 +101,7 @@ class EndScreenManager {
    */
   drawRestartButton(color) {
     const w = this.world;
-    const { ctx, x, y, width, height, canvas } =
-      this.drawRestartButtonConstsMethod();
+    const { ctx, x, y, width, height, canvas } = this.drawRestartButtonConstsMethod();
     const animatePulse = () => {
       this.ifLevelEndedMethod(ctx, x, y, width, height, color, canvas, animatePulse);
     };
@@ -109,6 +115,10 @@ class EndScreenManager {
     }
   }
 
+  /**
+ * Computes and returns layout constants required
+ * to draw the restart button on the end screen.
+ */
   drawRestartButtonConstsMethod() {
     const w = this.world;
     const ctx = w.ctx;
@@ -120,6 +130,10 @@ class EndScreenManager {
     return { ctx, x, y, width, height, canvas };
   }
 
+  /**
+ * Registers all click and pointer event listeners
+ * required to detect presses on the restart button.
+ */
   ifCanvasClickListenerAddedMethod(canvas) {
     const boundHandler = this.handleRestartClick.bind(this);
     canvas.addEventListener("click", boundHandler);
@@ -128,12 +142,20 @@ class EndScreenManager {
     this.canvasClickListenerAdded = true;
   }
 
+  /**
+ * Registers the hover listener used to show pointer feedback
+ * when the cursor moves over the restart button area.
+ */
   ifRestartHoverListenerAddedMethod(canvas) {
     this.handleRestartHoverBound = this.handleRestartHover.bind(this);
     canvas.addEventListener("mousemove", this.handleRestartHoverBound);
     this.restartHoverListenerAdded = true;
   }
 
+  /**
+ * Handles the restart button animation loop if the level has ended,
+ * and stops the animation when the game is no longer in an end state.
+ */
   ifLevelEndedMethod(ctx, x, y, w, h, color, canvas, animatePulse) {
     const world = this.world;
     if (world.levelEnded) {
@@ -148,6 +170,10 @@ class EndScreenManager {
     }
   }
 
+  /**
+ * Draws the animated glowing background behind the restart button,
+ * used only during win or game-over screens.
+ */
   ifLevelEndedCtxMethod(ctx, x, y, w, h) {
     ctx.save();
     ctx.globalAlpha = 0.2 + Math.sin(Date.now() / 400) * 0.2;
@@ -158,7 +184,10 @@ class EndScreenManager {
     ctx.restore();
   }
 
-  // Main restart button
+  /**
+ * Draws the main restart button on the end screen,
+ * including background and centered label text.
+ */
   mainRestartButtonMethod(ctx, color, x, y, w, h, canvas) {
     ctx.fillStyle = color;
     ctx.fillRect(x, y, w, h);
@@ -168,6 +197,10 @@ class EndScreenManager {
     ctx.fillText("Restart Game", canvas.width / 2, y + 38);
   }
 
+  /**
+ * Handles click or touch input on the restart button
+ * and triggers the restart action when clicked inside its hitbox.
+ */
   handleRestartClick(e) {
     const world = this.world;
     const rect = world.canvas.getBoundingClientRect();
@@ -183,6 +216,10 @@ class EndScreenManager {
     }
   }
 
+  /**
+ * Converts raw click or touch coordinates into canvas-scaled values
+ * and returns them alongside the restart button's hitbox.
+ */
   handleRestartClickConstsMethod(rect, e) {
     const world = this.world;
     const scaleX = world.canvas.width / rect.width;
@@ -193,6 +230,10 @@ class EndScreenManager {
     return { btn, x, y };
   }
 
+  /**
+ * Handles hover detection over the restart button
+ * and updates the cursor appearance accordingly.
+ */
   handleRestartHover(event) {
     const world = this.world;
     if (!world.restartButtonArea) {
@@ -209,6 +250,10 @@ class EndScreenManager {
     world.canvas.style.cursor = inside ? "pointer" : "default";
   }
 
+  /**
+ * Scales raw pointer coordinates into canvas coordinate space
+ * based on the current rendering and viewport size.
+ */
   scaleXYMethod(rect, event) {
     const world = this.world;
     const scaleX = world.canvas.width / rect.width;
@@ -218,6 +263,10 @@ class EndScreenManager {
     return { x, y };
   }
 
+  /**
+ * Executes all cleanup and UI reset steps required when the
+ * restart button is pressed, then triggers the game restart.
+ */
   _onRestartButtonPressed() {
     const w = this.world;
     this.stopRestartButtonUI();

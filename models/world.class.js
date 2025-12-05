@@ -35,7 +35,6 @@ class World {
     this.collectableBottles = this.level.collectableObjects || [];
     this.collectableCoins = this.level.collectableCoins || [];
 
-    // Manager
     this.collisionManager = new CollisionManager(this);
     this.audioManager = new AudioManager(this);
     this.uiManager = new UiInputManager(this);
