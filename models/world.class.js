@@ -180,19 +180,19 @@ class World {
  * @function ifThrowableBottlesMethod
  * ------------------------------------------------------------
  */
-  ifThrowableBottlesMethod() {
-    this.canThrow = false;
-    this.statusBarBottle.availableBottles--;
-    this.statusBarBottle.update?.();
-    const bottle = new ThrowableObject(
-      this.character.x + (this.character.otherDirection ? -30 : 30),
-      this.character.y + 100,
-      this.character.otherDirection
-    );
-    bottle.world = this;
-    this.throwableObjects.push(bottle);
-    setTimeout(() => (this.canThrow = true), 400);
-  }
+  // ifThrowableBottlesMethod() {
+  //   this.canThrow = false;
+  //   this.statusBarBottle.availableBottles--;
+  //   this.statusBarBottle.update?.();
+  //   const bottle = new ThrowableObject(
+  //     this.character.x + (this.character.otherDirection ? -30 : 30),
+  //     this.character.y + 100,
+  //     this.character.otherDirection
+  //   );
+  //   bottle.world = this;
+  //   this.throwableObjects.push(bottle);
+  //   setTimeout(() => (this.canThrow = true), 400);
+  // }
 
   /** Checks for player collisions with coins and updates the coin bar. */
   checkCoins() {
