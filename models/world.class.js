@@ -29,6 +29,7 @@ class World {
     this.backgroundObjects = this.level.backgroundObjects;
     this.collectableBottles = this.level.collectableObjects || [];
     this.collectableCoins = this.level.collectableCoins || [];
+    this.collisionManager = new CollisionManager(this);
     this.setWorld();
     this.setupCanvasControls();
     this.draw();
