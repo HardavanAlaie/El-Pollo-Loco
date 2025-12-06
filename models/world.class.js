@@ -125,38 +125,51 @@ class World {
   draw() {
     if (this.playerDied) return this.showGameOverScreen();
     if (this.endbossDefeated) return this.showWinScreen();
-
-    this.restartButtonArea = null;
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-    this.uiManager.updateCanvasRect?.();
-
-    this.ctx.translate(this.camera_x, 0);
-    this.addObjectsToMap(this.backgroundObjects);
-    this.ctx.translate(-this.camera_x, 0);
-
-    [this.statusBar, this.statusBarBottle, this.statusBarCoin].forEach((bar) =>
-      this.addToMap(bar)
-    );
-
+    this.btnUiBarMethod();
     this.ctx.translate(this.camera_x, 0);
     this.addToMap(this.character);
-
     this.level.enemies.forEach((enemy) => {
       this.addToMap(enemy);
       if (enemy.statusBar) this.addToMap(enemy.statusBar);
     });
+    this.addObjectsToMapMethod();
+    if (!this.levelEnded)
+      this.animationFrame = requestAnimationFrame(() => this.draw());
+    this.ifBottleLimitMessageMethod();
+  }
 
+ /**
+ * Draws the static UI bar elements such as background objects and
+ * status bars, and prepares the canvas for rendering world objects.
+ */
+  btnUiBarMethod() {
+    this.restartButtonArea = null;
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.uiManager.updateCanvasRect?.();
+    this.ctx.translate(this.camera_x, 0);
+    this.addObjectsToMap(this.backgroundObjects);
+    this.ctx.translate(-this.camera_x, 0);
+    [this.statusBar, this.statusBarBottle, this.statusBarCoin].forEach((bar) => this.addToMap(bar)
+    );
+  }
+
+ /**
+ * Renders collectable and throwable world objects and
+ * restores the camera transform before drawing UI controls.
+ */
+  addObjectsToMapMethod() {
     this.addObjectsToMap(this.collectableBottles);
     this.addObjectsToMap(this.collectableCoins);
     this.addObjectsToMap(this.throwableObjects);
     this.ctx.translate(-this.camera_x, 0);
-
     this.uiManager.drawMobileControls();
+  }
 
-    if (!this.levelEnded)
-      this.animationFrame = requestAnimationFrame(() => this.draw());
-
+ /**
+ * Displays a temporary on-screen message when the bottle
+ * collection limit has been reached by the player.
+ */
+  ifBottleLimitMessageMethod() {
     if (this.bottleLimitMessage) {
       this.ctx.save();
       this.ctx.font = "26px Comic Sans MS";
@@ -167,8 +180,7 @@ class World {
       this.ctx.fillText(
         this.bottleLimitMessage,
         this.canvas.width / 2,
-        this.canvas.height - 50
-      );
+        this.canvas.height - 50);
       this.ctx.restore();
     }
   }

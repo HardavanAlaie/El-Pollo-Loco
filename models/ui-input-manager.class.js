@@ -165,9 +165,7 @@ class UiInputManager {
       world.rightBtnArea,
       world.jumpBtnArea,
       world.throwBtnArea,
-    ].forEach((b) => {
-      this.forEachMethod(ctx, b);
-    });
+    ].forEach((b) => {this.forEachMethod(ctx, b);});
   }
 
   /**

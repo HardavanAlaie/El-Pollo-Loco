@@ -44,7 +44,7 @@ class ThrowableObject extends MovableObject {
    * The bottle flies in the direction the character is facing.
    */
   throw() {
-    this.speedY = 30;
+    this.speedY = 25;
     this.applyGravity();
     this.throwInterval = setInterval(() => {
       if (!this.isBroken) {

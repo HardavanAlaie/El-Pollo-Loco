@@ -105,6 +105,10 @@ class Character extends MovableObject {
     }, 1000 / 60);
   }
 
+ /**
+ * Handles the throw action input and triggers bottle throwing logic
+ * via the collision manager when the D key is pressed.
+ */
   dMethod(kb, didAction) {
     if (kb?.D) {
       this.world.collisionManager?.throwableBottles?.();
@@ -113,6 +117,10 @@ class Character extends MovableObject {
     return didAction;
   }
 
+ /**
+ * Handles the jump input and triggers a jump action only when
+ * the character is on the ground and not already moving vertically.
+ */
   upMethod(kb, didAction) {
     if (kb?.UP && !this.isAboveGround() && this.speedY === 0) {
       this.jump();
@@ -121,6 +129,10 @@ class Character extends MovableObject {
     return didAction;
   }
 
+ /**
+ * Handles horizontal movement to the left while ensuring the
+ * character does not move beyond the level boundary.
+ */
   leftMethod(kb, didAction) {
     if (kb?.LEFT && this.x > 0) {
       this.moveLeft();
@@ -130,6 +142,10 @@ class Character extends MovableObject {
     return didAction;
   }
 
+ /**
+ * Handles horizontal movement to the right while ensuring the
+ * character does not exceed the level's maximum X boundary.
+ */
   rightMethod(kb, didAction) {
     if (kb?.RIGHT && this.x < this.world.level.level_end_x) {
       this.moveRight();
@@ -148,8 +164,7 @@ class Character extends MovableObject {
    * @returns {void}
    */
   animationIntervalMethod() {
-    this.animationInterval = setInterval(() => {
-      const { isMoving, inactiveMs } = this.animationIntervalConstsMethod();
+    this.animationInterval = setInterval(() => {const { isMoving, inactiveMs } = this.animationIntervalConstsMethod();
       if (this.energy <= 0) {
         this.playAnimation(this.IMAGES_DEAD);
       } else if (this.isHurt()) {
@@ -160,12 +175,9 @@ class Character extends MovableObject {
         this.playAnimation(this.IMAGES_WALKING);
       } else if (inactiveMs >= 15000) {
         this.playAnimation(this.IMAGES_LONG_IDLE);
-      } else if (inactiveMs >= 10000) {
+      } else if (inactiveMs >= 100) {
         this.playAnimation(this.IMAGES_IDLE);
-      } else {
-        this.img = this.imageCache[this.IMAGES_IDLE[0]];
-      }
-    }, 80);
+      } else {this.img = this.imageCache[this.IMAGES_IDLE[0]];}}, 80);
   }
 
  /**
@@ -272,31 +284,27 @@ class Character extends MovableObject {
   }
 
 /**
- * ------------------------------------------------------------
- * Performs a precise collision check between the character
- * and a bottle by using inset boundaries and a small vertical
- * tolerance to detect collection proximity.
- *
- * @function isTouchingBottle
- * @param {object} bottle - The bottle object to test against.
- * @returns {boolean}
- * ------------------------------------------------------------
+ * Returns true if the character is close enough to the bottle
+ * to pick it up, with a slightly tighter hitbox so that
+ * pickup happens only when very close to the bottle.
  */
-  isTouchingBottle(bottle) {
-    const insetXChar = 15; 
-    const insetXBottle = 13; 
-    const charLeft = this.x + insetXChar;
-    const charRight = this.x + this.width - insetXChar;
-    const bottleLeft = bottle.x + insetXBottle;
-    const bottleRight = bottle.x + bottle.width - insetXBottle;
-    const horizontalOverlap = charRight > bottleLeft && charLeft < bottleRight;
-    const charBottom = this.y + this.height;
-    const bottleTop = bottle.y;
-    const bottleBottom = bottle.y + bottle.height;
-    const verticalMargin = 2;
-    const verticallyOnBottle = charBottom >= bottleTop && charBottom <= bottleBottom + verticalMargin;
-    return horizontalOverlap && verticallyOnBottle;
-  }
+isTouchingBottle(bottle) {
+  if (!bottle) return false;
+  const insetXChar = 30;  
+  const insetXBottle = 22;  
+  const charLeft = this.x + insetXChar;
+  const charRight = this.x + this.width - insetXChar;
+  const bottleLeft = bottle.x + insetXBottle;
+  const bottleRight = bottle.x + bottle.width - insetXBottle;
+  const horizontalOverlap = charRight > bottleLeft && charLeft < bottleRight;
+  const charBottom = this.y + this.height;
+  const bottleTop = bottle.y;
+  const bottleBottom = bottle.y + bottle.height;
+  const verticalMarginTop = 8;  
+  const verticalMarginBottom = 2;
+  const verticallyOnBottle = charBottom >= bottleTop + verticalMarginTop && charBottom <= bottleBottom + verticalMarginBottom;
+  return horizontalOverlap && verticallyOnBottle;
+}
 
   /**
    * Plays a sound from the specified file path if sound is enabled.

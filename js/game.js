@@ -95,23 +95,18 @@ function resizeCanvas() {
 }
 
 /**
- * ------------------------------------------------------------
  * Calculates the optimal canvas size based on window ratio
  * and a fixed game aspect ratio.
- *
  * @function ifWindowRatioAspectRatioMethod
  * @param {number} windowRatio - The current window width/height ratio.
  * @param {number} aspectRatio - The fixed desired aspect ratio of the game.
  * @param {number} newHeight - Initial height value (will be recalculated).
  * @param {number} newWidth - Initial width value (will be recalculated).
- *
  * @returns {{ newHeight: number, newWidth: number }}
  * Returns the adjusted width and height ensuring the aspect ratio is preserved.
- *
  * Behavior:
  * - If the window is wider than the desired ratio → height fits, width adjusts.
  * - If the window is taller/narrower → width fits, height adjusts.
- * ------------------------------------------------------------
  */
 function ifWindowRatioAspectRatioMethod(windowRatio, aspectRatio, newHeight, newWidth) {
   if (windowRatio > aspectRatio) {
@@ -124,9 +119,7 @@ function ifWindowRatioAspectRatioMethod(windowRatio, aspectRatio, newHeight, new
   return { newHeight, newWidth };
 }
 
-/**
- * Safely toggles fullscreen mode for the canvas (with icon auto-update)
- */
+//Safely toggles fullscreen mode for the canvas (with icon auto-update)
 function toggleFullscreen() {
   const canvas = document.getElementById("canvas");
   if (!canvas) return;
@@ -137,20 +130,16 @@ function toggleFullscreen() {
 }
 
 /**
- * ------------------------------------------------------------
  * Toggles fullscreen mode for the game canvas.
- * 
  * @function isFullscreenMethod
  * @param {boolean} isFullscreen - Indicates whether fullscreen is currently active.
  * @param {HTMLCanvasElement} canvas - The canvas element that should enter fullscreen.
  * @param {Document} doc - The document object used to exit fullscreen.
- *
  * Behavior:
  * - If not in fullscreen → requests fullscreen on the canvas.
  * - If already in fullscreen → exits fullscreen mode.
  * - Includes vendor-prefixed fallbacks for browser compatibility.
  * - Handles fullscreen permission errors gracefully.
- * ------------------------------------------------------------
  */
 function isFullscreenMethod(isFullscreen, canvas, doc) {
   if (!isFullscreen) {
@@ -215,11 +204,8 @@ document
   });
 
 /**
- * ------------------------------------------------------------
  * Displays the Impressum overlay by removing the "hidden" class.
- *
  * @function showImpressum
- * ------------------------------------------------------------
  */
 function showImpressum() {
   const overlay = document.getElementById("impressum-overlay");
@@ -227,11 +213,8 @@ function showImpressum() {
 }
 
 /**
- * ------------------------------------------------------------
  * Hides the Impressum overlay by adding the "hidden" class.
- *
  * @function hideImpressum
- * ------------------------------------------------------------
  */
 function hideImpressum() {
   const overlay = document.getElementById("impressum-overlay");
@@ -294,17 +277,13 @@ document.addEventListener("fullscreenchange", () => {
   world?.updateCanvasRect?.();
 });
 
-/**
- * Handles window resize updates for responsive canvas scaling.
- */
+ //Handles window resize updates for responsive canvas scaling.
 window.addEventListener("resize", () => {
   resizeCanvas();
   if (world) world.updateCanvasRect();
 });
 
-/**
- * Fallback UI bindings (ensures buttons always work, even if reloaded).
- */
+ //Fallback UI bindings (ensures buttons always work, even if reloaded).
 document
   .getElementById("instructions-btn")
   ?.addEventListener("click", showInstructions);
@@ -334,12 +313,9 @@ window.addEventListener("orientationchange", checkOrientation);
 window.addEventListener("load", checkOrientation);
 
 /**
- * ------------------------------------------------------------
  * Returns the restart overlay element used for the fade animation.
- *
  * @function ensureRestartOverlay
  * @returns {HTMLElement|null}
- * ------------------------------------------------------------
  */
 function ensureRestartOverlay() {
   const el = document.getElementById("restart-fade");
@@ -347,12 +323,9 @@ function ensureRestartOverlay() {
 }
 
 /**
- * ------------------------------------------------------------
  * Initiates the game restart sequence with a fade-out animation,
  * prevents double restarts, and preserves canvas size.
- *
  * @function restartGame
- * ------------------------------------------------------------
  */
 window.restartGame = function restartGame() {
   if (isRestarting) return;
@@ -367,16 +340,13 @@ window.restartGame = function restartGame() {
 }
 
 /**
- * ------------------------------------------------------------
  * Handles the delayed restart logic including cleanup,
  * canvas reset, and overlay fade-out transition.
- *
  * @function setTimeoutMethod
  * @param {HTMLCanvasElement} canvas
  * @param {string} keepW - Previous canvas width (CSS)
  * @param {string} keepH - Previous canvas height (CSS)
  * @param {HTMLElement} overlay
- * ------------------------------------------------------------
  */
 function setTimeoutMethod(canvas, keepW, keepH, overlay) {
   setTimeout(() => {
@@ -396,15 +366,12 @@ function setTimeoutMethod(canvas, keepW, keepH, overlay) {
 }
 
 /**
- * ------------------------------------------------------------
  * Resets canvas state, clears context, reinitializes the game,
  * restores canvas display size, and updates world canvas rect.
- *
  * @function ctxCanvasMethod
  * @param {HTMLCanvasElement} canvas
  * @param {string} keepW - Previous width from CSS
  * @param {string} keepH - Previous height from CSS
- * ------------------------------------------------------------
  */
 function ctxCanvasMethod(canvas, keepW, keepH) {
   const ctx = canvas.getContext("2d");
@@ -417,12 +384,9 @@ function ctxCanvasMethod(canvas, keepW, keepH) {
 }
 
 /**
- * ------------------------------------------------------------
  * Safely stops all world processes before restarting the game:
  * enemy audio, background sounds, the game loop, and animations.
- *
  * @function tryWindowWorldMethod
- * ------------------------------------------------------------
  */
 function tryWindowWorldMethod() {
   if (window.world) {
