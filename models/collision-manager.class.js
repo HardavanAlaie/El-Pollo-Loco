@@ -255,8 +255,57 @@ characterColliding(enemy) {
  * so that damage timing feels natural. Hitbox size is tuned
  * per enemy type to avoid "air hits" or missing collisions.
  */
+// isBodyCollision(c, enemy) {
+//   // Character body rectangle (leicht verkleinert, aber nicht zu extrem)
+//   const insetCharX = c.width * 0.2;
+//   const insetCharY = c.height * 0.15;
+//   const ax1 = c.x + insetCharX;
+//   const ay1 = c.y + insetCharY;
+//   const ax2 = c.x + c.width - insetCharX;
+//   const ay2 = c.y + c.height - insetCharY;
+
+//   // Enemy body rectangle – abhängig vom Typ
+//   let insetEnemyXFactor;
+//   let insetEnemyYFactor;
+
+//   if (enemy instanceof EndbossLevel1) {
+//     // Boss ist groß und soll NICHT aus der Luft treffen -> deutlich kleinere Body-Hitbox
+//     insetEnemyXFactor = 0.4;   // viel schmaler
+//     insetEnemyYFactor = 0.3;   // etwas niedriger
+//   } else if (enemy instanceof ChickenNormal) {
+//     // Normale Chicken: Treffer etwas früher als vorher, aber nicht übertrieben
+//     insetEnemyXFactor = 0.18;
+//     insetEnemyYFactor = 0.15;
+//   } else if (enemy instanceof ChickenSmall) {
+//     // Kleine Chicken: sehr kleine Sprites — daher fast volle Breite/Höhe als Body
+//     // sonst rutscht der Charakter optisch darüber ohne Hit
+//     insetEnemyXFactor = 0.05;
+//     insetEnemyYFactor = 0.05;
+//   } else {
+//     // Fallback für unbekannte Gegner
+//     insetEnemyXFactor = 0.25;
+//     insetEnemyYFactor = 0.2;
+//   }
+
+//   const insetEnemyX = enemy.width * insetEnemyXFactor;
+//   const insetEnemyY = enemy.height * insetEnemyYFactor;
+
+//   const bx1 = enemy.x + insetEnemyX;
+//   const by1 = enemy.y + insetEnemyY;
+//   const bx2 = enemy.x + enemy.width - insetEnemyX;
+//   const by2 = enemy.y + enemy.height - insetEnemyY;
+
+//   // Rechteck-Kollision der inneren Körperflächen
+//   return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
+// }
+
+/**
+ * Uses tightened body hitboxes for both character and enemy
+ * so that damage timing feels natural. Hitbox size is tuned
+ * per enemy type to avoid "air hits" or missing collisions.
+ */
 isBodyCollision(c, enemy) {
-  // Character body rectangle (leicht verkleinert, aber nicht zu extrem)
+  // Character body rectangle (leicht verkleinert, gemeinsame Basis)
   const insetCharX = c.width * 0.2;
   const insetCharY = c.height * 0.15;
   const ax1 = c.x + insetCharX;
@@ -264,25 +313,25 @@ isBodyCollision(c, enemy) {
   const ax2 = c.x + c.width - insetCharX;
   const ay2 = c.y + c.height - insetCharY;
 
-  // Enemy body rectangle – abhängig vom Typ
+  // Enemy body rectangle – abhängig vom Typ, feinjustiert
   let insetEnemyXFactor;
   let insetEnemyYFactor;
 
   if (enemy instanceof EndbossLevel1) {
-    // Boss ist groß und soll NICHT aus der Luft treffen -> deutlich kleinere Body-Hitbox
-    insetEnemyXFactor = 0.4;   // viel schmaler
-    insetEnemyYFactor = 0.3;   // etwas niedriger
+    // Boss: sehr kleine Body-Hitbox → Schaden nur, wenn du wirklich nah dran bist
+    insetEnemyXFactor = 0.55;   // sehr schmal
+    insetEnemyYFactor = 0.4;    // flacher
   } else if (enemy instanceof ChickenNormal) {
-    // Normale Chicken: Treffer etwas früher als vorher, aber nicht übertrieben
+    // Normales Chicken: war bei dir "perfekt" → nicht anfassen
     insetEnemyXFactor = 0.18;
     insetEnemyYFactor = 0.15;
   } else if (enemy instanceof ChickenSmall) {
-    // Kleine Chicken: sehr kleine Sprites — daher fast volle Breite/Höhe als Body
-    // sonst rutscht der Charakter optisch darüber ohne Hit
-    insetEnemyXFactor = 0.05;
-    insetEnemyYFactor = 0.05;
+    // Kleines Chicken: etwas kleinere Hitbox als eben,
+    // damit Schaden erst noch ein Stück näher passiert
+    insetEnemyXFactor = 0.2;
+    insetEnemyYFactor = 0.18;
   } else {
-    // Fallback für unbekannte Gegner
+    // Fallback für alle anderen Gegner
     insetEnemyXFactor = 0.25;
     insetEnemyYFactor = 0.2;
   }
@@ -298,6 +347,7 @@ isBodyCollision(c, enemy) {
   // Rechteck-Kollision der inneren Körperflächen
   return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
 }
+
 
 
 
