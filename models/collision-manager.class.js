@@ -225,6 +225,32 @@ characterColliding(enemy) {
   }
 }
 
+/**
+ * Uses tightened body hitboxes for both character and enemy
+ * so that damage is only applied when they visually overlap closely.
+ */
+isBodyCollision(c, enemy) {
+  // Charakter-Hitbox etwas verkleinern
+  const insetCharX = c.width * 0.25;
+  const insetCharY = c.height * 0.2;
+  const ax1 = c.x + insetCharX;
+  const ay1 = c.y + insetCharY;
+  const ax2 = c.x + c.width - insetCharX;
+  const ay2 = c.y + c.height - insetCharY;
+
+  // Gegner-Hitbox ebenfalls etwas verkleinern
+  const insetEnemyX = enemy.width * 0.25;
+  const insetEnemyY = enemy.height * 0.2;
+  const bx1 = enemy.x + insetEnemyX;
+  const by1 = enemy.y + insetEnemyY;
+  const bx2 = enemy.x + enemy.width - insetEnemyX;
+  const by2 = enemy.y + enemy.height - insetEnemyY;
+
+  // Rechteck-Kollision der „inneren“ Körperflächen
+  return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
+}
+
+
 
   /**
    * Determines whether a collision between the character and an
