@@ -179,22 +179,52 @@ class CollisionManager {
   }
 
   /** Handles player–enemy collision logic (jumping on enemies vs taking damage). */
-  characterColliding(enemy) {
-    const w = this.world;
-    const c = w.character;
-    if (!c || !enemy) return;
-    if (enemy.isDead?.() || enemy.dead) return;
-    if (!c.isColliding(enemy)) return;
-    const isStomp = this.characterCollidingConstsMethod(c, enemy);
-    if (isStomp) {
-      return this.ifIsStompMethod(enemy, c);
-    }
-    const isCloseEnough = c.isCollidingTight(enemy, 20);
-    if (!isCloseEnough) return;
-    if (!c.isHurtTimer) {
-      this.ifIsHurtTimerMethod(c);
-    }
+  // characterColliding(enemy) {
+  //   const w = this.world;
+  //   const c = w.character;
+  //   if (!c || !enemy) return;
+  //   if (enemy.isDead?.() || enemy.dead) return;
+  //   if (!c.isColliding(enemy)) return;
+  //   const isStomp = this.characterCollidingConstsMethod(c, enemy);
+  //   if (isStomp) {
+  //     return this.ifIsStompMethod(enemy, c);
+  //   }
+  //   const isCloseEnough = c.isCollidingTight(enemy, 20);
+  //   if (!isCloseEnough) return;
+  //   if (!c.isHurtTimer) {
+  //     this.ifIsHurtTimerMethod(c);
+  //   }
+  // }
+
+  /**
+ * Handles character–enemy collision logic:
+ * - stomp kills when the player lands on top
+ * - body collision damage only if tight body hitboxes overlap.
+ */
+characterColliding(enemy) {
+  const w = this.world;
+  const c = w.character;
+  if (!c || !enemy) return;
+  if (enemy.isDead?.() || enemy.dead) return;
+
+  // Erst überhaupt prüfen, ob sich die Bounding-Boxes berühren
+  if (!c.isColliding(enemy)) return;
+
+  // 1. Stomp (Springen auf Gegner) hat Vorrang, damit das Gefühl bleibt wie vorher
+  const isStomp = this.characterCollidingConstsMethod(c, enemy);
+  if (isStomp) {
+    return this.ifIsStompMethod(enemy, c);
   }
+
+  // 2. Für Schaden: noch einmal mit deutlich engeren "Body"-Hitboxen prüfen
+  const bodyHit = this.isBodyCollision(c, enemy);
+  if (!bodyHit) return;
+
+  if (!c.isHurtTimer) {
+    this.ifIsHurtTimerMethod(c);
+  }
+}
+
 
   /**
    * Determines whether a collision between the character and an
