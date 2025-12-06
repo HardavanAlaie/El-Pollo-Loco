@@ -319,7 +319,7 @@ isBodyCollision(c, enemy) {
 
   if (enemy instanceof EndbossLevel1) {
     // Boss: sehr kleine Body-Hitbox → Schaden nur, wenn du wirklich nah dran bist
-    insetEnemyXFactor = 0.55;   // sehr schmal
+    insetEnemyXFactor = 0.6;   // sehr schmal
     insetEnemyYFactor = 0.4;    // flacher
   } else if (enemy instanceof ChickenNormal) {
     // Normales Chicken: war bei dir "perfekt" → nicht anfassen
