@@ -294,17 +294,27 @@ isTouchingBottle(bottle) {
   const insetXBottle = 22;  
   const charLeft = this.x + insetXChar;
   const charRight = this.x + this.width - insetXChar;
-  const bottleLeft = bottle.x + insetXBottle;
-  const bottleRight = bottle.x + bottle.width - insetXBottle;
-  const horizontalOverlap = charRight > bottleLeft && charLeft < bottleRight;
-  const charBottom = this.y + this.height;
-  const bottleTop = bottle.y;
-  const bottleBottom = bottle.y + bottle.height;
+  const { charBottom, bottleTop, bottleBottom, horizontalOverlap } = this.insetBottleConstsMethod(bottle, insetXBottle, charRight, charLeft);
   const verticalMarginTop = 8;  
   const verticalMarginBottom = 2;
   const verticallyOnBottle = charBottom >= bottleTop + verticalMarginTop && charBottom <= bottleBottom + verticalMarginBottom;
   return horizontalOverlap && verticallyOnBottle;
 }
+
+/**
+ * Calculates bottle-related collision values used to determine
+ * horizontal overlap and vertical contact between the character
+ * and a collectable bottle.
+ */
+  insetBottleConstsMethod(bottle, insetXBottle, charRight, charLeft) {
+    const bottleLeft = bottle.x + insetXBottle;
+    const bottleRight = bottle.x + bottle.width - insetXBottle;
+    const horizontalOverlap = charRight > bottleLeft && charLeft < bottleRight;
+    const charBottom = this.y + this.height;
+    const bottleTop = bottle.y;
+    const bottleBottom = bottle.y + bottle.height;
+    return { charBottom, bottleTop, bottleBottom, horizontalOverlap };
+  }
 
   /**
    * Plays a sound from the specified file path if sound is enabled.
