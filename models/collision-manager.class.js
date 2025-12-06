@@ -40,16 +40,40 @@ class CollisionManager {
   }
 
   /** Checks if the Endboss collides with the player (causes damage). */
-  checkEndboss1Hit() {
-    const w = this.world;
-    const boss = w.level.enemies.find((e) => e instanceof EndbossLevel1);
-    if (!boss || w.character.energy <= 0) return;
-    if (w.character.isColliding(boss) && !w.character.isHurtTimer) {
-      w.character.hit();
-      w.character.isHurtTimer = true;
-      setTimeout(() => (w.character.isHurtTimer = false), 1000);
-    }
-  }
+  // checkEndboss1Hit() {
+  //   const w = this.world;
+  //   const boss = w.level.enemies.find((e) => e instanceof EndbossLevel1);
+  //   if (!boss || w.character.energy <= 0) return;
+  //   if (w.character.isColliding(boss) && !w.character.isHurtTimer) {
+  //     w.character.hit();
+  //     w.character.isHurtTimer = true;
+  //     setTimeout(() => (w.character.isHurtTimer = false), 1000);
+  //   }
+  // }
+
+  /**
+ * Applies contact damage from the end boss to the character,
+ * using the same tightened body collision as other enemies.
+ */
+checkEndboss1Hit() {
+  const w = this.world;
+  const c = w.character;
+  const boss = w.level.enemies.find((e) => e instanceof EndbossLevel1);
+  if (!boss || !c || c.energy <= 0) return;
+
+  // Jetzt: gleiche enge Kollision wie bei anderen Gegnern,
+  // inkl. deiner spezialisierten Endboss-Logik in isBodyCollision
+  const bodyHit = this.isBodyCollision(c, boss);
+  if (!bodyHit) return;
+
+  if (c.isHurtTimer) return;
+
+  c.hit();
+  w.statusBar?.setPercentage?.(c.energy);
+  c.isHurtTimer = true;
+  setTimeout(() => (c.isHurtTimer = false), 1000);
+}
+
 
   /** Manages all throwable objects and checks for enemy collisions. */
   checkThrowableObjects() {
@@ -201,22 +225,51 @@ class CollisionManager {
  * - stomp kills when the player lands on top
  * - body collision damage only if tight body hitboxes overlap.
  */
+// characterColliding(enemy) {
+//   const w = this.world;
+//   const c = w.character;
+//   if (!c || !enemy) return;
+//   if (enemy.isDead?.() || enemy.dead) return;
+
+//   // Erst überhaupt prüfen, ob sich die Bounding-Boxes berühren
+//   if (!c.isColliding(enemy)) return;
+
+//   // 1. Stomp (Springen auf Gegner) hat Vorrang, damit das Gefühl bleibt wie vorher
+//   const isStomp = this.characterCollidingConstsMethod(c, enemy);
+//   if (isStomp) {
+//     return this.ifIsStompMethod(enemy, c);
+//   }
+
+//   // 2. Für Schaden: noch einmal mit deutlich engeren "Body"-Hitboxen prüfen
+//   const bodyHit = this.isBodyCollision(c, enemy);
+//   if (!bodyHit) return;
+
+//   if (!c.isHurtTimer) {
+//     this.ifIsHurtTimerMethod(c);
+//   }
+// }
+
+/**
+ * Handles character–enemy collision logic:
+ * - stomp kills when the player lands on top
+ * - body collision damage for normal enemies
+ *   (Endboss damage is handled separately).
+ */
 characterColliding(enemy) {
   const w = this.world;
   const c = w.character;
   if (!c || !enemy) return;
   if (enemy.isDead?.() || enemy.dead) return;
-
-  // Erst überhaupt prüfen, ob sich die Bounding-Boxes berühren
   if (!c.isColliding(enemy)) return;
 
-  // 1. Stomp (Springen auf Gegner) hat Vorrang, damit das Gefühl bleibt wie vorher
   const isStomp = this.characterCollidingConstsMethod(c, enemy);
   if (isStomp) {
     return this.ifIsStompMethod(enemy, c);
   }
 
-  // 2. Für Schaden: noch einmal mit deutlich engeren "Body"-Hitboxen prüfen
+  // Endboss body damage is handled separately in checkEndboss1Hit
+  if (enemy instanceof EndbossLevel1) return;
+
   const bodyHit = this.isBodyCollision(c, enemy);
   if (!bodyHit) return;
 
@@ -224,6 +277,7 @@ characterColliding(enemy) {
     this.ifIsHurtTimerMethod(c);
   }
 }
+
 
 /**
  * Uses tightened body hitboxes for both character and enemy
@@ -304,8 +358,76 @@ characterColliding(enemy) {
  * so that damage timing feels natural. Hitbox size is tuned
  * per enemy type to avoid "air hits" or missing collisions.
  */
+// isBodyCollision(c, enemy) {
+//   // Character body rectangle (leicht verkleinert, gemeinsame Basis)
+//   const insetCharX = c.width * 0.2;
+//   const insetCharY = c.height * 0.15;
+//   const ax1 = c.x + insetCharX;
+//   const ay1 = c.y + insetCharY;
+//   const ax2 = c.x + c.width - insetCharX;
+//   const ay2 = c.y + c.height - insetCharY;
+
+//   // Enemy body rectangle – abhängig vom Typ, feinjustiert
+//   let insetEnemyXFactor;
+//   let insetEnemyYFactor;
+
+//   if (enemy instanceof EndbossLevel1) {
+//     // Boss: sehr kleine Body-Hitbox → Schaden nur, wenn du wirklich nah dran bist
+//     insetEnemyXFactor = 0.6;   // sehr schmal
+//     insetEnemyYFactor = 0.4;    // flacher
+//   } else if (enemy instanceof ChickenNormal) {
+//     // Normales Chicken: war bei dir "perfekt" → nicht anfassen
+//     insetEnemyXFactor = 0.18;
+//     insetEnemyYFactor = 0.15;
+//   } else if (enemy instanceof ChickenSmall) {
+//     // Kleines Chicken: etwas kleinere Hitbox als eben,
+//     // damit Schaden erst noch ein Stück näher passiert
+//     insetEnemyXFactor = 0.2;
+//     insetEnemyYFactor = 0.18;
+//   } else {
+//     // Fallback für alle anderen Gegner
+//     insetEnemyXFactor = 0.25;
+//     insetEnemyYFactor = 0.2;
+//   }
+
+//   const insetEnemyX = enemy.width * insetEnemyXFactor;
+//   const insetEnemyY = enemy.height * insetEnemyYFactor;
+
+//   const bx1 = enemy.x + insetEnemyX;
+//   const by1 = enemy.y + insetEnemyY;
+//   const bx2 = enemy.x + enemy.width - insetEnemyX;
+//   const by2 = enemy.y + enemy.height - insetEnemyY;
+
+//   // Rechteck-Kollision der inneren Körperflächen
+//   return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
+// }
+
+/**
+ * Uses tightened body hitboxes for both character and enemy
+ * so that damage timing feels natural. Hitbox size is tuned
+ * per enemy type to avoid "air hits" or missing collisions.
+ */
 isBodyCollision(c, enemy) {
-  // Character body rectangle (leicht verkleinert, gemeinsame Basis)
+  // Spezialfall: Endboss bekommt eine eigene, sehr enge Center-Hitbox
+  if (enemy instanceof EndbossLevel1) {
+    const charCenterX = c.x + c.width / 2;
+    const charCenterY = c.y + c.height / 2;
+
+    const bossCenterX = enemy.x + enemy.width / 2;
+    const bossCenterY = enemy.y + enemy.height / 2;
+
+    const dx = Math.abs(charCenterX - bossCenterX);
+    const dy = Math.abs(charCenterY - bossCenterY);
+
+    // Sehr kleiner Trefferbereich um die Boss-Mitte:
+    // → du musst wirklich direkt „an ihm dran“ sein
+    const maxX = enemy.width * 0.7;
+    const maxY = enemy.height * 0.9;
+
+    return dx < maxX && dy < maxY;
+  }
+
+  // Charakter-Hitbox etwas verkleinern (gemeinsame Basis für alle normalen Gegner)
   const insetCharX = c.width * 0.2;
   const insetCharY = c.height * 0.15;
   const ax1 = c.x + insetCharX;
@@ -317,17 +439,12 @@ isBodyCollision(c, enemy) {
   let insetEnemyXFactor;
   let insetEnemyYFactor;
 
-  if (enemy instanceof EndbossLevel1) {
-    // Boss: sehr kleine Body-Hitbox → Schaden nur, wenn du wirklich nah dran bist
-    insetEnemyXFactor = 0.6;   // sehr schmal
-    insetEnemyYFactor = 0.4;    // flacher
-  } else if (enemy instanceof ChickenNormal) {
-    // Normales Chicken: war bei dir "perfekt" → nicht anfassen
+  if (enemy instanceof ChickenNormal) {
+    // Normales Chicken → bei dir "perfekt" → unverändert lassen
     insetEnemyXFactor = 0.18;
     insetEnemyYFactor = 0.15;
   } else if (enemy instanceof ChickenSmall) {
-    // Kleines Chicken: etwas kleinere Hitbox als eben,
-    // damit Schaden erst noch ein Stück näher passiert
+    // Kleines Chicken → zuletzt auch "perfekt" → so lassen
     insetEnemyXFactor = 0.2;
     insetEnemyYFactor = 0.18;
   } else {
@@ -347,6 +464,7 @@ isBodyCollision(c, enemy) {
   // Rechteck-Kollision der inneren Körperflächen
   return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
 }
+
 
 
 
