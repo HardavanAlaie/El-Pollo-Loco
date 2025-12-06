@@ -229,26 +229,76 @@ characterColliding(enemy) {
  * Uses tightened body hitboxes for both character and enemy
  * so that damage is only applied when they visually overlap closely.
  */
+// isBodyCollision(c, enemy) {
+//   // Charakter-Hitbox etwas verkleinern
+//   const insetCharX = c.width * 0.25;
+//   const insetCharY = c.height * 0.2;
+//   const ax1 = c.x + insetCharX;
+//   const ay1 = c.y + insetCharY;
+//   const ax2 = c.x + c.width - insetCharX;
+//   const ay2 = c.y + c.height - insetCharY;
+
+//   // Gegner-Hitbox ebenfalls etwas verkleinern
+//   const insetEnemyX = enemy.width * 0.25;
+//   const insetEnemyY = enemy.height * 0.2;
+//   const bx1 = enemy.x + insetEnemyX;
+//   const by1 = enemy.y + insetEnemyY;
+//   const bx2 = enemy.x + enemy.width - insetEnemyX;
+//   const by2 = enemy.y + enemy.height - insetEnemyY;
+
+//   // Rechteck-Kollision der „inneren“ Körperflächen
+//   return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
+// }
+
+/**
+ * Uses tightened body hitboxes for both character and enemy
+ * so that damage timing feels natural. Hitbox size is tuned
+ * per enemy type to avoid "air hits" or missing collisions.
+ */
 isBodyCollision(c, enemy) {
-  // Charakter-Hitbox etwas verkleinern
-  const insetCharX = c.width * 0.25;
-  const insetCharY = c.height * 0.2;
+  // Character body rectangle (leicht verkleinert, aber nicht zu extrem)
+  const insetCharX = c.width * 0.2;
+  const insetCharY = c.height * 0.15;
   const ax1 = c.x + insetCharX;
   const ay1 = c.y + insetCharY;
   const ax2 = c.x + c.width - insetCharX;
   const ay2 = c.y + c.height - insetCharY;
 
-  // Gegner-Hitbox ebenfalls etwas verkleinern
-  const insetEnemyX = enemy.width * 0.25;
-  const insetEnemyY = enemy.height * 0.2;
+  // Enemy body rectangle – abhängig vom Typ
+  let insetEnemyXFactor;
+  let insetEnemyYFactor;
+
+  if (enemy instanceof EndbossLevel1) {
+    // Boss ist groß und soll NICHT aus der Luft treffen -> deutlich kleinere Body-Hitbox
+    insetEnemyXFactor = 0.4;   // viel schmaler
+    insetEnemyYFactor = 0.3;   // etwas niedriger
+  } else if (enemy instanceof ChickenNormal) {
+    // Normale Chicken: Treffer etwas früher als vorher, aber nicht übertrieben
+    insetEnemyXFactor = 0.18;
+    insetEnemyYFactor = 0.15;
+  } else if (enemy instanceof ChickenSmall) {
+    // Kleine Chicken: sehr kleine Sprites — daher fast volle Breite/Höhe als Body
+    // sonst rutscht der Charakter optisch darüber ohne Hit
+    insetEnemyXFactor = 0.05;
+    insetEnemyYFactor = 0.05;
+  } else {
+    // Fallback für unbekannte Gegner
+    insetEnemyXFactor = 0.25;
+    insetEnemyYFactor = 0.2;
+  }
+
+  const insetEnemyX = enemy.width * insetEnemyXFactor;
+  const insetEnemyY = enemy.height * insetEnemyYFactor;
+
   const bx1 = enemy.x + insetEnemyX;
   const by1 = enemy.y + insetEnemyY;
   const bx2 = enemy.x + enemy.width - insetEnemyX;
   const by2 = enemy.y + enemy.height - insetEnemyY;
 
-  // Rechteck-Kollision der „inneren“ Körperflächen
+  // Rechteck-Kollision der inneren Körperflächen
   return ax2 > bx1 && ax1 < bx2 && ay2 > by1 && ay1 < by2;
 }
+
 
 
 
