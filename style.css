@@ -213,10 +213,10 @@ h1 {
   opacity: 0;
   pointer-events: none;
   transition: opacity .25s ease;
-  z-index: 9999; /* über allem */
+  z-index: 9999;
 }
 #restart-fade.show {
-  opacity: .9;           /* leicht abdunkeln */
+  opacity: .9;         
   pointer-events: auto;
 }
 
