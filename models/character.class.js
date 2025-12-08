@@ -316,6 +316,7 @@ isTouchingBottle(bottle) {
     return { charBottom, bottleTop, bottleBottom, horizontalOverlap };
   }
 
+  
   /**
    * Plays a sound from the specified file path if sound is enabled.
    *
