@@ -13,33 +13,26 @@ class World {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.keyboard = keyboard;
-
     this.canThrow = true;
     this.levelEnded = false;
     this.playerDied = false;
     this.endbossDefeated = false;
     this.uiScreen = null;
-
     this.statusBar = new StatusBar();
     this.statusBarBottle = new StatusBarBottle();
     this.statusBarCoin = new StatusBarCoin();
-
     this.throwableObjects = [];
-
     this.level = level1(this);
     this.character = new Character(this);
-
     this.enemies = this.level.enemies;
     this.clouds = this.level.clouds;
     this.backgroundObjects = this.level.backgroundObjects;
     this.collectableBottles = this.level.collectableObjects || [];
     this.collectableCoins = this.level.collectableCoins || [];
-
     this.collisionManager = new CollisionManager(this);
     this.audioManager = new AudioManager(this);
     this.uiManager = new UiInputManager(this);
     this.endScreenManager = new EndScreenManager(this);
-
     this.setWorld();
     this.uiManager.setupCanvasControls();
     this.draw();
