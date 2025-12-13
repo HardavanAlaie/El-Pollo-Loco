@@ -15,7 +15,6 @@ class StatusBarCoin extends StatusBar {
     "img/7_statusbars/1_statusbar/1_statusbar_coin/blue/80.png",
     "img/7_statusbars/1_statusbar/1_statusbar_coin/blue/100.png",
   ];
-
   availableCoins = 0; 
 
   /**
