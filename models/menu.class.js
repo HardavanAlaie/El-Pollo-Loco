@@ -339,12 +339,10 @@ class Menu {
   }
 
 /**
- * ------------------------------------------------------------
  * Draws the Impressum button on the canvas and stores its
  * active hitbox area for click interaction.
  *
  * @function drawImpressumButton
- * ------------------------------------------------------------
  */
   drawImpressumButton() {
     const { x, y, btnWidth, btnHeight, ctx } = this.drawImpressumButtonConstsMethod(); 
