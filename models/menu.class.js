@@ -362,13 +362,11 @@ class Menu {
   }
 
 /**
- * ------------------------------------------------------------
  * Provides layout values and rendering context required
  * to draw the Impressum button on the canvas.
  *
  * @function drawImpressumButtonConstsMethod
  * @returns {{ x: number, y: number, btnWidth: number, btnHeight: number, ctx: CanvasRenderingContext2D }}
- * ------------------------------------------------------------
  */
   drawImpressumButtonConstsMethod() {
     const ctx = this.ctx;
