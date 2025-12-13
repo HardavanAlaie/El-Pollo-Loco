@@ -15,7 +15,6 @@ class StatusBarBottle extends StatusBar {
     "img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/80.png",
     "img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/100.png",
   ];
-
   availableBottles = 0; 
 
   /**
