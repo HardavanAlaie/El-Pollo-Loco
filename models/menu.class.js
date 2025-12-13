@@ -281,7 +281,6 @@ class Menu {
   }
 
 /**
- * ------------------------------------------------------------
  * Determines whether the mouse cursor is hovering over any
  * registered button based on scaled canvas coordinates.
  *
@@ -290,7 +289,6 @@ class Menu {
  * @param {number} x - Scaled x-coordinate of the pointer.
  * @param {number} y - Scaled y-coordinate of the pointer.
  * @returns {boolean}
- * ------------------------------------------------------------
  */
   ifHandleHoverMethod(over, x, y) {
     over = Object.values(this.buttons).some((btn) => x >= btn.x &&
