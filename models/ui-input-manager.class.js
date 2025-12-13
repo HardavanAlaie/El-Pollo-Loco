@@ -1,9 +1,7 @@
 /**
- * ------------------------------------------------------------
  * Handles canvas input, mobile controls and coordinate mapping.
  *
  * @class UiInputManager
- * ------------------------------------------------------------
  */
 class UiInputManager {
   /**
