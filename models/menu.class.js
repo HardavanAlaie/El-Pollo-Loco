@@ -302,14 +302,12 @@ class Menu {
   }
 
 /**
- * ------------------------------------------------------------
  * Converts raw mouse event coordinates into canvas-scaled
  * coordinates for hover detection.
  *
  * @function handleHoverConstsMethod
  * @param {MouseEvent} event
  * @returns {{ x: number, y: number }}
- * ------------------------------------------------------------
  */
   handleHoverConstsMethod(event) {
     const rect = this.canvas.getBoundingClientRect();
