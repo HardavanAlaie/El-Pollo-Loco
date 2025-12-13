@@ -222,7 +222,6 @@ class Menu {
   }
 
 /**
- * ------------------------------------------------------------
  * Adjusts click coordinates for horizontal or vertical letterboxing
  * depending on the window-to-canvas aspect ratio mismatch.
  *
@@ -236,7 +235,6 @@ class Menu {
  * @param {number} finalY - Current y coordinate (will be recalculated).
  * @param {number} clientY - Raw clientY from the event.
  * @returns {{ finalX: number, finalY: number }}
- * ------------------------------------------------------------
  */
   horizontalVerticalOffset(windowRatio, aspectRatio, pageHeight, pageWidth, finalX, clientX, finalY, clientY) {
     if (windowRatio > aspectRatio) {
