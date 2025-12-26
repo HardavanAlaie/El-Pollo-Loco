@@ -116,7 +116,7 @@ h1 {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6); 
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -208,15 +208,17 @@ h1 {
 }
 
 #restart-fade {
-  position: fixed; inset: 0;
+  position: fixed;
+  inset: 0;
   background: #000;
   opacity: 0;
   pointer-events: none;
   transition: opacity .25s ease;
   z-index: 9999;
 }
+
 #restart-fade.show {
-  opacity: .9;         
+  opacity: .9;
   pointer-events: auto;
 }
 
