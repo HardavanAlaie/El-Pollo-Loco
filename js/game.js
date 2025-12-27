@@ -395,6 +395,7 @@ function tryWindowWorldMethod() {
     world.stopBackgroundMusic?.();
     world.stopRestartButtonAnimation?.();
     world.stopGameLoopHard?.();
+    world.stopGameLoop?.();
   }
 }
 
