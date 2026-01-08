@@ -56,6 +56,11 @@ canvas {
   z-index: 1000;
 }
 
+/* 
+ * Styles circular on-screen control buttons used for mobile gameplay.
+ * Applies size, shape, colors, touch behavior, and interaction feedback
+ * such as scaling and brightness changes when a button is pressed.
+ */
 #canvas-buttons button {
   width: 48px;
   height: 48px;
