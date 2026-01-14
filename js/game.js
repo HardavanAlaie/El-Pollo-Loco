@@ -397,4 +397,3 @@ function tryWindowWorldMethod() {
     world.stopGameLoopHard?.();
   }
 }
-
